@@ -1,20 +1,10 @@
-From ca75f2556d3c43a290ce5c0030670f7b30467fae Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 03:44:28 +0000
-Subject: [PATCH] fix: Disable crash reporting
+Subject: [PATCH] feat: Disable crash reporting
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- .../fenix/app/src/main/AndroidManifest.xml       |  4 ++--
- .../java/org/mozilla/fenix/FenixApplication.kt   | 16 ++++++++--------
- .../fenix/components/BackgroundServices.kt       |  2 +-
- .../fenix/debugsettings/crashtools/CrashTools.kt |  8 ++++----
- .../debugsettings/navigation/DebugDrawerRoute.kt |  8 ++++----
- .../store/DebugDrawerNavigationMiddleware.kt     |  2 +-
- .../search/BrowserToolbarSearchMiddleware.kt     |  4 ++--
- .../java/org/mozilla/fenix/utils/Settings.kt     |  4 ++--
- 8 files changed, 26 insertions(+), 26 deletions(-)
-
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
 index ad28bfb8c8ff..3f3a29843fcb 100644
 --- a/mobile/android/fenix/app/build.gradle
@@ -199,28 +189,4 @@ index 788cee797c10..61fb08c6e103 100644
  
              "about:addons" -> {
                  navController.navigate(
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483..1b4526fd7e 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -607,7 +607,7 @@ class Settings(
- 
-     var crashReportChoice by stringPreference(
-         appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
--        default = CrashReportOption.Ask.toString(),
-+        default = CrashReportOption.Never.toString(),
-     )
- 
-     val isRemoteDebuggingEnabled by booleanPreference(
-@@ -1019,7 +1019,7 @@ class Settings(
-      */
-     var crashPullNeverShowAgain: Boolean by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_crash_pull_never_show_again),
--        default = false,
-+        default = true,
-     )
- 
-     @VisibleForTesting
 -- 
-2.53.0
-

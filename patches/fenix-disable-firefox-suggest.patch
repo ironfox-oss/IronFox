@@ -1,18 +1,13 @@
-From 3fd4d9559b1bae6eaced62ea83dc22dbd4c4df97 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 04:11:12 +0000
-Subject: [PATCH] fix: Disable Firefox Suggest by default, remove unwanted
- Firefox Suggest UI elements, and ensure that Fsuggestions from Firefox
- Suggest are only queried if suggestions are actually enabled by the user
+Subject: [PATCH] feat: Disable Firefox Suggest
+
+Disables Firefox Suggest by default, removes unwanted Firefox Suggest UI elements, and ensure that suggestions from Firefox Suggest are
+only queried if the user actually enables suggestions
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- .../java/org/mozilla/fenix/FenixApplication.kt     |  4 ++--
- .../SearchSuggestionsProvidersBuilder.kt           | 14 +++++++-------
- .../fenix/settings/search/SearchEngineFragment.kt  |  2 +-
- .../main/java/org/mozilla/fenix/utils/Settings.kt  |  6 +++---
- 4 files changed, 13 insertions(+), 13 deletions(-)
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index 8dd1374d2d94f..bd1322dfc5ab3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
@@ -115,28 +110,4 @@ index c0fb12426e4d..dd229dcd1875 100644
          }
          requirePreference<SwitchPreference>(R.string.pref_key_show_nonsponsored_suggestions).apply {
              isVisible = context.settings().enableFxSuggest
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483..5babad2aa6 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2672,7 +2672,7 @@ class Settings(
-     var showSponsoredSuggestions by lazyFeatureFlagBooleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_show_sponsored_suggestions),
-         defaultValue = { enableFxSuggest },
--        featureFlag = FeatureFlags.FX_SUGGEST,
-+        featureFlag = false,
-     )
- 
-     /**
-@@ -2683,7 +2683,7 @@ class Settings(
-     @Suppress("DEPRECATION")
-     var showNonSponsoredSuggestions by lazyFeatureFlagBooleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_show_nonsponsored_suggestions),
--        defaultValue = { enableFxSuggest },
-+        defaultValue = { false },
-         featureFlag = FeatureFlags.FX_SUGGEST,
-     )
- 
 -- 
-2.53.0
-

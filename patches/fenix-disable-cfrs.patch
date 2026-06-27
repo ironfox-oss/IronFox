@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sat, 14 Feb 2026 04:05:55 +0000
+Subject: [PATCH] feat: Disable contextual feature recommendations (CFRs)
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index e1eedc43d242..34be9c5507c7 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -361,7 +361,7 @@ class Settings(
+     )
+ 
+     val canShowCfr: Boolean
+-        get() = (System.currentTimeMillis() - lastCfrShownTimeInMillis) > THREE_DAYS_MS
++        get() = false
+ 
+     val cfrPopupsEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_cfr_popups_enabled),
+-- 

@@ -1,3 +1,10 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sat, 27 Jun 2026 20:11:41 +0000
+Subject: [PATCH] feat: Disable AI Controls
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 index 742522506d..d881cfe5a6 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
@@ -11,16 +18,4 @@ index 742522506d..d881cfe5a6 100644
                  <data android:host="settings_delete_browsing_data"/>
                  <data android:host="settings_logins"/>
                  <data android:host="settings_notifications"/>
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483..f15c7488c1 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2769,7 +2769,7 @@ class Settings(
- 
-     var aiControlsFeatureFlagEnabled by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_ai_controls),
--        default = true,
-+        default = false,
-     )
- 
-     var importBookmarksFeatureFlagEnabled by booleanPreference(
+-- 

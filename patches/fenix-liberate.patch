@@ -1,20 +1,12 @@
-From 56d6d6bcf2da868fb5f39e736b49a071e6a7ad5e Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 03:35:42 +0000
-Subject: [PATCH] fix: Remove proprietary, tracking, and other unwanted
- libraries from Fenix
+Subject: [PATCH] feat: Liberate Fenix
+
+Removes proprietary, tracking, and other unwanted libraries/functionality from Fenix
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- mobile/android/fenix/app/build.gradle         | 20 +++++------
- mobile/android/fenix/app/proguard-rules.pro   |  4 +--
- .../fenix/app/src/main/AndroidManifest.xml    | 14 ++++----
- .../mozilla/fenix/components/Components.kt    | 36 +++++++++----------
- .../settings/SecretDebugSettingsFragment.kt   |  4 +--
- .../fenix/settings/SettingsFragment.kt        |  2 +-
- .../java/org/mozilla/fenix/utils/Settings.kt  |  2 +-
- 7 files changed, 46 insertions(+), 46 deletions(-)
-
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
 index ad28bfb8c8ff..baa5656a3613 100644
 --- a/mobile/android/fenix/app/build.gradle
@@ -416,19 +408,4 @@ index f6ccbddae057..1c910e84017d 100644
                  utmTerm: ${settings.utmTerm}
                  utmMedium: ${settings.utmMedium}
                  utmSource: ${settings.utmSource}
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483b7..1e9f892b6018 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2293,7 +2293,7 @@ class Settings(
-      */
-     var shouldShowMarketingOnboarding by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
--        default = true,
-+        default = false,
-     )
- 
-     val shouldUseComposableToolbar = true
 -- 
-2.53.0
-

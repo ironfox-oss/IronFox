@@ -54,14 +54,6 @@ categories:
       and simplify or declutter interface elements to enhance user clarity and recognition.
 
 patches:
-  # Accessibility
-  - file: "fenix-force-enable-zoom-by-default.patch"
-    name: "Enable Universal Zoom"
-    description: "Allows zoom on all websites, even if the website tries to block it, by default"
-    reason: "To improve accessibility by overriding website zoom restrictions."
-    effect: "Users can zoom on all websites, even those trying to block zooming."
-    category: "Accessibility"
-
   # Build System
   - file: "a-c-allow-build-date-override.patch"
     name: "Allow overriding the build date"
@@ -320,13 +312,6 @@ patches:
     effect: "Ensures user configurations remain consistent and are controlled locally."
     category: "Mozilla"
 
-  - file: "fenix-disable-nimbus-rollouts.patch"
-    name: "Disable Nimbus Rollouts (Fenix)"
-    description: "Prevents A/B testing via Nimbus within Firefox for Android."
-    reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
-    effect: "Ensures user configurations remain consistent and are controlled locally."
-    category: "Mozilla"
-
   - file: "gecko-disable-nimbus.patch"
     name: "Disable Nimbus Experimentation (Gecko)"
     description: "Prevents A/B testing and remote configuration of settings via Nimbus within Gecko."
@@ -339,20 +324,6 @@ patches:
     description: "Disables Firefox Suggest functionality."
     reason: "To remove sponsored suggestions, and to prevent sending address bar data to Mozilla."
     effect: "Cleaner, more private address bar experience, without web suggestions."
-    category: "Mozilla"
-
-  - file: "fenix-disable-firefox-relay.patch"
-    name: "Disable Firefox Relay"
-    description: "Disables Firefox Relay functionality."
-    reason: "To reduce reliance/integration with external Mozilla services, and provide users with more control over whether they wish to use this functionality."
-    effect: "Cleaner browsing experience, with more control provided to users."
-    category: "Mozilla"
-
-  - file: "fenix-remove-tos-privacy-policy.patch"
-    name: "Remove ToS and Privacy Policy"
-    description: "Removes unwanted elements related to Mozilla's terms of service and privacy policy."
-    reason: "To prevent confusing users and to remove unwanted Mozilla branding."
-    effect: "Users are provided with a cleaner browsing experience."
     category: "Mozilla"
 
   - file: "fenix-disable-ai-controls.patch"
@@ -418,9 +389,9 @@ patches:
     effect: "Users have improved privacy, security, and control over their extensions."
     category: "Mozilla"
 
-  - file: "fenix-disable-nags.patch"
-    name: "Disable Nags"
-    description: "Disables Contextual Feature Recommendations, prompts encouraging users to set the browser as the system default, and other promotional messaging."
+  - file: "fenix-disable-cfrs.patch"
+    name: "Disable Contextual Feature Recommendations (CFRs)"
+    description: "Disables contextual feature recommendations and other promotional messaging."
     reason: "To remove promotional suggestions for Firefox features, and to eliminate unnecessary engagement messages that may interrupt user workflows."
     effect: "Provides a cleaner interface without contextual prompts, recommendations, and unwanted nags."
     category: "Mozilla"
@@ -475,45 +446,6 @@ patches:
     effect: "Adds a selection of carefully selected DoH providers for the users to choose from."
     category: "Privacy"
 
-  - file: "fenix-enable-doh-via-mullvad-base-by-default.patch"
-    name: "Enable DNS over HTTPS (via Mullvad (Base)) by default"
-    description: "Enables DNS over HTTPS without fallback by default, and sets Mullvad (Base) as the default provider."
-    reason: "To harden DoH out of the box."
-    effect: "Improves DNS privacy and security by strengthening DoH's default protection level."
-    category: "Privacy"
-
-  - file: "fenix-disable-autocomplete-by-default.patch"
-    name: "Disable Autocomplete"
-    description: "Disables URL autocomplete by default."
-    reason: "To prevent accidental navigation to incorrect/undesired websites."
-    effect: "Provides users with more control over the URL bar, and ensures that users only navigate to their intended location."
-    category: "Privacy"
-
-  - file: "fenix-disable-password-mgr-and-autofill-by-default.patch"
-    name: "Disable Password Manager and Address/Credit Card Autofill"
-    description: |
-      Disables password manager and address/credit card autofill by default. Using the built-in
-      password manager in a browser is discouraged. Prefer using external, more secure
-      password managers, such as Bitwarden.
-    reason: "To prevent automatic storage of sensitive credentials in the browser."
-    effect: |
-      Reduces risk of credential exposure.
-    category: "Privacy"
-
-  - file: "fenix-disable-trending-search-suggestions-by-default.patch"
-    name: "Disable Trending Search Suggestions"
-    description: "Disables trending search suggestions by default."
-    reason: "Reduces unwanted network activity and connections to third party services."
-    effect: "Cleaner, more private address bar experience, without trending search suggestions."
-    category: "Privacy"
-
-  - file: "fenix-disable-search-suggestions-by-default.patch"
-    name: "Disable Search Suggestions"
-    description: "Disables search suggestions by default."
-    reason: "To prevent automatic submission of text entered in the URL bar to search providers."
-    effect: "Improves privacy by reducing data shared with search engines."
-    category: "Privacy"
-
   - file: "fenix-sanitize-data-on-exit-by-default.patch"
     name: "Sanitize Data on Exit"
     description: "Clears browsing data on exit by default"
@@ -526,13 +458,6 @@ patches:
     description: "Adds custom privacy-focused search engines."
     reason: "To provide alternatives to tracking-heavy default search engines."
     effect: "Users can easily use privacy-respecting search engines."
-    category: "Privacy"
-
-  - file: "fenix-enable-etp-strict.patch"
-    name: "Enable ETP Strict"
-    description: "Sets Enhanced Tracking Protection to Strict mode by default."
-    reason: "To provide stronger protection against tracking without user configuration."
-    effect: "Blocks more trackers and fingerprinting scripts out of the box, strengthens state partitioning, and enables protection against various other methods of cross-site tracking."
     category: "Privacy"
 
   - file: "gecko-configure-ublock-origin.patch"
@@ -670,13 +595,6 @@ patches:
     effect: "Users are provided with a more secure PDF viewing experience, while still enjoying it from the comfort of their browser."
     category: "Security"
 
-  - file: "fenix-enable-https-only-mode-by-default.patch"
-    name: "Enable HTTPS-Only Mode"
-    description: "Enables HTTPS-only mode by default."
-    reason: "To encrypt connections whenever possible."
-    effect: "Improves privacy and security by preventing unencrypted HTTP connections."
-    category: "Security"
-
   - file: "gecko-prevent-extensions-from-changing-browser-settings.patch"
     name: "Prevent Extensions From Changing Browser Settings"
     description: "Prevents extensions from changing various browser settings."
@@ -739,20 +657,6 @@ patches:
     category: "User Control"
 
   # User Experience
-  - file: "fenix-default-site-permissions.patch"
-    name: "Default Site Permissions"
-    description: "Configures IronFox's default site permissions. Currently blocks Autoplay, Geolocation prompts, and Notification prompts by default."
-    reason: "To prevent websites from prompting users to access Geolocation and send Notifications, and to prevent unwanted audio/video playback."
-    effect: "Improves user experience, and blocking Autoplay reduces bandwidth usage."
-    category: "User Experience"
-
-  - file: "fenix-display-extensions-in-custom-tabs-menu-by-default.patch"
-    name: "Display extensions in the custom tabs menu by default"
-    description: "Displays the status of extensions in the menu for custom tabs."
-    reason: "To improve freedom/control for users, by allowing them to see the status of extensions at any time, even when running with a custom tab."
-    effect: "Users are provided with more control over their browsing experience."
-    category: "User Interface"
-
   - file: "gecko-ironfox-fingerprinting-protection-overrides.patch"
     name: "IronFox Fingerprinting Protection (FPP) Overrides"
     description: "Adds support for an internal list that disables specific fingerprinting protections as needed on a per-site basis."
@@ -815,13 +719,6 @@ patches:
     description: "Enables the UI to control Cookie Banner Reduction per-site in standard browsing windows."
     reason: "The ability to control Cookie Banner Reduction per-site is typically only displayed in private browsing windows."
     effect: "Users are provided with more control by allowing them to control Cookie Banner Reduction on a per-site basis."
-    category: "User Interface"
-
-  - file: "fenix-disable-history-and-recent-search-suggestions-by-default.patch"
-    name: "Disable Historical and Recent Search Suggestions"
-    description: "Disables recent and historical search suggestions by default."
-    reason: "To provide users with a cleaner, focused URL bar and browsing experience."
-    effect: "Cleaner interface so that users can focus on where they want to go now, instead of where they went in the past."
     category: "User Interface"
 
   - file: "gecko-expose-hidden-aboutsupport-settings.patch"

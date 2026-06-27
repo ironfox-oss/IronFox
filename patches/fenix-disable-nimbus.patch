@@ -1,18 +1,12 @@
-From 9c9d314070b46893e93d23f29f6e725343e746d9 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 05:22:45 +0000
-Subject: [PATCH] fix: Disable Nimbus Experimentation and A/B testing
+Subject: [PATCH] feat: Disable Nimbus
+
+Disables Nimbus Experimentation and A/B testing
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- mobile/android/fenix/app/nimbus.fml.yaml       | 18 +++++++++---------
- .../java/org/mozilla/fenix/FenixApplication.kt | 10 +++++-----
- .../java/org/mozilla/fenix/HomeActivity.kt     |  2 +-
- .../mozilla/fenix/settings/SettingsFragment.kt |  6 +++---
- .../DefaultLocaleSettingsController.kt         |  6 +++---
- .../java/org/mozilla/fenix/utils/Settings.kt   |  4 ++--
- 6 files changed, 23 insertions(+), 23 deletions(-)
-
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
 index 8c61dbb0291c..fbe56f557ec0 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
@@ -136,19 +130,4 @@ index 4cd5212dea9b..3b4ada79b960 100644
          recreateActivity()
      }
  
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483..3a43fec1a0 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -422,7 +422,7 @@ class Settings(
- 
-     var nimbusExperimentsFetched by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_nimbus_experiments_fetched),
--        default = false,
-+        default = true,
-     )
- 
-     var utmParamsKnown by booleanPreference(
 -- 
-2.53.0
-

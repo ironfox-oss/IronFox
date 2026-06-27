@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sat, 27 Jun 2026 20:11:41 +0000
+Subject: [PATCH] feat: Disable telemetry
+
+Disables telemetry at build-time and removes various data reporting mechanisms
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
 index ad28bfb8c8ff..4f3136c67a91 100644
 --- a/mobile/android/fenix/app/build.gradle
@@ -120,16 +129,4 @@ index 83a940b91e88..41b1288c9280 100644
  
  fun Context.asActivity() = (this as? ContextThemeWrapper)?.baseContext as? Activity
      ?: this as? Activity
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483..c47314c0cf 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -617,7 +617,7 @@ class Settings(
- 
-     var isTelemetryEnabled by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_telemetry),
--        default = true,
-+        default = false,
-     )
- 
-     var isMarketingTelemetryEnabled by booleanPreference(
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sat, 27 Jun 2026 20:11:41 +0000
+Subject: [PATCH] feat: Disable Firefox Sync engines by default
+
+Disables Firefox Sync engines by default, to ensure that users are in control and can decide what data they'd like to sync with Firefox Sync, if any
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
 index 76ab6e5b0072..5ae6093e034d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
@@ -36,19 +45,6 @@ index 76ab6e5b0072..5ae6093e034d 100644
 +            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Addresses) { false }
          }
      }
- 
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483..428179fc63 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2094,7 +2094,7 @@ class Settings(
-     @Suppress("DEPRECATION")
-     var isAddressSyncEnabled by featureFlagBooleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_address_sync),
--        defaultValue = true,
-+        defaultValue = false,
-         featureFlag = isAddressFeatureEnabled(appContext),
-     )
  
 diff --git a/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml
 index 300331efb528..f1cbf8ea995b 100644
@@ -99,3 +95,4 @@ index 300331efb528..f1cbf8ea995b 100644
              android:visible="false"
              android:key="@string/pref_key_sync_address"
              android:layout="@layout/checkbox_left_preference"
+-- 

@@ -1,49 +1,16 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483b7..2450c79f10ea 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1391,7 +1391,7 @@ class Settings(
- 
-     var shouldDeleteBrowsingDataOnQuit by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_delete_browsing_data_on_quit),
--        default = false,
-+        default = true,
-     )
- 
-     var deleteOpenTabs by booleanPreference(
-@@ -1541,8 +1541,17 @@ class Settings(
-      * @param type The [DeleteBrowsingDataOnQuitType] to check.
-      * @return `true` if the data type is set to be deleted on quit, `false` otherwise.
-      */
--    fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean =
--        preferences.getBoolean(type.getPreferenceKey(appContext), false)
-+    fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean {
-+        val defaultValue = when(type) {
-+            DeleteBrowsingDataOnQuitType.CACHE -> true
-+            DeleteBrowsingDataOnQuitType.DOWNLOADS -> true
-+            DeleteBrowsingDataOnQuitType.HISTORY -> true
-+            DeleteBrowsingDataOnQuitType.TABS -> true
-+            else -> false
-+        }
-+
-+        return preferences.getBoolean(type.getPreferenceKey(appContext), defaultValue)
-+    }
- 
-     /**
-      * Sets whether a specific type of browsing data should be deleted on quit.
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sat, 27 Jun 2026 20:11:41 +0000
+Subject: [PATCH] feat: Sanitize data on exit by default
+
+Ensures the UI reflects our values to sanitize data on exit by default
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
-index a5cc8cabb689..f38c9f61c4f2 100644
+index e0967307ccbc..561f423c1cc8 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
-@@ -5,7 +5,7 @@
- <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:app="http://schemas.android.com/apk/res-auto">
-     <SwitchPreference
--        android:defaultValue="false"
-+        android:defaultValue="true"
-         android:key="@string/pref_key_delete_browsing_data_on_quit"
-         android:summary="@string/preference_summary_delete_browsing_data_on_quit_2"
-         android:title="@string/preferences_delete_browsing_data_on_quit" />
 @@ -16,10 +16,12 @@
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_empty">
@@ -73,3 +40,4 @@ index a5cc8cabb689..f38c9f61c4f2 100644
              android:key="@string/pref_key_delete_downloads_on_quit"
              android:layout="@layout/checkbox_left_preference"
              android:title="@string/preferences_delete_browsing_data_downloads" />
+-- 

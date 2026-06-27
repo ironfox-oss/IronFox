@@ -1,17 +1,32 @@
-From 75a3b7b848d59f749f5e977550bd84247024bacb Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 05:35:54 +0000
-Subject: [PATCH] feat: add support for IronFox UI settings
+Subject: [PATCH] feat: IronFox UI settings
+
+Adds support for IronFox-specific UI settings
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- .../java/org/mozilla/fenix/components/Core.kt |  2 ++
- .../fenix/settings/SettingsFragment.kt        | 15 ++++++++++++++
- .../java/org/mozilla/fenix/utils/Settings.kt  |  4 ++++
- .../app/src/main/res/navigation/nav_graph.xml | 11 ++++++++++
- .../app/src/main/res/xml/preferences.xml      | 20 +++++++++++++++++--
- 5 files changed, 50 insertions(+), 2 deletions(-)
-
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 7a166ddc83aae..07836fc3392b4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -145,6 +145,7 @@ import java.util.Date
+ import java.util.concurrent.TimeUnit
+ import kotlin.math.roundToLong
+ import mozilla.components.support.AppServicesInitializer.Config as AppServicesConfig
++import org.ironfoxoss.ironfox.utils.IFPrefs
+ 
+ private const val RAM_THRESHOLD_MEGABYTES = 1024
+ private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
+@@ -240,6 +241,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+             // Start loading the SharedPreferences file from disk on a background thread immediately.
+             applicationScope.launch(IO) {
+                 applicationContext.getSharedPreferences(Settings.FENIX_PREFERENCES, MODE_PRIVATE)
++                IFPrefs.setPrefs(applicationContext)
+             }
+ 
+             // Initialization is split into two phases based on if libmegazord is fully initialized.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 index 5cc1da059f7d..517c235062dd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
@@ -171,5 +186,3 @@ index 243eddddd9a3..5963a7073099 100644
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
 -- 
-2.53.0
-

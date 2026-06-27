@@ -1,3 +1,10 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sat, 27 Jun 2026 20:11:41 +0000
+Subject: [PATCH] feat: Disable Contile
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
 index 579db37cf75a..e2869c0a37e3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
@@ -10,16 +17,4 @@ index 579db37cf75a..e2869c0a37e3 100644
              isChecked = fenixSettings.showContileFeature
              onPreferenceChangeListener = createMetricPreferenceChangeListener("contile")
          }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483..09a6f1582c 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2188,7 +2188,7 @@ class Settings(
-      */
-     var showContileFeature by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
--        default = true,
-+        default = false,
-     )
- 
-     /**
+-- 
