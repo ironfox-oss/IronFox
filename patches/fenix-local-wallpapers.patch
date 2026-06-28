@@ -1,5 +1,14 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 28 Jun 2026 05:34:22 +0000
+Subject: [PATCH] feat: Local wallpapers
+
+Adds support for local wallpapers, to prevent downloading them from Mozilla servers upon each launch
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
-index ab7ba29ba34c..dfe63e193aa5 100644
+index ab7ba29ba34c..08b2a72aaca7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
 @@ -6,11 +6,11 @@ package org.mozilla.fenix.wallpapers
@@ -9,11 +18,11 @@ index ab7ba29ba34c..dfe63e193aa5 100644
 -import mozilla.components.concept.fetch.Client
 -import mozilla.components.concept.fetch.Request
 +import android.content.res.Resources
-+import org.ironfoxoss.ironfox.utils.FenixStringsDictionary
++// import mozilla.components.concept.fetch.Request
  import org.json.JSONArray
  import org.json.JSONObject
 -import org.mozilla.fenix.BuildConfig
-+// import org.mozilla.fenix.BuildConfig
++import org.mozilla.fenix.R
  import org.mozilla.fenix.utils.toHexColor
  import java.text.SimpleDateFormat
  import java.util.Date
@@ -41,7 +50,7 @@ index ab7ba29ba34c..dfe63e193aa5 100644
 -                JSONObject(json).parseAsWallpapers()
 -            }
 -        }.getOrElse { listOf() }
-+        val json = resources.openRawResource(FenixStringsDictionary.wallpapersJson).bufferedReader()
++        val json = resources.openRawResource(R.raw.wallpapers).bufferedReader()
 +            .use { it.readText() }
 +        return@withContext JSONObject(json).parseAsWallpapers()
      }
@@ -134,3 +143,4 @@ index a6f1b2e91cad..6f407dd84354 100644
              ) {
                  selectWallpaper(wallpaper)
                  dispatchDownloadState(wallpaper, Wallpaper.ImageFileState.Downloaded)
+-- 
