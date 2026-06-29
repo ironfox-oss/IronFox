@@ -153,7 +153,7 @@ object FenixSettingsVisibilityManager {
    * @param prefFragment The preference fragment from where the preference should be displayed
    */
   internal fun displayPreference(
-    prefKey: String,
+    prefKey: Int,
     prefFragment: PreferenceFragmentCompat,
   ) {
     val preference = prefFragment.findPreference<Preference>(prefKey)
@@ -167,7 +167,7 @@ object FenixSettingsVisibilityManager {
    * @param prefFragment The preference fragment from where the preference should be removed
    */
   internal fun hidePreference(
-    prefKey: String,
+    prefKey: Int,
     prefFragment: PreferenceFragmentCompat,
   ) {
     val preference = prefFragment.findPreference<Preference>(prefKey)
