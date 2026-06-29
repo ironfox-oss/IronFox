@@ -2,47 +2,43 @@
 
 # Aliases
 [attr]lfs filter=lfs diff=lfs merge=lfs -text
-[attr]crlf eol=crlf
+[attr]crlf eol=crlf* text=auto eol=lf
 
-# Normalize
-* text=auto eol=lf
+# LFS
+test/ironfox-nightly.aab    lfs
 
-# Windows
-# *.bat crlf
+*.json                      linguist-detectable
+*.yaml                      linguist-detectable
+*.xml                       linguist-detectable
 
-# LFS, binary files
-test/ironfox-nightly.aab lfs
+# lowercase only
+*.build                     gitlab-language=python
+*.cfg                       gitlab-language=javascript
+*.conf                      gitlab-language=python
+*.configure                 gitlab-language=python
+*.ftl                       gitlab-language=ini
+*.jsonc                     gitlab-language=json
+*.mn                        gitlab-language=makefile
+*.mozconfig                 gitlab-language=shell
+*.properties                gitlab-language=ini
+*.yml                       gitlab-language=yaml
+.git*                       gitlab-language=shell
+.gitlab-ci.yml              gitlab-language=yaml
+.npmrc*                     gitlab-language=ini
+machrc*                     gitlab-language=ini
 
-# GitLab: syntax highlight
-*.build             gitlab-language=python
-*.cfg               gitlab-language=javascript
-*.code-workspace    gitlab-language=json
-*.conf              gitlab-language=python
-*.configure         gitlab-language=python
-*.ftl               gitlab-language=ini
-*.jsonc             gitlab-language=json
-*.mn                gitlab-language=makefile
-*.mozconfig         gitlab-language=shell
-*.properties        gitlab-language=ini
-*.yml               gitlab-language=yaml
-.npmrc*             gitlab-language=ini
-machrc*             gitlab-language=ini
-
-# GitHub & Codeberg: languages and diffs
-*.build             linguist-language=PYTHON
-*.cfg               linguist-language=JAVASCRIPT
-*.code-workspace    linguist-language=JSON
-*.conf              linguist-language=PYTHON
-*.configure         linguist-language=PYTHON
-*.ftl               linguist-language=INI
-*.jsonc             linguist-language=JSON
-*.mn                linguist-language=MAKEFILE
-*.mozconfig         linguist-language=SHELL
-*.properties        linguist-language=INI
-*.yml               linguist-language=YAML
-.npmrc*             linguist-language=INI
-machrc*             linguist-language=INI
-
-# Statistics
-*.json  linguist-detectable
-# *.md  linguist-detectable
+# SHELL -> Shell, json -> JSON
+*.build                     linguist-language=PYTHON
+*.cfg                       linguist-language=JavaScript
+*.conf                      linguist-language=PYTHON
+*.configure                 linguist-language=PYTHON
+*.ftl                       linguist-language=INI
+*.jsonc                     linguist-language=JSON
+*.mn                        linguist-language=MAKEFILE
+*.mozconfig                 linguist-language=SHELL
+*.properties                linguist-language=INI
+*.yml                       linguist-language=YAML
+.git*                       linguist-language=Shell
+.gitlab-ci.yml              linguist-language=YAML
+.npmrc*                     linguist-language=INI
+machrc*                     linguist-language=INI
