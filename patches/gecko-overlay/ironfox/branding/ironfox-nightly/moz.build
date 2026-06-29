@@ -1,5 +1,4 @@
-
 DIRS += [
-    "content",
-    "locales",
+  "content",
+  "locales",
 ]

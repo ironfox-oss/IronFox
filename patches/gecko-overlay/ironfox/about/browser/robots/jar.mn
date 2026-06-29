@@ -1,8 +1,7 @@
-
 browser.jar:
-    content/browser/aboutRobots.css                     (aboutRobots.css)
-    content/browser/aboutRobots.js                      (aboutRobots.js)
-    content/browser/aboutRobots.xhtml                   (aboutRobots.xhtml)
-    content/browser/aboutRobots-icon.png                (aboutRobots-icon.png)
-    content/browser/robot.ico                           (robot.ico)
-    content/browser/static-robot.png                    (static-robot.png)
+  content/browser/aboutRobots.css       (aboutRobots.css)
+  content/browser/aboutRobots.js        (aboutRobots.js)
+  content/browser/aboutRobots.xhtml     (aboutRobots.xhtml)
+  content/browser/aboutRobots-icon.png  (aboutRobots-icon.png)
+  content/browser/robot.ico             (robot.ico)
+  content/browser/static-robot.png      (static-robot.png)

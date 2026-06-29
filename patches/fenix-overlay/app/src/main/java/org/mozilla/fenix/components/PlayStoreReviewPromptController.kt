@@ -10,34 +10,34 @@ import org.mozilla.fenix.components.ReviewPromptAttemptResult.Unknown
 import java.util.Date
 
 class PlayStoreReviewPromptController(
-    private val numberOfAppLaunches: () -> Int,
+  private val numberOfAppLaunches: () -> Int,
 ) {
 
-    suspend fun tryPromptReview(
-        activity: Activity,
-        onNotDisplayed: () -> Unit = {},
-        onError: () -> Unit = {},
-    ) {}
+  suspend fun tryPromptReview(
+    activity: Activity,
+    onNotDisplayed: () -> Unit = {},
+    onError: () -> Unit = {},
+  ) {}
 
-    fun tryLaunchPlayStoreReview(activity: Activity) {}
+  fun tryLaunchPlayStoreReview(activity: Activity) {}
 }
 
 enum class ReviewPromptAttemptResult {
-    NotDisplayed,
-    Displayed,
-    Error,
-    Unknown,
-    ;
+  NotDisplayed,
+  Displayed,
+  Error,
+  Unknown,
+  ;
 
-    companion object {
-        fun from(reviewInfoAsString: String): ReviewPromptAttemptResult {
-            return Displayed
-        }
+  companion object {
+    fun from(reviewInfoAsString: String): ReviewPromptAttemptResult {
+      return Displayed
     }
+  }
 }
 
 fun recordReviewPromptEvent(
-    promptAttemptResult: ReviewPromptAttemptResult,
-    numberOfAppLaunches: Int,
-    now: Date,
+  promptAttemptResult: ReviewPromptAttemptResult,
+  numberOfAppLaunches: Int,
+  now: Date,
 ) {}

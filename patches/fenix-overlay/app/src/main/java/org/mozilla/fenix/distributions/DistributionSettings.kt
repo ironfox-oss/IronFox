@@ -3,15 +3,15 @@
 package org.mozilla.fenix.distributions
 
 interface DistributionSettings {
-    fun getDistributionId(): String
-    fun saveDistributionId(id: String)
-    fun setMarketingTelemetryPreferences()
+  fun getDistributionId(): String
+  fun saveDistributionId(id: String)
+  fun setMarketingTelemetryPreferences()
 }
 
 class DefaultDistributionSettings(
-    private val settings: Any?,
+  private val settings: Any?,
 ) : DistributionSettings {
-    override fun getDistributionId() = "Mozilla"
-    override fun saveDistributionId(id: String) {}
-    override fun setMarketingTelemetryPreferences() {}
+  override fun getDistributionId() = "Mozilla"
+  override fun saveDistributionId(id: String) {}
+  override fun setMarketingTelemetryPreferences() {}
 }

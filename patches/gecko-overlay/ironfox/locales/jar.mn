@@ -1,5 +1,5 @@
 #filter substitution
 
 [localization] @AB_CD@.jar:
-  browser                                          (%browser/**/*.ftl)
-  ironfox                                          (%ironfox/**/*.ftl)
+  browser  (%browser/**/*.ftl)
+  ironfox  (%ironfox/**/*.ftl)

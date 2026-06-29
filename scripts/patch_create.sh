@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    bash -x $(dirname $0)/env.sh
+  bash -x $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -28,27 +28,27 @@ echo_green_text "2. Gecko - ${IRONFOX_GECKO}"
 echo_red_text "3. Glean - ${IRONFOX_GLEAN}"
 read -p 'Please enter your desired project: ' PROJECT
 case ${PROJECT} in
-	"application services" | "application Services" | "Application services" | "Application Services" | "APPLICATION SERVICES" | "application-services" | "app-services" | "as" | "AS" | 1)
-		pushd "${IRONFOX_AS}"
-        readonly PROJECT='AS'
-		;;
+  "application services" | "application Services" | "Application services" | "Application Services" | "APPLICATION SERVICES" |
+   "application-services" | "app-services" | "as" | "AS" | 1)
+    pushd "${IRONFOX_AS}"
+    readonly PROJECT='AS'
+    ;;
 
-	"gecko" | "Gecko" | "GECKO" | "firefox" | "Firefox" | "FIREFOX" | "mozilla-central" | "mozilla-release" | 2)
-		pushd "${IRONFOX_GECKO}"
-        readonly PROJECT='gecko'
-		;;
+  "gecko" | "Gecko" | "GECKO" | "firefox" | "Firefox" | "FIREFOX" | "mozilla-central" | "mozilla-release" | 2)
+    pushd "${IRONFOX_GECKO}"
+    readonly PROJECT='gecko'
+    ;;
 
-	"glean" | "Glean" | "GLEAN" | 3)
-		pushd "${IRONFOX_GLEAN}"
-        readonly PROJECT='glean'
-		;;
+  "glean" | "Glean" | "GLEAN" | 3)
+    pushd "${IRONFOX_GLEAN}"
+    readonly PROJECT='glean'
+    ;;
 
-	*)
-		echo_red_text "Invalid option"
-		exit 1
-		;;
+  *)
+    echo_red_text "Invalid option"
+    exit 1
+    ;;
 esac
-
 
 echo_green_text "What would you like to name your patch?"
 echo_red_text "NOTE: Patch names should be prefixed with the component they're targetting, ex:"
@@ -62,22 +62,22 @@ read -p 'Please enter your desired patch name: ' PATCH_NAME
 
 # Ensure the patch doesn't already exist
 if [[ -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch" ]]; then
-    echo_red_text "WARNING: A Patch with your chosen name already exists"
-    read -p 'Are you sure you want to continue? (y/n): ' OVERWRITE
-    case ${OVERWRITE} in
-	"y" | "Y" | "yes" | "Yes" | "YES")
-		echo_green_text "Removing ${IRONFOX_PATCHES}/${PATCH_NAME}.patch..."
-        rm -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch"
-		;;
+  echo_red_text "WARNING: A Patch with your chosen name already exists"
+  read -p 'Are you sure you want to continue? (y/n): ' OVERWRITE
+  case ${OVERWRITE} in
+  "y" | "Y" | "yes" | "Yes" | "YES")
+    echo_green_text "Removing ${IRONFOX_PATCHES}/${PATCH_NAME}.patch..."
+    rm -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch"
+    ;;
 
-	"n" | "N" | "no" | "No" | "NO")
-		read -p 'Please enter a different patch name: ' PATCH_NAME
-		;;
+  "n" | "N" | "no" | "No" | "NO")
+    read -p 'Please enter a different patch name: ' PATCH_NAME
+    ;;
 
-	*)
-		echo_red_text "Invalid option"
-		exit 1
-		;;
+  *)
+    echo_red_text "Invalid option"
+    exit 1
+    ;;
 esac
 fi
 

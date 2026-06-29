@@ -5,21 +5,21 @@ RUN dnf update -y --refresh
 
 # Install our dependencies...
 RUN dnf install -y \
-    cmake \
-    clang \
-    gawk \
-    git \
-    jq \
-    m4 \
-    make \
-    nasm \
-    ninja-build \
-    patch \
-    perl \
-    shasum \
-    xz \
-    yq \
-    zlib-devel
+  cmake \
+  clang \
+  gawk \
+  git \
+  jq \
+  m4 \
+  make \
+  nasm \
+  ninja-build \
+  patch \
+  perl \
+  shasum \
+  xz \
+  yq \
+  zlib-devel
 
 # cd into working directory
 WORKDIR /app

@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    bash -x $(dirname $0)/env.sh
+  bash -x $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -13,35 +13,35 @@ source "${IRONFOX_UTILS}"
 
 # Set-up target parameters
 if [[ -z "${1+x}" ]]; then
-    echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
-    exit 1
+  echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
+  exit 1
 fi
 
 readonly target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
 if [[ -z "${2+x}" ]]; then
-    readonly project='fenix'
+  readonly project='fenix'
 else
-    readonly project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+  readonly project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 fi
 
 # Build IronFox
 readonly IRONFOX_FROM_BUILD=1
 export IRONFOX_FROM_BUILD
 if [[ "${IRONFOX_LOG_BUILD}" == 1 ]]; then
-    readonly BUILD_LOG_FILE="${IRONFOX_LOG_DIR}/build-${target}.log"
+  readonly BUILD_LOG_FILE="${IRONFOX_LOG_DIR}/build-${target}.log"
 
-    # If the log file already exists, remove it
-    if [[ -f "${BUILD_LOG_FILE}" ]]; then
-        rm "${BUILD_LOG_FILE}"
-    fi
+  # If the log file already exists, remove it
+  if [[ -f "${BUILD_LOG_FILE}" ]]; then
+    rm "${BUILD_LOG_FILE}"
+  fi
 
-    # Ensure our log directory exists
-    mkdir -vp "${IRONFOX_LOG_DIR}"
+  # Ensure our log directory exists
+  mkdir -vp "${IRONFOX_LOG_DIR}"
 
-    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}" > >(tee -a "${BUILD_LOG_FILE}") 2>&1
+  bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}" > >(tee -a "${BUILD_LOG_FILE}") 2>&1
 else
-    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}"
+  bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}"
 fi
 
 # We should only try to sign IronFox if we actually built Fenix, so check that first
@@ -51,26 +51,26 @@ if [[ "${project}" == 'fenix' ]] || [[ "${project}" == 'rebuild-ac-core' ]] || [
  [[ "${project}" == 'rebuild-geckoview' ]] || [[ "${project}" == 'rebuild-glean' ]] || [[ "${project}" == 'rebuild-llvm' ]] ||
  [[ "${project}" == 'rebuild-microg' ]] || [[ "${project}" == 'rebuild-nimbus-fml' ]] || [[ "${project}" == 'rebuild-uniffi' ]] ||
  [[ "${project}" == 'rebuild-up-ac' ]] || [[ "${project}" == 'rebuild-wasi' ]]; then
-    readonly IRONFOX_BUILT_FENIX=1
+  readonly IRONFOX_BUILT_FENIX=1
 else
-    readonly IRONFOX_BUILT_FENIX=0
+  readonly IRONFOX_BUILT_FENIX=0
 fi
 
 # Sign IronFox
 if [[ "${IRONFOX_SIGN}" == 1 ]] && [[ "${IRONFOX_BUILT_FENIX}" == 1 ]]; then
-    if [[ "${IRONFOX_LOG_SIGN}" == 1 ]]; then
-        readonly SIGN_LOG_FILE="${IRONFOX_LOG_DIR}/sign.log"
+  if [[ "${IRONFOX_LOG_SIGN}" == 1 ]]; then
+    readonly SIGN_LOG_FILE="${IRONFOX_LOG_DIR}/sign.log"
 
-        # If the log file already exists, remove it
-        if [[ -f "${SIGN_LOG_FILE}" ]]; then
-            rm "${SIGN_LOG_FILE}"
-        fi
-
-        # Ensure our log directory exists
-        mkdir -vp "${IRONFOX_LOG_DIR}"
-
-        bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >(tee -a "${SIGN_LOG_FILE}") 2>&1
-    else
-        bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}"
+    # If the log file already exists, remove it
+    if [[ -f "${SIGN_LOG_FILE}" ]]; then
+      rm "${SIGN_LOG_FILE}"
     fi
+
+    # Ensure our log directory exists
+    mkdir -vp "${IRONFOX_LOG_DIR}"
+
+    bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >(tee -a "${SIGN_LOG_FILE}") 2>&1
+  else
+    bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}"
+  fi
 fi

@@ -7,10 +7,10 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_CI+x}" ]]; then
-    export IRONFOX_CI=1
+  export IRONFOX_CI=1
 fi
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    bash -x "$(realpath $(dirname "$0"))/env.sh"
+  bash -x "$(realpath $(dirname "$0"))/env.sh"
 fi
 source "$(realpath $(dirname "$0"))/env.sh"
 
@@ -23,7 +23,7 @@ source "${IRONFOX_PYENV}"
 
 # Update version name
 "${IRONFOX_SED}" -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_VERSION}\";/g" \
-    ./src/version.ts
+  ./src/version.ts
 
 # Commit changes
 git add src

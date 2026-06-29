@@ -9,36 +9,34 @@ import kotlinx.coroutines.newSingleThreadContext
 import java.util.concurrent.ConcurrentLinkedQueue
 
 internal object Dispatchers {
-    class WaitableCoroutineScope(private val coroutineScope: CoroutineScope) {
-        fun setTestingMode(enabled: Boolean) {}
+  class WaitableCoroutineScope(private val coroutineScope: CoroutineScope) {
+    fun setTestingMode(enabled: Boolean) {}
+    internal fun executeTask(block: suspend CoroutineScope.() -> Unit): Job? = null
+  }
 
-        internal fun executeTask(block: suspend CoroutineScope.() -> Unit): Job? = null
-    }
+  class DelayedTaskQueue {
+    private var queueInitialTasks = false
+    internal val taskQueue: ConcurrentLinkedQueue<() -> Unit> = ConcurrentLinkedQueue()
 
-    class DelayedTaskQueue {
-        private var queueInitialTasks = false
+    fun launch(
+      block: () -> Unit,
+     ) {}
 
-        internal val taskQueue: ConcurrentLinkedQueue<() -> Unit> = ConcurrentLinkedQueue()
+    internal fun flushQueuedInitialTasks() {}
 
-        fun launch(
-            block: () -> Unit,
-        ) {}
+    @Synchronized
+    private fun addTaskToQueue(block: () -> Unit) {}
+  }
 
-        internal fun flushQueuedInitialTasks() {}
+  private val supervisorJob = SupervisorJob()
 
-        @Synchronized
-        private fun addTaskToQueue(block: () -> Unit) {}
-    }
+  @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class, kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+  var API = WaitableCoroutineScope(
+    CoroutineScope(
+      newSingleThreadContext("GleanAPIPool") + supervisorJob,
+    ),
+  )
 
-    private val supervisorJob = SupervisorJob()
-
-    @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class, kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    var API = WaitableCoroutineScope(
-        CoroutineScope(
-            newSingleThreadContext("GleanAPIPool") + supervisorJob,
-        ),
-    )
-
-    @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class, kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    var Delayed = DelayedTaskQueue()
+  @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class, kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+  var Delayed = DelayedTaskQueue()
 }

@@ -1,101 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:moz="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-    <!-- IronFox Settings -->
-    <string name="pref_key_if_preferences" translatable="false">pref_key_if_preferences</string>
-    <string name="pref_key_if_secret" translatable="false">pref_key_if_secret</string>
+ xmlns:tools="http://schemas.android.com/tools">
+  <!-- IronFox Settings -->
+  <string name="pref_key_if_preferences" translatable="false">pref_key_if_preferences</string>
+  <string name="pref_key_if_secret" translatable="false">pref_key_if_secret</string>
 
-    <!-- IronFox onboarding -->
-    <string name="pref_key_if_onboarding_completed" translatable="false">pref_key_if_onboarding_completed</string>
+  <!-- IronFox onboarding -->
+  <string name="pref_key_if_onboarding_completed" translatable="false">pref_key_if_onboarding_completed</string>
 
-    <!-- Accessibility services -->
-    <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
+  <!-- Accessibility services -->
+  <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
 
-    <!-- Always use private browsing mode -->
-    <string name="pref_key_always_use_private_browsing" translatable="false">pref_key_always_use_private_browsing</string>
-    <string name="pref_key_open_links_in_a_private_tab_cached_value" translatable="false">pref_key_open_links_in_a_private_tab_cached_value</string>
+  <!-- Always use private browsing mode -->
+  <string name="pref_key_always_use_private_browsing" translatable="false">pref_key_always_use_private_browsing</string>
+  <string name="pref_key_open_links_in_a_private_tab_cached_value" translatable="false">pref_key_open_links_in_a_private_tab_cached_value</string>
 
-    <!-- Collections -->
-    <string name="pref_key_collections_enabled" translatable="false">pref_key_collections_enabled</string>
+  <!-- Collections -->
+  <string name="pref_key_collections_enabled" translatable="false">pref_key_collections_enabled</string>
 
-    <!-- Cross-origin referer policy -->
-    <string name="pref_key_referer_policy" translatable="false">pref_key_referer_policy</string>
-    <string name="pref_key_referer_policy_always" translatable="false">pref_key_referer_policy_always</string>
-    <string name="pref_key_referer_policy_base_domains_match" translatable="false">pref_key_referer_policy_base_domains_match</string>
-    <string name="pref_key_referer_policy_hosts_match" translatable="false">pref_key_referer_policy_hosts_match</string>
+  <!-- Cross-origin referer policy -->
+  <string name="pref_key_referer_policy" translatable="false">pref_key_referer_policy</string>
+  <string name="pref_key_referer_policy_always" translatable="false">pref_key_referer_policy_always</string>
+  <string name="pref_key_referer_policy_base_domains_match" translatable="false">pref_key_referer_policy_base_domains_match</string>
+  <string name="pref_key_referer_policy_hosts_match" translatable="false">pref_key_referer_policy_hosts_match</string>
 
-    <!-- Disk cache -->
-    <string name="pref_key_cache_enabled" translatable="false">pref_key_cache_enabled</string>
+  <!-- Disk cache -->
+  <string name="pref_key_cache_enabled" translatable="false">pref_key_cache_enabled</string>
 
-    <!-- EME -->
-    <string name="pref_key_eme_enabled" translatable="false">pref_key_eme_enabled</string>
+  <!-- EME -->
+  <string name="pref_key_eme_enabled" translatable="false">pref_key_eme_enabled</string>
 
-    <!-- Firefox Translations -->
-    <string name="pref_key_translations_enabled" translatable="false">pref_key_translations_enabled</string>
+  <!-- Firefox Translations -->
+  <string name="pref_key_translations_enabled" translatable="false">pref_key_translations_enabled</string>
 
-    <!-- FPP overrides -->
-    <string name="pref_key_fpp_overrides_ironfox_enabled" translatable="false">pref_key_fpp_overrides_ironfox_enabled</string>
-    <string name="pref_key_fpp_overrides_mozilla_enabled" translatable="false">pref_key_fpp_overrides_mozilla_enabled</string>
+  <!-- FPP overrides -->
+  <string name="pref_key_fpp_overrides_ironfox_enabled" translatable="false">pref_key_fpp_overrides_ironfox_enabled</string>
+  <string name="pref_key_fpp_overrides_mozilla_enabled" translatable="false">pref_key_fpp_overrides_mozilla_enabled</string>
 
-    <!-- IPv6 -->
-    <string name="pref_key_ipv6_enabled" translatable="false">pref_key_ipv6_enabled</string>
+  <!-- IPv6 -->
+  <string name="pref_key_ipv6_enabled" translatable="false">pref_key_ipv6_enabled</string>
 
-    <!-- JavaScript -->
-    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
+  <!-- JavaScript -->
+  <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
 
-    <!-- JavaScript JIT -->
-    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
-    <string name="pref_key_jit_trusted_principals_enabled" translatable="false">pref_key_jit_trusted_principals_enabled</string>
+  <!-- JavaScript JIT -->
+  <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
+  <string name="pref_key_jit_trusted_principals_enabled" translatable="false">pref_key_jit_trusted_principals_enabled</string>
 
-    <!-- Media autoplay-->
-    <string name="pref_key_autoplay_policy_click_to_play" translatable="false">pref_key_autoplay_policy_click_to_play</string>
-    <string name="pref_key_autoplay_policy_sticky" translatable="false">pref_key_autoplay_policy_sticky</string>
-    <string name="pref_key_autoplay_policy_transient" translatable="false">pref_key_autoplay_policy_transient</string>
-    <string name="pref_key_media_autoplay_description" translatable="false">pref_key_media_autoplay_description</string>
+  <!-- Media autoplay-->
+  <string name="pref_key_autoplay_policy_click_to_play" translatable="false">pref_key_autoplay_policy_click_to_play</string>
+  <string name="pref_key_autoplay_policy_sticky" translatable="false">pref_key_autoplay_policy_sticky</string>
+  <string name="pref_key_autoplay_policy_transient" translatable="false">pref_key_autoplay_policy_transient</string>
+  <string name="pref_key_media_autoplay_description" translatable="false">pref_key_media_autoplay_description</string>
 
-    <!-- PDF.js -->
-    <string name="pref_key_pdfjs_disabled" translatable="false">pref_key_pdfjs_disabled</string>
+  <!-- PDF.js -->
+  <string name="pref_key_pdfjs_disabled" translatable="false">pref_key_pdfjs_disabled</string>
 
-    <!-- Preferred website appearance -->
-    <string name="pref_key_prefers_browser_color_scheme" translatable="false">pref_key_prefers_browser_color_scheme</string>
-    <string name="pref_key_prefers_dark_color_scheme" translatable="false">pref_key_prefers_dark_color_scheme</string>
-    <string name="pref_key_prefers_light_color_scheme" translatable="false">pref_key_prefers_light_color_scheme</string>
-    <string name="pref_key_website_appearance_description" translatable="false">pref_key_website_appearance_description</string>
+  <!-- Preferred website appearance -->
+  <string name="pref_key_prefers_browser_color_scheme" translatable="false">pref_key_prefers_browser_color_scheme</string>
+  <string name="pref_key_prefers_dark_color_scheme" translatable="false">pref_key_prefers_dark_color_scheme</string>
+  <string name="pref_key_prefers_light_color_scheme" translatable="false">pref_key_prefers_light_color_scheme</string>
+  <string name="pref_key_website_appearance_description" translatable="false">pref_key_website_appearance_description</string>
 
-    <!-- Printing capabilities -->
-    <string name="pref_key_print_enabled" translatable="false">pref_key_print_enabled</string>
+  <!-- Printing capabilities -->
+  <string name="pref_key_print_enabled" translatable="false">pref_key_print_enabled</string>
 
-    <!-- Safe Browsing -->
-    <string name="pref_key_safe_browsing_enabled" translatable="false">pref_key_safe_browsing_enabled</string>
-    <string name="pref_key_safe_browsing_enabled_caption" translatable="false">pref_key_safe_browsing_enabled_caption</string>
+  <!-- Safe Browsing -->
+  <string name="pref_key_safe_browsing_enabled" translatable="false">pref_key_safe_browsing_enabled</string>
+  <string name="pref_key_safe_browsing_enabled_caption" translatable="false">pref_key_safe_browsing_enabled_caption</string>
 
-    <!-- Spoof locale to English -->
-    <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
+  <!-- Spoof locale to English -->
+  <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
 
-    <!-- Spoof timezone to UTC-0 -->
-    <string name="pref_key_spoof_timezone" translatable="false">pref_key_spoof_timezone</string>
-    <string name="pref_key_fpp_overrides_ironfox_timezone_enabled" translatable="false">pref_key_fpp_overrides_ironfox_timezone_enabled</string>
+  <!-- Spoof timezone to UTC-0 -->
+  <string name="pref_key_spoof_timezone" translatable="false">pref_key_spoof_timezone</string>
+  <string name="pref_key_fpp_overrides_ironfox_timezone_enabled" translatable="false">pref_key_fpp_overrides_ironfox_timezone_enabled</string>
 
-    <!-- SVG -->
-    <string name="pref_key_svg_enabled" translatable="false">pref_key_svg_enabled</string>
+  <!-- SVG -->
+  <string name="pref_key_svg_enabled" translatable="false">pref_key_svg_enabled</string>
 
-    <!-- UnifiedPush -->
-    <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
-    <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
+  <!-- UnifiedPush -->
+  <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
+  <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
 
-   <!-- WebAssembly -->
-    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
+  <!-- WebAssembly -->
+  <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
 
-    <!-- WebGL -->
-    <string name="pref_key_webgl_disabled" translatable="false">pref_key_webgl_disabled</string>
-    <string name="pref_key_fpp_overrides_ironfox_webgl_enabled" translatable="false">pref_key_fpp_overrides_ironfox_webgl_enabled</string>
+  <!-- WebGL -->
+  <string name="pref_key_webgl_disabled" translatable="false">pref_key_webgl_disabled</string>
+  <string name="pref_key_fpp_overrides_ironfox_webgl_enabled" translatable="false">pref_key_fpp_overrides_ironfox_webgl_enabled</string>
 
-    <!-- WebRTC -->
-    <string name="pref_key_webrtc_enabled" translatable="false">pref_key_webrtc_enabled</string>
+  <!-- WebRTC -->
+  <string name="pref_key_webrtc_enabled" translatable="false">pref_key_webrtc_enabled</string>
 
-    <!-- XPInstall -->
-    <string name="pref_key_xpinstall_enabled" translatable="false">pref_key_xpinstall_enabled</string>
+  <!-- XPInstall -->
+  <string name="pref_key_xpinstall_enabled" translatable="false">pref_key_xpinstall_enabled</string>
 
-    <!-- OLED Theme -->
-    <string name="pref_key_oled_theme" translatable="false">pref_key_oled_theme</string>
+  <!-- OLED Theme -->
+  <string name="pref_key_oled_theme" translatable="false">pref_key_oled_theme</string>
 </resources>

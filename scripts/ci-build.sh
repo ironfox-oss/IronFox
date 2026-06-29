@@ -3,16 +3,16 @@
 set -euo pipefail
 
 if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
-    # Target release
-    export IRONFOX_RELEASE=1
+  # Target release
+  export IRONFOX_RELEASE=1
 fi
 
 # Set-up our environment
 if [[ -z "${IRONFOX_CI+x}" ]]; then
-    export IRONFOX_CI=1
+  export IRONFOX_CI=1
 fi
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    bash -x $(dirname $0)/env.sh
+  bash -x $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -23,19 +23,19 @@ source "${IRONFOX_UTILS}"
 readonly ci_target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
 if [[ -z "${2+x}" ]]; then
-    readonly ci_project='fenix'
+  readonly ci_project='fenix'
 else
-    readonly ci_project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+  readonly ci_project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 fi
 
 # Function to compress our archives
 function compress_archives() {
-    if [[ "${ci_project}" == 'geckoview' ]]; then
-        local readonly ci_job_artifact="build-geckoview-${ci_target}"
-    elif [[ "${ci_project}" == 'fenix' ]]; then
-        local readonly ci_job_artifact="build-fenix-${ci_target}"
-    fi
-    bash -x "${IRONFOX_SCRIPTS}/ci-compress.sh" "${ci_job_artifact}"
+  if [[ "${ci_project}" == 'geckoview' ]]; then
+    local readonly ci_job_artifact="build-geckoview-${ci_target}"
+  elif [[ "${ci_project}" == 'fenix' ]]; then
+    local readonly ci_job_artifact="build-fenix-${ci_target}"
+  fi
+  bash -x "${IRONFOX_SCRIPTS}/ci-compress.sh" "${ci_job_artifact}"
 }
 
 # By default, we know the build hasn't failed...

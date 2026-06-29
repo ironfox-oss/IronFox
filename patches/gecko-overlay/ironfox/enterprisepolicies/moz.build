@@ -1,6 +1,5 @@
-
 DIRS += [
-    "../../browser/components/enterprisepolicies",
+  "../../browser/components/enterprisepolicies",
 ]
 
 Library("browsercomps")

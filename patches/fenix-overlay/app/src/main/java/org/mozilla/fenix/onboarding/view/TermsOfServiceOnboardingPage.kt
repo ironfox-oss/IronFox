@@ -33,74 +33,74 @@ import org.mozilla.fenix.theme.FirefoxTheme
  */
 @Composable
 fun TermsOfServiceOnboardingPage(
-    pageState: OnboardingPageState,
-    eventHandler: Any?,
+  pageState: OnboardingPageState,
+  eventHandler: Any?,
 ) {
-    Card(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(if (!pageState.isSmallDevice) 6.dp else 0.dp),
+  Card(
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+    elevation = CardDefaults.cardElevation(if (!pageState.isSmallDevice) 6.dp else 0.dp),
+  ) {
+    Column(
+      modifier = Modifier.padding(
+        horizontal = 16.dp,
+        vertical = if (pageState.isSmallDevice) 0.dp else 24.dp,
+      ),
+      horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(
-            modifier = Modifier.padding(
-                horizontal = 16.dp,
-                vertical = if (pageState.isSmallDevice) 0.dp else 24.dp,
-            ),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            val scrollState = rememberScrollState()
+      val scrollState = rememberScrollState()
 
-            if (pageState.isSmallDevice) {
-                Spacer(modifier = Modifier.height(16.dp))
-            } else {
-                Spacer(modifier = Modifier.weight(TITLE_TOP_SPACER_WEIGHT))
-            }
+      if (pageState.isSmallDevice) {
+        Spacer(modifier = Modifier.height(16.dp))
+      } else {
+        Spacer(modifier = Modifier.weight(TITLE_TOP_SPACER_WEIGHT))
+      }
 
-            Column(
-                modifier = Modifier
-                    .weight(CONTENT_WEIGHT)
-                    .verticalScroll(scrollState),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Header(pageState)
+      Column(
+        modifier = Modifier
+          .weight(CONTENT_WEIGHT)
+          .verticalScroll(scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
+      ) {
+        Header(pageState)
 
-                Spacer(Modifier.weight(1f))
+        Spacer(Modifier.weight(1f))
 
-                Spacer(Modifier.height(26.dp))
-            }
+        Spacer(Modifier.height(26.dp))
+      }
 
-            FilledButton(
-                text = pageState.primaryButton.text,
-                modifier = Modifier
-                    .width(width = FirefoxTheme.layout.size.maxWidth.small),
-                onClick = pageState.primaryButton.onClick,
-            )
-        }
+      FilledButton(
+        text = pageState.primaryButton.text,
+        modifier = Modifier
+          .width(width = FirefoxTheme.layout.size.maxWidth.small),
+        onClick = pageState.primaryButton.onClick,
+      )
     }
+  }
 }
 
 @Composable
 private fun Header(pageState: OnboardingPageState) {
-    Image(
-        painter = painterResource(id = pageState.imageRes),
-        contentDescription = null,
-        modifier = Modifier
-            .height(IconSize.heightDp)
-            .width(IconSize.widthDp),
-    )
+  Image(
+    painter = painterResource(id = pageState.imageRes),
+    contentDescription = null,
+    modifier = Modifier
+      .height(IconSize.heightDp)
+      .width(IconSize.widthDp),
+  )
 
-    Spacer(Modifier.height(20.dp))
+  Spacer(Modifier.height(20.dp))
 
-    Text(
-        text = pageState.title,
-        textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.headlineMedium,
-    )
+  Text(
+    text = pageState.title,
+    textAlign = TextAlign.Center,
+    style = MaterialTheme.typography.headlineMedium,
+  )
 
-    Spacer(Modifier.height(10.dp))
+  Spacer(Modifier.height(10.dp))
 }
 
 private object IconSize {
-    val heightDp = 167.dp
-    val widthDp = 161.dp
+  val heightDp = 167.dp
+  val widthDp = 161.dp
 }

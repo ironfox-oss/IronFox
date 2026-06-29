@@ -13,31 +13,31 @@ import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.settings
 
 fun createNimbus(context: Context, urlString: String?, remoteSettingsService: RemoteSettingsService?, geckoPrefHandler: Any?): NimbusApi {
-    val serverSettings: NimbusServerSettings? = remoteSettingsService?.let { service ->
-        NimbusServerSettings(
-            rsService = service,
-            collectionName = "noop",
-        )
-    }
-
-    val appInfo = NimbusAppInfo(
-        appName = "fenix",
-        channel = "release",
-        customTargetingAttributes = JSONObject(),
+  val serverSettings: NimbusServerSettings? = remoteSettingsService?.let { service ->
+    NimbusServerSettings(
+      rsService = service,
+      collectionName = "noop",
     )
+  }
 
-    return NimbusBuilder(context).apply {
-        url = null
-        errorReporter = context::reportError
-        initialExperiments = R.raw.initial_experiments
-        timeoutLoadingExperiment = 200L
-        sharedPreferences = context.settings().preferences
-        isFirstRun = true
-        featureManifest = null
-        onFetchCallback = {}
-        recordedContext = null
-        this.geckoPrefHandler = null
-    }.build(appInfo, serverSettings)
+  val appInfo = NimbusAppInfo(
+    appName = "fenix",
+    channel = "release",
+    customTargetingAttributes = JSONObject(),
+  )
+
+  return NimbusBuilder(context).apply {
+    url = null
+    errorReporter = context::reportError
+    initialExperiments = R.raw.initial_experiments
+    timeoutLoadingExperiment = 200L
+    sharedPreferences = context.settings().preferences
+    isFirstRun = true
+    featureManifest = null
+    onFetchCallback = {}
+    recordedContext = null
+    this.geckoPrefHandler = null
+  }.build(appInfo, serverSettings)
 }
 
 private fun Context.reportError(message: String, e: Throwable) {}

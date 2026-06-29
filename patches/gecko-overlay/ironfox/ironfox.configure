@@ -31,9 +31,9 @@ set_config("IRONFOX", True)
 set_define("IRONFOX", True)
 
 option(
-    "--enable-ironfox-release",
-    help="Build IronFox (Release)",
-    default=False,
+  "--enable-ironfox-release",
+  help="Build IronFox (Release)",
+  default=False,
 )
 
 set_config("IRONFOX_RELEASE", True, when="--enable-ironfox-release")
@@ -41,34 +41,34 @@ set_define("IRONFOX_RELEASE", True, when="--enable-ironfox-release")
 
 # (This is inspired by mozilla-central's `--enable-android-subproject`)
 option(
-    "--enable-ironfox-subproject",
-    choices=(
-        "android-components",
-        "fenix",
-        "geckoview",
-    ),
-    nargs="?",
-    help="Build an Android subproject. Possible options: android-components/fenix/geckoview",
+  "--enable-ironfox-subproject",
+  choices=(
+    "android-components",
+    "fenix",
+    "geckoview",
+  ),
+  nargs="?",
+  help="Build an Android subproject. Possible options: android-components/fenix/geckoview",
 )
 
 @depends("--enable-ironfox-subproject")
 def ironfox_subproject(value):
-    if value:
-        return value[0]
+  if value:
+    return value[0]
 
 
 set_config("IRONFOX_SUBPROJECT", ironfox_subproject)
 
 # This allows us to specify a custom path for nimbus-fml, instead of just using Mozilla's standard hardcoded locations
 option(
-    "--with-ironfox-nimbus-fml",
-    nargs="?",
-    help="Set the path to nimbus-fml",
+  "--with-ironfox-nimbus-fml",
+  nargs="?",
+  help="Set the path to nimbus-fml",
 )
 
 @depends("--with-ironfox-nimbus-fml")
 def nimbus_fml_path(value):
-    if value:
-        return value[0]
+  if value:
+    return value[0]
 
 set_config("NIMBUS_FML", nimbus_fml_path)

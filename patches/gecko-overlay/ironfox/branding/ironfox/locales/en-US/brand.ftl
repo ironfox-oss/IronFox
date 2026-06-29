@@ -1,4 +1,3 @@
-
 -brand-full-name = IronFox
 -brand-product-name = IronFox
 -brand-short-name = IronFox

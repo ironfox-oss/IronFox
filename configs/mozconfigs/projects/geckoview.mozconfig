@@ -9,8 +9,8 @@ ac_add_options --enable-ironfox-subproject='geckoview'
 export GRADLE_FLAGS="${GRADLE_FLAGS} -x javadocRelease -x verifyGleanVersion"
 
 if [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'geckoview' ]]; then
-    if [[ "${IRONFOX_MACH_GECKOVIEW_CREATE_AAR}" == 1 ]]; then
-        # If we're building a GeckoView AAR, all we need to do is create the archive - so prevent re-running other build logic
-        export GRADLE_FLAGS="${GRADLE_FLAGS} -x assembleRelease -x publishReleasePublicationToMavenRepository"
-    fi
+  if [[ "${IRONFOX_MACH_GECKOVIEW_CREATE_AAR}" == 1 ]]; then
+    # If we're building a GeckoView AAR, all we need to do is create the archive - so prevent re-running other build logic
+    export GRADLE_FLAGS="${GRADLE_FLAGS} -x assembleRelease -x publishReleasePublicationToMavenRepository"
+  fi
 fi

@@ -1,14 +1,8 @@
 {
-    "exclude": [
-        "artifacts/**",
-        "assets/**",
-        "build/**",
-        "env/**",
-
-        "appservices/**",
-        "gecko/**",
-        "glean/**",
-        "gmscore/**",
-        "wasi-sdk/**",
-    ]
+  "exclude": [
+    "artifacts/**",
+    "assets/**",
+    "build/**",
+    "external/**",
+  ]
 }

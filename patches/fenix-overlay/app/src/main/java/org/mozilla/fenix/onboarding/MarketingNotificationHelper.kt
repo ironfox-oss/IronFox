@@ -9,5 +9,5 @@ const val MARKETING_CHANNEL_ID = ""
 const val RE_ENGAGEMENT_NOTIFICATION_ID = 2
 
 fun ensureMarketingChannelExists(context: Context): String {
-    return MARKETING_CHANNEL_ID
+  return MARKETING_CHANNEL_ID
 }

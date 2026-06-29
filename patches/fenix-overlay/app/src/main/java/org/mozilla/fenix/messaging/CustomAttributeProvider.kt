@@ -7,11 +7,11 @@ import mozilla.components.service.nimbus.messaging.JexlAttributeProvider
 import org.json.JSONObject
 
 object CustomAttributeProvider : JexlAttributeProvider {
-    fun getCustomTargetingAttributes(context: Context): JSONObject {
-        return JSONObject()
-    }
+  fun getCustomTargetingAttributes(context: Context): JSONObject {
+    return JSONObject()
+  }
 
-    override fun getCustomAttributes(context: Context): JSONObject {
-        return JSONObject()
-    }
+  override fun getCustomAttributes(context: Context): JSONObject {
+    return JSONObject()
+  }
 }

@@ -1,8 +1,7 @@
-
 DIRS += [
-    "robots",
+  "robots",
 ]
 
 JAR_MANIFESTS += [
-    "jar.mn",
+  "jar.mn",
 ]

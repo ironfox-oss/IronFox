@@ -7,5 +7,5 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 
 internal class GleanLifecycleObserver : LifecycleEventObserver {
-    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {}
+  override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {}
 }

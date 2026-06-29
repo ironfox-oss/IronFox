@@ -8,26 +8,26 @@ import mozilla.components.support.utils.RunWhenReadyQueue
 import org.mozilla.fenix.perf.lazyMonitored
 
 class Analytics(
-    private val context: Context,
-    private val nimbusComponents: Any?,
-    private val runWhenReadyQueue: RunWhenReadyQueue,
+  private val context: Context,
+  private val nimbusComponents: Any?,
+  private val runWhenReadyQueue: RunWhenReadyQueue,
 ) {
-    val crashReporter: CrashReporter by lazyMonitored {
-        CrashReporter(
-            context = context,
-            services = listOf(),
-            telemetryServices = listOf(),
-            shouldPrompt = CrashReporter.Prompt.ALWAYS,
-            promptConfiguration = CrashReporter.PromptConfiguration(
-                appName = "",
-                organizationName = "",
-            ),
-            enabled = false,
-            nonFatalCrashIntent = null,
-            useLegacyReporting = false,
-            runtimeTagProviders = listOf(),
-        )
-    }
+  val crashReporter: CrashReporter by lazyMonitored {
+    CrashReporter(
+      context = context,
+      services = listOf(),
+      telemetryServices = listOf(),
+      shouldPrompt = CrashReporter.Prompt.ALWAYS,
+      promptConfiguration = CrashReporter.PromptConfiguration(
+        appName = "",
+        organizationName = "",
+      ),
+      enabled = false,
+      nonFatalCrashIntent = null,
+      useLegacyReporting = false,
+      runtimeTagProviders = listOf(),
+    )
+  }
 
-    val metrics = {}
+  val metrics = {}
 }

@@ -12,14 +12,14 @@ ac_add_options --without-embedded-uniffi-bindgen
 # Set l10n-central path
 # (We only need l10n-central if we're packaging Gecko...)
 if [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'gecko' ]]; then
-    ac_add_options --with-l10n-base="${IRONFOX_L10N_CENTRAL}"
-    export L10NBASEDIR="${IRONFOX_L10N_CENTRAL}"
+  ac_add_options --with-l10n-base="${IRONFOX_L10N_CENTRAL}"
+  export L10NBASEDIR="${IRONFOX_L10N_CENTRAL}"
 fi
 
 # Set nimbus-fml path
 # (We only need nimbus-fml if we're packaging Android Components or Fenix)
 if [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'android-components' ]] || [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'fenix' ]]; then
-    ac_add_options --with-ironfox-nimbus-fml="${IRONFOX_AS}/target/release/nimbus-fml"
+  ac_add_options --with-ironfox-nimbus-fml="${IRONFOX_AS}/target/release/nimbus-fml"
 else
-    ac_add_options --without-ironfox-nimbus-fml
+  ac_add_options --without-ironfox-nimbus-fml
 fi
