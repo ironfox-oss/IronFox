@@ -446,6 +446,18 @@ fi
 readonly IRONFOX_MAKE
 export IRONFOX_MAKE
 
+# GNU patch
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+  readonly IRONFOX_PATCH_DEFAULT='/opt/homebrew/bin/gpatch'
+else
+  readonly IRONFOX_PATCH_DEFAULT='/usr/bin/patch'
+fi
+if [[ -z "${IRONFOX_PATCH+x}" ]]; then
+  IRONFOX_PATCH="${IRONFOX_PATCH_DEFAULT}"
+fi
+readonly IRONFOX_PATCH
+export IRONFOX_PATCH
+
 # GNU sed
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
   readonly IRONFOX_SED_DEFAULT='gsed'

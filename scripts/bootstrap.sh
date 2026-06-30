@@ -61,6 +61,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
       git \
       gnu-sed \
       gnu-tar \
+      gpatch \
       m4 \
       make \
       xz \
