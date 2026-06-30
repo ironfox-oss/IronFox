@@ -1514,13 +1514,13 @@ function get_uniffi() {
   # Get uniffi-bindgen for Linux
   if [[ "${IRONFOX_PLATFORM}" == 'linux' ]] || [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
     echo_red_text 'Downloading prebuilt uniffi-bindgen (Linux)...'
-    download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_LINUX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/linux/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_LINUX_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_LINUX_IRONFOX_SHA512SUM}"
+    download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${PREBUILDS_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/linux/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_LINUX_IRONFOX_SHA512SUM}"
   fi
 
   # Get uniffi-bindgen for OS X
   if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]] || [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
     echo_red_text 'Downloading prebuilt uniffi-bindgen (OS X)...'
-    download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_OSX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/osx/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_OSX_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_OSX_IRONFOX_SHA512SUM}"
+    download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${PREBUILDS_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/osx/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_OSX_IRONFOX_SHA512SUM}"
   fi
 
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]]; then
@@ -1617,13 +1617,13 @@ function get_wasi() {
   # Get WASI SDK for Linux
   if [[ "${IRONFOX_PLATFORM}" == 'linux' ]] || [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
     echo_red_text 'Downloading prebuilt WASI SDK (Linux)...'
-    download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_LINUX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/linux/wasi-sdk-${WASI_VERSION}-${WASI_LINUX_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_WASI}" "${WASI_LINUX_IRONFOX_SHA512SUM}"
+    download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${PREBUILDS_COMMIT}/wasi-sdk/${WASI_VERSION}/linux/wasi-sdk-${WASI_VERSION}-${WASI_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_WASI}" "${WASI_LINUX_IRONFOX_SHA512SUM}"
   fi
 
   # Get WASI SDK for OS X
   if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]] || [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
     echo_red_text 'Downloading prebuilt WASI SDK (OS X)...'
-    download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_OSX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/osx/wasi-sdk-${WASI_VERSION}-${WASI_OSX_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_WASI}" "${WASI_OSX_IRONFOX_SHA512SUM}"
+    download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${PREBUILDS_COMMIT}/wasi-sdk/${WASI_VERSION}/osx/wasi-sdk-${WASI_VERSION}-${WASI_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_WASI}" "${WASI_OSX_IRONFOX_SHA512SUM}"
   fi
 
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]]; then
