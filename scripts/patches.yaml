@@ -1,10 +1,4 @@
 categories:
-  - name: "Accessibility"
-    excerpt: "Patches that improve accessibility features for all users."
-    description: >
-      These patches aim to make the browser more accessible, such as enabling zoom features
-      universally so that users with visual impairments can navigate websites more easily.
-
   - name: "Build System"
     excerpt: "Modifications to improve and stabilize the build process."
     description: >
