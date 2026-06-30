@@ -43,11 +43,15 @@ default:
       - unknown_failure
 
 variables: &build_variables
-  PRODUCTION_BRANCH: main
-  IRONFOX_CI: 1
+  ARTIFACT_COMPRESSION_LEVEL: "slowest"
+  CACHE_COMPRESSION_LEVEL: "slowest"
+  FF_USE_FASTZIP: "1"
   IF_CI_NAME: "IronFox CI"
   IF_CI_USERNAME: "ironfox-ci"
   IF_CI_EMAIL: "ci@ironfoxoss.org"
+  IRONFOX_CI: 1
+  PRODUCTION_BRANCH: "main"
+  TRANSFER_METER_FREQUENCY: "2s"
 
 stages:
   - build_fdroid
