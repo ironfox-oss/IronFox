@@ -3,7 +3,7 @@
   <string name="restart_required_summary">سيؤدي تغيير هذا الإعداد إلى إعادة تشغيل المتصفح</string>
   <string name="unsupported_summary">هذا الإعداد غير موصى به بتاتًا وغير مدعوم. يُرجى المتابعة بحذر.</string>
   <string name="if_preferences">إعدادات IronFox</string>
-  <string name="if_preferences_misc">متفرقات</string>
+  <string name="if_preferences_misc">متنوّع</string>
   <string name="if_preferences_privacy">الخصوصية</string>
   <string name="if_preferences_privacy_security">الأمن والخصوصية</string>
   <string name="if_preferences_secret">الإعدادات السرية</string>
