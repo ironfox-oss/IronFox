@@ -1,11 +1,11 @@
 # Sources
 
 ## Firefox
-### Version: 152.0.2 (RELEASE)
+### Version: 152.0.4 (BUILD1)
 ### https://github.com/mozilla-firefox/firefox
-readonly FIREFOX_COMMIT='e784efd49da7cd69805f55f3353b65ff430441a1'
-readonly FIREFOX_SHA512SUM='54e8e5128cab75e78cf2180f0b1ee5d18a697f00a7621e877af205f6ccc7423637718eb3fd489a9b435ab7c71b1ab199b1aa53ca5ea8aadd1486116cef9cdff2'
-readonly FIREFOX_VERSION='152.0.2'
+readonly FIREFOX_COMMIT='d4faced9e237d6431856c0873cb035cbbc25817b'
+readonly FIREFOX_SHA512SUM='aa443f3c4bf01ad1fd3dd8171283ce8e0c5f66f89e1e6f60798b5669b19e21b255510ad04bd106f09baa0e5a5c99e21b3ef79faf287fb07bcbfe4d0b7b7cfac2'
+readonly FIREFOX_VERSION='152.0.4'
 
 ### IronFox
 readonly IRONFOX_VERSION="${FIREFOX_VERSION}"
@@ -22,8 +22,8 @@ readonly APPSERVICES_VERSION='152.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-readonly L10N_COMMIT='69ebbebdfc3ac686ac663c086c5cc503048ae737'
-readonly L10N_SHA512SUM='bb0d7355fb79738c65ceacb6b1d1abe5e29fb7f8eeaba034881e24060fef46324e6eddb5274273b0080c96d85e4cf0405a524e23c467f31981a76491daa857bc'
+readonly L10N_COMMIT='b80fe3772249f52844198ddacafdfc92bbdbb45a'
+readonly L10N_SHA512SUM='ed28e0e5409f0cccbdc750dba8df5c0a18cd300a5606a048a5c89b77682cb03a673f907a73ee6b0c371bd4909fc3766efb373941587fe7eeb1f75b5744cd6030'
 
 ## Glean
 ### Version: 67.3.2
@@ -133,11 +133,11 @@ readonly BUNDLETOOL_SHA512SUM='50feda5f3f00931bad943a37b7cfc33d8ea53b33bd9bfa838
 readonly BUNDLETOOL_VERSION='1.18.3'
 
 ## cbindgen
-### Version: v0.29.3
+### Version: v0.29.4
 ### https://github.com/mozilla/cbindgen
-readonly CBINDGEN_COMMIT='b5f2a978302e86fa06659a945a26c1b8b9aa9b8d'
-readonly CBINDGEN_SHA512SUM='f89a6887a1f4e0c7ef57247577b7be8eac4159843ff9cccf917d14af03d41ad005d25ca1f4dbf70e61cdd50d268ac1f5b2b0125488f564f175fe8a0a5c121d7f'
-readonly CBINDGEN_VERSION='0.29.3'
+readonly CBINDGEN_COMMIT='b826cb8911488fe8a209d2b693492c0c673e8cca'
+readonly CBINDGEN_SHA512SUM='b1d43c6820a210c809a029a3f7ec92720fca9bfa1bfecd5835615124b005dfb63e30fe1463ab071717f83b0928207dfd2a71d93f57642314b5bae92076ceb15f'
+readonly CBINDGEN_VERSION='0.29.4'
 
 ## Gradle (F-Droid)
 ### https://gitlab.com/fdroid/gradlew-fdroid
