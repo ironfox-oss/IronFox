@@ -1,5 +1,3 @@
-# .gitignore
-
 # Generated Python cache
 __pycache__/
 
