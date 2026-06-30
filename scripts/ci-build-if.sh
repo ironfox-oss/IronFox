@@ -55,17 +55,6 @@ if [[ "${ci_build_project}" == 'fenix' ]]; then
   fi
 fi
 
-if [[ "${ci_build_arch}" == 'bundle' ]]; then
-  # Extract our GeckoView AAR artifacts
-  mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
-  mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
-  mkdir -vp "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
-
-  "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-geckoview-arm64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
-  "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-geckoview-arm.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
-  "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-geckoview-x86_64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
-fi
-
 # Get sources
 if [[ "${ci_build_project}" == 'geckoview' ]]; then
   # If we're only building GeckoView, we don't need to download all sources
@@ -93,6 +82,13 @@ if [[ "${ci_build_project}" == 'geckoview' ]]; then
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'wasi'
 else
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
+
+  # If we're building a Fenix bundle, we also need to download our GeckoView artifacts
+  if [[ "${ci_build_arch}" == 'bundle' ]]; then
+    bash -x "${IRONFOX_SCRIPTS}/ci-download-artifacts.sh" 'geckoview' 'arm64'
+    bash -x "${IRONFOX_SCRIPTS}/ci-download-artifacts.sh" 'geckoview' 'arm'
+    bash -x "${IRONFOX_SCRIPTS}/ci-download-artifacts.sh" 'geckoview' 'x86_64'
+  fi
 fi
 
 # Prepare sources
@@ -108,27 +104,3 @@ fi
 
 # Build
 bash -x "${IRONFOX_SCRIPTS}/build.sh" "${ci_build_arch}" "${ci_build_project}"
-
-# Copy our GeckoView AAR archives to the artifacts directory for publishing
-if [[ "${ci_build_project}" == 'geckoview' ]]; then
-  mkdir -vp "${IRONFOX_AAR_ARTIFACTS}"
-  if [[ "${ci_build_arch}" == 'arm64' ]]; then
-    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${IRONFOX_AAR_ARTIFACTS}/"
-  elif [[ "${ci_build_arch}" == 'arm' ]]; then
-    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${IRONFOX_AAR_ARTIFACTS}/"
-  elif [[ "${ci_build_arch}" == 'x86_64' ]]; then
-    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${IRONFOX_AAR_ARTIFACTS}/"
-  fi
-fi
-
-# Copy our Fenix outputs to the artifacts directory for publishing
-if [[ "${ci_build_project}" == 'fenix' ]]; then
-  mkdir -vp "${IRONFOX_APK_ARTIFACTS}"
-  mkdir -vp "${IRONFOX_APKS_ARTIFACTS}"
-
-  cp -v "${IRONFOX_OUTPUTS_ARM64}" "${IRONFOX_APK_ARTIFACTS}/"
-  cp -v "${IRONFOX_OUTPUTS_ARM}" "${IRONFOX_APK_ARTIFACTS}/"
-  cp -v "${IRONFOX_OUTPUTS_X86_64}" "${IRONFOX_APK_ARTIFACTS}/"
-  cp -v "${IRONFOX_OUTPUTS_UNIVERSAL}" "${IRONFOX_APK_ARTIFACTS}/"
-  cp -v "${IRONFOX_OUTPUTS_BUNDLE}" "${IRONFOX_APKS_ARTIFACTS}/"
-fi

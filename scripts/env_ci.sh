@@ -19,18 +19,23 @@ export IRONFOX_LOCAL_AS_VERSION_OVERRIDE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_
 export IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_CREATED_AT}" "+%s%N")"
 
 # GeckoView AAR archives
-export IRONFOX_GECKOVIEW_AAR_ARM64_DIR="${IRONFOX_EXTERNAL}/geckoview-arm64"
-export IRONFOX_GECKOVIEW_AAR_ARM64="${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}/aar/geckoview-arm64-v8a.zip"
-export IRONFOX_GECKOVIEW_AAR_ARM_DIR="${IRONFOX_EXTERNAL}/geckoview-arm"
-export IRONFOX_GECKOVIEW_AAR_ARM="${IRONFOX_GECKOVIEW_AAR_ARM_DIR}/aar/geckoview-armeabi-v7a.zip"
-export IRONFOX_GECKOVIEW_AAR_X86_64_DIR="${IRONFOX_EXTERNAL}/geckoview-x86_64"
-export IRONFOX_GECKOVIEW_AAR_X86_64="${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}/aar/geckoview-x86_64.zip"
+export IRONFOX_GECKOVIEW_AAR_ARM64="${IRONFOX_AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
+export IRONFOX_GECKOVIEW_AAR_ARM="${IRONFOX_AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
+export IRONFOX_GECKOVIEW_AAR_X86_64="${IRONFOX_AAR_ARTIFACTS}/geckoview-x86_64.zip"
 export IRONFOX_GECKOVIEW_BUNDLE_DIRECT=1
 
 # Log directory
 export IRONFOX_LOG_DIR="${IRONFOX_LOG_ARTIFACTS}"
 
 # S3
+
+## Artifacts
+export IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE='/opt/IronFox/ironfox-artifacts-s3-access-key.txt'
+export IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE='/opt/IronFox/ironfox-artifacts-s3-bucket-name.txt'
+export IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE='/opt/IronFox/ironfox-artifacts-s3-endpoint.txt'
+export IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE='/opt/IronFox/ironfox-artifacts-s3-secret-key.txt'
+
+## Releases
 export IRONFOX_RELEASES_S3_ACCESS_KEY_FILE='/opt/IronFox/ironfox-releases-s3-access-key.txt'
 export IRONFOX_RELEASES_S3_BUCKET_NAME_FILE='/opt/IronFox/ironfox-releases-s3-bucket-name.txt'
 export IRONFOX_RELEASES_S3_ENDPOINT_FILE='/opt/IronFox/ironfox-releases-s3-endpoint.txt'

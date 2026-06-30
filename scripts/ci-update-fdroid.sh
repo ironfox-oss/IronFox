@@ -43,7 +43,7 @@ function download_release() {
   if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
     echo_red_text 'ERROR: Checksum validation failed.'
     echo "Expected SHA512sum: ${expected_sha512sum}"
-    echo "Actual SHA512sum: ${local_sha512sum}"
+    echo "Actual SHA512sum:   ${local_sha512sum}"
 
     # If checksum validation fails, also just clean-up the files
     rm -f "${output_apk}"

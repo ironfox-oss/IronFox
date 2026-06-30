@@ -22,22 +22,26 @@ source "${IRONFOX_UTILS}"
 
 # Set-up target parameters
 if [[ -z "${1+x}" ]]; then
-  echo_red_text "Usage: $0 android-keystore|s3|sb" >&1
+  echo_red_text "Usage: $0 android-keystore|s3-artifacts|s3-releases|sb" >&1
   exit 1
 fi
 
 readonly ci_prep_target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
 IRONFOX_CI_PREP_ANDROID_KEYSTORE=0
-IRONFOX_CI_PREP_S3=0
+IRONFOX_CI_PREP_S3_ARTIFACTS=0
+IRONFOX_CI_PREP_S3_RELEASES=0
 IRONFOX_CI_PREP_SB_GAPI_KEY=0
 
 if [[ "${ci_prep_target}" == 'android-ks' ]]; then
   # Set-up the Android keystore
   IRONFOX_CI_PREP_ANDROID_KEYSTORE=1
-elif [[ "${ci_prep_target}" == 's3' ]]; then
-  # Set-up S3 storage
-  IRONFOX_CI_PREP_S3=1
+elif [[ "${ci_prep_target}" == 's3-artifacts' ]]; then
+  # Set-up S3 storage - Artifacts
+  IRONFOX_CI_PREP_S3_ARTIFACTS=1
+elif [[ "${ci_prep_target}" == 's3-releases' ]]; then
+  # Set-up S3 storage - Releases
+  IRONFOX_CI_PREP_S3_RELEASES=1
 elif [[ "${ci_prep_target}" == 'sb' ]]; then
   # Set-up the Google Safe Browsing API key
   IRONFOX_CI_PREP_SB_GAPI_KEY=1
@@ -45,11 +49,13 @@ else
   echo_red_text "ERROR: Invalid target: ${ci_prep_target}\n You must enter one of the following:"
   echo 'Android keystore:               android-keystore'
   echo 'Google Safe Browsing API key:   sb'
-  echo 'S3 storage:                     s3'
+  echo 'S3 storage - Artifacts:         s3-artifacts'
+  echo 'S3 storage - Releases:          s3-releases'
   exit 1
 fi
 readonly IRONFOX_CI_PREP_ANDROID_KEYSTORE
-readonly IRONFOX_CI_PREP_S3
+readonly IRONFOX_CI_PREP_S3_ARTIFACTS
+readonly IRONFOX_CI_PREP_S3_RELEASES
 readonly IRONFOX_CI_PREP_SB_GAPI_KEY
 
 # Android keystore
@@ -162,9 +168,135 @@ function prep_android_keystore() {
   echo_green_text 'SUCCESS: Prepared Android keystore'
 }
 
-# S3 storage
-function prep_s3() {
-  echo_red_text 'Preparing S3 storage...'
+# S3 storage - Artifacts
+function prep_s3_artifacts() {
+  echo_red_text 'Preparing S3 storage - Artifacts...'
+
+  # First, ensure that environment variables specified externally (from CI) are properly set...
+
+  ## S3 access key
+  if [[ -z "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY+x}" ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_ACCESS_KEY environment variable is missing! Aborting...'
+    exit 1
+  fi
+  readonly IRONFOX_ARTIFACTS_S3_ACCESS_KEY
+
+  ## S3 bucket name
+  if [[ -z "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME+x}" ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_BUCKET_NAME environment variable is missing! Aborting...'
+    exit 1
+  fi
+  readonly IRONFOX_ARTIFACTS_S3_BUCKET_NAME
+
+  ## S3 endpoint
+  if [[ -z "${IRONFOX_ARTIFACTS_S3_ENDPOINT+x}" ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_ENDPOINT environment variable is missing! Aborting...'
+    exit 1
+  fi
+  readonly IRONFOX_ARTIFACTS_S3_ENDPOINT
+
+  ## S3 secret key
+  if [[ -z "${IRONFOX_ARTIFACTS_S3_SECRET_KEY+x}" ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_SECRET_KEY environment variable is missing! Aborting...'
+    exit 1
+  fi
+  readonly IRONFOX_ARTIFACTS_S3_SECRET_KEY
+
+  # Now, ensure that our S3 file variables (defined at `env_common.sh`, set at `env_ci.sh`) are properly set...
+
+  if [[ -z "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE environment variable is missing! Aborting...'
+    exit 1
+  fi
+
+  if [[ "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" == 'null' ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE environment variable has not been specified! Aborting...'
+    exit 1
+  fi
+
+  if [[ -z "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE environment variable is missing! Aborting...'
+    exit 1
+  fi
+
+  if [[ "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" == 'null' ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE environment variable has not been specified! Aborting...'
+    exit 1
+  fi
+
+  if [[ -z "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE environment variable is missing! Aborting...'
+    exit 1
+  fi
+
+  if [[ "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" == 'null' ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE environment variable has not been specified! Aborting...'
+    exit 1
+  fi
+
+  if [[ -z "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE environment variable is missing! Aborting...'
+    exit 1
+  fi
+
+  if [[ "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" == 'null' ]]; then
+    echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE environment variable has not been specified! Aborting...'
+    exit 1
+  fi
+
+  # Create our directories
+  mkdir -p $(dirname "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}")
+  mkdir -p $(dirname "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}")
+  mkdir -p $(dirname "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}")
+  mkdir -p $(dirname "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}")
+
+  # Create the S3 access key file
+  touch "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}"
+  chmod 600 "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}"
+  echo -n "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY}" > "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}"
+
+  # Create the S3 bucket name file
+  touch "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}"
+  chmod 600 "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}"
+  echo -n "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME}" > "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}"
+
+  # Create the S3 endpoint file
+  touch "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}"
+  chmod 600 "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}"
+  echo -n "${IRONFOX_ARTIFACTS_S3_ENDPOINT}" > "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}"
+
+  # Create the S3 secret key file
+  touch "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}"
+  chmod 600 "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}"
+  echo -n "${IRONFOX_ARTIFACTS_S3_SECRET_KEY}" > "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}"
+
+  # Ensure nothing went wrong...
+  if [[ ! -s "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" ]]; then
+    echo_red_text "ERROR: S3 access key file ${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE} is empty!"
+    exit 1
+  fi
+
+  if [[ ! -s "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" ]]; then
+    echo_red_text "ERROR: S3 bucket name file ${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE} is empty!"
+    exit 1
+  fi
+
+  if [[ ! -s "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" ]]; then
+    echo_red_text "ERROR: S3 endpoint file ${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE} is empty!"
+    exit 1
+  fi
+
+  if [[ ! -s "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" ]]; then
+    echo_red_text "ERROR: S3 secret key file ${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE} is empty!"
+    exit 1
+  fi
+
+  echo_green_text 'SUCCESS: Prepared S3 storage - Artifacts'
+}
+
+# S3 storage - Releases
+function prep_s3_releases() {
+  echo_red_text 'Preparing S3 storage - Releases...'
 
   # First, ensure that environment variables specified externally (from CI) are properly set...
 
@@ -285,7 +417,7 @@ function prep_s3() {
     exit 1
   fi
 
-  echo_green_text 'SUCCESS: Prepared S3 storage'
+  echo_green_text 'SUCCESS: Prepared S3 storage - Releases'
 }
 
 # Google Safe Browsing API key
@@ -332,8 +464,10 @@ function prep_sb_gapi_key() {
 # Prepare our secrets...
 if [[ "${IRONFOX_CI_PREP_ANDROID_KEYSTORE}" == 1 ]]; then
   prep_android_keystore
-elif [[ "${IRONFOX_CI_PREP_S3}" == 1 ]]; then
-  prep_s3
+elif [[ "${IRONFOX_CI_PREP_S3_ARTIFACTS}" == 1 ]]; then
+  prep_s3_artifacts
+elif [[ "${IRONFOX_CI_PREP_S3_RELEASES}" == 1 ]]; then
+  prep_s3_releases
 elif [[ "${IRONFOX_CI_PREP_SB_GAPI_KEY}" == 1 ]]; then
   prep_sb_gapi_key
 fi

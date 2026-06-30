@@ -50,4 +50,4 @@ readonly IRONFOX_CI_BUILD_FAILED
 export IRONFOX_CI_BUILD_FAILED
 
 # Compress our archives
-compress_archives
+#compress_archives
