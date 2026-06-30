@@ -362,6 +362,13 @@ export RUSTUP_TERM_PROGRESS_WHEN
 readonly RUSTUP_TERM_COLOR="${IRONFOX_RUSTUP_COLORED_OUTPUT}"
 export RUSTUP_TERM_COLOR
 
+# s3cmd
+
+## Avoid installing manual pages/doc files
+### https://github.com/s3tools/s3cmd/blob/master/INSTALL.md#note-to-distributions-package-maintainers
+readonly S3CMD_PACKAGING='yes'
+export S3CMD_PACKAGING
+
 # UnifiedPush-AC
 readonly UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
 export UP_AC_GRADLE_USER_HOME
