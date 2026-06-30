@@ -959,7 +959,7 @@ readonly IRONFOX_RUST_FLAGS_OVERRIDE
 export IRONFOX_RUST_FLAGS_OVERRIDE
 
 # Rust flags
-readonly IRONFOX_RUST_FLAGS_DEFAULT='-Ccontrol-flow-guard=true -Cdebug-assertions=false -Cdebuginfo=0 -Cincremental=false -Clink-dead-code=false -Copt-level=3 -Coverflow-checks=true -Cstrip=debuginfo -O'
+readonly IRONFOX_RUST_FLAGS_DEFAULT='-Ccontrol-flow-guard=true -Cdebuginfo=0 -Cincremental=false -Clink-dead-code=false -Copt-level=3 -Coverflow-checks=true -Cstrip=debuginfo'
 if [[ -z "${IRONFOX_RUST_FLAGS+x}" ]]; then
   IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_RUST_FLAGS_OVERRIDE}" == 1 ]]; then
