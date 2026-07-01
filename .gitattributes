@@ -9,7 +9,10 @@ test/ironfox-nightly.aab    lfs
 *.yaml                      linguist-detectable
 *.xml                       linguist-detectable
 
-# lowercase only
+# GitLab
+# (These language names must be lowercase)
+# For a list of supported languages, see:
+# https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml
 *.build                     gitlab-language=python
 *.cfg                       gitlab-language=javascript
 *.conf                      gitlab-language=python
@@ -25,7 +28,11 @@ test/ironfox-nightly.aab    lfs
 .npmrc*                     gitlab-language=ini
 machrc*                     gitlab-language=ini
 
-# SHELL -> Shell, json -> JSON
+# Forgejo (Codeberg)/GitHub
+# (These language names must be uppercase)
+# For a list of supported languages, see:
+# Forgejo (Codeberg): https://github.com/go-enry/go-enry/blob/master/data/languageInfo.go
+# GitHub: https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml
 *.build                     linguist-language=PYTHON
 *.cfg                       linguist-language=JAVASCRIPT
 *.conf                      linguist-language=PYTHON
