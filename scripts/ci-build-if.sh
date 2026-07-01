@@ -79,9 +79,11 @@ if [[ "${ci_build_project}" == 'geckoview' ]]; then
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'node'
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'npm'
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'phoenix'
+  bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 's3cmd'
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'wasi'
 else
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
+  bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 's3cmd'
 
   # If we're building a Fenix bundle, we also need to download our GeckoView artifacts
   if [[ "${ci_build_arch}" == 'bundle' ]]; then
