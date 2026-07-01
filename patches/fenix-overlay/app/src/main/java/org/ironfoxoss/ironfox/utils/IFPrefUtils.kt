@@ -49,11 +49,7 @@ class IFPrefUtils(private val context: Context) {
    */
   fun prefExists(resID: Int): Boolean {
     val pref = context.getPreferenceKey(resID)
-    if (sharedPrefs.contains(pref)) {
-      return true
-    } else {
-      return false
-    }
+    return sharedPrefs.contains(pref)
   }
 
   /**
@@ -62,11 +58,7 @@ class IFPrefUtils(private val context: Context) {
    * @param pref Preference key
    */
   fun strPrefExists(pref: String): Boolean {
-    if (sharedPrefs.contains(pref)) {
-      return true
-    } else {
-      return false
-    }
+    return sharedPrefs.contains(pref)
   }
 
   /**
