@@ -325,14 +325,14 @@ fi
 
 if [[ "${IRONFOX_AR_UP_GECKOVIEW}" == 1 ]]; then
     if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm64' ]]; then
-      push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${CI_PIPELINE_ID}"
+      push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}"   "${CI_PIPELINE_ID}"
     fi
 
     if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm' ]]; then
-      push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"   "${CI_PIPELINE_ID}"
+      push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"     "${CI_PIPELINE_ID}"
     fi
 
     if [[ "${IRONFOX_AR_UP_ARCH}" == 'x86_64' ]]; then
-      push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"   "${CI_PIPELINE_ID}"
+      push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}"  "${CI_PIPELINE_ID}"
     fi
 fi
