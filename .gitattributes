@@ -27,7 +27,7 @@ machrc*                     gitlab-language=ini
 
 # SHELL -> Shell, json -> JSON
 *.build                     linguist-language=PYTHON
-*.cfg                       linguist-language=JavaScript
+*.cfg                       linguist-language=JAVASCRIPT
 *.conf                      linguist-language=PYTHON
 *.configure                 linguist-language=PYTHON
 *.ftl                       linguist-language=INI
