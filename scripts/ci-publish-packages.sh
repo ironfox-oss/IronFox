@@ -194,12 +194,12 @@ function add_sha512sum() {
 }
 
 # Extract compressed artifacts
-mkdir -p "${IRONFOX_ARTIFACTS}"
-for archive in "${IRONFOX_ARTIFACTS}"/*.tar.xz; do
-  [[ -f "${archive}" ]] || continue
-  echo "Extracting ${archive}"
-  "${IRONFOX_TAR}" xvJf "${archive}" -C "${IRONFOX_ARTIFACTS}"
-done
+#mkdir -p "${IRONFOX_ARTIFACTS}"
+#for archive in "${IRONFOX_ARTIFACTS}"/*.tar.xz; do
+#  [[ -f "${archive}" ]] || continue
+#  echo "Extracting ${archive}"
+#  "${IRONFOX_TAR}" xvJf "${archive}" -C "${IRONFOX_ARTIFACTS}"
+#done
 
 mkdir -vp "${IRONFOX_BUILD}"
 

@@ -179,6 +179,7 @@ build-geckoview:
   script:
     - set -euo pipefail
     - echo 'CI - Preparing secrets...'
+    - bash scripts/ci-prep.sh s3-artifacts
     - bash scripts/ci-prep.sh sb
     - echo 'CI - Prepared secrets.'
     - echo "CI - Building GeckoView (${BUILD_VARIANT})..."
@@ -227,6 +228,7 @@ build-fenix:
     - set -euo pipefail
     - echo 'CI - Preparing secrets...'
     - bash scripts/ci-prep.sh android-ks
+    - bash scripts/ci-prep.sh s3-artifacts
     - bash scripts/ci-prep.sh sb
     - echo 'CI - Prepared secrets.'
     - echo "CI - Building Fenix (${BUILD_VARIANT_PRETTY})..."
