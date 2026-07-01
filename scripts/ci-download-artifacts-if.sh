@@ -88,8 +88,8 @@ function download_artifact() {
   fi
 
   local readonly target_expected_sha512sum="${target_file}-sha512sum.txt"
-  local readonly target_expected_sha512sum_url="https://artifacts.ironfoxoss.org/${pipeline_id}/${target_expected_sha512sum}"
-  local readonly target_file_url="https://artifacts.ironfoxoss.org/${pipeline_id}/${target_file}"
+  local readonly target_expected_sha512sum_url="https://artifacts.ironfoxoss.org/ironfox/${pipeline_id}/${target_expected_sha512sum}"
+  local readonly target_file_url="https://artifacts.ironfoxoss.org/ironfox/${pipeline_id}/${target_file}"
   local readonly output_file="${output_dir}/${target_file}"
   local readonly output_expected_sha512sum="${output_dir}/${target_expected_sha512sum}"
 

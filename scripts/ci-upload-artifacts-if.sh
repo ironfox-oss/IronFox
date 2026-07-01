@@ -227,7 +227,7 @@ function push_file() {
 
   echo_red_text "Uploading ${push_file} to S3..."
   source "${IRONFOX_PYENV}"
-  "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} --mime-type="${mime_type}" put "${push_file}" "s3://${s3_bucket_name}/${s3_full_path}" \
+  "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} --mime-type="${mime_type}" put "${push_file}" "s3://${s3_bucket_name}/ironfox/${s3_full_path}" \
     --access_key="${s3_access_key}" \
     --secret_key="${s3_secret_key}" \
     --host="${s3_endpoint}" \
