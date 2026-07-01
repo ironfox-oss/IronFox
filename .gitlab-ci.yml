@@ -191,7 +191,6 @@ build-geckoview:
   artifacts:
     untracked: false
     when: always
-    when: always
     access: all
     expire_in: "30 days"
     paths:
@@ -239,7 +238,6 @@ build-fenix:
     - echo 'CI - Uploaded artifact.'
   artifacts:
     untracked: false
-    when: always
     when: always
     access: all
     expire_in: "30 days"
