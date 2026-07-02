@@ -58,8 +58,8 @@ fi
 # Get sources
 if [[ "${ci_build_project}" == 'geckoview' ]]; then
   # If we're only building GeckoView, we don't need to download all sources
-  bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'python'
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'uv'
+  bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'python'
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-ndk'
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-25'
   bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk'

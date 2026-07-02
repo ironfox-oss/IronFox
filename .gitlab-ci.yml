@@ -86,8 +86,8 @@ update-fdroid-repo:
   script:
     - set -euo pipefail
     - echo 'CI - Downloading dependencies...'
-    - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh uv
+    - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh androguard
     - echo 'CI - Downloaded dependencies.'
     - echo 'Updating F-Droid repo...'
@@ -122,8 +122,8 @@ update-site-repo:
   script:
     - set -euo pipefail
     - echo 'CI - Downloading dependencies...'
-    - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh uv
+    - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh pyyaml
     - echo 'CI - Downloaded dependencies.'
     - echo 'CI - Updating website repo...'
@@ -286,8 +286,8 @@ prepare-release:
     - bash scripts/ci-prep.sh s3-releases
     - echo 'CI - Prepared secrets.'
     - echo 'CI - Downloading dependencies...'
-    - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh uv
+    - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh s3cmd
     - echo 'CI - Downloaded dependencies.'
     - echo 'CI - Downloading artifacts...'
