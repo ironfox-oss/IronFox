@@ -1,3 +1,5 @@
+* text=auto eol=lf
+
 # Aliases
 [attr]lfs filter=lfs diff=lfs merge=lfs -text
 [attr]crlf eol=crlf* text=auto eol=lf
