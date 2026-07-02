@@ -294,7 +294,6 @@ prepare-release:
     - bash -x scripts/ci-download-artifacts.sh fenix arm64
     - bash -x scripts/ci-download-artifacts.sh fenix arm
     - bash -x scripts/ci-download-artifacts.sh fenix x86_64
-    - bash -x scripts/ci-download-artifacts.sh fenix universal
     - bash -x scripts/ci-download-artifacts.sh fenix bundle
     - echo 'CI - Downloaded artifacts.'
     - echo 'CI - Publishing packages...'
