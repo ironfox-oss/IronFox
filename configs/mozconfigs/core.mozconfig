@@ -178,8 +178,8 @@ export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Pofficial -Dorg.gradle.java.home=$
 ## Skip checks for unwanted/unused API keys
 ac_add_options --without-adjust-sdk-keyfile
 ac_add_options --without-bing-api-keyfile
-ac_add_options --without-mozilla-api-keyfile
 ac_add_options --without-leanplum-sdk-keyfile
+ac_add_options --without-mozilla-api-keyfile
 ac_add_options --without-pocket-api-keyfile
 
 ## Target Android

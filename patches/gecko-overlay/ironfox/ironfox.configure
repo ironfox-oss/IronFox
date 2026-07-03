@@ -65,8 +65,8 @@ imply_option("MOZILLA_OFFICIAL", True)
 # Skip checks for unwanted/unused API keys
 imply_option("--with-adjust-sdk-keyfile", False)
 imply_option("--with-bing-api-keyfile", False)
-imply_option("--with-mozilla-api-keyfile", False)
 imply_option("--with-leanplum-sdk-keyfile", False)
+imply_option("--with-mozilla-api-keyfile", False)
 imply_option("--with-pocket-api-keyfile", False)
 
 # Target Fenix
