@@ -37,9 +37,8 @@ ac_add_options --disable-backgroundtasks
 
 ## Disable crash reporting
 ac_add_options --disable-crashreporter
-ac_add_options --with-crashreporter-url='data;'
+ac_add_options --with-crashreporter-url=''
 export MOZ_CRASHREPORTER=
-export MOZ_CRASHREPORTER_URL='data;'
 
 ## Disable the default browser agent
 ### This is a service used for telemetry

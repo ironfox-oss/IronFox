@@ -2,19 +2,49 @@
 
 # NOTE: Unfortunately, we can't redefine options here that were implied to a different value at `mobile/android/moz.configure` here.
 ## (Ex. we can't set `MOZ_SERVICES_HEALTHREPORT` to `False` and `MOZ_APP_VENDOR` to `IronFox OSS` here) - We'll still need to drirectly modify the configure file directly for changes like this.
-## BUT we can use this as a form of validation, to ensure that our changes are properly applied/working as expected - ex. if we set `MOZ_SERVICES_HEALTHREPORT` to `False` here, and the build fails - we'll know something went wrong with the`gecko-diasble-telemetry` patch.
+## BUT we can use this as a form of validation, to ensure that our changes are properly applied/working as expected - ex. if we set `MOZ_SERVICES_HEALTHREPORT` to `False` here, and the build fails - we'll know something went wrong with the`gecko-disable-telemetry` patch.
+
+# Disable artifact builds
+imply_option("--enable-artifact-builds", False)
+
+# Disable ASan crash reporting
+imply_option("--enable-address-sanitizer-reporter", False)
+
+# Disable automatic bootstrap/update of toolchains/dependencies
+imply_option("--enable-bootstrap", False)
+
+# Disable crash reporting
+imply_option("--enable-crashreporter", False)
+imply_option("--with-crashreporter-url", "")
+
+# Disable the default browser agent
+## This is a service used for telemetry
+## Windows-specific, but doesn't hurt to set here
+imply_option("--enable-default-browser-agent", False)
 
 # Disable HLS (HTTP Live Streaming)
 ## To address privacy and security concerns due to the use of an external ExoPlayer library
 ## https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/29859
 imply_option("MOZ_ANDROID_HLS_SUPPORT", False)
 
+# Disable misc. debugging/development/test features
+imply_option("--enable-debug", False)
+
+# Disable Mozilla's runtime check for nimbus-fml
+## We replace this with our own (--with-ironfox-nimbus-fml), so that we can override the path of nimbus-fml directly
+imply_option("--with-nimbus-fml", False)
+
 # Disable Normandy (Experimentation)
 imply_option("MOZ_NORMANDY", False)
 
 # Disable telemetry
-## See the note at the top, we also set this with our `gecko-diasble-telemetry` patch
+## We also set `MOZ_SERVICES_HEALTHREPORT` with our `gecko-disable-telemetry` patch
 imply_option("MOZ_SERVICES_HEALTHREPORT", False)
+imply_option("MOZ_TELEMETRY_REPORTING", False)
+
+# Enable AutoConfig
+## https://support.mozilla.org/kb/customizing-firefox-using-autoconfig
+imply_option("--enable-pref-extensions", True)
 
 # Ensure UA is set to Firefox
 imply_option("MOZ_APP_UA_NAME", "Firefox")
@@ -26,6 +56,33 @@ imply_option("MOZ_ANDROID_EXCLUDE_FONTS", False)
 # Make it IronFox...
 ## See the note at the top, we also set this with our prebuild script
 imply_option("MOZ_APP_VENDOR", "IronFox OSS")
+
+# Set flag for "official" builds
+## Ensures we're not enabling functionality/settings meant for debugging/development
+## https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
+imply_option("MOZILLA_OFFICIAL", True)
+
+# Skip checks for unwanted/unused API keys
+imply_option("--with-adjust-sdk-keyfile", False)
+imply_option("--with-bing-api-keyfile", False)
+imply_option("--with-mozilla-api-keyfile", False)
+imply_option("--with-leanplum-sdk-keyfile", False)
+imply_option("--with-pocket-api-keyfile", False)
+
+# Target Fenix
+## (This is just used/always set to prevent Mach from configuring tasks for unwanted subprojects)
+## (To actually, target Fenix, use `--enable-ironfox-subproject` instead)
+imply_option("--enable-android-subproject", "fenix")
+
+# Target release
+imply_option("--enable-release", True)
+imply_option("--enable-update-channel", "release")
+
+# Use GeckoView Lite
+## This is the standard variant of GeckoView used by embedders
+## But, by default, Fenix uses a modified "omni" variant that includes Glean
+## We don't want Glean, so this is preferable for us
+imply_option("--enable-geckoview-lite", True)
 
 set_config("IRONFOX", True)
 set_define("IRONFOX", True)
