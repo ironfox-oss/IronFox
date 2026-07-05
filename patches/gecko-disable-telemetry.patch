@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Fri, 03 Jul 2026 04:18:56 +0000
+Subject: [PATCH] feat: Disable telemetry
+
+Disables telemetry at build-time and removes various data reporting mechanisms
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
 index 077c7ca2f14b..e6fa430c772d 100644
 --- a/mobile/android/moz.configure
@@ -11,6 +20,32 @@ index 077c7ca2f14b..e6fa430c772d 100644
  imply_option("MOZ_GECKOVIEW_HISTORY", True)
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
+diff --git a/python/sites/mach.txt b/python/sites/mach.txt
+index 8f4aa95dbd04..eb1e8711a658 100644
+--- a/python/sites/mach.txt
++++ b/python/sites/mach.txt
+@@ -58,7 +58,7 @@ pth:xpcom/geckoprocesstypes_generator
+ pth:xpcom/idl-parser
+ # glean-sdk may not be installable if a wheel isn't available
+ # and it has to be built from source.
+-pypi-optional:glean-sdk==67.3.2:telemetry will not be collected
++# pypi-optional:glean-sdk==67.3.2:telemetry will not be collected
+ pypi-optional:orjson>=3.10:json operations will be slower in various tools
+ # Mach gracefully handles the case where `psutil` is unavailable.
+ # We aren't (yet) able to pin packages in automation, so we have to
+diff --git a/toolkit/components/glean/moz.build b/toolkit/components/glean/moz.build
+index 22dfab5a45f4..21ee5138beb4 100644
+--- a/toolkit/components/glean/moz.build
++++ b/toolkit/components/glean/moz.build
+@@ -256,7 +256,7 @@ if CONFIG["MOZ_GLEAN_INTERESTING_METRICS_FILES"]:
+ 
+ 
+ DIRS += [
+-    "tests",  # Must be in DIRS, not TEST_DIRS or python-test won't find it.
++#    "tests",  # Must be in DIRS, not TEST_DIRS or python-test won't find it.
+     "xpcom",
+ ]
+ 
 diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
 index 8ebf827d5612..d32cfe782d26 100644
 --- a/toolkit/components/glean/src/init/mod.rs
@@ -40,10 +75,80 @@ index 8ebf827d5612..d32cfe782d26 100644
          ping_schedule: pings::ping_schedule(),
          ping_lifetime_threshold: 0,
          ping_lifetime_max_time: Duration::ZERO,
+diff --git a/toolkit/components/glean/src/init/viaduct_uploader.rs b/toolkit/components/glean/src/init/viaduct_uploader.rs
+index e07ff326e03b..5ed0d0ac9f50 100644
+--- a/toolkit/components/glean/src/init/viaduct_uploader.rs
++++ b/toolkit/components/glean/src/init/viaduct_uploader.rs
+@@ -43,7 +43,7 @@ impl PingUploader for ViaductUploader {
+             .headers
+             .iter()
+             .any(|(name, _)| name == "X-Debug-ID");
+-        let localhost_port = static_prefs::pref!("telemetry.fog.test.localhost_port");
++        let localhost_port = -1;
+         if localhost_port < 0
+             || (localhost_port == 0 && !debug_tagged && cfg!(feature = "disable_upload"))
+         {
+diff --git a/toolkit/components/glean/xpcom/FOG.cpp b/toolkit/components/glean/xpcom/FOG.cpp
+index 562321d03435..3994681d13b2 100644
+--- a/toolkit/components/glean/xpcom/FOG.cpp
++++ b/toolkit/components/glean/xpcom/FOG.cpp
+@@ -35,7 +35,7 @@ static mozilla::LazyLogModule sLog("fog");
+ 
+ using glean::LogToBrowserConsole;
+ 
+-#ifdef MOZ_GLEAN_ANDROID
++#if false
+ // Defined by `glean-core`. We reexport it here for later use.
+ extern "C" NS_EXPORT void glean_enable_logging(void);
+ 
+@@ -211,7 +211,7 @@ extern "C" const char* FOG_MozAppVersionDisplay(void) {
+ NS_IMETHODIMP
+ FOG::RegisterCustomPings() {
+   MOZ_ASSERT(XRE_IsParentProcess());
+-  glean::impl::fog_register_pings();
++//  glean::impl::fog_register_pings();
+   return NS_OK;
+ }
+ 
+diff --git a/toolkit/components/telemetry/moz.build b/toolkit/components/telemetry/moz.build
+index 91ae53839b69..0748f005d543 100644
+--- a/toolkit/components/telemetry/moz.build
++++ b/toolkit/components/telemetry/moz.build
+@@ -6,9 +6,9 @@ include("/ipc/chromium/chromium-config.mozbuild")
+ 
+ FINAL_LIBRARY = "xul"
+ 
+-DIRS = [
+-    "pingsender",
+-]
++# DIRS = [
++#    "pingsender",
++# ]
+ 
+ DEFINES["MOZ_APP_VERSION"] = '"%s"' % CONFIG["MOZ_APP_VERSION"]
+ 
 diff --git a/toolkit/components/telemetry/core/Telemetry.cpp b/toolkit/components/telemetry/core/Telemetry.cpp
-index 1e83d34cd007..2564de8f86ef 100644
+index 1e83d34cd007..474bc5c50bf3 100644
 --- a/toolkit/components/telemetry/core/Telemetry.cpp
 +++ b/toolkit/components/telemetry/core/Telemetry.cpp
+@@ -693,7 +693,7 @@ TelemetryImpl::GetCanRecordBase(bool* ret) {
+ 
+ NS_IMETHODIMP
+ TelemetryImpl::SetCanRecordBase(bool canRecord) {
+-#ifndef FUZZING
++#if false
+   if (canRecord != mCanRecordBase) {
+     TelemetryHistogram::SetCanRecordBase(canRecord);
+     TelemetryScalar::SetCanRecordBase(canRecord);
+@@ -719,7 +719,7 @@ TelemetryImpl::GetCanRecordExtended(bool* ret) {
+ 
+ NS_IMETHODIMP
+ TelemetryImpl::SetCanRecordExtended(bool canRecord) {
+-#ifndef FUZZING
++#if false
+   if (canRecord != mCanRecordExtended) {
+     TelemetryHistogram::SetCanRecordExtended(canRecord);
+     TelemetryScalar::SetCanRecordExtended(canRecord);
 @@ -762,7 +762,7 @@ already_AddRefed<nsITelemetry> TelemetryImpl::CreateTelemetryInstance() {
    }
  
@@ -66,3 +171,4 @@ index a3f1cc357366..2d814cbcbc40 100644
      gkrust_features += ["glean_disable_upload"]
  
  if CONFIG["MOZ_ENABLE_DBUS"]:
+-- 
