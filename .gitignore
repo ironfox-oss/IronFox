@@ -27,5 +27,9 @@ __pycache__/
 # mozconfig for local builds
 /overrides.mozconfig
 
+# VSCod(e/ium)
+*.code-workspace
+/.vscode/
+
 # WIP
 /wip/
