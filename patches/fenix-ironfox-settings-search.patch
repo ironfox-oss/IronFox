@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 05:15:52 +0000
+Subject: [PATCH] IronFox Settings Search
+
+Provides support for searching IronFox-specific preferences
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
 index 6bd919d8b664..6474f120ea9b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
@@ -29,3 +38,4 @@ index ea598d0979d4..fd90ee81b03f 100644
 +        fragmentId = R.id.ironFoxSettingsFragment,
 +    )
  }
+-- 

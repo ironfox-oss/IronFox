@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 05:20:13 +0000
+Subject: [PATCH] IronFox Settings Support (Fenix) - XPInstall
+
+Provides support for a preference to enable/disable add-on installation
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 index 69b25294b63e..387a69d829dc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
@@ -17,3 +26,4 @@ index 69b25294b63e..387a69d829dc 100644
                  }
              }
  
+-- 
