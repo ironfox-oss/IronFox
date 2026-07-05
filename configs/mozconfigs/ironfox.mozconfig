@@ -32,7 +32,7 @@ fi
 
 if [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'gecko' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'geckoview' ]] &&
  [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'ac-core' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'android-components' ]] &&
- [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'fenix' ]]; then
+ [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'ironfox-core' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'fenix' ]]; then
   echo "ERROR: Invalid Mach target project: ${IRONFOX_MACH_TARGET_PROJECT}"
   exit 1
 fi

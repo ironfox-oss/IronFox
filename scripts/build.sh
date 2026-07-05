@@ -48,9 +48,9 @@ fi
 ## (All `rebuild-` targets eventually build Fenix, because eventually Fenix consumes everything...)
 if [[ "${project}" == 'fenix' ]] || [[ "${project}" == 'rebuild-ac-core' ]] || [[ "${project}" == 'rebuild-ac' ]] ||
  [[ "${project}" == 'rebuild-as' ]] || [[ "${project}" == 'rebuild-fenix' ]] || [[ "${project}" == 'rebuild-gecko' ]] ||
- [[ "${project}" == 'rebuild-geckoview' ]] || [[ "${project}" == 'rebuild-glean' ]] || [[ "${project}" == 'rebuild-llvm' ]] ||
- [[ "${project}" == 'rebuild-microg' ]] || [[ "${project}" == 'rebuild-nimbus-fml' ]] || [[ "${project}" == 'rebuild-uniffi' ]] ||
- [[ "${project}" == 'rebuild-up-ac' ]] || [[ "${project}" == 'rebuild-wasi' ]]; then
+ [[ "${project}" == 'rebuild-geckoview' ]] || [[ "${project}" == 'rebuild-glean' ]] || [[ "${project}" == 'rebuild-ironfox-core' ]] ||
+ [[ "${project}" == 'rebuild-llvm' ]] || [[ "${project}" == 'rebuild-microg' ]] || [[ "${project}" == 'rebuild-nimbus-fml' ]] ||
+ [[ "${project}" == 'rebuild-uniffi' ]] || [[ "${project}" == 'rebuild-up-ac' ]] || [[ "${project}" == 'rebuild-wasi' ]]; then
   readonly IRONFOX_BUILT_FENIX=1
 else
   readonly IRONFOX_BUILT_FENIX=0

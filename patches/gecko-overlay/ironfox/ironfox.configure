@@ -87,14 +87,98 @@ imply_option("--enable-geckoview-lite", True)
 set_config("IRONFOX", True)
 set_define("IRONFOX", True)
 
+# Whether we're targetting release
 option(
   "--enable-ironfox-release",
-  help="Build IronFox (Release)",
   default=False,
+  help="Target IronFox Release",
 )
 
-set_config("IRONFOX_RELEASE", True, when="--enable-ironfox-release")
-set_define("IRONFOX_RELEASE", True, when="--enable-ironfox-release")
+@depends("--enable-ironfox-release")
+def ironfox_release(value):
+  if value:
+    return True
+
+set_config("IRONFOX_RELEASE", ironfox_release)
+set_define("IRONFOX_RELEASE", ironfox_release)
+
+# Whether we're targetting nightly
+@depends("--enable-ironfox-release")
+def ironfox_nightly(value):
+  if value:
+    return False
+
+set_config("IRONFOX_NIGHTLY", ironfox_nightly)
+set_define("IRONFOX_NIGHTLY", ironfox_nightly)
+
+# Get the release channel
+@depends("--enable-ironfox-release")
+def ironfox_channel(release):
+  if release:
+    return "release"
+  return "nightly"
+
+# Get the default uBlock Origin assets URL
+@depends("--enable-ironfox-release")
+def ironfox_default_ubo_assets_url(release):
+  if release:
+    return "https://assets.ironfoxoss.org/ublock/assets.json"
+  return "https://assets.ironfoxoss.org/ublock/assets.dev.json"
+
+# Set constants
+## These values are shared and can be used directly by both Gecko and Java/Kotlin libraries (via their respective IFConstants)
+project_flag("IRONFOX_BUGS_URL",                nargs=1, help="IronFox issue tracker URL", set_as_define=True)
+project_flag("IRONFOX_CHANNEL",                 nargs=1, help="IronFox release channel", set_as_define=True)
+project_flag("IRONFOX_DEFAULT_DOH_URL",         nargs=1, help="IronFox default DoH provider URL", set_as_define=True)
+project_flag("IRONFOX_DEFAULT_UBO_ASSETS_URL",  nargs=1, help="IronFox default uBlock Origin assets URL", set_as_define=True)
+project_flag("IRONFOX_FAQ_URL",                 nargs=1, help="IronFox FAQ URL", set_as_define=True)
+project_flag("IRONFOX_RELEASES_URL",            nargs=1, help="IronFox releases URL", set_as_define=True)
+project_flag("IRONFOX_REPO_GIT_URL",            nargs=1, help="IronFox repo (Git) URL", set_as_define=True)
+project_flag("IRONFOX_REPO_URL",                nargs=1, help="IronFox repo URL", set_as_define=True)
+project_flag("IRONFOX_URL",                     nargs=1, help="IronFox URL", set_as_define=True)
+
+imply_option("IRONFOX_BUGS_URL",                "https://codeberg.org/ironfox-oss/bugs/issues")
+imply_option("IRONFOX_CHANNEL",                 ironfox_channel)
+imply_option("IRONFOX_DEFAULT_DOH_URL",         "https://base.dns.mullvad.net/dns-query")
+imply_option("IRONFOX_DEFAULT_UBO_ASSETS_URL",  ironfox_default_ubo_assets_url)
+imply_option("IRONFOX_FAQ_URL",                 "https://ironfoxoss.org/docs/faq/")
+imply_option("IRONFOX_RELEASES_URL",            "https://gitlab.com/ironfox-oss/IronFox/-/releases")
+imply_option("IRONFOX_REPO_GIT_URL",            "gitlab.com:ironfox-oss/IronFox.git")
+imply_option("IRONFOX_REPO_URL",                "https://gitlab.com/ironfox-oss/IronFox")
+imply_option("IRONFOX_URL",                     "https://ironfoxoss.org/")
+
+# Set version
+option(
+  env="IRONFOX_VERSION",
+  nargs="?",
+  help="IronFox version",
+)
+
+@depends("IRONFOX_VERSION")
+def ironfox_version(version):
+  if not version:
+    die("ERROR: Missing IronFox version! Please set the version with IRONFOX_VERSION")
+  return version[0]
+
+set_define("IRONFOX_VERSION", ironfox_version)
+
+# Set app name
+@depends("--with-app-name")
+def ironfox_app_name(name):
+  if not name:
+    die("ERROR: Missing IronFox app name! Please set the name with --with-app-name")
+  return name[0]
+
+set_define("IRONFOX_APP_NAME", ironfox_app_name)
+
+# Set pretty app name
+@depends("--with-app-basename")
+def ironfox_app_name_pretty(name):
+  if not name:
+    die("ERROR: Missing IronFox pretty app name! Please set the pretty name with --with-app-basename")
+  return name[0]
+
+set_define("IRONFOX_APP_NAME_PRETTY", ironfox_app_name_pretty)
 
 # (This is inspired by mozilla-central's `--enable-android-subproject`)
 option(
@@ -103,9 +187,10 @@ option(
     "android-components",
     "fenix",
     "geckoview",
+    "ironfox-core",
   ),
   nargs="?",
-  help="Build an Android subproject. Possible options: android-components/fenix/geckoview",
+  help="Build an Android subproject. Possible options: android-components/fenix/geckoview/ironfox-core",
 )
 
 @depends("--enable-ironfox-subproject")

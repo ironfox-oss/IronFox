@@ -580,11 +580,6 @@ function prepare_fenix() {
   "${IRONFOX_SED}" -i -e 's|GOOGLE_XX_URL = ".*"|GOOGLE_XX_URL = ""|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt"
   "${IRONFOX_SED}" -i -e 's|RATE_APP_URL = ".*"|RATE_APP_URL = ""|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt"
 
-  "${IRONFOX_SED}" -i -e 's|ANDROID_SUPPORT_SUMO_URL = ".*"|ANDROID_SUPPORT_SUMO_URL = "https://ironfoxoss.org/docs/faq/"|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt"
-  "${IRONFOX_SED}" -i -e 's|WHATS_NEW_URL = ".*"|WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt"
-  "${IRONFOX_SED}" -i 's|mzl.la/AndroidSupport|https://ironfoxoss.org/docs/faq/|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt"
-  "${IRONFOX_SED}" -i 's|https://www.mozilla.org/firefox/android/notes|https://gitlab.com/ironfox-oss/IronFox/-/releases|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt"
-
   # Replace proprietary artwork
   rm -v "${IRONFOX_FENIX}/app/src/release/res/drawable/ic_launcher_foreground.xml"
   rm -v "${IRONFOX_FENIX}"/app/src/release/res/mipmap-*/ic_launcher.webp

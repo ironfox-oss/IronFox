@@ -1,0 +1,6 @@
+# IronFox Core mozconfig
+
+set -euo pipefail
+
+# Target IronFox Components
+ac_add_options --enable-ironfox-subproject='ironfox-core'

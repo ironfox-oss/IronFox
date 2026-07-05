@@ -1,0 +1,118 @@
+plugins {
+  alias(libs.plugins.dependency.analysis)
+  alias(libs.plugins.python.envs.plugin)
+  id 'maven-publish'
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+  compileSdk {
+    version = release(config.compileSdkMajorVersion) { minorApiLevel = config.compileSdkMinorVersion }
+  }
+
+  defaultConfig {
+    minSdk config.minSdkVersion
+
+    consumerProguardFiles "proguard-rules.pro"
+
+    // Set constants
+    buildConfigField 'String', "IRONFOX_APP_NAME",                  "\"${gradle.mozconfig.defines.IRONFOX_APP_NAME}\"";
+    buildConfigField 'String', "IRONFOX_APP_NAME_PRETTY",           "\"${gradle.mozconfig.defines.IRONFOX_APP_NAME_PRETTY}\"";
+    buildConfigField 'String', "IRONFOX_BUGS_URL",                  "\"${gradle.mozconfig.defines.IRONFOX_BUGS_URL}\"";
+    buildConfigField 'String', "IRONFOX_CHANNEL",                   "\"${gradle.mozconfig.defines.IRONFOX_CHANNEL}\"";
+    buildConfigField 'String', "IRONFOX_DEFAULT_DOH_URL",           "\"${gradle.mozconfig.defines.IRONFOX_DEFAULT_DOH_URL}\"";
+    buildConfigField 'String', "IRONFOX_DEFAULT_UBO_ASSETS_URL",    "\"${gradle.mozconfig.defines.IRONFOX_DEFAULT_UBO_ASSETS_URL}\"";
+    buildConfigField 'String', "IRONFOX_FAQ_URL",                   "\"${gradle.mozconfig.defines.IRONFOX_FAQ_URL}\"";
+    buildConfigField 'boolean', "IRONFOX_NIGHTLY",                  gradle.mozconfig.defines.IRONFOX_NIGHTLY ? 'true' : 'false';
+    buildConfigField 'boolean', "IRONFOX_RELEASE",                  gradle.mozconfig.defines.IRONFOX_RELEASE ? 'true' : 'false';
+    buildConfigField 'String', "IRONFOX_RELEASES_URL",              "\"${gradle.mozconfig.defines.IRONFOX_RELEASES_URL}\"";
+    buildConfigField 'String', "IRONFOX_REPO_GIT_URL",              "\"${gradle.mozconfig.defines.IRONFOX_REPO_GIT_URL}\"";
+    buildConfigField 'String', "IRONFOX_REPO_URL",                  "\"${gradle.mozconfig.defines.IRONFOX_REPO_URL}\"";
+    buildConfigField 'String', "IRONFOX_URL",                       "\"${gradle.mozconfig.defines.IRONFOX_URL}\"";
+    buildConfigField 'String', "IRONFOX_VERSION",                   "\"${gradle.mozconfig.defines.IRONFOX_VERSION}\"";
+  }
+
+  buildFeatures {
+    buildConfig = true
+  }
+
+  publishing {
+    singleVariant("release") {
+      withSourcesJar()
+    }
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  namespace "org.ironfoxoss.core"
+}
+
+def releaseGroupId = 'org.ironfoxoss.core'
+def releaseArtifactId = 'core'
+def timestamp = System.getenv("IRONFOX_CORE_TIMESTAMP")
+if (timestamp == "null") {
+  throw new GradleException("ERROR: Missing version timestamp (IRONFOX_CORE_TIMESTAMP)")
+}
+// The actual version is after "0.0.1"
+// Since we're not publishing this to a public Maven repo, we can prepend "0.0.1-" and append "-SNAPSHOT"
+// to better support substitution and patching/adding it as a dependency
+def releaseVersion = "0.0.1-${gradle.mozconfig.defines.IRONFOX_VERSION}-${timestamp}-SNAPSHOT"
+
+tasks.register('printArtifactId') {
+  group 'Artifact Info'
+  doLast {
+    println("artifact=${releaseGroupId}:${releaseArtifactId}")
+  }
+}
+
+tasks.register("printVersion") {
+  group 'Artifact Info'
+  doLast {
+    println("version=${releaseVersion}")
+  }
+}
+
+afterEvaluate {
+  publishing {
+    repositories {
+      mavenLocal()
+    }
+    publications {
+      // Creates a Maven publication called "release"
+      release(MavenPublication) {
+        pom {
+          name = "${releaseGroupId}:${releaseArtifactId}"
+          description = 'IronFox Core'
+          url = gradle.mozconfig.defines.IRONFOX_URL
+          developers {
+            developer {
+              name = 'IronFox OSS'
+              email = 'contact@ironfoxoss.org'
+              organization = 'IronFox OSS'
+              organizationUrl = gradle.mozconfig.defines.IRONFOX_URL
+            }
+          }
+          scm {
+            connection = "scm:git:git://${gradle.mozconfig.defines.IRONFOX_REPO_GIT_URL}"
+            developerConnection = "scm:git:ssh://${gradle.mozconfig.defines.IRONFOX_REPO_GIT_URL}"
+            url = gradle.mozconfig.defines.IRONFOX_REPO_URL
+          }
+        }
+        // Applies the component for the release build variant.
+        from components.release
+
+        // You can then customize attributes of the publication as shown below.
+        groupId = releaseGroupId
+        artifactId = releaseArtifactId
+        version = releaseVersion
+      }
+    }
+  }
+}

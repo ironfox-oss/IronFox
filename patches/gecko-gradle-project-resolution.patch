@@ -1,8 +1,8 @@
 diff --git a/settings.gradle b/settings.gradle
-index d149d222b95b7..55f1a94364c60 100644
+index d149d222b95b..71342634dd94 100644
 --- a/settings.gradle
 +++ b/settings.gradle
-@@ -44,15 +44,19 @@ if (gradle.ext.mozconfig.substs.MOZ_APPSERVICES_IN_TREE) {
+@@ -44,15 +44,26 @@ if (gradle.ext.mozconfig.substs.MOZ_APPSERVICES_IN_TREE) {
  // but it's hard to automatically arrange better.
  System.setProperty('android.home', gradle.mozconfig.substs.ANDROID_SDK_ROOT)
  
@@ -15,13 +15,20 @@ index d149d222b95b7..55f1a94364c60 100644
 +    include ':geckoview'
 +    project(':geckoview').projectDir = new File("${gradle.mozconfig.topsrcdir}/mobile/android/geckoview")
 +}
++
++if (gradle.mozconfig.substs.IRONFOX_SUBPROJECT == "android-components") {
++    include ':android-components'
++    project(':android-components').projectDir = new File("${gradle.mozconfig.topsrcdir}/mobile/android/android-components")
++}
  
 -project(':annotations').projectDir = new File("${gradle.mozconfig.topsrcdir}/mobile/android/annotations")
 -project(':geckoview').projectDir = new File("${gradle.mozconfig.topsrcdir}/mobile/android/geckoview")
 -project(':android-components').projectDir = new File("${gradle.mozconfig.topsrcdir}/mobile/android/android-components")
-+if (gradle.mozconfig.substs.IRONFOX_SUBPROJECT == "android-components") {
-+    include ':android-components'
-+    project(':android-components').projectDir = new File("${gradle.mozconfig.topsrcdir}/mobile/android/android-components")
++if (gradle.mozconfig.substs.IRONFOX_SUBPROJECT == "ironfox-core") {
++    include ':ironfox'
++    project(':ironfox').projectDir = new File("${gradle.mozconfig.topsrcdir}/ironfox/android")
++    include ':ironfox:core'
++    project(':ironfox:core').projectDir = new File("${gradle.mozconfig.topsrcdir}/ironfox/android/core")
 +}
  
 -if (!gradle.mozconfig.substs.MOZ_ANDROID_SUBPROJECT || gradle.mozconfig.substs.MOZ_ANDROID_SUBPROJECT == "fenix") {

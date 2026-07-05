@@ -23,16 +23,48 @@ index fbd12fc813a3..3d0e6f9f5753 100644
  }
  
  internal fun SharedPreferences.flowScopedBooleanPreference(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+index 63cee0ad25f3..d03e8d1c9d91 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException
+ import java.net.URLEncoder
+ import java.util.Locale
+ import com.google.android.material.R as materialR
++import org.ironfoxoss.core.IFConstants
+ 
+ object SupportUtils {
+     const val RATE_APP_URL = "market://details?id=" + BuildConfig.APPLICATION_ID
+@@ -26,9 +27,9 @@ object SupportUtils {
+     const val GOOGLE_URL = "https://www.google.com/"
+     const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
+     const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
+-    const val WHATS_NEW_URL = "https://www.mozilla.org/firefox/android/notes"
++    const val WHATS_NEW_URL = IFConstants.IRONFOX_RELEASES_URL
+     const val FXACCOUNT_SUMO_URL = "https://support.mozilla.org/kb/access-mozilla-services-firefox-account"
+-    const val ANDROID_SUPPORT_SUMO_URL = "mzl.la/AndroidSupport"
++    const val ANDROID_SUPPORT_SUMO_URL = IFConstants.IRONFOX_FAQ_URL
+     const val RELAY_MANAGE_URL = "https://relay.firefox.com"
+ 
+     // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-index cb99e582c0..0af71912cc 100644
+index a76873adfa9c..6fb5d2dd92c2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-@@ -209,11 +209,11 @@ class AboutFragment(
+@@ -37,6 +37,7 @@ import org.mozilla.fenix.settings.about.AboutItemType.WHATS_NEW
+ import org.mozilla.fenix.utils.Settings
+ import org.mozilla.fenix.whatsnew.WhatsNew
+ import org.mozilla.geckoview.BuildConfig as GeckoViewBuildConfig
++import org.ironfoxoss.core.IFConstants
+ 
+ /**
+  * Displays the logo and information about the app, including library versions.
+@@ -210,11 +211,11 @@ class AboutFragment(
              AboutPageItem(
                  AboutItem.ExternalLink(
                      SUPPORT,
 -                    SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.HELP),
-+                    "https://codeberg.org/ironfox-oss/bugs/issues",
++                    IFConstants.IRONFOX_BUGS_URL,
                  ),
                  getString(R.string.about_support),
              ),
@@ -41,7 +73,7 @@ index cb99e582c0..0af71912cc 100644
                  AboutItem.Crashes,
                  getString(R.string.about_crashes),
              ),
-@@ -230,7 +230,7 @@ class AboutFragment(
+@@ -231,7 +232,7 @@ class AboutFragment(
                      SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.YOUR_RIGHTS),
                  ),
                  getString(R.string.about_know_your_rights),

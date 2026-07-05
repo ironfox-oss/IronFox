@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sat, 05 Ju1 2026 03:48:55 +0000
+Subject: [PATCH] IronFox - Core (Gecko)
+
+Provides support for core functionality and IronFox-specific resources, to ensure that these changes are always applied as expected
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/moz.build b/moz.build
 index bd4e5d2b9075..2fa61710b3ed 100644
 --- a/moz.build
@@ -45,3 +54,4 @@ index b16d2c3df257..6289ff2ab764 100644
 +
 +@BINPATH@/defaults/autoconfig/ironfox.cfg
 +@BINPATH@/defaults/policies.json
+-- 

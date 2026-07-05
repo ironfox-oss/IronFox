@@ -219,7 +219,7 @@ readonly PHOENIX_EXTENDED=1
 readonly PHOENIX_EXTRA_CFG="${IRONFOX_CONFIGS}/phoenix/ironfox.cfg"
 readonly PHOENIX_EXTRA_POLICIES_ANDROID="${IRONFOX_CONFIGS}/phoenix/policies.json"
 readonly PHOENIX_FORCE_RESET_REMOTE_DEBUGGING=0
-readonly PHOENIX_OVERRIDES_CFG="${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg"
+readonly PHOENIX_OVERRIDES_CFG="${IRONFOX_CONFIGS}/phoenix/phoenix-overrides.cfg"
 readonly PHOENIX_PYENV_DIR="${IRONFOX_PYENV_DIR}"
 readonly PHOENIX_PYTHON="${IRONFOX_PYTHON}"
 readonly PHOENIX_PYTHON_DIR="${IRONFOX_PYTHON_DIR}"
@@ -457,6 +457,9 @@ export UV_TOOL_DIR
 ## Pin Python version
 readonly UV_PYTHON_CPYTHON_BUILD="${PYTHON_GIT_RELEASE}"
 export UV_PYTHON_CPYTHON_BUILD
+
+# Set IronFox version
+export IRONFOX_VERSION
 
 ## Set Node.js bin path
 readonly NVM_BIN="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin"

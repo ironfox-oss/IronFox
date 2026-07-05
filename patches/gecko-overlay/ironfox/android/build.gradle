@@ -1,0 +1,30 @@
+buildscript {
+  // Configure Maven repositories
+  repositories {
+    gradle.configureMavenRepositories(delegate)
+  }
+
+  // Plug-in classes
+  dependencies {
+    classpath libs.android.gradle.plugin
+  }
+}
+
+plugins {
+  id "mozac.ConfigPlugin"
+  alias(libs.plugins.dependency.analysis)
+  alias(libs.plugins.kotlin.android) apply false
+  alias(libs.plugins.kotlin.compose) apply false
+  alias(libs.plugins.ksp)
+}
+
+allprojects {
+  // Configure Maven repositories
+  repositories {
+    gradle.configureMavenRepositories(delegate)
+  }
+}
+
+tasks.register('clean', Delete) {
+  delete rootProject.layout.buildDirectory
+}

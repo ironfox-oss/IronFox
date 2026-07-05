@@ -101,6 +101,8 @@ IRONFOX_BUILD_GECKOVIEW_DEPS=0
 IRONFOX_BUILD_GLEAN=0
 IRONFOX_BUILD_GLEAN_CONSUMERS=0
 IRONFOX_BUILD_GLEAN_DEPS=0
+IRONFOX_BUILD_IF_CORE=0
+IRONFOX_BUILD_IF_CORE_CONSUMERS=0
 IRONFOX_BUILD_LLVM=0
 IRONFOX_BUILD_LLVM_CONSUMERS=0
 IRONFOX_BUILD_MICROG=0
@@ -149,6 +151,9 @@ elif [[ "${build_project}" == 'glean' ]]; then
   # *Only* build Glean (and its dependencies)
   IRONFOX_BUILD_GLEAN=1
   IRONFOX_BUILD_GLEAN_DEPS=1
+elif [[ "${build_project}" == 'ironfox-core' ]]; then
+  # *Only* build IronFox Core
+  IRONFOX_BUILD_IF_CORE=1
 elif [[ "${build_project}" == 'llvm' ]]; then
   # *Only* build LLVM
   IRONFOX_BUILD_LLVM=1
@@ -198,6 +203,10 @@ elif [[ "${build_project}" == 'rebuild-glean' ]]; then
   # Build Glean and its consumers
   IRONFOX_BUILD_GLEAN=1
   IRONFOX_BUILD_GLEAN_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-ironfox-core' ]]; then
+  # Build IronFox Core and its consumers
+  IRONFOX_BUILD_IF_CORE=1
+  IRONFOX_BUILD_IF_CORE_CONSUMERS=1
 elif [[ "${build_project}" == 'rebuild-llvm' ]]; then
   # Build LLVM and its consumers
   IRONFOX_BUILD_LLVM=1
@@ -236,6 +245,7 @@ else
   echo 'Gecko:                                gecko'
   echo 'GeckoView:                            geckoview'
   echo 'Glean:                                glean'
+  echo 'IronFox Core:                         ironfox-core'
   echo 'LLVM:                                 llvm'
   echo 'microG:                               microg'
   echo 'nimbus-fml:                           nimbus-fml'
@@ -250,6 +260,7 @@ else
   echo 'Rebuild - Gecko:                      rebuild-gecko'
   echo 'Rebuild - GeckoView:                  rebuild-geckoview'
   echo 'Rebuild - Glean:                      rebuild-glean'
+  echo 'Rebuild - IronFox Core:               rebuild-ironfox-core'
   echo 'Rebuild - LLVM:                       rebuild-llvm'
   echo 'Rebuild - microG:                     rebuild-microg'
   echo 'Rebuild - nimbus-fml:                 rebuild-nimbus-fml'
@@ -309,15 +320,20 @@ if [[ "${IRONFOX_BUILD_UNIFFI_CONSUMERS}" == 1 ]]; then
   IRONFOX_BUILD_GLEAN_CONSUMERS=1
 fi
 
-# Build projects that consume Android Components, Glean, nimbus-fml, or UnifiedPush-AC directly
+# Build projects that consume Android Components, Glean, IronFox Core, nimbus-fml, or UnifiedPush-AC directly
 if [[ "${IRONFOX_BUILD_AC_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_GLEAN_CONSUMERS}" == 1 ]] ||
- [[ "${IRONFOX_BUILD_NIMBUS_FML_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_UP_AC_CONSUMERS}" == 1 ]]; then
+ [[ "${IRONFOX_BUILD_IF_CORE_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_NIMBUS_FML_CONSUMERS}" == 1 ]] ||
+ [[ "${IRONFOX_BUILD_UP_AC_CONSUMERS}" == 1 ]]; then
   # Build Fenix
   IRONFOX_BUILD_FENIX=1
 fi
 
 # Build direct dependencies of Fenix
 if [[ "${IRONFOX_BUILD_FENIX_DEPS}" == 1 ]]; then
+  # IronFox Core
+  ## (In the future, this will likely be used by other Android Components - but for now, it's just used by Fenix)
+  IRONFOX_BUILD_IF_CORE=1
+
   # Android Components
   IRONFOX_BUILD_AC=1
   IRONFOX_BUILD_AC_DEPS=1
@@ -427,6 +443,8 @@ readonly IRONFOX_BUILD_GECKOVIEW_DEPS
 readonly IRONFOX_BUILD_GLEAN
 readonly IRONFOX_BUILD_GLEAN_CONSUMERS
 readonly IRONFOX_BUILD_GLEAN_DEPS
+readonly IRONFOX_BUILD_IF_CORE
+readonly IRONFOX_BUILD_IF_CORE_CONSUMERS
 readonly IRONFOX_BUILD_LLVM
 readonly IRONFOX_BUILD_LLVM_CONSUMERS
 readonly IRONFOX_BUILD_MICROG
@@ -1270,6 +1288,7 @@ function set_build_env() {
   unset IF_LOCAL_GLEAN_VERSION
   unset IF_LOCAL_GLEAN_VERSION_GRADLE
   unset IF_LOCAL_GLEAN_VERSION_STAMP
+  unset IRONFOX_CORE_TIMESTAMP
   unset MOZ_BUILD_DATE
 
   # Create our directory
@@ -1385,6 +1404,14 @@ function set_build_env() {
     touch "${glean_version_file}"
     echo -n "${IF_LOCAL_GLEAN_VERSION_STAMP_TEMP}" > "${glean_version_file}"
   fi
+
+  # Override our version for IronFox Core substitution
+  if [[ "${IRONFOX_CORE_TIMESTAMP_OVERRIDE}" != 'null' ]]; then
+    readonly IRONFOX_CORE_TIMESTAMP="${IRONFOX_CORE_TIMESTAMP_OVERRIDE}"
+  else
+    readonly IRONFOX_CORE_TIMESTAMP="${IF_LOCAL_VERSION_STAMP}"
+  fi
+  export IRONFOX_CORE_TIMESTAMP
 
   # Set versions for our local dependency substitutions
   if [[ "${IF_BUILD_ID}" != 'null' ]] && [[ -f "${moz_build_id_file}" ]] && [[ -s "${moz_build_id_file}" ]]; then
@@ -1533,22 +1560,6 @@ function prep_glean() {
   "${IRONFOX_SED}" -i "s|{IRONFOX_UNIFFI}|${IRONFOX_UNIFFI}|" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
 
   echo_green_text 'SUCCESS: Prepared Glean'
-}
-
-# Prepare Phoenix
-function prep_phoenix() {
-  echo_red_text 'Preparing Phoenix...'
-  mkdir -p "${IRONFOX_TEMP}/phoenix"
-
-  if [[ -f "${IRONFOX_TEMP}/phoenix/phoenix-overrides-parsed.cfg" ]]; then
-    rm -f "${IRONFOX_TEMP}/phoenix/phoenix-overrides-parsed.cfg"
-  fi
-
-  cp -f "${IRONFOX_TEMPLATES}/phoenix/phoenix-overrides.cfg" "${IRONFOX_TEMP}/phoenix/phoenix-overrides-parsed.cfg"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_CHANNEL}|${IRONFOX_CHANNEL}|" "${IRONFOX_TEMP}/phoenix/phoenix-overrides-parsed.cfg"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_TEMP}/phoenix/phoenix-overrides-parsed.cfg"
-
-  echo_green_text 'SUCCESS: Prepared Phoenix'
 }
 
 # Prepare UnifiedPush-AC
@@ -2049,6 +2060,36 @@ function build_gecko() {
   fi
 }
 
+# IronFox Core
+function build_ironfox_core() {
+  echo_red_text 'Building IronFox Core...'
+
+  # First, clean our environment
+  unset IRONFOX_MACH_TARGET_ARCH
+  unset IRONFOX_MACH_TARGET_PROJECT
+
+  # Set our target project
+  export IRONFOX_MACH_TARGET_PROJECT='ironfox-core'
+
+  # Set our target architecture
+  export IRONFOX_MACH_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
+
+  pushd "${IRONFOX_GECKO}"
+
+  # Ensure we remove any existing Mach environment cache
+  ## (To ensure our configurations are properly updated/reflected...)
+  rm -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
+
+  # Configure Mach
+  "${IRONFOX_MACH}" configure
+
+  # Build IronFox Core
+  "${IRONFOX_MACH}" gradle -p ironfox/android :core:publish
+  popd
+
+  echo_green_text 'SUCCESS: Built IronFox Core'
+}
+
 # Android Components (Core)
 function build_ac_core() {
   echo_red_text 'Building Android Components (Core)...'
@@ -2126,8 +2167,8 @@ function build_ac() {
   echo_green_text 'SUCCESS: Built Android Components'
 }
 
+# Fenix
 function build_fenix() {
-  # Fenix
   echo_red_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})..."
 
   # First, clean our environment
@@ -2268,11 +2309,6 @@ if [[ "${IRONFOX_BUILD_LLVM}" == 1 ]]; then
   prep_llvm
 fi
 
-# Prepare Phoenix
-if [[ "${IRONFOX_BUILD_PHOENIX}" == 1 ]]; then
-  prep_phoenix
-fi
-
 # Prepare UnifiedPush-AC
 if [[ "${IRONFOX_BUILD_UP_AC}" == 1 ]]; then
   prep_up_ac
@@ -2315,6 +2351,11 @@ fi
 if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ -z "${MOZ_ANDROID_FAT_AAR_ARCHITECTURES+x}" ]]; then
   readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
   export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
+fi
+
+# Build IronFox Core
+if [[ "${IRONFOX_BUILD_IF_CORE}" == 1 ]]; then
+  build_ironfox_core
 fi
 
 # Build GeckoView

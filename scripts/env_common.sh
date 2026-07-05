@@ -1092,6 +1092,14 @@ fi
 readonly IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE
 export IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE
 
+## Timestamp we should use to set the version for our local IronFox Core substitution (if overriding it is desired)
+readonly IRONFOX_CORE_TIMESTAMP_OVERRIDE_DEFAULT='null'
+if [[ -z "${IRONFOX_CORE_TIMESTAMP_OVERRIDE+x}" ]]; then
+  IRONFOX_CORE_TIMESTAMP_OVERRIDE="${IRONFOX_CORE_TIMESTAMP_OVERRIDE_DEFAULT}"
+fi
+readonly IRONFOX_CORE_TIMESTAMP_OVERRIDE
+export IRONFOX_CORE_TIMESTAMP_OVERRIDE
+
 # App signing
 
 # Location to the Android keystore file that we should use

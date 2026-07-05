@@ -1,13 +1,23 @@
 diff --git a/toolkit/content/aboutSupport.js b/toolkit/content/aboutSupport.js
-index fb4fbac6ac59..7a2425d69fe5 100644
+index 58de33cd7d60c..5235710277c55 100644
 --- a/toolkit/content/aboutSupport.js
 +++ b/toolkit/content/aboutSupport.js
-@@ -108,7 +108,7 @@ var snapshotFormatters = {
+@@ -13,6 +13,9 @@ const { ResetProfile } = ChromeUtils.importESModule(
+ const { AppConstants } = ChromeUtils.importESModule(
+   "resource://gre/modules/AppConstants.sys.mjs"
+ );
++const { IFConstants } = ChromeUtils.importESModule(
++  "resource://gre/modules/IFConstants.sys.mjs"
++);
+ 
+ ChromeUtils.defineESModuleGetters(this, {
+   DownloadUtils: "resource://gre/modules/DownloadUtils.sys.mjs",
+@@ -111,7 +114,7 @@ var snapshotFormatters = {
        "XREExeF",
        Ci.nsIFile
      ).path;
 -    $("supportLink").href = data.supportURL;
-+    $("supportLink").href = "https://ironfoxoss.org/docs/faq/";
++    $("supportLink").href = IFConstants.IRONFOX_FAQ_URL;
      let version = AppConstants.MOZ_APP_VERSION_DISPLAY;
      if (data.vendor) {
        version += " (" + data.vendor + ")";

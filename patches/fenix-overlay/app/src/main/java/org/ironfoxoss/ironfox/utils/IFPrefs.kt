@@ -2,6 +2,7 @@ package org.ironfoxoss.ironfox.utils
 
 import android.content.Context
 import mozilla.components.lib.crash.store.CrashReportOption
+import org.ironfoxoss.core.IFConstants
 import org.ironfoxoss.ironfox.utils.IFPrefUtils
 import org.mozilla.fenix.R
 import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_ALL
@@ -257,7 +258,7 @@ object IFPrefs {
     prefs.setDefaultIntPref(R.string.pref_key_doh_settings_mode, 3)
 
     /// Set the default DoH provider to Mullvad (Base)
-    prefs.setStringPref(R.string.pref_key_doh_default_provider_uri, "https://base.dns.mullvad.net/dns-query")
+    prefs.setStringPref(R.string.pref_key_doh_default_provider_uri, IFConstants.IRONFOX_DEFAULT_DOH_URL)
 
     // Enable ETP Strict
     prefs.setBoolPref(R.string.pref_key_tracking_protection, true) // [DEFAULT]

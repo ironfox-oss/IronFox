@@ -1,0 +1,55 @@
+pluginManagement {
+  if (!gradle.root.hasProperty("mozconfig")){
+    apply from: file('../../mobile/android/gradle/mozconfig.gradle')
+  } else {
+    gradle.ext.mozconfig = gradle.root.mozconfig
+    gradle.ext.configureMavenRepositories = gradle.root.ext.configureMavenRepositories
+  }
+
+  repositories {
+    gradle.configureMavenRepositories(delegate)
+  }
+
+  includeBuild("../../mobile/android/gradle/plugins/conventions")
+  includeBuild("../../mobile/android/android-components/plugins/dependencies")
+  includeBuild("../../mobile/android/android-components/plugins/config")
+}
+
+plugins {
+  id 'org.mozilla.conventions.settings'
+  id 'mozac.DependenciesPlugin'
+}
+
+dependencyResolutionManagement {
+  versionCatalogs {
+    libs {
+      from(files("../../gradle/libs.versions.toml"))
+    }
+  }
+}
+
+ext.topsrcdir = rootProject.projectDir.absolutePath.minus("ironfox")
+
+apply from: file('../../mobile/android/shared-settings.gradle')
+
+include ':core'
+rootProject.name = "ironfox"
+
+mozilla {
+  disableAndroidComponentsTasks = true
+}
+
+def projectLocalProperties = file("local.properties").with { localPropertiesFile ->
+  def localProperties = new Properties()
+  if (localPropertiesFile.canRead()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+    logger.lifecycle("settings.gradle> Loaded local.properties")
+  }
+  localProperties
+}
+
+if (projectLocalProperties != null) {
+  projectLocalProperties.each { prop ->
+    gradle.ext."localProperties.${prop.key}" = prop.value
+  }
+}

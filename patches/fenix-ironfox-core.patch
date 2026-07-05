@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sat, 05 Ju1 2026 03:48:55 +0000
+Subject: [PATCH] IronFox - Core (Fenix)
+
+Provides support for core functionality and IronFox-specific resources, to ensure that these changes are always applied as expected
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index ad28bfb8c8ff..a17c15b9d559 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -530,6 +530,7 @@ nimbus {
+ }
+ 
+ dependencies {
++    implementation 'org.ironfoxoss.core:core:0.0.1-+'
+     implementation project('longfox')
+     implementation project(':components:browser-engine-gecko')
+     implementation project(':components:compose-awesomebar')
+-- 
