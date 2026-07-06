@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Disable native messaging
+
+Disables native messaging for non-built-in extensions.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/toolkit/components/extensions/ExtensionParent.sys.mjs b/toolkit/components/extensions/ExtensionParent.sys.mjs
+index 2bd05f80433a4..c24198136f3d1 100644
+--- a/toolkit/components/extensions/ExtensionParent.sys.mjs
++++ b/toolkit/components/extensions/ExtensionParent.sys.mjs
+@@ -262,7 +262,7 @@ const ProxyMessenger = {
+         nativeApp,
+         context.extension.hasPermission("nativeMessagingFromContent")
+       );
+-    } else if (sender.verified) {
++    } else if (false) {
+       return new lazy.NativeApp(context, nativeApp);
+     }
+     sender = this.getSender(context.extension, sender);
+-- 

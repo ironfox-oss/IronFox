@@ -619,6 +619,13 @@ patches:
     effect: "Users are provided with a more secure browsing experience."
     category: "Security"
 
+  - file: "gecko-disable-native-messaging.patch"
+    name: "Gecko - Disable native messaging"
+    description: "Disables native messaging for non-built-in extensions."
+    reason: "To prevent extensions from communicating with external apps."
+    effect: "Users are provided with a more private and secure browsing experience."
+    category: "Security"
+
   - file: "gecko-harden-pdfjs.patch"
     name: "Gecko - Harden PDF.js"
     description: "Hardens Firefox's built-in PDF Viewer (PDF.js)."
