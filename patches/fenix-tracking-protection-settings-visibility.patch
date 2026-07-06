@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Tracking Protection settings visibility
+
+Provides support for controlling the visibility of UI settings within the Tracking Protection fragment.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt
 index 1183971659f3..ec4655ae87ae 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt
@@ -19,3 +28,4 @@ index 1183971659f3..ec4655ae87ae 100644
      }
  
      override fun onResume() {
+-- 

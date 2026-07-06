@@ -1,3 +1,13 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Support add-on installation without mozAddonManager
+
+Adds support for installing add-ons from `addons.mozilla.org`, without allowing Mozilla to enable, uninstall, and query a list of the user's
+installed add-ons (via the privileged mozAddonManager API), in addition to websites specified with the `xpinstall.whitelist.add` series of prefs.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/modules/PermissionsUtils.sys.mjs b/toolkit/modules/PermissionsUtils.sys.mjs
 index 593cf97b046c4..62f91585304e7 100644
 --- a/toolkit/modules/PermissionsUtils.sys.mjs
@@ -180,3 +190,4 @@ index 545a358ed0001..08caf1e80e814 100644
          }
        }
      } else {
+-- 

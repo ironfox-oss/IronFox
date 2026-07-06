@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Remove about:telemetry
+
+Removes the `about:telemetry` page.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
 index 76f707e5f1e8e..58e069cb6b720 100644
 --- a/docshell/base/nsAboutRedirector.cpp
@@ -41,3 +50,4 @@ index f25490bdc554..2d1d5555fc6c 100644
     content/global/aboutUrlClassifier.js
     content/global/aboutUrlClassifier.xhtml
     content/global/aboutUrlClassifier.css
+-- 

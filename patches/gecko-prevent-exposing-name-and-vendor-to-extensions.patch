@@ -1,3 +1,13 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Prevent exposing the browser name and vendor to extensions
+
+Prevents exposing the browser name and vendor to extensions via getBrowserInfo()
+(https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getBrowserInfo).
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/components/extensions/parent/ext-runtime.js b/toolkit/components/extensions/parent/ext-runtime.js
 index 0d7a3e505b6bd..946650ec6f124 100644
 --- a/toolkit/components/extensions/parent/ext-runtime.js
@@ -13,3 +23,4 @@ index 0d7a3e505b6bd..946650ec6f124 100644
            return Promise.resolve(info);
          },
  
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Remove Sentry
+
+Removes the Sentry library.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
 index e23ec109a522..a9ff3525c831 100644
 --- a/mobile/android/fenix/.buildconfig.yml
@@ -33,3 +42,4 @@ index ad28bfb8c8ff..a293840d3463 100644
      implementation libs.androidx.documentfile
      implementation libs.zxing
  
+-- 

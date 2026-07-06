@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] GeckoView - Disable network connectivity status monitoring
+
+Removes the `ACCCESS_NETWORK_STATE` permission and prevents the browser from monitoring the status of the user's internet connection.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/geckoview/src/main/AndroidManifest.xml b/mobile/android/geckoview/src/main/AndroidManifest.xml
 index f3ac290795d1a..358b29dfe8160 100644
 --- a/mobile/android/geckoview/src/main/AndroidManifest.xml
@@ -42,3 +51,4 @@ index 20e44673a3348..d5c68c139a707 100644
        GeckoThread.onPause();
      }
    }
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] GeckoView - Disable crash reporting
+
+Disables and prevents the collection/submission of crash reports.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/geckoview/src/main/AndroidManifest_overlay.jinja b/mobile/android/geckoview/src/main/AndroidManifest_overlay.jinja
 index c6a17be3b541..fe66b5a8695d 100644
 --- a/mobile/android/geckoview/src/main/AndroidManifest_overlay.jinja
@@ -53,3 +62,4 @@ index 20e44673a3348..14f9b805ad845 100644
    }
  
    /* package */ boolean init(
+-- 

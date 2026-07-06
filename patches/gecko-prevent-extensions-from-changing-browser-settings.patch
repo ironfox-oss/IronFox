@@ -1,3 +1,10 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Prevent extensions from changing browser settings
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/components/extensions/parent/ext-browserSettings.js b/toolkit/components/extensions/parent/ext-browserSettings.js
 index 51dbf35890564..389071b71ac1e 100644
 --- a/toolkit/components/extensions/parent/ext-browserSettings.js
@@ -246,3 +253,4 @@ index 1c4bf05ff136c..6ba0a16913ac7 100644
  
    setCallback(value) {
      function tlsStringToVersion(string) {
+-- 

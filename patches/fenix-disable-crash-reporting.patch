@@ -1,7 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 03:44:28 +0000
-Subject: [PATCH] feat: Disable crash reporting
+Subject: [PATCH] Fenix - Disable crash reporting
+
+Disables and prevents the collection/submission of crash reports.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Support native manifests
+
+Adds support for native manifests to GeckoView.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/components/extensions/NativeManifests.sys.mjs b/toolkit/components/extensions/NativeManifests.sys.mjs
 index 5c9cee1b700d3..04d1eaa59d8f3 100644
 --- a/toolkit/components/extensions/NativeManifests.sys.mjs
@@ -23,3 +32,4 @@ index 5c9cee1b700d3..04d1eaa59d8f3 100644
      for (let dir of dirs) {
        let path = PathUtils.join(dir, TYPES[type], `${name}.json`);
        let manifest = await this._tryPath(type, path, name, context, false);
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Android Components - Remove Nimbus
+
+Removes the Nimbus library/service.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 index 8b57d01c4fc8..87e90956d26f 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
@@ -41,3 +50,4 @@ index 8b57d01c4fc8..87e90956d26f 100644
  ext.configurePublish(config.componentsGroupId, project.name, project.ext.description)
  
  // Non-official versions are like "61.0a1", where "a1" is the milestone.
+-- 

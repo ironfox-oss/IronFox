@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Application Services - Remove Glean
+
+Removes the Glean SDK.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 index 4e550544d..9f8b10fca 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
@@ -327,3 +336,4 @@ index 4dfc3178f..89816d107 100644
 +        } */
      }
  }
+-- 

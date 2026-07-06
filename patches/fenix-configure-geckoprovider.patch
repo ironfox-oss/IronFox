@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Configure GeckoProvider
+
+Configures Firefox's implementation of GeckoView (GeckoProvider).
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 index 0bca79f30c33..30c1f9b40278 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
@@ -47,3 +56,4 @@ index 0bca79f30c33..30c1f9b40278 100644
              .contentBlocking(
                  policy.toContentBlockingSetting(
                      cookieBannerHandlingMode = context.settings().getCookieBannerHandling(),
+-- 

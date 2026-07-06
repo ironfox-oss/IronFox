@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Enable about:translations
+
+Enables the `about:translations` page.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/docshell/build/components.conf b/docshell/build/components.conf
 index 76a6380f849c2..589efb14c166b 100644
 --- a/docshell/build/components.conf
@@ -35,3 +44,4 @@ index e672ab192109f..f0e8f3e664700 100644
    JSWINDOWACTORS.ColorPicker = {
      parent: {
        esModuleURI: "moz-src:///toolkit/actors/ColorPickerParent.sys.mjs",
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Application Services - Remote Settings Blocker
+
+Prevents Remote Settings from downloading unwanted collections.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
 index b951d45c0..f7106e898 100644
 --- a/components/remote_settings/src/client.rs
@@ -56,3 +65,4 @@ index b19942604..f378f7897 100644
                  trace!("syncing collection: {collection_name}");
                  client.sync()?;
              }
+-- 

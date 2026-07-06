@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Application Services - Remove Remote Settings dumps
+
+Removes unwanted Remote Settings dumps.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
 index b951d45c0..faf1ef996 100644
 --- a/components/remote_settings/src/client.rs
@@ -30,3 +39,4 @@ index b951d45c0..faf1ef996 100644
          ("main", "search-config-icons") => [
              "001500a9-1a6c-3f5a-ba15-a5f5a075d256",
              "06cf7432-efd7-f244-927b-5e423005e1ea",
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 05:20:13 +0000
+Subject: [PATCH] Fenix - IronFox UI
+
+Adds minor tweaks to the browser's user interface.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
 index 547ba176cfd8..f6eec9b4adfd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
@@ -210,3 +219,4 @@ index c2b6f661e9eb..e211cc4e792f 100644
                                              summarizationMenuState = summarizationMenuState,
                                              onWebCompatReporterClick = {
                                                  store.dispatch(MenuAction.Navigate.WebCompatReporter)
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Remove Firefox Sync bookmark promotion
+
+Removes Mozilla's promotion to enable Firefox Sync at the bookmarks fragment.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt
 index 58b970f69707..b04bd854df1f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt
@@ -11,3 +20,4 @@ index 58b970f69707..b04bd854df1f 100644
                      showBookmarksImport = showBookmarksImport,
                  )
                  EmptyListState.Authenticated -> RootEmptyContent(
+-- 

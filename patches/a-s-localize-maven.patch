@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Application Services - Localize Maven
+
+Replaces Mozilla Maven repositories with local maven repositories.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/settings.gradle b/settings.gradle
 index c891c8ac1..44df67926 100644
 --- a/settings.gradle
@@ -26,3 +35,4 @@ index c891c8ac1..44df67926 100644
          }
      }
  }
+-- 

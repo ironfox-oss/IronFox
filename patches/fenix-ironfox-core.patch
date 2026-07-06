@@ -1,9 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Sun, 05 Jul 2026 03:48:55 +0000
-Subject: [PATCH] IronFox - Core (Fenix)
+Subject: [PATCH] Fenix - IronFox core
 
-Provides support for core functionality and IronFox-specific resources, to ensure that these changes are always applied as expected
+Provides support for core IronFox functionality.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

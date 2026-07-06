@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Remove URL tracking parameters
+
+Prevents the browser from appending URL tracking parameters to Mozilla support links.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/content/widgets/moz-support-link/moz-support-link.mjs b/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
 index 170dc9cab28d6..320ab9c5bcbe2 100644
 --- a/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
@@ -24,3 +33,4 @@ index 170dc9cab28d6..320ab9c5bcbe2 100644
      return url;
    }
    let parsedUrl = new URL(url);
+-- 

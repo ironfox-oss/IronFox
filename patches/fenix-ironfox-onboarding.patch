@@ -1,7 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 10 Mar 2026 01:00:42 +0000
-Subject: [PATCH] feat: add support for IronFox onboarding cards
+Subject: [PATCH] Fenix - IronFox onboarding
+
+Adds IronFox-specific onboarding screens.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

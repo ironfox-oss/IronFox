@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Display Cookie Banner Reduction UI in standard browsing windows
+
+Enables UI to control Cookie Banner Reduction per-site in standard browsing windows.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/ProtectionsView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/ProtectionsView.kt
 index 1f81493c9f9e..be163913a0ef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/ProtectionsView.kt
@@ -11,3 +20,4 @@ index 1f81493c9f9e..be163913a0ef 100644
              state.cookieBannerUIMode != CookieBannerUIMode.HIDE
  
          binding.trackingProtectionDetails.setOnClickListener {
+-- 

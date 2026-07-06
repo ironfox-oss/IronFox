@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Disable Firefox Sync Avatar Fetching
+
+Prevents the browser from downloading the user's profile picture from Mozilla if Firefox Sync is enabled.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
 index 288150bc6368..a977f4ecdecf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
@@ -47,3 +56,4 @@ index da8fa9afaa7f..be8b28ff70f6 100644
  
              preferenceSignIn.onPreferenceClickListener = null
              preferenceFirefoxAccountAuthError.isVisible = false
+-- 

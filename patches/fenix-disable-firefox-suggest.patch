@@ -1,10 +1,10 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 04:11:12 +0000
-Subject: [PATCH] feat: Disable Firefox Suggest
+Subject: [PATCH] Fenix - Disable Firefox Suggest
 
 Disables Firefox Suggest by default, removes unwanted Firefox Suggest UI elements, and ensure that suggestions from Firefox Suggest are
-only queried if the user actually enables suggestions
+only queried if the user actually enables suggestions.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

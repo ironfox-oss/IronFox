@@ -1,9 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Fri, 03 Jul 2026 04:18:56 +0000
-Subject: [PATCH] feat: Disable telemetry
+Subject: [PATCH] Gecko - Disable telemetry
 
-Disables telemetry at build-time and removes various data reporting mechanisms
+Disables telemetry at build-time and removes various data reporting mechanisms.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

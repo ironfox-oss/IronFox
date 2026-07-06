@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] GeckView - Pref handling
+
+Locks Gecko preferences controlled by GeckoRuntimeSettings to ensure they stay in sync with Fenix's UI settings.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
 index 2bf4ae1cc8fd2..99ec78b2ac046 100644
 --- a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
@@ -102,3 +111,4 @@ index 6996d0f77a2c5..e58be9c63d5b5 100644
                  break;
                default:
                  throw new Error(
+-- 

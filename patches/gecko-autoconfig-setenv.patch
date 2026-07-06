@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - AutoConfig setEnv()
+
+Adds support for setting environment variables via Firefox's AutoConfig functionality.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/extensions/pref/autoconfig/src/prefcalls.js b/extensions/pref/autoconfig/src/prefcalls.js
 index fcd0554e9598..71bf90dc473e 100644
 --- a/extensions/pref/autoconfig/src/prefcalls.js
@@ -20,3 +29,4 @@ index fcd0554e9598..71bf90dc473e 100644
    pref,
    defaultPref,
    lockPref,
+-- 

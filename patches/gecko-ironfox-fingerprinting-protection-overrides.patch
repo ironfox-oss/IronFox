@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - IronFox Fingerprinting Protection (FPP) overrides
+
+Adds support for an internal list that disables specific fingerprinting protections as needed on a per-site basis.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs b/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
 index ed246939863cd..807490230536a 100644
 --- a/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
@@ -33,3 +42,4 @@ index ed246939863cd..807490230536a 100644
    }
  
    async init() {
+-- 

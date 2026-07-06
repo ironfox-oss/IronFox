@@ -1,13 +1,13 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Wed, 24 Jun 2026 17:25:39 +0000
-Subject: [PATCH] feat: Disable loading/requesting fonts from Google Play Services (or the OEM)
+Subject: [PATCH] Fenix - Disable loading fonts from Google Play Services (or the OEM)
 
-Prevents the browser from downloading and attempting to load emojis from Google Play Services (or the OEM), and instead
-includes them locally
+Prevents the browser from downloading and attempting to download/request fonts from Google Play Services (or the OEM), and instead
+includes the necessary fonts locally.
 
 Reduces our reliance on/use of proprietary services, mitigates fingerprinting by ensuring our users always have a common set of
-emojis, and improves compatibility as well by ensuring that emojis are always available
+emojis, and improves compatibility as well by ensuring that emojis are always available.
 
 (For reference: https://developer.android.com/develop/ui/views/text-and-emoji/emoji2#support-bundled-fonts)
 

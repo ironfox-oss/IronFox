@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 05:20:13 +0000
+Subject: [PATCH] Gecko - IronFox Settings: XPInstall
+
+Provides support for a UI setting to enable/disable the installation of add-ons.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/browser/components/enterprisepolicies/Policies.sys.mjs b/browser/components/enterprisepolicies/Policies.sys.mjs
 index e612b78173584..e23ec87640457 100644
 --- a/browser/components/enterprisepolicies/Policies.sys.mjs
@@ -38,3 +47,4 @@ index 0d081a03a92d4..f81c6e95886cc 100644
      if (!ExtensionSettings) {
        return true;
      }
+-- 

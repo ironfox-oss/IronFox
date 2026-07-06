@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Prevent fingerprinting via internal resources
+
+Prevents the browser from exposing branding assets and certain other internal resources to websites.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/caps/nsScriptSecurityManager.cpp b/caps/nsScriptSecurityManager.cpp
 index 7ee53592874e..44751adde8a8 100644
 --- a/caps/nsScriptSecurityManager.cpp
@@ -93,3 +102,4 @@ index 7ee53592874e..44751adde8a8 100644
  
        if (targetScheme.EqualsLiteral("resource")) {
          if (StaticPrefs::security_all_resource_uri_content_accessible()) {
+-- 

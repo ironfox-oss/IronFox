@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Disable network connectivity status monitoring
+
+Removes the `ACCCESS_NETWORK_STATE` permission and prevents the browser from monitoring the status of the user's internet connection.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 index 63398b2c715a..8d5644cf2dd5 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
@@ -45,3 +54,4 @@ index a82e8f061672..0a36a99e1814 100644
              } else {
                  text = getString(R.string.preference_option_phone_feature_blocked)
                  setOnClickListener {
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Android Components - Disable unsolicited favicon fetching
+
+Prevents Firefox from automatically fetching favicons for websites pinned to the browser homepage.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/android-components/components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt b/mobile/android/android-components/components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
 index 3763da85adb5..ebcb11af8588 100644
 --- a/mobile/android/android-components/components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
@@ -11,3 +20,4 @@ index 3763da85adb5..ebcb11af8588 100644
          } else {
              request
          }
+-- 

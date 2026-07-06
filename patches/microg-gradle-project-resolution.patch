@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] microG - Gradle project resolution
+
+Prevents building and configuring unnecessary/unwanted example/sample libraries, and ensures that only necessary projects are configured at build-time.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/settings.gradle b/settings.gradle
 index 1ab99b9..d71198b 100644
 --- a/settings.gradle
@@ -23,3 +32,4 @@ index 1ab99b9..d71198b 100644
  include ':play-services-core:microg-ui-tools' // Legacy
 -include ':play-services-core'
 +include ':play-services-core' */
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Disable Nimbus
+
+Disables and prevents A/B testing/experimentation and remote configuration of settings.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
 index 02e864c59250..3f490e270943 100644
 --- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
@@ -42,3 +51,4 @@ index f7c6421ebcd7..949543a1f979 100644
      return context;
    }
  
+-- 

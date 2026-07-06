@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Certificate pinning
+
+Updates and expands the list of domains supported by Mozilla's built-in certificate pinning.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
 index 1b20240a185a..3925b911fb10 100644
 --- a/security/manager/ssl/StaticHPKPins.h
@@ -217,3 +226,4 @@ index 1b20240a185a..3925b911fb10 100644
  
  static const int32_t kUnknownId = -1;
  
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Android Components - Disable crash reporting
+
+Disables and prevents the collection/submission of crash reports.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 index 2b16913688f6e..c115de2c586a1 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
@@ -255,3 +264,4 @@ index 93ec365f24be..1397755ffe22 100644
          val logLevel: Log.Priority = Log.Priority.INFO,
      )
  }
+-- 

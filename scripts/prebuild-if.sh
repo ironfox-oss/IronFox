@@ -1000,7 +1000,7 @@ function prepare_microg() {
   pushd "${IRONFOX_GMSCORE}"
 
   # Apply patches
-  apply_patch 'microg-exclude-unused-dependencies.patch'
+  apply_patch 'microg-gradle-project-resolution.patch'
 
   # Always use our Gradle wrapper with our Gradle flags/configuration
   localize_gradle

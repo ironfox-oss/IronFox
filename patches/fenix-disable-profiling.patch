@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Disable profiling
+
+Disables profiling functionality/integration.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 index 70cf6e8802f5b..e2ed9d5c80b1e 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
@@ -16,3 +25,4 @@ index 70cf6e8802f5b..e2ed9d5c80b1e 100644
  
      <application
          android:name=".FenixApplication"
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Disable network ID generation
+
+Prevents Firefox from generating an internal network ID that could potentially be used to track users.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/netwerk/system/android/nsAndroidNetworkLinkService.cpp b/netwerk/system/android/nsAndroidNetworkLinkService.cpp
 index 309115e34d4b..592eda3584fc 100644
 --- a/netwerk/system/android/nsAndroidNetworkLinkService.cpp
@@ -32,3 +41,4 @@ index 8941427b3a19..e7981c87b476 100644
  }
  
  nsresult NetlinkService::GetDnsSuffixList(nsTArray<nsCString>& aDnsSuffixList) {
+-- 

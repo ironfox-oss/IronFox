@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Application Services - Disable Nimbus
+
+Disables and prevents A/B testing/experimentation and remote configuration of settings.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 index 2b7f08734..8587e0752 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
@@ -79,3 +88,4 @@ index 2a3934c83..71f82ed17 100644
 --keep class org.mozilla.experiments.nimbus.internal.** { *; }
 +# -keepattributes RuntimeVisibleAnnotations,RuntimeInvisibleAnnotations,RuntimeVisibleTypeAnnotations,RuntimeInvisibleTypeAnnotations,AnnotationDefault,InnerClasses,EnclosingMethod,Signature
 +# -keep class org.mozilla.experiments.nimbus.internal.** { *; }
+-- 

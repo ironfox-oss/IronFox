@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Bypass DevTools detection
+
+Prevents websites from detecting that a user is using developer tools/debugging.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/devtools/server/actors/thread.js b/devtools/server/actors/thread.js
 index 2d70647d0e59e..fc0d5c015e749 100644
 --- a/devtools/server/actors/thread.js
@@ -60,3 +69,4 @@ index 1b0ec2647299a..e6958231d30b8 100644
   */
  makePrefTrackedFlag(exports, "testing", "devtools.testing");
 +makePrefTrackedFlag(exports, "derDetach", "browser.ironfox.devtools.debugger.force_detach");
+-- 

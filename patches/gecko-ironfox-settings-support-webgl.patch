@@ -1,15 +1,12 @@
-From d92856883f414284337daa28dca561e5ddb3e19d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 04:56:55 +0000
-Subject: [PATCH] feat: Implement a RFP target to control whether WebGL is
- enabled or disabled
+Subject: [PATCH] Gecko - IronFox Settings: WebGL
+
+Provides support for a UI setting to enable/disable WebGL (including on a per-site basis), as a custom RFP target.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- dom/canvas/ClientWebGLContext.cpp                      | 4 ++++
- toolkit/components/resistfingerprinting/RFPTargets.inc | 1 +
- 2 files changed, 5 insertions(+)
-
 diff --git a/dom/canvas/ClientWebGLContext.cpp b/dom/canvas/ClientWebGLContext.cpp
 index 12492d606cc2..0fd90c1a8b19 100644
 --- a/dom/canvas/ClientWebGLContext.cpp
@@ -38,5 +35,3 @@ index b77c1fd1f9ac..b87224e93d7e 100644
  // !!! Adding a new target? Rename PointerId and repurpose it.
  
 -- 
-2.53.0
-

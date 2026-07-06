@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Android Components - Display built-in add-ons
+
+Displays built-in add-ons alongside user-installed ones.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
 index 0575b1166697..6470f6a7f64d 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
@@ -11,3 +20,4 @@ index 0575b1166697..6470f6a7f64d 100644
                  .map {
                      val extension = it.value
                      val installedState = toInstalledState(extension)
+-- 

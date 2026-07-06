@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Remote Settings Blocker
+
+Prevents Remote Settings from downloading unwanted collections.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/services/settings/RemoteSettingsClient.sys.mjs b/services/settings/RemoteSettingsClient.sys.mjs
 index 8321c6cc97aea..d2e19db0698d7 100644
 --- a/services/settings/RemoteSettingsClient.sys.mjs
@@ -153,3 +162,4 @@ index da12049e14b38..2adb23704f3cf 100644
        timestamp,
        serverTimeMillis,
        backoffSeconds,
+-- 

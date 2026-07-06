@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 05:15:52 +0000
+Subject: [PATCH] Fenix - IronFox Settings: Always use private browsing
+
+Provides support for a UI setting to always use private browsing mode.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
 index b600bf6b3d43..86fc25c15b52 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
@@ -23,3 +32,4 @@ index 83e0f40483b7..fac08fa708f9 100644
                  BrowsingMode.Private
              } else {
                  BrowsingMode.Normal
+-- 

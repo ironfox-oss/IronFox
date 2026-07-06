@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Ensure builds always reflect our (latest) changes
+
+Ensures that builds of GeckoView binaries always reflect our (latest) changes.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/gradle/with_gecko_binaries.gradle b/mobile/android/gradle/with_gecko_binaries.gradle
 index a625a53b8c9d..b9e2da58a75c 100644
 --- a/mobile/android/gradle/with_gecko_binaries.gradle
@@ -11,3 +20,4 @@ index a625a53b8c9d..b9e2da58a75c 100644
              assetGenTask.dependsOn rootProject.machStagePackage
              jniLibFoldersTask.dependsOn rootProject.machStagePackage
          }
+-- 

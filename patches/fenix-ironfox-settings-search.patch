@@ -1,9 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Sun, 05 Jul 2026 05:15:52 +0000
-Subject: [PATCH] IronFox Settings Search
+Subject: [PATCH] Fenix - IronFox settings search
 
-Provides support for searching IronFox-specific preferences
+Allows users to search for IronFox-specific UI settings.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

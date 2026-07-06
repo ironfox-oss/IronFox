@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Substitute nimbus-fml
+
+Adds support for using a locally built nimbus-fml binary, instead of fetching a prebuilt artifact from Mozilla.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt b/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt
 index fcb3b4b682..cb1b14ab73 100644
 --- a/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt
@@ -11,3 +20,4 @@ index fcb3b4b682..cb1b14ab73 100644
              // we assume the binary has been built and `gradle.ext.mozconfig.substs.NIMBUS_FML` tells us where to find it.
              val nimbusFmlPath = requireNotNull(mozconfigSubsts?.get("NIMBUS_FML") as? String) {
                  "NIMBUS_FML not found in mozconfig substs"
+-- 

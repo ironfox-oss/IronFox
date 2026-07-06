@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Expose hidden settings at about:support
+
+Enables the display of advanced options at `about:support`.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/content/aboutSupport.js b/toolkit/content/aboutSupport.js
 index fb4fbac6ac59..0d300fd2c8b7 100644
 --- a/toolkit/content/aboutSupport.js
@@ -48,3 +57,4 @@ index 021e6a326703..e324c3ce1e49 100644
      </div>
      <div id="contents">
  
+-- 

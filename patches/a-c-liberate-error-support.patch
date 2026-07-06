@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Android Components - Remove Error Support
+
+Removes the Rust 'Error Support' library.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/android-components/components/browser/storage-sync/build.gradle b/mobile/android/android-components/components/browser/storage-sync/build.gradle
 index 94e5a3956d3b..d5e7f0f481a0 100644
 --- a/mobile/android/android-components/components/browser/storage-sync/build.gradle
@@ -103,3 +112,4 @@ index 5a007933c75cf..df2d2e9a59f92 100644
      implementation ComponentsDependencies.mozilla_remote_settings
      implementation libs.androidx.work.runtime
      implementation libs.kotlinx.serialization.json
+-- 

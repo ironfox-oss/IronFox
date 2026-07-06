@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 05:15:52 +0000
+Subject: [PATCH] Fenix - IronFox Settings: Firefox Translations
+
+Provides support for a UI setting to enable/disable Firefox Translations.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 index 684f6b1c8007..cc200715b351 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
@@ -11,3 +20,4 @@ index 684f6b1c8007..cc200715b351 100644
              translationsBinding.set(
                  feature = TranslationsBinding(
                      browserStore = rootView.context.components.core.store,
+-- 

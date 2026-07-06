@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Remove privileged add-on signing status
+
+Prevents Mozilla add-ons from returning the 'PRIVILEGED' and 'SYSTEM' add-on signing states.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 index 358fcce396431..ddd8dc656b774 100644
 --- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
@@ -18,3 +27,4 @@ index 358fcce396431..ddd8dc656b774 100644
  
        return /preliminary/i.test(aCert.organizationalUnit)
          ? AddonManager.SIGNEDSTATE_PRELIMINARY
+-- 

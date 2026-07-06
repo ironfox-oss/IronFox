@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Gradle project resolution
+
+Prevents building and configuring unnecessary/unwanted example/sample libraries, and ensures that only necessary projects are configured at build-time.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/settings.gradle b/settings.gradle
 index d149d222b95b..71342634dd94 100644
 --- a/settings.gradle
@@ -65,3 +74,4 @@ index 15f4ca890197..7ef976f21bb2 100644
          "geckoview:publish{geckoview.variant.name}PublicationToMavenRepository".format(
              geckoview=build_config.geckoview
          ),
+-- 

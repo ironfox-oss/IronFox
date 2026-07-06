@@ -1,17 +1,12 @@
-From 8ca2d1361a3f0a36f71b7e692319b800cf5c11c8 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Wed, 4 Feb 2026 04:27:07 +0000
-Subject: [PATCH] fix: Remove OpenAI backend
+Subject: [PATCH] Gecko - Remove OpenAI
 
 Removes the OpenAI backend from Mozilla's ML (machine learning) component.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- toolkit/components/aboutinference/content/aboutInference.js | 4 ++--
- toolkit/components/ml/content/EngineProcess.sys.mjs         | 2 +-
- toolkit/components/ml/content/backends/Pipeline.mjs         | 6 +++---
- 3 files changed, 9 insertions(+), 9 deletions(-)
-
 diff --git a/toolkit/components/aboutinference/content/aboutInference.js b/toolkit/components/aboutinference/content/aboutInference.js
 index 01533ad4c9f2..041bdcaeaeaf 100644
 --- a/toolkit/components/aboutinference/content/aboutInference.js
@@ -73,5 +68,3 @@ index a4b997e9bc4d..4565f3e097be 100644
        factory = lazy.StaticEmbeddingsPipeline.initialize;
        break;
 -- 
-2.52.0
-

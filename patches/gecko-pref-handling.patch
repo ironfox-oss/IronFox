@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Pref handling
+
+Locks Gecko preferences controlled by GeckoRuntimeSettings to ensure they stay in sync with Fenix's UI settings.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/extensions/pref/autoconfig/src/prefcalls.js b/extensions/pref/autoconfig/src/prefcalls.js
 index 66b39775196f7..61d01b705b202 100644
 --- a/extensions/pref/autoconfig/src/prefcalls.js
@@ -38,3 +47,4 @@ index 66b39775196f7..61d01b705b202 100644
        prefBranch.setBoolPref(prefName, value);
      }
    } catch (e) {
+-- 

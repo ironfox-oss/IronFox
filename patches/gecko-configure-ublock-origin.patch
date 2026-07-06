@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Configure uBlock Origin
+
+Sets uBlock Origin to use a custom/enhanced config, and changes certain settings by default.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/components/extensions/parent/ext-storage.js b/toolkit/components/extensions/parent/ext-storage.js
 index 0d6109c25019c..d350ffeb608ad 100644
 --- a/toolkit/components/extensions/parent/ext-storage.js
@@ -57,3 +66,4 @@ index 0d6109c25019c..d350ffeb608ad 100644
              let data = await getManagedStorageManifestData(extension, context);
              return ExtensionStorage._filterProperties(extension.id, data, keys);
            },
+-- 

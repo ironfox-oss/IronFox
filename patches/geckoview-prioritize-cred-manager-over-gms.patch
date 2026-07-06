@@ -1,3 +1,13 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] GeckoView - Prioritize Credential Manager over Google Play Services
+
+Prioritizes the use of Android's standard Credential Manager API, instead of first attempting to use Google Play Services (or microG)
+if they're available.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
 index 2eea4c6af1763..ce2a758e6f275 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
@@ -11,3 +21,4 @@ index 2eea4c6af1763..ce2a758e6f275 100644
        // No way to check credential in GMS. Use Credential Manager at first.
        return GeckoResult.fromValue(false);
      }
+-- 

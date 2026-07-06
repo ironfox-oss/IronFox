@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Prevent fingerprinting via EME
+
+Prevents fingerprinting via the status of EME.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/dom/media/eme/MediaKeySystemAccessManager.cpp b/dom/media/eme/MediaKeySystemAccessManager.cpp
 index acdc1030c06fa..c686a80691077 100644
 --- a/dom/media/eme/MediaKeySystemAccessManager.cpp
@@ -22,3 +31,4 @@ index acdc1030c06fa..c686a80691077 100644
      aRequest->mDiagnostics.StoreMediaKeySystemAccess(
          mWindow->GetExtantDoc(), aRequest->mKeySystem, false, __func__);
      return;
+-- 

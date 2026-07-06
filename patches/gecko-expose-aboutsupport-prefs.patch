@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Expose preferences at about:support
+
+Enables the display of certain important preferences at `about:support`.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/modules/Troubleshoot.sys.mjs b/toolkit/modules/Troubleshoot.sys.mjs
 index 370915013815..478de2453a45 100644
 --- a/toolkit/modules/Troubleshoot.sys.mjs
@@ -67,3 +76,4 @@ index 370915013815..478de2453a45 100644
  ];
  
  // Table of getters for various preference types.
+-- 

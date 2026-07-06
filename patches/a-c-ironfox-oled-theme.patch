@@ -1,13 +1,12 @@
-From 8228439299f2a275168665f41cc2992e10f591fb Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Akash Yadav <itsaky01@gmail.com>
-Date: Tue, 23 Dec 2025 13:43:01 +0530
-Subject: [PATCH] feat: IronFox OLED theme support
+Date: Tue, 23 Dec 2025 08:13:01 +0000
+Subject: [PATCH] Android Components - OLED Theme
+
+Adds support for a true OLED black theme.
 
 Signed-off-by: Akash Yadav <itsaky01@gmail.com>
 ---
- .../java/mozilla/components/compose/base/theme/AcornColors.kt   | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt b/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt
 index 54b2352e3d7c..9df834523056 100644
 --- a/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt
@@ -22,5 +21,3 @@ index 54b2352e3d7c..9df834523056 100644
      primaryContainer: Color,
      inversePrimary: Color,
 -- 
-2.53.0
-

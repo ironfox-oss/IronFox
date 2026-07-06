@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Stub navigator.sendBeacon()
+
+Stubs the Beacon API to prevent tracking and the submission of analytics, without aiding fingerprinting and causing undesired breakage.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/dom/base/Navigator.cpp b/dom/base/Navigator.cpp
 index df1ff164347bc..88c391099aeca 100644
 --- a/dom/base/Navigator.cpp
@@ -11,3 +20,4 @@ index df1ff164347bc..88c391099aeca 100644
    nsCOMPtr<nsIChannel> channel;
    rv = NS_NewChannel(getter_AddRefs(channel), uri, doc, securityFlags,
                       nsIContentPolicy::TYPE_BEACON);
+-- 

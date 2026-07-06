@@ -14,30 +14,33 @@ categories:
 patches:
   # Build System
   - file: "glean-localize-maven.patch"
-    name: "Remove Mozilla Maven Repositories"
-    description: "Removes Mozilla repositories substitution and replaces them with local maven repositories."
+    name: "Glean - Localize Maven"
+    description: "Replaces Mozilla Maven repositories with local maven repositories."
     reason: "Reduces dependency on Mozilla infrastructure and improves build reproducibility."
     effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
     category: "Build System"
 
-  - file: "glean-remove-example-dependencies.patch"
-    name: "Remove Unwanted Example/Sample Dependencies"
-    description: "Prevents building and configuring unnecessary/unwanted example/sample libraries."
+  - file: "glean-gradle-project-resolution.patch"
+    name: "Glean - Gradle project resolution"
+    description: |
+      Prevents building and configuring unnecessary/unwanted example/sample libraries, and ensures that only necessary projects are configured
+      at build-time.
     reason: "Allows for faster builds, with less overhead."
     effect: "Reduces build-time, and reduces the complexity of the overall build process."
     category: "Build System"
 
   - file: "glean-unbreak-geckoview-lite.patch"
-    name: "Unbreak GeckoView Lite"
-    description: "Unbreaks GeckoView Lite builds."
+    name: "Glean - Unbreak GeckoView Lite"
+    description: "Adds support for builds with GeckoView Lite."
     reason: "Allows for building GeckoView without Glean and unnecessary dependencies."
     effect: "Unbreaks the build process when building GeckoView without Glean."
     category: "Build System"
 
   # Mozilla
   - file: "glean-noop.patch"
-    name: "No-op Glean"
+    name: "Glean - No-op"
     description: "No-ops the Glean SDK."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
+    reason: |
+     To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies.
     effect: "Prevents unwanted collection and transmission of telemetry data."
     category: "Mozilla"

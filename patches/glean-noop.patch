@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Glean - No-op
+
+No-ops the Glean SDK.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/glean-core/android/build.gradle b/glean-core/android/build.gradle
 index b1d4b8cd..cf27a872 100644
 --- a/glean-core/android/build.gradle
@@ -65,3 +74,4 @@ index 53519d42..77b9ccb0 100644
 +# -dontwarn java.awt.*
 +# -keep class com.sun.jna.* { *; }
 +# -keepclassmembers class * extends com.sun.jna.* { public *; }
+-- 

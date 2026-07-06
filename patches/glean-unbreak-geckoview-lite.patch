@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Glean - Unbreak GeckoView Lite
+
+Adds support for builds with GeckoView Lite.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/glean-core/android-native/build.gradle b/glean-core/android-native/build.gradle
 index 53716d52..51737231 100644
 --- a/glean-core/android-native/build.gradle
@@ -16,3 +25,4 @@ index 53716d52..51737231 100644
      // Uncomment to include debug symbols in native library builds.
      // packagingOptions { doNotStrip "**/*.so" }
  }
+-- 

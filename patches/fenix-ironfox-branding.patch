@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - IronFox branding
+
+Modifies branding elements to IronFox.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
 index fbd12fc813a3..3d0e6f9f5753 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
@@ -82,3 +91,4 @@ index a76873adfa9c..6fb5d2dd92c2 100644
              AboutPageItem(
                  AboutItem.ExternalLink(LICENSING_INFO, ABOUT_LICENSE_URL),
                  getString(R.string.about_licensing_information),
+-- 

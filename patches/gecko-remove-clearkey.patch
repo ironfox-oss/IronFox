@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Remove Clear Key
+
+Removes the Clear Key CDM.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/installer/package-manifest.in b/mobile/android/installer/package-manifest.in
 index b16d2c3df257..95461d9663ca 100644
 --- a/mobile/android/installer/package-manifest.in
@@ -11,3 +20,4 @@ index b16d2c3df257..95461d9663ca 100644
  
  [browser]
  ; [Base Browser Files]
+-- 

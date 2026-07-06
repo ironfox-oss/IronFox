@@ -1,13 +1,12 @@
-From be752a85556b6cc59c93bc560a7124ee7e519236 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 10 Feb 2026 17:43:13 +0000
-Subject: [PATCH] feat: Configure default search engines (Android Components)
+Subject: [PATCH] Android Components - Configure default search engines
+
+Adds custom privacy-focused search engines.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- .../search/storage/SearchEngineReader.kt       | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 index a18f612a94570..0c95c4d4a9990 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
@@ -39,5 +38,3 @@ index a18f612a94570..0c95c4d4a9990 100644
  
  /**
 -- 
-2.52.0
-

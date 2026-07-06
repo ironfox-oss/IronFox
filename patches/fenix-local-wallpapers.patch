@@ -1,9 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Sun, 28 Jun 2026 05:34:22 +0000
-Subject: [PATCH] feat: Local wallpapers
+Subject: [PATCH] Fenix - Local wallpapers
 
-Adds support for local wallpapers, to prevent downloading them from Mozilla servers upon each launch
+Adds support for local wallpapers, to prevent downloading them from Mozilla servers upon each launch.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

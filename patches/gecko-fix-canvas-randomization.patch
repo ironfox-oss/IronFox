@@ -1,17 +1,15 @@
-From 7f1c1b564bd365adfd92cb43f2c2bd3f650b5957 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 10 Feb 2026 17:31:22 +0000
-Subject: [PATCH] fix: Ensure Canvas Randomization is properly applied
+Subject: [PATCH] Gecko - Fix canvas randomization
+
+Backports a fix for an upstream bug that prevents Canvas randomization from working for getImageData and WebGL image hash
+(https://bugzilla.mozilla.org/show_bug.cgi?id=2013976), and enables Canvas randomization for solid colors.
 
 Adapted from any1here's LibreWolf patch: https://codeberg.org/librewolf/source/src/commit/343645241e58cb43b713968cb29614688e6d8979/patches/fpp-canvas-fix.patch
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- dom/canvas/CanvasRenderingContext2D.cpp                  | 6 +++---
- dom/canvas/ClientWebGLContext.cpp                        | 6 +++---
- toolkit/components/resistfingerprinting/nsRFPService.cpp | 4 ++--
- 3 files changed, 8 insertions(+), 8 deletions(-)
-
 diff --git a/dom/canvas/CanvasRenderingContext2D.cpp b/dom/canvas/CanvasRenderingContext2D.cpp
 index 16eb6f61903a..321538d5eb71 100644
 --- a/dom/canvas/CanvasRenderingContext2D.cpp
@@ -110,5 +108,3 @@ index d900f49a3b1b..c81d308cb823 100644
    auto timerId =
        glean::fingerprinting_protection::canvas_noise_calculate_time_2.Start();
 -- 
-2.53.0
-

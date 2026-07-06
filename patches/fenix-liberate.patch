@@ -1,9 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 03:35:42 +0000
-Subject: [PATCH] feat: Liberate Fenix
+Subject: [PATCH] Fenix - Liberate
 
-Removes proprietary, tracking, and other unwanted libraries/functionality from Fenix
+Removes proprietary, tracking, and other unwanted libraries/functionality.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

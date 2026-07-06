@@ -1,19 +1,12 @@
-From aac64ddfd4859563a403ff24430ad0d11be6a5bb Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Akash Yadav <itsaky01@gmail.com>
-Date: Tue, 23 Dec 2025 13:43:01 +0530
-Subject: [PATCH] feat: IronFox OLED theme support
+Date: Tue, 23 Dec 2025 08:13:01 +0000
+Subject: [PATCH] Fenix - OLED Theme
+
+Adds support for a true OLED black theme.
 
 Signed-off-by: Akash Yadav <itsaky01@gmail.com>
 ---
- .../org/mozilla/fenix/FenixApplication.kt     |  2 +-
- .../java/org/mozilla/fenix/components/Core.kt |  7 ++++++-
- .../customtabs/FennecWebAppIntentProcessor.kt |  4 +++-
- .../fenix/settings/CustomizationFragment.kt   | 15 +++++++++++++--
- .../org/mozilla/fenix/theme/FirefoxTheme.kt   |  5 +++--
- .../org/mozilla/fenix/theme/ThemeManager.kt   | 19 +++++++++++++++++--
- .../res/xml/customization_preferences.xml     |  5 +++++
- 8 files changed, 49 insertions(+), 9 deletions(-)
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index 8dd1374d2d94f..601cf1cf2a38a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
@@ -228,5 +221,3 @@ index 313053c48c62..619cb8e8e997 100644
              android:defaultValue="false"
              android:key="@string/pref_key_auto_battery_theme"
 -- 
-2.53.0
-

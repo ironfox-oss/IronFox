@@ -1,13 +1,12 @@
-From 0c213750021f36e6907b13e7f4b0648d8f9c120d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 10 Feb 2026 17:40:35 +0000
-Subject: [PATCH] fix: Allow uBlock Origin to run in private browsing windows by default
+Subject: [PATCH] Android Components - Allow uBlock Origin in private browsing windows by default
+
+Allows uBlock Origin to run in private browsing windows by default.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- .../components/feature/addons/ui/PermissionsDialogFragment.kt | 4 ++++
- 1 file changed, 4 insertions(+)
-
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
 index b40a8825fd941..db7309fc6b7cd 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
@@ -24,5 +23,3 @@ index b40a8825fd941..db7309fc6b7cd 100644
              onPositiveButtonClicked?.invoke(
                  addon,
 -- 
-2.52.0
-

@@ -1,13 +1,12 @@
-From 7a7b1a0060d89ddf1f705b0e179de6bc30b9197f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Akash Yadav <itsaky01@gmail.com>
-Date: Sun, 18 May 2025 02:17:20 +0530
-Subject: [PATCH] fix: allow overriding build date using system env
+Date: Sat, 17 May 2025 20:47:20 +0000
+Subject: [PATCH] Android Components - Allow overriding the build date
+
+Adds support for overriding the build date via the `IRONFOX_BUILD_DATE_OVERRIDE` environment variable.
 
 Signed-off-by: Akash Yadav <itsaky01@gmail.com>
 ---
- .../plugins/config/src/main/java/ConfigPlugin.kt          | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
 diff --git a/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt b/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
 index f82613fdd6..cf55ee61b5 100644
 --- a/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
@@ -28,5 +27,3 @@ index f82613fdd6..cf55ee61b5 100644
          Math.floor((build.time - cutoff.time) / (1000.0 * 60.0 * 60.0)).toInt()
      }
 -- 
-2.49.0
-

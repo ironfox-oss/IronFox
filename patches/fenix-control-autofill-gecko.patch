@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Control Gecko Autofill
+
+If autofill is enabled/disabled from the browser's UI settings, this ensures that the functionality is also fully enabled/disabled within Gecko.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
 index ea6a64bc881b..0206326bff7a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
@@ -38,3 +47,4 @@ index ea6a64bc881b..0206326bff7a 100644
          }
      }
  
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Support enterprise policies
+
+Adds support for enterprise policies to GeckoView, so that it can be leveraged for advanced configuration.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 index bb451a279599d..ecaaf717da955 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
@@ -48,3 +57,4 @@ index 2a9906e1fbf2a..d04bfbdac21ca 100644
      EXTRA_JS_MODULES += [
          "EnterprisePolicies.sys.mjs",
          "EnterprisePoliciesContent.sys.mjs",
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Enable about:inference
+
+Enables the `about:inference` page.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
 index 76f707e5f1e8e..fdfcd2ab2d0a0 100644
 --- a/docshell/base/nsAboutRedirector.cpp
@@ -50,3 +59,4 @@ index 480dbd7db7981..522e98f0928dd 100644
    preview/aboutInference.ftl                       (../components/aboutinference/content/aboutInference.ftl)
  #endif
  
+-- 

@@ -1,9 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Sat, 27 Jun 2026 20:11:41 +0000
-Subject: [PATCH] feat: Sanitize data on exit by default
+Subject: [PATCH] Fenix - Sanitize data on exit
 
-Ensures the UI reflects our values to sanitize data on exit by default
+Ensures the UI reflects our values to sanitize data on exit by default.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Harden PDF.js
+
+Hardens Firefox's built-in PDF Viewer (PDF.js).
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.html b/toolkit/components/pdfjs/content/web/viewer-geckoview.html
 index 18b76e27db3a..82529a4127b5 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.html
@@ -40,3 +49,4 @@ index ab4f5545674d..6ac957cc7bc5 100644
      });
      this.pdfLoadingTask = loadingTask;
      loadingTask.onPassword = (updateCallback, reason) => {
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Application Services - Remove Error Support
+
+Removes the Rust 'Error Support' library.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/components/init_rust_components/android/build.gradle b/components/init_rust_components/android/build.gradle
 index c74832968..8cdde766c 100644
 --- a/components/init_rust_components/android/build.gradle
@@ -33,3 +42,4 @@ index 045af0cd5..07abf4fff 100644
  
          // This code was originally in the `Megazord.init` that was moved here to have the initialize
          // done in this particular sequence without needing to have the embedder have to do it within
+-- 

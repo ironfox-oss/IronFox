@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Android Components - Remove Glean
+
+Removes the Glean SDK.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt b/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt
 index 7bb7ba269643..da28b1842c7a 100644
 --- a/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt
@@ -25,3 +34,4 @@ index 7bb7ba269643..da28b1842c7a 100644
      }
  
      private fun convertActionIntoDeepLinkSchemeUri(action: String): Uri =
+-- 

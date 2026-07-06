@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Application Services - Liberate
+
+Removes proprietary, tracking, and other unwanted libraries/functionality.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/.buildconfig-android.yml b/.buildconfig-android.yml
 index eec97ee42..7e4684542 100644
 --- a/.buildconfig-android.yml
@@ -103,3 +112,4 @@ index 62b191072..37912d82a 100644
  pub use fxa_client;
  pub use init_rust_components;
  pub use logins;
+-- 

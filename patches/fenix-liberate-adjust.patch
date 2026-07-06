@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Remove Adjust
+
+Removes the Adjust library.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
 index ad28bfb8c8ff..ce199b37a843 100644
 --- a/mobile/android/fenix/app/build.gradle
@@ -41,3 +50,4 @@ index 3788a543e8c0..beb7e7fa64bf 100644
  
          <receiver android:name="org.mozilla.fenix.components.share.SaveToPdfReceiver"
              android:exported="false">
+-- 

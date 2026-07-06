@@ -1,9 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 05:22:45 +0000
-Subject: [PATCH] feat: Disable Nimbus
+Subject: [PATCH] Fenix - Disable Nimbus
 
-Disables Nimbus Experimentation and A/B testing
+Disables and prevents A/B testing/experimentation and remote configuration of settings.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

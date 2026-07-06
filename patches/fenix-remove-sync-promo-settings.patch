@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Remove Firefox Sync settings promotion
+
+Removes Mozilla's promotional banner to enable Firefox Sync at the top of the settings fragment.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
 index da8fa9afaa7f..b9986c14447c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
@@ -11,3 +20,4 @@ index da8fa9afaa7f..b9986c14447c 100644
          }
      }
  
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Disable Pocket
+
+Disables integration with Pocket.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
 index d211d3625dbf..cbdc241b9b4f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
@@ -10,3 +19,4 @@ index d211d3625dbf..cbdc241b9b4f 100644
 +        return false && CONTENT_RECOMMENDATIONS_SUPPORTED_LOCALE.contains(langTag)
      }
  }
+-- 

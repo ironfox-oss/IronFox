@@ -1,8 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 03:58:09 +0000
-Subject: [PATCH] fix: Disable and remove integration with the Mozilla Glean
- (telemetry) SDK
+Subject: [PATCH] Fenix - Remove Glean
+
+Removes the Glean SDK.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

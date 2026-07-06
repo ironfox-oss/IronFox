@@ -1,9 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Sat, 27 Jun 2026 20:11:41 +0000
-Subject: [PATCH] feat: IronFox UI settings - Collections
+Subject: [PATCH] Fenix - IronFox Settings: Collections
 
-Adds support for a UI setting to enable/disable the "Collections" functionality
+Provides support for a UI setting to enable/disable collections.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

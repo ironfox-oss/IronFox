@@ -1,7 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Sat, 27 Jun 2026 20:11:41 +0000
-Subject: [PATCH] feat: Disable AI Controls
+Subject: [PATCH] Fenix - Remove AI Controls
+
+Provides support for removing the 'AI Controls' settings menu.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

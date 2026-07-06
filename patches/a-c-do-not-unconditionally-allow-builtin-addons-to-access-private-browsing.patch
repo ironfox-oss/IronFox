@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Android Components - Do not allow built-in add-ons to access private browsing windows unconditionally
+
+Prevents built-in add-ons from always being able to access private browsing windows, even if they don't request or need access.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/webextension/GeckoWebExtension.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/webextension/GeckoWebExtension.kt
 index d7deea0907fe..d0fdbef0957d 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/webextension/GeckoWebExtension.kt
@@ -11,3 +20,4 @@ index d7deea0907fe..d0fdbef0957d 100644
      }
  
      override suspend fun loadIcon(size: Int): Bitmap? {
+-- 

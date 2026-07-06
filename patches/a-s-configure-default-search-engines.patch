@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 10 Feb 2026 17:43:13 +0000
+Subject: [PATCH] Application Services - Custom search engines
+
+Adds custom privacy-focused search engines.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
 index 047c6f126..e21a98e41 100644
 --- a/components/remote_settings/src/client.rs
@@ -52,3 +61,4 @@ index 047c6f126..e21a98e41 100644
          ],
          ("main", "translations-wasm") => [
              "4fd32605-9889-4dd9-9fc7-577ad1136746",
+-- 

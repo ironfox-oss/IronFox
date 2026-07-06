@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 05:20:13 +0000
+Subject: [PATCH] Gecko - IronFox Settings: Extension blocklist
+
+Adds a preference to enable/disable Phoenix's blocklist of malicious/unwanted/sketchy extensions.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 index 0d081a03a92d4..a5c579bf7e9ef 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
@@ -19,3 +28,4 @@ index 0d081a03a92d4..a5c579bf7e9ef 100644
            default:
              return true;
          }
+-- 

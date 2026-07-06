@@ -1,9 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Sat, 27 Jun 2026 20:11:41 +0000
-Subject: [PATCH] feat: Disable Firefox Sync engines by default
-
-Disables Firefox Sync engines by default, to ensure that users are in control and can decide what data they'd like to sync with Firefox Sync, if any
+Subject: [PATCH] Fenix - Disable Firefox Sync engines by default
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

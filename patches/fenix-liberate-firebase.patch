@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Remove Google Play Firebase
+
+Removes the Google Play Firebase library.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
 index e23ec109a522..831fd721680e 100644
 --- a/mobile/android/fenix/.buildconfig.yml
@@ -171,3 +180,4 @@ index 0000000000..b50a6f03a2
 +        return false
 +    }
 +}
+-- 

@@ -1,3 +1,12 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Support AutoConfig
+
+Adds support for Firefox's AutoConfig functionality to GeckoView, so that it can be leveraged for advanced configuration.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
 diff --git a/extensions/pref/autoconfig/src/nsReadConfig.cpp b/extensions/pref/autoconfig/src/nsReadConfig.cpp
 index 73da0a726d53..7cbcc7740ffe 100644
 --- a/extensions/pref/autoconfig/src/nsReadConfig.cpp
@@ -11,3 +20,4 @@ index 73da0a726d53..7cbcc7740ffe 100644
      nsCOMPtr<nsIFile> jsFile;
  #if defined(MOZ_WIDGET_GTK)
      if (!mozilla::widget::IsRunningUnderFlatpakOrSnap()) {
+-- 
