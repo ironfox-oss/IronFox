@@ -1,11 +1,11 @@
 # Sources
 
 ## Firefox
-### Version: 152.0.4 (RELEASE)
+### Version: 152.0.5 (BUILD1)
 ### https://github.com/mozilla-firefox/firefox
-readonly FIREFOX_COMMIT='d4faced9e237d6431856c0873cb035cbbc25817b'
-readonly FIREFOX_SHA512SUM='2f92d2e52ddf3ac141daa1fe62c0e3ee1702b71418b4a4b408dadd89865dadb84cdb39c458da16d5dfe5b99ba3fa40ea382e0b4fc10af8b9f23eca5354358eaf'
-readonly FIREFOX_VERSION='152.0.4'
+readonly FIREFOX_COMMIT='ced8f3c97c2b119aee3c230611bbb6e9c679abb7'
+readonly FIREFOX_SHA512SUM='686da10938b29efd5c75b2f115148406fca122414a4e7d1f29a9f95a12d26d4dd757344ec4f343512815bb6226dc08d0e9e92da95de71c4458a44af298cfc3a9'
+readonly FIREFOX_VERSION='152.0.5'
 
 ### IronFox
 readonly IRONFOX_VERSION="${FIREFOX_VERSION}"
@@ -22,8 +22,8 @@ readonly APPSERVICES_VERSION='152.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-readonly L10N_COMMIT='75f81e36e9003c7c380c7fd7d7d4e2d255e35c05'
-readonly L10N_SHA512SUM='efd5b129079bfd5367dd7163db3461f5b8967f24e225bcfac6b692cb8483187b42e219c34e02e43092b1ba99d9f09da5095139f3e99188ad8d0caa09b164d18f'
+readonly L10N_COMMIT='40b437d099565d8d591b7c7b5173df25ae1dfc95'
+readonly L10N_SHA512SUM='a4166b61bf71d58ed1d7b9b1747cacaeeefc573b2ee4f9a2a0293d4753db80ba998b854ff355367ac828fe2c4c7524b1022d77eb9e779c12942a0b0641bc8600'
 
 ## Glean
 ### Version: 67.3.2
