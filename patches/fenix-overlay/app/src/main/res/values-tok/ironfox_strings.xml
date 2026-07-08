@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_action_retry">alasa sin</string>
+    <string name="preference_autoplay_policy_sticky">awen</string>
+    <string name="preference_autoplay_policy_transient">awen ala (open)</string>
+</resources>
