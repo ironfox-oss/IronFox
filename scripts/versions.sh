@@ -1,10 +1,10 @@
 # Sources
 
 ## Firefox
-### Version: 152.0.5 (BUILD1)
+### Version: 152.0.5 (RELEASE)
 ### https://github.com/mozilla-firefox/firefox
 readonly FIREFOX_COMMIT='ced8f3c97c2b119aee3c230611bbb6e9c679abb7'
-readonly FIREFOX_SHA512SUM='686da10938b29efd5c75b2f115148406fca122414a4e7d1f29a9f95a12d26d4dd757344ec4f343512815bb6226dc08d0e9e92da95de71c4458a44af298cfc3a9'
+readonly FIREFOX_SHA512SUM='f2979e8168c6bea9f0a0cb259012dd99252ef34a6b6dcdb05c8d335149041d9c89aef467bf37b220ac65122840d5f67c1da36776f7116825891fbcaa12a1ef2b'
 readonly FIREFOX_VERSION='152.0.5'
 
 ### IronFox
