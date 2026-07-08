@@ -523,7 +523,6 @@ function boolPrefHasUISetting(pref) {
     "browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled",
     "browser.ironfox.onboardingCompleted",
     "browser.ironfox.webgl.disabled",
-    "browser.ironfox.xpinstall.enabled",
     "browser.privatebrowsing.autostart",
     "extensions.formautofill.addresses.enabled",
     "extensions.formautofill.creditCards.enabled",
@@ -534,6 +533,7 @@ function boolPrefHasUISetting(pref) {
     "pdfjs.disabled",
     "print.enabled",
     "signon.rememberSignons",
+    "xpinstall.enabled",
 
     // GeckoRuntimeSettings
     "browser.contentblocking.database.enabled",

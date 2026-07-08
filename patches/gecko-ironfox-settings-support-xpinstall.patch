@@ -8,7 +8,7 @@ Provides support for a UI setting to enable/disable the installation of add-ons.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/browser/components/enterprisepolicies/Policies.sys.mjs b/browser/components/enterprisepolicies/Policies.sys.mjs
-index e612b78173584..e23ec87640457 100644
+index e612b78173..f04524a16a 100644
 --- a/browser/components/enterprisepolicies/Policies.sys.mjs
 +++ b/browser/components/enterprisepolicies/Policies.sys.mjs
 @@ -31,6 +31,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -26,25 +26,8 @@ index e612b78173584..e23ec87640457 100644
 -        setAndLockPref("xpinstall.enabled", param.Default);
 -        if (!param.Default) {
 +//        setAndLockPref("xpinstall.enabled", param.Default);
-+        if (!lazy.IFPrefUtils.getBoolPref("browser.ironfox.xpinstall.enabled")) {
++        if (!lazy.IFPrefUtils.getBoolPref("xpinstall.enabled")) {
            manager.disallowFeature("installTemporaryAddon");
            setAndLockPref(
              "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
-diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 0d081a03a92d4..f81c6e95886cc 100644
---- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-+++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-@@ -472,6 +472,12 @@ EnterprisePoliciesManager.prototype = {
- 
-   mayInstallAddon(addon) {
-     // See https://dev.chromium.org/administrators/policy-list-3/extension-settings-full
-+    if (!lazy.IFPrefUtils.getBoolPref("browser.ironfox.onboardingCompleted") && addon.id === "uBlock0@raymondhill.net" && addon.type === "extension" && addon.isWebExtension && addon.sourceURI === "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi" && addon.name === "uBlock Origin" && addon.isCorrectlySigned && addon.providesUpdatesSecurely && addon.isCompatible && addon.isPlatformCompatible && addon.blocklistState === 0) {
-+      return true;
-+    }
-+    if (!addon.inDatabase && !lazy.IFPrefUtils.getBoolPref("browser.ironfox.xpinstall.enabled")) {
-+      return false;
-+    }
-     if (!ExtensionSettings) {
-       return true;
-     }
 -- 

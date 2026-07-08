@@ -128,7 +128,7 @@ object GeckoSettingsBridge {
 
   fun setXPInstallEnabled(context: Context, engine: Engine) {
     val xpinstallEnabled = IronFoxPreferences.isXPInstallEnabled(context)
-    setDefaultPref(engine, "browser.ironfox.xpinstall.enabled", xpinstallEnabled)
+    setDefaultPref(engine, "xpinstall.enabled", xpinstallEnabled)
   }
 
   fun setJITEnabled(context: Context, engine: Engine) {
