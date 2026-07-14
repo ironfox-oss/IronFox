@@ -1,11 +1,11 @@
 # Sources
 
 ## Firefox
-### Version: 152.0.5 (RELEASE)
+### Version: 152.0.6 (BUILD1)
 ### https://github.com/mozilla-firefox/firefox
-readonly FIREFOX_COMMIT='ced8f3c97c2b119aee3c230611bbb6e9c679abb7'
-readonly FIREFOX_SHA512SUM='f2979e8168c6bea9f0a0cb259012dd99252ef34a6b6dcdb05c8d335149041d9c89aef467bf37b220ac65122840d5f67c1da36776f7116825891fbcaa12a1ef2b'
-readonly FIREFOX_VERSION='152.0.5'
+readonly FIREFOX_COMMIT='27b462b22705a8860f7ab0d33aa5b4b658ae5932'
+readonly FIREFOX_SHA512SUM='eabf7b56b0183b7bd66cff3d187d2fd6a31645b8d5f3043994f22c1c1112e7a9d5a7eb46f356c1dc61a5f30ee5b0d65b0fb045b6f09c0daa8f1d5a56b739305a'
+readonly FIREFOX_VERSION='152.0.6'
 
 ### IronFox
 readonly IRONFOX_VERSION="${FIREFOX_VERSION}"
@@ -22,8 +22,8 @@ readonly APPSERVICES_VERSION='152.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-readonly L10N_COMMIT='40b437d099565d8d591b7c7b5173df25ae1dfc95'
-readonly L10N_SHA512SUM='a4166b61bf71d58ed1d7b9b1747cacaeeefc573b2ee4f9a2a0293d4753db80ba998b854ff355367ac828fe2c4c7524b1022d77eb9e779c12942a0b0641bc8600'
+readonly L10N_COMMIT='e80a3f2432cd055fe20d385412e2867268d24f09'
+readonly L10N_SHA512SUM='1c86c20f7a00d15cbd594829b4ac44d1226889dbe058dbd3734bb8bd91eff7483e2a96139d1bfe9d4ced680b8cf102998a8ad5e47f255a6046c17d99152f2976'
 
 ## Glean
 ### Version: 67.3.2
@@ -41,10 +41,10 @@ readonly GLEAN_PARSER_SHA512SUM='acb6ba017549fe26b0b9af77fea98421509580d8c734ada
 readonly GLEAN_PARSER_VERSION='19.0.0'
 
 ## microG
-### Version: v0.3.15.250932
+### Version: v0.3.16.252432
 ### https://github.com/microg/GmsCore
-readonly GMSCORE_COMMIT='352f2d72fa52c6c3c4fdd79d575a071a0da72ad1'
-readonly GMSCORE_SHA512SUM='da38003f346cb7e86ce7bca89316e0c1d7c760b9312dd9505e63e0f6ef652563da102960e657cd37341d59d6ea00094a57837137d6835bafefe3c59d0839d4e9'
+readonly GMSCORE_COMMIT='9a206ae115d6f4d99300def2aea447332ac84260'
+readonly GMSCORE_SHA512SUM='b826bd6693b55a4e7844ed773df0015f9f04f502dab50c49c44e5807721918650b0b6cf23a7db5d25312224b2f02e2bdb1edfa1bb8f12dd0023fcd91b71ab275'
 
 ## Phoenix
 ### Version: 2026.07.08.1
@@ -112,11 +112,11 @@ readonly ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='991db0bbf23acd212b6be57033cdb
 readonly ANDROID_SDK_PLATFORM_VERSION='37.0'
 
 ## Android SDK Platform Tools
-### Version: 37.0.0
+### Version: 37.0.1
 ### https://developer.android.com/tools/releases/platform-tools
-readonly ANDROID_SDK_PLATFORM_TOOLS_VERSION='37.0.0'
-readonly ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX='9c5589319d3668ec0dcce0dbcd9fbd0f8c49e59f9004604f9d501ea626972e099579bfff202bf9a0586083e0fdd6f4f5d566a41fc33bf1702a862403e0fdfd38'
-readonly ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX='a093db8388d4b8a212476c014eedb2b3d757d57dcc5b25ca3e38d556562129e5e6be264f8b9d8409df909f894f055cc7eb9ce27fa6de041a34f9419f247bb950'
+readonly ANDROID_SDK_PLATFORM_TOOLS_VERSION='37.0.1'
+readonly ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX='990ee47ae823724599679fe56561df31a6056668246390698c94f9b00a5af8e5966bff4c31c8f8b8d11b3c419ea994147d38e2234fa6e881255dbb29ff203449'
+readonly ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX='331558dd9bd086a3a990f1bfda84066ff90a7f4231262970f6330186c1213cfd171c54baacf7e4fef8df6aab6c2dc0c1c58abcdc0b7cf4fe4df1032f54c27fc9'
 
 ### This is used for setting microG's compile SDK version
 readonly MICROG_ANDROID_SDK_COMPILE_VERSION='36'
@@ -182,16 +182,16 @@ readonly JDK_17_SHA512SUM_OSX_X86_64='c871deedc3ccf0663aa584610c1390d1ae2fac2d47
 readonly JDK_17_VERSION='17.0.19'
 
 ## Node.js
-### Version: 26.4.0
+### Version: 26.5.0
 ### https://nodejs.org/about/previous-releases
 ### (Used by nvm)
-readonly NODE_VERSION='26.4.0'
+readonly NODE_VERSION='26.5.0'
 
 ## npm
-### Version: 11.18.0
+### Version: 12.0.1
 ### https://github.com/npm/cli
-readonly NPM_SHA512SUM='4faecce0be70366d1c67b1012c4adc1246354a6cc45bf589f92003073b05518d547403df1475c542d67a4845e22b4fafcd7cac0af02c7a96cc6814f09eb003fb'
-readonly NPM_VERSION='11.18.0'
+readonly NPM_SHA512SUM='2f94fd8bf600416416a934bfc59c4991e8bff7372ef7d842784e2a8b8d48c81555ee645069ddea73625fb8e92dc261feab0188fd5dab6c22fefd46316f5f9140'
+readonly NPM_VERSION='12.0.1'
 
 ## nvm
 ### Version: v0.40.5
@@ -222,9 +222,9 @@ readonly PYYAML_COMMIT='49790e73684bebad1df05ef8d828fa12f685bffb'
 readonly PYYAML_SHA512SUM='2fd1334af2722c093592f93a5eee01d0b2e26976a12cb2e4859b4271a8fa47ff257d10c91b09bdb2b5aa9415b62693a69d6e6602e997c2bff6711aa02bf43937'
 
 ## Rust
-### Version: 1.96.0
+### Version: 1.97.0
 ### https://releases.rs/
-readonly RUST_VERSION='1.96.0'
+readonly RUST_VERSION='1.97.0'
 
 ## rustup
 ### Version: 1.29.0
