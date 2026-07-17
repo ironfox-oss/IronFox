@@ -8,7 +8,7 @@ Adds support for using a locally built nimbus-fml binary, instead of fetching a 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt b/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt
-index fcb3b4b682..cb1b14ab73 100644
+index 594374187da1..d2e1fdacbcb5 100644
 --- a/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt
 +++ b/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt
 @@ -118,7 +118,7 @@ class NimbusPlugin : Plugin<Project> {
@@ -17,7 +17,7 @@ index fcb3b4b682..cb1b14ab73 100644
  
 -        if (mozconfigSubsts?.get("MOZ_APPSERVICES_IN_TREE").isTruthy()) {
 +        if (true) {
-             // we assume the binary has been built and `gradle.ext.mozconfig.substs.NIMBUS_FML` tells us where to find it.
-             val nimbusFmlPath = requireNotNull(mozconfigSubsts?.get("NIMBUS_FML") as? String) {
-                 "NIMBUS_FML not found in mozconfig substs"
+             // This is subtle.  We capture `NIMBUS_FML` in the configuration cache as a `String`.
+             // If we access `project.gradle...` in the `provider` `Callable` below, we capture the
+             // `Project` in the configuration cache, which is not desirable.
 -- 

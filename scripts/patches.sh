@@ -13,7 +13,7 @@ readonly GREEN="\033[0;32m"
 readonly NC="\033[0m"
 
 declare -a PATCH_CMD
-readonly PATCH_CMD=("${IRONFOX_PATCH}" -p1 -f --fuzz=3 --no-backup-if-mismatch)
+readonly PATCH_CMD=("${IRONFOX_PATCH}" -p1 --no-backup-if-mismatch)
 
 declare -a PATCH_FILES
 declare -a AS_PATCH_FILES

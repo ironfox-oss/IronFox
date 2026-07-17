@@ -48,21 +48,21 @@ index 5cc1da059f7d..517c235062dd 100644
          }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 4ecf8c8e6467..2035846c88b3 100644
+index b9c948180af6..cda0f6b36652 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -72,6 +72,7 @@ import org.mozilla.fenix.snackbar.SnackbarBinding
- import org.mozilla.fenix.utils.Settings
+@@ -86,6 +86,7 @@ import java.lang.ref.WeakReference
  import kotlin.system.exitProcess
+ import mozilla.components.ui.icons.R as iconsR
  import org.mozilla.fenix.GleanMetrics.Settings as SettingsMetrics
 +import org.ironfoxoss.ironfox.utils.FenixSettingsVisibilityManager
  
- @Suppress("LargeClass", "TooManyFunctions")
- class SettingsFragment : PreferenceFragmentCompat() {
-@@ -609,8 +610,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
-         setupHomepagePreference(settings)
+ /**
+  * Main settings screen.
+@@ -652,8 +653,22 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
          setupTrackingProtectionPreference(settings)
          setupDnsOverHttpsPreference(settings)
+         setupEmailMaskPreference(settings, requireComponents)
 +        setupIronFoxPreferences()
      }
  
@@ -79,9 +79,9 @@ index 4ecf8c8e6467..2035846c88b3 100644
 +        FenixSettingsVisibilityManager.SettingsFragment(requireContext(), this)
 +     }
 +
-     /**
-      * For >=Q -> Use new RoleManager API to show in-app browser switching dialog.
-      * For <Q && >=N -> Navigate user to Android Default Apps Settings.
+     private val setToDefaultPromptRequestLauncher: ActivityResultLauncher<Intent> =
+         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+             with(requireContext()) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 83e0f40483b7..d1f203994c07 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

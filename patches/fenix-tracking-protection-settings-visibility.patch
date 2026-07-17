@@ -8,19 +8,19 @@ Provides support for controlling the visibility of UI settings within the Tracki
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt
-index 1183971659f3..ec4655ae87ae 100644
+index 6076047691dd..eb3d3c00eeb0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt
-@@ -19,7 +19,7 @@ import androidx.preference.PreferenceFragmentCompat
- import androidx.preference.SwitchPreference
+@@ -19,7 +19,7 @@ import androidx.preference.Preference
+ import androidx.preference.PreferenceFragmentCompat
+ import androidx.preference.SwitchPreferenceCompat
  import com.google.android.material.dialog.MaterialAlertDialogBuilder
- import org.mozilla.fenix.BrowserDirection
 -import org.mozilla.fenix.GleanMetrics.TrackingProtection
 +import org.ironfoxoss.ironfox.utils.FenixSettingsVisibilityManager
- import org.mozilla.fenix.HomeActivity
  import org.mozilla.fenix.R
+ import org.mozilla.fenix.e2e.SystemInsetsPaddedFragment
  import org.mozilla.fenix.ext.components
-@@ -99,6 +99,7 @@ class TrackingProtectionFragment : PreferenceFragmentCompat() {
+@@ -101,6 +101,7 @@ class TrackingProtectionFragment : PreferenceFragmentCompat(), SystemInsetsPadde
          addToRadioGroup(radioStrict, radioStandard, radioCustom)
          updateStrictOptionsVisibility()
          updateCustomOptionsVisibility()

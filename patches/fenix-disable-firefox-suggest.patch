@@ -98,16 +98,16 @@ index 7c68a88f9f45..1ef39c9efaec 100644
          )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
-index c0fb12426e4d..dd229dcd1875 100644
+index df0483c0788a..4c74d65239e9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
-@@ -39,7 +39,7 @@ class SearchEngineFragment : PreferenceFragmentCompat() {
+@@ -46,7 +46,7 @@ class SearchEngineFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
          )
  
-         requirePreference<SwitchPreference>(R.string.pref_key_show_sponsored_suggestions).apply {
+         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_sponsored_suggestions).apply {
 -            isVisible = context.settings().enableFxSuggest
 +            isVisible = false
          }
-         requirePreference<SwitchPreference>(R.string.pref_key_show_nonsponsored_suggestions).apply {
+         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_nonsponsored_suggestions).apply {
              isVisible = context.settings().enableFxSuggest
 -- 

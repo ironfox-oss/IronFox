@@ -56,10 +56,10 @@ index 87a4f911c0cf..f92e2c53742e 100644
  
      val relayEligibilityStore by lazyMonitored {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index ff4c7a014c2c1..63a75a005e955 100644
+index f7aaa39f3990..802a8c1586f2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -84,14 +84,14 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
+@@ -88,14 +88,14 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
  import mozilla.components.service.digitalassetlinks.local.StatementRelationChecker
  import mozilla.components.service.location.LocationService
  import mozilla.components.service.location.MozillaLocationService
@@ -73,10 +73,10 @@ index ff4c7a014c2c1..63a75a005e955 100644
  import mozilla.components.service.mars.Placement
 -import mozilla.components.service.mars.contile.ContileTopSitesUpdater
 +import mozilla.components.service.mars.contile.ContileTopSitesUpdater */
+ import mozilla.components.service.merino.manifest.MerinoManifestProvider
  import mozilla.components.service.pocket.ContentRecommendationsRequestConfig
  import mozilla.components.service.pocket.PocketStoriesConfig
- import mozilla.components.service.pocket.PocketStoriesService
-@@ -585,7 +585,7 @@ class Core(
+@@ -645,7 +645,7 @@ class Core(
      }
      val pocketStoriesService by lazyMonitored { PocketStoriesService(context, pocketStoriesConfig) }
  
@@ -85,14 +85,16 @@ index ff4c7a014c2c1..63a75a005e955 100644
          MarsTopSitesProvider(
              context = context,
              client = client,
-@@ -631,17 +631,17 @@ class Core(
-             },
-             frequency = Frequency(3, TimeUnit.HOURS),
+@@ -665,7 +665,7 @@ class Core(
+             ),
+             maxCacheAgeInSeconds = MARS_TOP_SITES_MAX_CACHE_AGE,
          )
 -    }
 +    } */
  
-     val topSitesStorage by lazyMonitored {
+     val macTopSitesProvider by lazyMonitored {
+         MacTopSitesProvider(
+@@ -697,11 +697,11 @@ class Core(
          DefaultTopSitesStorage(
              pinnedSitesStorage = pinnedSiteStorage,
              historyStorage = historyStorage,
