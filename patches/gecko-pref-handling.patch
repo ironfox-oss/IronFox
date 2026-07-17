@@ -8,14 +8,13 @@ Locks Gecko preferences controlled by GeckoRuntimeSettings to ensure they stay i
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/extensions/pref/autoconfig/src/prefcalls.js b/extensions/pref/autoconfig/src/prefcalls.js
-index 66b39775196f7..61d01b705b202 100644
+index 47eb92982c97..ce9ac56af63f 100644
 --- a/extensions/pref/autoconfig/src/prefcalls.js
 +++ b/extensions/pref/autoconfig/src/prefcalls.js
-@@ -4,6 +4,16 @@
-  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+@@ -5,6 +5,16 @@
  
  /* globals gSandbox */
-+ 
+ 
 +const lazy = {};
 +ChromeUtils.defineESModuleGetters(
 +  lazy,
@@ -25,17 +24,20 @@ index 66b39775196f7..61d01b705b202 100644
 +  },
 +  { global: "contextual" }
 +);
- 
++
  const LDAPSyncQueryContractID = "@mozilla.org/ldapsyncquery;1";
  
-@@ -36,15 +46,15 @@ function pref(prefName, value) {
+ var gIsUTF8;
+@@ -36,7 +46,7 @@ function pref(prefName, value) {
  function defaultPref(prefName, value) {
    try {
      var prefBranch = Services.prefs.getDefaultBranch(null);
 -    if (typeof value == "string") {
 +    if (typeof value == "string" && lazy.GeckoSettingsBridge.autoconfCanSetStringPref(prefName)) {
-       if (gIsUTF8) {
-         prefBranch.setStringPref(prefName, value);
+       // Unwrap the legacy homepage form that the localizable-pref reader used
+       // to handle (bug 1490339). Match it exactly so we don't touch deliberate
+       // data: URLs.
+@@ -52,9 +62,9 @@ function defaultPref(prefName, value) {
          return;
        }
        prefBranch.setCharPref(prefName, value);
