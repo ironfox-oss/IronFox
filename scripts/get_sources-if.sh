@@ -647,7 +647,6 @@ function download_and_extract() {
     fi
   fi
 
-  local readonly extension
   if [[ "${url}" =~ \.tar\.xz$ ]]; then
     local readonly extension=".tar.xz"
   elif [[ "${url}" =~ \.tar\.gz$ ]]; then
