@@ -295,56 +295,56 @@ source "${IRONFOX_VERSIONS}"
 # Back-up (and remove) a file if it exists
 function backup_file() {
   local readonly file="$1"
-  local readonly file_name="$(basename "${file}")"
+  local readonly file_name="$("${IRONFOX_BASENAME}" "${file}")"
   local readonly backup_file="${IRONFOX_EXTERNAL}/temp/backup/${file_name}"
 
   if [[ -f "${file}" ]]; then
-    rm -f "${backup_file}"
-    mkdir -p "$(dirname "${backup_file}")"
-    cp -f "${file}" "${backup_file}"
-    rm -f "${file}"
+    "${IRONFOX_RM}" -f "${backup_file}"
+    "${IRONFOX_MKDIR}" -p "$("${IRONFOX_DIRNAME}" "${backup_file}")"
+    "${IRONFOX_CP}" -f "${file}" "${backup_file}"
+    "${IRONFOX_RM}" -f "${file}"
   fi
 }
 
 # Back-up (and remove) a directory if it exists
 function backup_dir() {
   local readonly dir="$1"
-  local readonly dir_name="$(basename "${dir}")"
+  local readonly dir_name="$("${IRONFOX_BASENAME}" "${dir}")"
   local readonly backup_dir="${IRONFOX_EXTERNAL}/temp/backup/${dir_name}"
 
   if [[ -d "${dir}" ]]; then
-    rm -rf "${backup_dir}"
-    mkdir -p "$(dirname "${backup_dir}")"
-    cp -rf "${dir}/" "${backup_dir}"
-    rm -rf "${dir}"
+    "${IRONFOX_RM}" -rf "${backup_dir}"
+    "${IRONFOX_MKDIR}" -p "$("${IRONFOX_DIRNAME}" "${backup_dir}")"
+    "${IRONFOX_CP}" -rf "${dir}/" "${backup_dir}"
+    "${IRONFOX_RM}" -rf "${dir}"
   fi
 }
 
 # Restore a backed-up file
 function restore_file() {
   local readonly file="$1"
-  local readonly file_name="$(basename "${file}")"
+  local readonly file_name="$("${IRONFOX_BASENAME}" "${file}")"
   local readonly backed_up_file="${IRONFOX_EXTERNAL}/temp/backup/${file_name}"
 
   if [[ -f "${backed_up_file}" ]]; then
-    rm -f "${file}"
-    mkdir -p "$(dirname "${file}")"
-    cp -f "${backed_up_file}" "${file}"
-    rm -f "${backed_up_file}"
+    "${IRONFOX_RM}" -f "${file}"
+    "${IRONFOX_MKDIR}" -p "$("${IRONFOX_DIRNAME}" "${file}")"
+    "${IRONFOX_CP}" -f "${backed_up_file}" "${file}"
+    "${IRONFOX_RM}" -f "${backed_up_file}"
   fi
 }
 
 # Restore a backed-up directory
 function restore_dir() {
   local readonly dir="$1"
-  local readonly dir_name="$(basename "${dir}")"
+  local readonly dir_name="$("${IRONFOX_BASENAME}" "${dir}")"
   local readonly backed_up_dir="${IRONFOX_EXTERNAL}/temp/backup/${dir_name}"
 
   if [[ -d "${backed_up_dir}" ]]; then
-    rm -rf "${dir}"
-    mkdir -p "$(dirname "${dir}")"
-    cp -rf "${backed_up_dir}/" "${dir}"
-    rm -rf "${backed_up_dir}"
+    "${IRONFOX_RM}" -rf "${dir}"
+    "${IRONFOX_MKDIR}" -p "$("${IRONFOX_DIRNAME}" "${dir}")"
+    "${IRONFOX_CP}" -rf "${backed_up_dir}/" "${dir}"
+    "${IRONFOX_RM}" -rf "${backed_up_dir}"
   fi
 }
 
@@ -386,16 +386,16 @@ function validate_checksum() {
 
   if [[ "${checksum_type}" == 'md5sum' ]]; then
     local readonly checksum_type_pretty='MD5sum'
-    local readonly local_checksum=$(md5sum "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    local readonly local_checksum=$("${IRONFOX_MD5SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
   elif [[ "${checksum_type}" == 'sha1sum' ]]; then
     local readonly checksum_type_pretty='SHA1sum'
-    local readonly local_checksum=$(sha1sum "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    local readonly local_checksum=$("${IRONFOX_SHA1SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
   elif [[ "${checksum_type}" == 'sha256sum' ]]; then
     local readonly checksum_type_pretty='SHA256sum'
-    local readonly local_checksum=$(sha256sum "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    local readonly local_checksum=$("${IRONFOX_SHA256SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
   elif [[ "${checksum_type}" == 'sha512sum' ]]; then
     local readonly checksum_type_pretty='SHA512sum'
-    local readonly local_checksum=$(sha512sum "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    local readonly local_checksum=$("${IRONFOX_SHA512SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
   else
     echo_red_text 'ERROR: Unknown checksum type.'
     return 1
@@ -409,7 +409,7 @@ function validate_checksum() {
     echo "Actual ${checksum_type_pretty}:     ${local_checksum}"
 
     # If checksum validation fails, also just remove the file
-    rm -f "${file}"
+    "${IRONFOX_RM}" -f "${file}"
 
     return 1
   else
@@ -449,20 +449,20 @@ function clone_repo() {
     echo
     if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
       echo_red_text "Removing ${path}..."
-      rm -rf "${path}"
+      "${IRONFOX_RM}" -rf "${path}"
     else
       return 0
     fi
   fi
 
   echo_red_text "Cloning ${url}::${revision}..."
-  git clone --revision="${revision}" --depth=1 "${url}" "${path}"
+  "${IRONFOX_GIT}" clone --revision="${revision}" --depth=1 "${url}" "${path}"
 }
 
 function download() {
   local readonly url="$1"
   local readonly file_in="$2"
-  local readonly file_name=$(basename "${file_in}")
+  local readonly file_name=$("${IRONFOX_BASENAME}" "${file_in}")
   local readonly expected_sha512sum="$3"
 
   # By default, we want to exit upon an error
@@ -494,7 +494,7 @@ function download() {
 
   # If we're doing a checksum update, we download the file to a separate temporary directory, instead of our standard one
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
-    rm -rf "${IRONFOX_EXTERNAL}/temp/chksm"
+    "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp/chksm"
     local readonly file="${IRONFOX_EXTERNAL}/temp/chksm/${file_name}"
   else
     local readonly file="${file_in}"
@@ -519,15 +519,15 @@ function download() {
   local IRONFOX_CHECKSUM_FAILED=0
   local IRONFOX_DOWNLOAD_FAILED=0
 
-  if [[ ! -d "$(dirname "${file}")" ]]; then
-    mkdir -vp "$(dirname "${file}")"
+  if [[ ! -d "$("${IRONFOX_DIRNAME}" "${file}")" ]]; then
+    "${IRONFOX_MKDIR}" -vp "$("${IRONFOX_DIRNAME}" "${file}")"
     local readonly CREATED_DIR_FOR_DL=1
   else
     local readonly CREATED_DIR_FOR_DL=0
   fi
 
   echo_red_text "Downloading ${url}..."
-  curl ${IRONFOX_CURL_FLAGS} --location "${url}" --output "${file}" || local IRONFOX_DOWNLOAD_FAILED=1
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${url}" --output "${file}" || local IRONFOX_DOWNLOAD_FAILED=1
 
   # Verify (or update) SHA512sum
   validate_checksum "${expected_sha512sum}" "${file}" 'sha512sum' || local IRONFOX_CHECKSUM_FAILED=1
@@ -553,14 +553,14 @@ function download() {
   fi
 
   # Clean-up
-  rm -f "${IRONFOX_EXTERNAL}/temp/backup/${file_name}"
-  rm -rf "${IRONFOX_EXTERNAL}/temp/chksm"
+  "${IRONFOX_RM}" -f "${IRONFOX_EXTERNAL}/temp/backup/${file_name}"
+  "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp/chksm"
 
   # If the download (or checksum validation) failed, exit
   if [[ "${IRONFOX_CHECKSUM_FAILED}" == 1 ]] || [[ "${IRONFOX_DOWNLOAD_FAILED}" == 1 ]]; then
     # If a directory was created just for this download, remove it
     if [[ "${CREATED_DIR_FOR_DL}" == 1 ]]; then
-      rm -rf "$(dirname "${file}")"
+      "${IRONFOX_RM}" -rf "$("${IRONFOX_DIRNAME}" "${file}")"
     fi
     if [[ "${IRONFOX_DOWNLOAD_EXIT}" != 1 ]]; then
       unset IRONFOX_DOWNLOAD_EXIT
@@ -584,16 +584,16 @@ function extract() {
 
   # If our temporary directory for extraction already exists, delete it
   if [[ -d "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}" ]]; then
-    rm -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
+    "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
   fi
 
   # Create temporary directory for extraction
-  mkdir -p "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
+  "${IRONFOX_MKDIR}" -p "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
 
   # Extract based on file extension
   case "${archive_path}" in
     *.zip)
-      unzip -q "${archive_path}" -d "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
+      "${IRONFOX_UNZIP}" -q "${archive_path}" -d "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
       ;;
     *.tar.gz)
       "${IRONFOX_TAR}" xzf "${archive_path}" -C "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
@@ -606,14 +606,14 @@ function extract() {
       ;;
     *)
       echo_red_text "ERROR: Unsupported archive format: ${archive_path}"
-      rm -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
+      "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
       exit 1
       ;;
   esac
 
-  local readonly top_input_dir=$(ls "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
-  cp -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}/${top_input_dir}/" "${target_path}"
-  rm -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
+  local readonly top_input_dir=$("${IRONFOX_LS}" "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
+  "${IRONFOX_CP}" -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}/${top_input_dir}/" "${target_path}"
+  "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
 }
 
 function download_and_extract() {
@@ -693,7 +693,7 @@ function download_and_extract() {
   extract "${repo_archive}" "${path}" "${repo_name}"
 
   # Clean-up
-  rm -rf "${IRONFOX_EXTERNAL}/temp/backup/${repo_name}"
+  "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp/backup/${repo_name}"
 }
 
 # Get androguard
@@ -765,7 +765,7 @@ function get_android_sdk() {
         return 0
       fi
     fi
-    mkdir -p "${IRONFOX_ANDROID_SDK}/cmdline-tools"
+    "${IRONFOX_MKDIR}" -p "${IRONFOX_ANDROID_SDK}/cmdline-tools"
   fi
 
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
@@ -793,7 +793,7 @@ function get_android_sdk() {
     download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-${ANDROID_SDK_PLATFORM}-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}" "${ANDROID_SDK_SHA512SUM}"
 
     # Accept Android SDK licenses
-    { yes || true; } | "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}/bin/sdkmanager" --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
+    { "${IRONFOX_YES}" || true; } | "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}/bin/sdkmanager" --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
 
     echo_green_text "SUCCESS: Set-up Android SDK at ${IRONFOX_ANDROID_SDK}"
   fi
@@ -899,7 +899,7 @@ function get_android_sdk_platform() {
     if [[ "${IRONFOX_DOWNLOAD_FAILED}" == 1 ]]; then
       echo_red_text 'ERROR: Download failed! Exiting...'
       restore_dir "${IRONFOX_ANDROID_SDK}/platforms/android-${ANDROID_SDK_PLATFORM_VERSION}"
-      rm -rf "${IRONFOX_EXTERNAL}/temp"
+      "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
       exit 1
     else
       echo_green_text "SUCCESS: Set-up Android SDK Platform (latest) at ${IRONFOX_ANDROID_SDK}/platforms/android-${ANDROID_SDK_PLATFORM_VERSION}"
@@ -945,7 +945,7 @@ function get_android_sdk_platform_36() {
     if [[ "${IRONFOX_DOWNLOAD_FAILED}" == 1 ]]; then
       echo_red_text 'ERROR: Download failed! Exiting...'
       restore_dir "${IRONFOX_ANDROID_SDK}/platforms/android-36"
-      rm -rf "${IRONFOX_EXTERNAL}/temp"
+      "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
       exit 1
     else
       echo_green_text "SUCCESS: Set-up Android SDK Platform (36) at ${IRONFOX_ANDROID_SDK}/platforms/android-36"
@@ -1035,12 +1035,12 @@ function get_cbindgen() {
   fi
 
   echo_red_text "Downloading cbindgen..."
-  download_and_extract 'cbindgen' "https://github.com/mozilla/cbindgen/archive/${CBINDGEN_COMMIT}.tar.gz" "${IRONFOX_CBINDGEN}" "${CBINDGEN_SHA512SUM}"
+  download_and_extract 'cbindgen' "https://github.com/mozilla/cbindgen/archive/${CBINDGEN_COMMIT}.tar.gz" "${IRONFOX_CBINDGEN_DIR}" "${CBINDGEN_SHA512SUM}"
 
   if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
     source "${IRONFOX_CARGO_ENV}"
     echo_red_text 'Installing cbindgen...'
-    "${IRONFOX_CARGO}" +"${RUST_VERSION}" install --locked --force --vers "${CBINDGEN_VERSION}" --path "${IRONFOX_CBINDGEN}" cbindgen
+    "${IRONFOX_CARGO}" +"${RUST_VERSION}" install --locked --force --vers "${CBINDGEN_VERSION}" --path "${IRONFOX_CBINDGEN_DIR}" cbindgen
     echo_green_text "SUCCESS: Set-up cbindgen at ${IRONFOX_CARGO_HOME}/bin/cbindgen"
   fi
 }
@@ -1106,7 +1106,7 @@ function get_glean_parser() {
     fi
   fi
 
-  mkdir -p "${glean_parser_wheels}"
+  "${IRONFOX_MKDIR}" -p "${glean_parser_wheels}"
   source "${IRONFOX_PYENV}"
   echo_red_text 'Downloading Glean Parser wheels...'
   pushd "${IRONFOX_GLEAN_PARSER_WHEELS}"
@@ -1118,7 +1118,7 @@ function get_glean_parser() {
 
   # Clean-up
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
-    rm -rf "${IRONFOX_EXTERNAL}/temp/chksm"
+    "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp/chksm"
   fi
 }
 
@@ -1339,7 +1339,7 @@ function get_node() {
       read -p "Do you want to re-create it? [y/N] " -n 1 -r
       echo
       if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
-        rm -rf "${IRONFOX_NPM_CACHE}" "${IRONFOX_NVM}" "${IRONFOX_ROOT}/node_modules"
+        "${IRONFOX_RM}" -rf "${IRONFOX_NPM_CACHE}" "${IRONFOX_NVM}" "${IRONFOX_ROOT}/node_modules"
       fi
     fi
   fi
@@ -1378,7 +1378,7 @@ function get_npm() {
 # Get Phoenix
 function get_phoenix() {
   echo_red_text 'Downloading Phoenix...'
-  download_and_extract 'phoenix' "https://gitlab.com/celenityy/Phoenix/-/archive/${PHOENIX_COMMIT}/Phoenix-${PHOENIX_COMMIT}.tar.gz" "${IRONFOX_PHOENIX}" "${PHOENIX_SHA512SUM}"
+  download_and_extract 'phoenix' "https://gitlab.com/celenityy/Phoenix/-/archive/${IRONFOX_PHOENIX_COMMIT}/Phoenix-${IRONFOX_PHOENIX_COMMIT}.tar.gz" "${IRONFOX_PHOENIX}" "${IRONFOX_PHOENIX_SHA512SUM}"
   if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
     echo_green_text "SUCCESS: Set-up Phoenix at ${IRONFOX_PHOENIX}"
   fi
@@ -1413,7 +1413,7 @@ function get_prebuilds() {
   if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
     pushd "${IRONFOX_PREBUILDS}"
     echo_red_text 'Downloading prebuild sources...'
-    bash "${IRONFOX_PREBUILDS}/scripts/get_sources.sh"
+    /bin/bash "${IRONFOX_PREBUILDS}/scripts/get_sources.sh"
     popd
     echo_green_text "SUCCESS: Set-up the IronFox prebuilds repository at ${IRONFOX_PREBUILDS}"
   fi
@@ -1517,7 +1517,7 @@ function get_python() {
       restore_dir "${IRONFOX_UV_CACHE}"
       restore_dir "${IRONFOX_UV_PYTHON}"
       restore_dir "${IRONFOX_UV_LOCAL}/python-cache"
-      rm -rf "${IRONFOX_EXTERNAL}/temp"
+      "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
       exit 1
     elif [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
       echo_green_text "SUCCESS: Downloaded Python to ${IRONFOX_PYTHON_DIR}/${PYTHON_GIT_RELEASE}/cpython-${PYTHON_VERSION}+${PYTHON_GIT_RELEASE}-${PYTHON_ARCH}-${PYTHON_PLATFORM}-install_only_stripped.tar.gz"
@@ -1533,7 +1533,7 @@ function get_python() {
         restore_dir "${IRONFOX_UV_CACHE}"
         restore_dir "${IRONFOX_UV_PYTHON}"
         restore_dir "${IRONFOX_UV_LOCAL}/python-cache"
-        rm -rf "${IRONFOX_EXTERNAL}/temp"
+        "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
         exit 1
       fi
 
@@ -1544,7 +1544,7 @@ function get_python() {
       if [[ "${IRONFOX_PYENV_FAILED}" == 1 ]]; then
         echo_red_text 'ERROR: Environment set-up failed! Exiting...'
         restore_dir "${IRONFOX_PYENV_DIR}"
-        rm -rf "${IRONFOX_EXTERNAL}/temp"
+        "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
         exit 1
       else
         echo_green_text "SUCCESS: Set-up Python environment at ${IRONFOX_PYENV_DIR}"
@@ -1621,18 +1621,18 @@ function get_rust() {
       echo_red_text 'ERROR: Download failed! Exiting...'
       restore_dir "${IRONFOX_CARGO_HOME}"
       restore_dir "${IRONFOX_RUSTUP_HOME}"
-      rm -rf "${IRONFOX_EXTERNAL}/temp"
+      "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
       exit 1
     elif [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
       echo_red_text 'Installing Rust...'
-      bash -x "${IRONFOX_DOWNLOADS}/rustup-init.sh" -y --no-modify-path --no-update-default-toolchain --profile=minimal || local IRONFOX_CARGO_INSTALL_FAILED=1
+      /bin/bash -x "${IRONFOX_DOWNLOADS}/rustup-init.sh" -y --no-modify-path --no-update-default-toolchain --profile=minimal || local IRONFOX_CARGO_INSTALL_FAILED=1
 
       # If the install failed, restore our back-ups, clean-up, and exit
       if [[ "${IRONFOX_CARGO_INSTALL_FAILED}" == 1 ]]; then
         echo_red_text 'ERROR: Installation failed! Exiting...'
         restore_dir "${IRONFOX_CARGO_HOME}"
         restore_dir "${IRONFOX_RUSTUP_HOME}"
-        rm -rf "${IRONFOX_EXTERNAL}/temp"
+        "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
         exit 1
       fi
 
@@ -1644,7 +1644,7 @@ function get_rust() {
         echo_red_text 'ERROR: Could not source environment! Exiting...'
         restore_dir "${IRONFOX_CARGO_HOME}"
         restore_dir "${IRONFOX_RUSTUP_HOME}"
-        rm -rf "${IRONFOX_EXTERNAL}/temp"
+        "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
         exit 1
       fi
 
@@ -1796,7 +1796,7 @@ function get_uv() {
       echo_red_text 'ERROR: Download failed! Exiting...'
       restore_dir "${IRONFOX_UV_DIR}"
       restore_dir "${IRONFOX_UV_LOCAL}"
-      rm -rf "${IRONFOX_EXTERNAL}/temp"
+      "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
       exit 1
     elif [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
       echo_green_text "SUCCESS: Set-up uv at ${IRONFOX_UV}"
@@ -1824,8 +1824,8 @@ function get_wasi() {
 }
 
 # Clean-up
-rm -rf "${IRONFOX_EXTERNAL}/downloads"
-rm -rf "${IRONFOX_EXTERNAL}/temp"
+"${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/downloads"
+"${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
 
 # These need to run before we get androguard, glean_parser, gyp, PyYAML, and s3cmd
 if [[ "${IRONFOX_GET_SOURCE_UV}" == 1 ]]; then

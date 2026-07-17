@@ -86,12 +86,12 @@ update-fdroid-repo:
   script:
     - set -euo pipefail
     - echo 'CI - Downloading dependencies...'
-    - bash -x scripts/get_sources.sh uv
-    - bash -x scripts/get_sources.sh python
-    - bash -x scripts/get_sources.sh androguard
+    - /bin/bash -x scripts/get_sources.sh uv
+    - /bin/bash -x scripts/get_sources.sh python
+    - /bin/bash -x scripts/get_sources.sh androguard
     - echo 'CI - Downloaded dependencies.'
     - echo 'Updating F-Droid repo...'
-    - bash scripts/ci-update-fdroid.sh
+    - /bin/bash scripts/ci-update-fdroid.sh
     - echo 'CI - Updated F-Droid repo.'
 
 update-site-repo:
@@ -122,12 +122,12 @@ update-site-repo:
   script:
     - set -euo pipefail
     - echo 'CI - Downloading dependencies...'
-    - bash -x scripts/get_sources.sh uv
-    - bash -x scripts/get_sources.sh python
-    - bash -x scripts/get_sources.sh pyyaml
+    - /bin/bash -x scripts/get_sources.sh uv
+    - /bin/bash -x scripts/get_sources.sh python
+    - /bin/bash -x scripts/get_sources.sh pyyaml
     - echo 'CI - Downloaded dependencies.'
     - echo 'CI - Updating website repo...'
-    - bash scripts/ci-update-site.sh
+    - /bin/bash scripts/ci-update-site.sh
     - echo 'CI - Updated website repo.'
 
 build-docker:
@@ -179,14 +179,14 @@ build-geckoview:
   script:
     - set -euo pipefail
     - echo 'CI - Preparing secrets...'
-    - bash scripts/ci-prep.sh s3-artifacts
-    - bash scripts/ci-prep.sh sb
+    - /bin/bash scripts/ci-prep.sh s3-artifacts
+    - /bin/bash scripts/ci-prep.sh sb
     - echo 'CI - Prepared secrets.'
     - echo "CI - Building GeckoView (${BUILD_VARIANT})..."
-    - bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'geckoview'
+    - /bin/bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'geckoview'
     - echo "CI - Built GeckoView (${BUILD_VARIANT})."
     - echo 'CI - Uploading artifact...'
-    - bash scripts/ci-upload-artifacts.sh geckoview "${BUILD_VARIANT}"
+    - /bin/bash scripts/ci-upload-artifacts.sh geckoview "${BUILD_VARIANT}"
     - echo 'CI - Uploaded artifact.'
   artifacts:
     untracked: false
@@ -226,15 +226,15 @@ build-fenix:
   script:
     - set -euo pipefail
     - echo 'CI - Preparing secrets...'
-    - bash scripts/ci-prep.sh android-ks
-    - bash scripts/ci-prep.sh s3-artifacts
-    - bash scripts/ci-prep.sh sb
+    - /bin/bash scripts/ci-prep.sh android-ks
+    - /bin/bash scripts/ci-prep.sh s3-artifacts
+    - /bin/bash scripts/ci-prep.sh sb
     - echo 'CI - Prepared secrets.'
     - echo "CI - Building Fenix (${BUILD_VARIANT_PRETTY})..."
-    - bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'fenix'
+    - /bin/bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'fenix'
     - echo "CI - Built Fenix (${BUILD_VARIANT_PRETTY})."
     - echo 'CI - Uploading artifact...'
-    - bash scripts/ci-upload-artifacts.sh fenix "${BUILD_VARIANT}"
+    - /bin/bash scripts/ci-upload-artifacts.sh fenix "${BUILD_VARIANT}"
     - echo 'CI - Uploaded artifact.'
   artifacts:
     untracked: false
@@ -283,21 +283,21 @@ prepare-release:
   script:
     - set -euo pipefail
     - echo 'CI - Preparing secrets...'
-    - bash scripts/ci-prep.sh s3-releases
+    - /bin/bash scripts/ci-prep.sh s3-releases
     - echo 'CI - Prepared secrets.'
     - echo 'CI - Downloading dependencies...'
-    - bash -x scripts/get_sources.sh uv
-    - bash -x scripts/get_sources.sh python
-    - bash -x scripts/get_sources.sh s3cmd
+    - /bin/bash -x scripts/get_sources.sh uv
+    - /bin/bash -x scripts/get_sources.sh python
+    - /bin/bash -x scripts/get_sources.sh s3cmd
     - echo 'CI - Downloaded dependencies.'
     - echo 'CI - Downloading artifacts...'
-    - bash -x scripts/ci-download-artifacts.sh fenix arm64
-    - bash -x scripts/ci-download-artifacts.sh fenix arm
-    - bash -x scripts/ci-download-artifacts.sh fenix x86_64
-    - bash -x scripts/ci-download-artifacts.sh fenix bundle
+    - /bin/bash -x scripts/ci-download-artifacts.sh fenix arm64
+    - /bin/bash -x scripts/ci-download-artifacts.sh fenix arm
+    - /bin/bash -x scripts/ci-download-artifacts.sh fenix x86_64
+    - /bin/bash -x scripts/ci-download-artifacts.sh fenix bundle
     - echo 'CI - Downloaded artifacts.'
     - echo 'CI - Publishing packages...'
-    - bash scripts/ci-publish-packages.sh
+    - /bin/bash scripts/ci-publish-packages.sh
     - echo 'CI - Published packages.'
   artifacts:
     untracked: false

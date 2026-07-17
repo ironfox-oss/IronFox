@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  bash -x $(dirname $0)/env.sh
+  /bin/bash -x $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -67,60 +67,60 @@ function noop_mozilla_endpoints() {
   local readonly dir="$2"
 
   # Find files containing the endpoint
-  local readonly files=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}[^\"']*\"" -e "'${endpoint}[^\"']*'")
-  local readonly files_slash=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}/[^\"']*\"" -e "'${endpoint}/[^\"']*'")
-  local readonly files_period=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}.[^\"']*\"" -e "'${endpoint}.[^\"']*'")
-  local readonly http_files=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}[^\"']*\"" -e "'http://${endpoint}[^\"']*'")
-  local readonly http_files_slash=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}/[^\"']*\"" -e "'http://${endpoint}/[^\"']*'")
-  local readonly http_files_period=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}.[^\"']*\"" -e "'http://${endpoint}.[^\"']*'")
-  local readonly https_files=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}[^\"']*\"" -e "'https://${endpoint}[^\"']*'")
-  local readonly https_files_slash=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}/[^\"']*\"" -e "'https://${endpoint}/[^\"']*'")
-  local readonly https_files_period=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}.[^\"']*\"" -e "'https://${endpoint}.[^\"']*'")
+  local readonly files=$("${IRONFOX_GREP}" -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}[^\"']*\"" -e "'${endpoint}[^\"']*'")
+  local readonly files_slash=$("${IRONFOX_GREP}" -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}/[^\"']*\"" -e "'${endpoint}/[^\"']*'")
+  local readonly files_period=$("${IRONFOX_GREP}" -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}.[^\"']*\"" -e "'${endpoint}.[^\"']*'")
+  local readonly http_files=$("${IRONFOX_GREP}" -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}[^\"']*\"" -e "'http://${endpoint}[^\"']*'")
+  local readonly http_files_slash=$("${IRONFOX_GREP}" -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}/[^\"']*\"" -e "'http://${endpoint}/[^\"']*'")
+  local readonly http_files_period=$("${IRONFOX_GREP}" -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}.[^\"']*\"" -e "'http://${endpoint}.[^\"']*'")
+  local readonly https_files=$("${IRONFOX_GREP}" -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}[^\"']*\"" -e "'https://${endpoint}[^\"']*'")
+  local readonly https_files_slash=$("${IRONFOX_GREP}" -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}/[^\"']*\"" -e "'https://${endpoint}/[^\"']*'")
+  local readonly https_files_period=$("${IRONFOX_GREP}" -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}.[^\"']*\"" -e "'https://${endpoint}.[^\"']*'")
 
   # Check if any files were found and modify them
   if [[ -n "${files}" ]]; then
     echo_red_text "Removing ${endpoint} from files... ${files}"
-    echo "${files}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"${endpoint}[^\"']*\"|\"\"|g" -e "s|'${endpoint}[^\"']*'|''|g"
+    echo "${files}" | "${IRONFOX_XARGS}" -L1 "${IRONFOX_SED}" -i -r -e "s|\"${endpoint}[^\"']*\"|\"\"|g" -e "s|'${endpoint}[^\"']*'|''|g"
   fi
 
   if [[ -n "${files_slash}" ]]; then
     echo_red_text "Removing ${endpoint}/ from files... ${files_slash}"
-    echo "${files_slash}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"${endpoint}/[^\"']*\"|\"\"|g" -e "s|'${endpoint}/[^\"']*'|''|g"
+    echo "${files_slash}" | "${IRONFOX_XARGS}"s -L1 "${IRONFOX_SED}" -i -r -e "s|\"${endpoint}/[^\"']*\"|\"\"|g" -e "s|'${endpoint}/[^\"']*'|''|g"
   fi
 
   if [[ -n "${files_period}" ]]; then
     echo_red_text "Removing ${endpoint}. from files... ${files_period}"
-    echo "${files_period}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"${endpoint}.[^\"']*\"|\"\"|g" -e "s|'${endpoint}.[^\"']*'|''|g"
+    echo "${files_period}" | "${IRONFOX_XARGS}" -L1 "${IRONFOX_SED}" -i -r -e "s|\"${endpoint}.[^\"']*\"|\"\"|g" -e "s|'${endpoint}.[^\"']*'|''|g"
   fi
 
   if [[ -n "${http_files}" ]]; then
     echo_red_text "Removing http://${endpoint} from files... ${http_files}"
-    echo "${http_files}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"http://${endpoint}[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}[^\"']*'|''|g"
+    echo "${http_files}" | "${IRONFOX_XARGS}" -L1 "${IRONFOX_SED}" -i -r -e "s|\"http://${endpoint}[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}[^\"']*'|''|g"
   fi
 
   if [[ -n "${http_files_slash}" ]]; then
     echo_red_text "Removing http://${endpoint}/ from files... ${http_files_slash}"
-    echo "${http_files_slash}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"http://${endpoint}/[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}/[^\"']*'|''|g"
+    echo "${http_files_slash}" | "${IRONFOX_XARGS}" -L1 "${IRONFOX_SED}" -i -r -e "s|\"http://${endpoint}/[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}/[^\"']*'|''|g"
   fi
 
   if [[ -n "${http_files_period}" ]]; then
     echo_red_text "Removing http://${endpoint}. from files... ${http_files_period}"
-    echo "${http_files_period}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"http://${endpoint}.[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}.[^\"']*'|''|g"
+    echo "${http_files_period}" | "${IRONFOX_XARGS}" -L1 "${IRONFOX_SED}" -i -r -e "s|\"http://${endpoint}.[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}.[^\"']*'|''|g"
   fi
 
   if [[ -n "${https_files}" ]]; then
     echo_red_text "Removing https://${endpoint} from files... ${https_files}"
-    echo "${https_files}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"https://${endpoint}[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}[^\"']*'|''|g"
+    echo "${https_files}" | "${IRONFOX_XARGS}" -L1 "${IRONFOX_SED}" -i -r -e "s|\"https://${endpoint}[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}[^\"']*'|''|g"
   fi
 
   if [[ -n "${https_files_slash}" ]]; then
     echo_red_text "Removing https://${endpoint}/ from files... ${https_files_slash}"
-    echo "${https_files_slash}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"https://${endpoint}/[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}/[^\"']*'|''|g"
+    echo "${https_files_slash}" | "${IRONFOX_XARGS}" -L1 "${IRONFOX_SED}" -i -r -e "s|\"https://${endpoint}/[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}/[^\"']*'|''|g"
   fi
 
   if [[ -n "${https_files_period}" ]]; then
     echo_red_text "Removing https://${endpoint}. from files... ${https_files_period}"
-    echo "${https_files_period}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"https://${endpoint}.[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}.[^\"']*'|''|g"
+    echo "${https_files_period}" | "${IRONFOX_XARGS}" -L1 "${IRONFOX_SED}" -i -r -e "s|\"https://${endpoint}.[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}.[^\"']*'|''|g"
   fi
 }
 

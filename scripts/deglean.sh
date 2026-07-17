@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  bash -x $(dirname $0)/env.sh
+  /bin/bash -x $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -57,36 +57,36 @@ readonly IRONFOX_DEGLEAN_GECKO
 
 function deglean() {
   local readonly dir="$1"
-  local readonly gradle_files=$(find "${dir}" -type f -name "*.gradle")
-  local readonly kt_files=$(find "${dir}" -type f -name "*.kt")
-  local readonly yaml_files=$(find "${dir}" -type f -name "metrics.yaml" -o -name "pings.yaml")
+  local readonly gradle_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.gradle")
+  local readonly kt_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.kt")
+  local readonly yaml_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "metrics.yaml" -o -name "pings.yaml")
 
   if [[ -n "${gradle_files}" ]]; then
     for file in $gradle_files; do
       local modified=false
       "${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/deglean.py" "${file}"
 
-      if grep -q 'apply plugin.*glean' "${file}"; then
+      if "${IRONFOX_GREP}" -q 'apply plugin.*glean' "${file}"; then
         "${IRONFOX_SED}" -i -r 's/^(.*apply plugin:.*glean.*)$/\/\/ \1/' "${file}"
         local modified=true
       fi
 
-      if grep -q 'classpath.*glean' "${file}"; then
+      if "${IRONFOX_GREP}" -q 'classpath.*glean' "${file}"; then
         "${IRONFOX_SED}" -i -r 's/^(.*classpath.*glean.*)$/\/\/ \1/' "${file}"
         local modified=true
       fi
 
-      if grep -q 'compileOnly.*glean' "$file"; then
+      if "${IRONFOX_GREP}" -q 'compileOnly.*glean' "$file"; then
         "${IRONFOX_SED}" -i -r 's/^(.*compileOnly.*glean.*)$/\/\/ \1/' "${file}"
         local modified=true
       fi
 
-      if grep -q 'implementation.*glean' "$file"; then
+      if "${IRONFOX_GREP}" -q 'implementation.*glean' "$file"; then
         "${IRONFOX_SED}" -i -r 's/^(.*implementation.*glean.*)$/\/\/ \1/' "${file}"
         local modified=true
       fi
 
-      if grep -q 'testImplementation.*glean' "${file}"; then
+      if "${IRONFOX_GREP}" -q 'testImplementation.*glean' "${file}"; then
         "${IRONFOX_SED}" -i -r 's/^(.*testImplementation.*glean.*)$/\/\/ \1/' "${file}"
         local modified=true
       fi
@@ -103,12 +103,12 @@ function deglean() {
     for file in $kt_files; do
       local modified=false
 
-      if grep -q 'import mozilla.telemetry.*' "${file}"; then
+      if "${IRONFOX_GREP}" -q 'import mozilla.telemetry.*' "${file}"; then
         "${IRONFOX_SED}" -i -r 's/^(.*import mozilla.telemetry.*)$/\/\/ \1/' "${file}"
         local modified=true
       fi
 
-      if grep -q 'import .*GleanMetrics' "${file}"; then
+      if "${IRONFOX_GREP}" -q 'import .*GleanMetrics' "${file}"; then
         "${IRONFOX_SED}" -i -r 's/^(.*GleanMetrics.*)$/\/\/ \1/' "${file}"
         local modified=true
       fi
@@ -123,7 +123,7 @@ function deglean() {
 
   if [[ -n "${yaml_files}" ]]; then
     for yaml_file in $yaml_files; do
-      rm -vf "${yaml_file}"
+      "${IRONFOX_RM}" -vf "${yaml_file}"
       echo_red_text "De-gleaned ${yaml_file}."
     done
   else
@@ -133,18 +133,18 @@ function deglean() {
 
 function fenix_deglean() {
   local readonly dir="$1"
-  local readonly gradle_files=$(find "${dir}" -type f -name "*.gradle")
+  local readonly gradle_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.gradle")
 
   if [[ -n "${gradle_files}" ]]; then
     for file in $gradle_files; do
       local modified=false
 
-      if grep -q 'implementation.*service-glean' "${file}"; then
+      if "${IRONFOX_GREP}" -q 'implementation.*service-glean' "${file}"; then
         "${IRONFOX_SED}" -i -r 's/^(.*implementation.*service-glean.*)$/\/\/ \1/' "${file}"
         local modified=true
       fi
 
-      if grep -q 'testImplementation.*glean' "${file}"; then
+      if "${IRONFOX_GREP}" -q 'testImplementation.*glean' "${file}"; then
         "${IRONFOX_SED}" -i -r 's/^(.*testImplementation.*glean.*)$/\/\/ \1/' "${file}"
         local modified=true
       fi
@@ -165,8 +165,8 @@ function deglean_ac() {
 
   # Remove the Glean service
   ## https://searchfox.org/firefox-main/source/mobile/android/android-components/components/service/glean/README.md
-  rm -rvf "${IRONFOX_AC}/components/service/glean"
-  rm -rvf "${IRONFOX_AC}/samples/glean"
+  "${IRONFOX_RM}" -rvf "${IRONFOX_AC}/components/service/glean"
+  "${IRONFOX_RM}" -rvf "${IRONFOX_AC}/samples/glean"
 
   # Remove Glean classes
   "${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
@@ -175,7 +175,7 @@ function deglean_ac() {
   "${IRONFOX_SED}" -i -e 's|Microsurvey.privacy|// Microsurvey.privacy|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
   "${IRONFOX_SED}" -i -e 's|Microsurvey.shown|// Microsurvey.shown|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
   "${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt"
-  rm -vf "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt"
+  "${IRONFOX_RM}" -vf "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt"
 
   echo_green_text 'SUCCESS: De-gleaned Android Components'
 }
@@ -188,8 +188,8 @@ function deglean_as() {
   "${IRONFOX_SED}" -i 's|glean|# glean|g' "${IRONFOX_AS}/gradle/libs.versions.toml"
 
   # Remove unused/unnecessary Glean components
-  rm -vf "${IRONFOX_AS}/components/remote_settings/android/src/main/java/mozilla/appservices/remotesettings/GleanTelemetry.kt"
-  rm -vf "${IRONFOX_AS}/components/sync_manager/android/src/main/java/mozilla/appservices/syncmanager/BaseGleanSyncPing.kt"
+  "${IRONFOX_RM}" -vf "${IRONFOX_AS}/components/remote_settings/android/src/main/java/mozilla/appservices/remotesettings/GleanTelemetry.kt"
+  "${IRONFOX_RM}" -vf "${IRONFOX_AS}/components/sync_manager/android/src/main/java/mozilla/appservices/syncmanager/BaseGleanSyncPing.kt"
 
   # Remove Glean classes
   "${IRONFOX_SED}" -i 's|FxaClientMetrics|// FxaClientMetrics|g' "${IRONFOX_AS}/components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt"

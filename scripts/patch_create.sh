@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  bash -x $(dirname $0)/env.sh
+  /bin/bash -x $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -67,7 +67,7 @@ if [[ -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch" ]]; then
   case ${OVERWRITE} in
   "y" | "Y" | "yes" | "Yes" | "YES")
     echo_green_text "Removing ${IRONFOX_PATCHES}/${PATCH_NAME}.patch..."
-    rm -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch"
+    "${IRONFOX_RM}" -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch"
     ;;
 
   "n" | "N" | "no" | "No" | "NO")
@@ -84,11 +84,11 @@ fi
 echo_red_text "Creating patch..."
 
 # Create temporary branch, named after our patch
-git checkout -b "${PATCH_NAME}"
+"${IRONFOX_GIT}" checkout -b "${PATCH_NAME}"
 echo_red_text "Created temporary git branch for our changes..."
 
 echo_green_text "Please now make your desired changes to the target project."
-sleep 5
+"${IRONFOX_SLEEP}" 5
 echo
 echo_red_text "Press enter to continue."
 read
@@ -96,13 +96,13 @@ read
 read -p 'Please enter your desired patch message: ' PATCH_MSG
 
 # Commit our changes
-git commit -am "${PATCH_MSG}" --sign
+"${IRONFOX_GIT}" commit -am "${PATCH_MSG}" --sign
 
 # Now, create our patch...
-git format-patch -1 --stdout >"${IRONFOX_PATCHES}/${PATCH_NAME}.patch"
+"${IRONFOX_GIT}" format-patch -1 --stdout >"${IRONFOX_PATCHES}/${PATCH_NAME}.patch"
 
 # Finally, switch back to the original branch, and remove our temporary branch
-git checkout main
-git branch -D "${PATCH_NAME}"
+"${IRONFOX_GIT}" checkout main
+"${IRONFOX_GIT}" branch -D "${PATCH_NAME}"
 
 echo_green_text "SUCCESS: Created patch: ${IRONFOX_PATCHES}/${PATCH_NAME}.patch :)"

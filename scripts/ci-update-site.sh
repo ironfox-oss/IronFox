@@ -10,11 +10,11 @@ if [[ -z "${IRONFOX_CI+x}" ]]; then
   export IRONFOX_CI=1
 fi
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  bash -x "$(realpath $(dirname "$0"))/env.sh"
+  /bin/bash -x "$(realpath $(dirname "$0"))/env.sh"
 fi
 source "$(realpath $(dirname "$0"))/env.sh"
 
-git clone "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${TARGET_REPO_PATH}.git" target-repo
+"${IRONFOX_GIT}" clone "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${TARGET_REPO_PATH}.git" target-repo
 cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };
 
 # Generate documentation for patches
@@ -26,6 +26,6 @@ source "${IRONFOX_PYENV}"
   ./src/version.ts
 
 # Commit changes
-git add src
-git commit -m "feat: update patch docs to reflect ironfox-oss/IronFox@${CI_COMMIT_SHA}"
-git push origin "HEAD:${TARGET_REPO_BRANCH}"
+"${IRONFOX_GIT}" add src
+"${IRONFOX_GIT}" commit -m "feat: update patch docs to reflect ironfox-oss/IronFox@${CI_COMMIT_SHA}"
+"${IRONFOX_GIT}" push origin "HEAD:${TARGET_REPO_BRANCH}"

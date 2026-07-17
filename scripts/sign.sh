@@ -11,13 +11,10 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
-readonly target="$1"
-
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
-# Temporarily add Java to PATH, as apksigner requires it
-export PATH="${IRONFOX_JAVA_HOME}/bin:${PATH}"
+readonly target="$1"
 
 # Functions
 
@@ -38,7 +35,7 @@ function sign_bundle() {
   echo_red_text 'Building signed bundleset...'
 
   # Create our output directory
-  mkdir -p $(dirname "${IRONFOX_OUTPUTS_BUNDLE}")
+  "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_BUNDLE}")
 
   "${IRONFOX_BUNDLETOOL}" build-apks \
     --bundle="${IRONFOX_OUTPUTS_BUNDLE_AAB}" \
@@ -53,7 +50,7 @@ function sign_bundle() {
 
 function sign_arm64() {
   # Create our output directory
-  mkdir -p $(dirname "${IRONFOX_OUTPUTS_ARM64}")
+  "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_ARM64}")
 
   echo_red_text 'Signing APK (ARM64)...'
   sign_apk "${IRONFOX_OUTPUTS_ARM64_UNSIGNED}" "${IRONFOX_OUTPUTS_ARM64}"
@@ -62,7 +59,7 @@ function sign_arm64() {
 
 function sign_arm() {
   # Create our output directory
-  mkdir -p $(dirname "${IRONFOX_OUTPUTS_ARM}")
+  "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_ARM}")
 
   echo_red_text 'Signing APK (ARM)...'
   sign_apk "${IRONFOX_OUTPUTS_ARM_UNSIGNED}" "${IRONFOX_OUTPUTS_ARM}"
@@ -71,7 +68,7 @@ function sign_arm() {
 
 function sign_x86_64() {
   # Create our output directory
-  mkdir -p $(dirname "${IRONFOX_OUTPUTS_X86_64}")
+  "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_X86_64}")
 
   echo_red_text 'Signing APK (x86_64)...'
   sign_apk "${IRONFOX_OUTPUTS_X86_64_UNSIGNED}" "${IRONFOX_OUTPUTS_X86_64}"
@@ -80,7 +77,7 @@ function sign_x86_64() {
 
 function sign_universal() {
   # Create our output directory
-  mkdir -p $(dirname "${IRONFOX_OUTPUTS_UNIVERSAL}")
+  "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_UNIVERSAL}")
 
   echo_red_text 'Signing APK (Universal)...'
   sign_apk "${IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED}" "${IRONFOX_OUTPUTS_UNIVERSAL}"
@@ -117,7 +114,7 @@ if [[ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]]; then
     if [[ "${IRONFOX_OS}" == 'osx' ]]; then
       # On OS X, the user may need to accept a prompt to allow their device to connect,
       ## so wait to ensure we allow them to accept it
-      /bin/sleep 6
+      "${IRONFOX_SLEEP}" 6
     fi
     if [[ "${target}" == 'bundle' ]]; then
       # If we built a bundle, install the universal APK

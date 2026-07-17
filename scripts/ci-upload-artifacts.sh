@@ -12,7 +12,7 @@ if [[ -z "${IRONFOX_CI+x}" ]]; then
   export IRONFOX_CI=1
 fi
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  bash -x $(dirname $0)/env.sh
+  /bin/bash -x $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -31,13 +31,13 @@ if [[ "${IRONFOX_LOG_AR_UP}" == 1 ]]; then
 
   # If the log file already exists, remove it
   if [[ -f "${AR_UP_LOG_FILE}" ]]; then
-    rm "${AR_UP_LOG_FILE}"
+    "${IRONFOX_RM}" "${AR_UP_LOG_FILE}"
   fi
 
   # Ensure our log directory exists
-  mkdir -vp "${IRONFOX_LOG_DIR}"
+  "${IRONFOX_MKDIR}" -vp "${IRONFOX_LOG_DIR}"
 
-  bash "${IRONFOX_SCRIPTS}/ci-upload-artifacts-if.sh" "${target_artifact}" "${target_arch}" > >(tee -a "${AR_UP_LOG_FILE}") 2>&1
+  /bin/bash "${IRONFOX_SCRIPTS}/ci-upload-artifacts-if.sh" "${target_artifact}" "${target_arch}" > >("${IRONFOX_TEE}" -a "${AR_UP_LOG_FILE}") 2>&1
 else
-  bash "${IRONFOX_SCRIPTS}/ci-upload-artifacts-if.sh" "${target_artifact}" "${target_arch}"
+  /bin/bash "${IRONFOX_SCRIPTS}/ci-upload-artifacts-if.sh" "${target_artifact}" "${target_arch}"
 fi

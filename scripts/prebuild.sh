@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  bash -x $(dirname $0)/env.sh
+  /bin/bash -x $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -23,13 +23,13 @@ if [[ "${IRONFOX_LOG_PREBUILD}" == 1 ]]; then
 
   # If the log file already exists, remove it
   if [[ -f "${PREBUILD_LOG_FILE}" ]]; then
-    rm "${PREBUILD_LOG_FILE}"
+    "${IRONFOX_RM}" "${PREBUILD_LOG_FILE}"
   fi
 
   # Ensure our log directory exists
-  mkdir -vp "${IRONFOX_LOG_DIR}"
+  "${IRONFOX_MKDIR}" -vp "${IRONFOX_LOG_DIR}"
 
-  bash -x "${IRONFOX_SCRIPTS}/prebuild-if.sh" "${target}" > >(tee -a "${PREBUILD_LOG_FILE}") 2>&1
+  /bin/bash -x "${IRONFOX_SCRIPTS}/prebuild-if.sh" "${target}" > >("${IRONFOX_TEE}" -a "${PREBUILD_LOG_FILE}") 2>&1
 else
-  bash -x "${IRONFOX_SCRIPTS}/prebuild-if.sh" "${target}"
+  /bin/bash -x "${IRONFOX_SCRIPTS}/prebuild-if.sh" "${target}"
 fi

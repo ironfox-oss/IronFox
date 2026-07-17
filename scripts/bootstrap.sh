@@ -6,7 +6,7 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  bash -x $(dirname $0)/env.sh
+  /bin/bash -x $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -56,9 +56,11 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
 
     # Install OS X dependencies
     brew install \
+      curl \
       coreutils \
       gawk \
       git \
+      gmake \
       gnu-sed \
       gnu-tar \
       gpatch \
@@ -76,6 +78,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
     nasm \
     ninja \
     perl \
+    shasum \
     yq || error_fn
   echo
 
@@ -95,7 +98,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
 
     # We now unfortunately have to restart the system :/
     echo_red_text "To apply the clang and zlib installations, your system will now reboot."
-    /usr/bin/sleep 5 || error_fn
+    "${IRONFOX_SLEEP}" 5 || error_fn
     echo
     echo_green_text "Press enter to continue."
     read

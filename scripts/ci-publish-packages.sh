@@ -13,7 +13,7 @@ if [[ -z "${IRONFOX_CI+x}" ]]; then
   export IRONFOX_CI=1
 fi
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  bash -x "$(realpath $(dirname "$0"))/env.sh"
+  /bin/bash -x "$(realpath $(dirname "$0"))/env.sh"
 fi
 source "$(realpath $(dirname "$0"))/env.sh"
 
@@ -113,8 +113,8 @@ readonly GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packag
 function upload_to_package_registry() {
   local readonly upload_file="$1"
   local readonly upload_package_name="$2"
-  local readonly upload_file_name="$(basename "${upload_file}")"
-  curl ${IRONFOX_CURL_FLAGS} --header "PRIVATE-TOKEN: ${GITLAB_CI_API_TOKEN}" \
+  local readonly upload_file_name="$("${IRONFOX_BASENAME}" "${upload_file}")"
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --header "PRIVATE-TOKEN: ${GITLAB_CI_API_TOKEN}" \
     --upload-file "${upload_file}" \
     "${GENERIC_PACKAGES_URL}/${upload_package_name}/${IRONFOX_VERSION}/${upload_file_name}"
 }
@@ -122,7 +122,7 @@ function upload_to_package_registry() {
 function upload_to_s3() {
   local readonly upload_file="$1"
   local readonly s3_path="$2"
-  local readonly s3_full_path="${s3_path}/$(basename "${upload_file}")"
+  local readonly s3_full_path="${s3_path}/$("${IRONFOX_BASENAME}" "${upload_file}")"
 
   if [[ ! -f "${upload_file}" ]]; then
     echo_red_text "ERROR: File ${upload_file} does not exist!"
@@ -154,10 +154,10 @@ function upload_to_s3() {
       ;;
   esac
 
-  local readonly s3_access_key=$(cat "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" | xargs)
-  local readonly s3_bucket_name=$(cat "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" | xargs)
-  local readonly s3_endpoint=$(cat "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" | xargs)
-  local readonly s3_secret_key=$(cat "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" | xargs)
+  local readonly s3_access_key=$("${IRONFOX_CAT}" "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" | "${IRONFOX_XARGS}")
+  local readonly s3_bucket_name=$("${IRONFOX_CAT}" "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" | "${IRONFOX_XARGS}")
+  local readonly s3_endpoint=$("${IRONFOX_CAT}" "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" | "${IRONFOX_XARGS}")
+  local readonly s3_secret_key=$("${IRONFOX_CAT}" "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" | "${IRONFOX_XARGS}")
 
   echo_red_text "Uploading ${upload_file} to S3..."
   source "${IRONFOX_PYENV}"
@@ -171,11 +171,11 @@ function upload_to_s3() {
 
 function add_sha512sum() {
   local readonly sha512sum_file_in="$1"
-  local readonly sha512sum_file_name=$(basename "${sha512sum_file_in}")
-  local readonly sha512sum_file_path=$(dirname "${sha512sum_file_in}")
+  local readonly sha512sum_file_name=$("${IRONFOX_BASENAME}" "${sha512sum_file_in}")
+  local readonly sha512sum_file_path=$("${IRONFOX_DIRNAME}" "${sha512sum_file_in}")
 
   if [[ -z "${2+x}" ]]; then
-    local readonly sha512sum_s3path=$(basename "${sha512sum_file_path}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+    local readonly sha512sum_s3path=$("${IRONFOX_BASENAME}" "${sha512sum_file_path}" | "${IRONFOX_AWK}" '{print tolower($0)}')
   else
     local readonly sha512sum_s3path="$2"
   fi
@@ -184,24 +184,24 @@ function add_sha512sum() {
 
   # If there's already a SHA512sum file, remove it
   if [[ -f "${sha512sum_file_out}" ]]; then
-    rm -f "${sha512sum_file_out}"
+    "${IRONFOX_RM}" -f "${sha512sum_file_out}"
   fi
 
-  local readonly local_sha512sum=$(sha512sum "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
+  local readonly local_sha512sum=$("${IRONFOX_SHA512SUM}" "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
   echo -n "${local_sha512sum}" > "${sha512sum_file_out}"
 
   upload_to_s3 "${sha512sum_file_out}" "${sha512sum_s3path}"
 }
 
 # Extract compressed artifacts
-#mkdir -p "${IRONFOX_ARTIFACTS}"
+#"${IRONFOX_MKDIR}" -p "${IRONFOX_ARTIFACTS}"
 #for archive in "${IRONFOX_ARTIFACTS}"/*.tar.xz; do
 #  [[ -f "${archive}" ]] || continue
 #  echo "Extracting ${archive}"
 #  "${IRONFOX_TAR}" xvJf "${archive}" -C "${IRONFOX_ARTIFACTS}"
 #done
 
-mkdir -vp "${IRONFOX_BUILD}"
+"${IRONFOX_MKDIR}" -vp "${IRONFOX_BUILD}"
 
 readonly RELEASE_NOTES_FILE="${IRONFOX_BUILD}/release-notes.md"
 readonly CHECKSUMS_FILE="${IRONFOX_BUILD}/asset-checksums.txt"
@@ -215,11 +215,11 @@ function upload_asset() {
   local readonly asset_package_name="$1"
   local readonly asset_s3_path="$2"
   local readonly asset_file="$3"
-  local readonly asset_file_name="$(basename "${asset_file}")"
+  local readonly asset_file_name="$("${IRONFOX_BASENAME}" "${asset_file}")"
 
   echo "\`${asset_file_name}\`: " >> "${CHECKSUMS_FILE}"
   echo "\`\`\`text" >> "${CHECKSUMS_FILE}"
-  echo "$(sha512sum -b "${asset_file}" | cut -d ' ' -f 1)" >> "${CHECKSUMS_FILE}"
+  echo "$("${IRONFOX_SHA512SUM}" -b "${asset_file}" | cut -d ' ' -f 1)" >> "${CHECKSUMS_FILE}"
   echo "\`\`\`" >> "${CHECKSUMS_FILE}"
   echo '' >> "${CHECKSUMS_FILE}"
   upload_to_package_registry "${asset_file}" "${asset_package_name}"
@@ -229,31 +229,31 @@ function upload_asset() {
 
 function upload_apk_arm64() {
   upload_asset 'apk' "ironfox/releases/${IRONFOX_VERSION}/arm64-v8a" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-arm64-v8a.apk"
-  local readonly arm64_file_name="$(basename "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-arm64-v8a.apk")"
+  local readonly arm64_file_name="$("${IRONFOX_BASENAME}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-arm64-v8a.apk")"
   assets+=("{\"name\": \"${arm64_file_name}\",\"url\": \"https://releases.ironfoxoss.org/ironfox/releases/${IRONFOX_VERSION}/arm64-v8a/${arm64_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${arm64_file_name}\"}")
 }
 
 function upload_apk_arm() {
   upload_asset 'apk' "ironfox/releases/${IRONFOX_VERSION}/armeabi-v7a" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk"
-  local readonly arm_file_name="$(basename "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk")"
+  local readonly arm_file_name="$("${IRONFOX_BASENAME}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk")"
   assets+=("{\"name\": \"${arm_file_name}\",\"url\": \"https://releases.ironfoxoss.org/ironfox/releases/${IRONFOX_VERSION}/armeabi-v7a/${arm_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${arm_file_name}\"}")
 }
 
 function upload_apk_x86_64() {
   upload_asset 'apk' "ironfox/releases/${IRONFOX_VERSION}/x86_64" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-x86_64.apk"
-  local readonly x86_64_file_name="$(basename "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-x86_64.apk")"
+  local readonly x86_64_file_name="$("${IRONFOX_BASENAME}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-x86_64.apk")"
   assets+=("{\"name\": \"${x86_64_file_name}\",\"url\": \"https://releases.ironfoxoss.org/ironfox/releases/${IRONFOX_VERSION}/x86_64/${x86_64_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${x86_64_file_name}\"}")
 }
 
 function upload_apk_universal() {
   upload_asset 'apk' "ironfox/releases/${IRONFOX_VERSION}/universal" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk"
-  local readonly universal_file_name="$(basename "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk")"
+  local readonly universal_file_name="$("${IRONFOX_BASENAME}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk")"
   assets+=("{\"name\": \"${universal_file_name}\",\"url\": \"https://releases.ironfoxoss.org/ironfox/releases/${IRONFOX_VERSION}/universal/${universal_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${universal_file_name}\"}")
 }
 
 function upload_apkset() {
   upload_asset 'apkset' "ironfox/releases/${IRONFOX_VERSION}/bundle" "${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks"
-  local readonly bundle_file_name="$(basename "${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks")"
+  local readonly bundle_file_name="$("${IRONFOX_BASENAME}" "${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks")"
   assets+=("{\"name\": \"${bundle_file_name}\",\"url\": \"https://releases.ironfoxoss.org/ironfox/releases/${IRONFOX_VERSION}/bundle/${bundle_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${bundle_file_name}\"}")
 }
 
@@ -266,13 +266,13 @@ upload_apkset
 
 # Update our universal updates.json file
 ## (ex. used by Obtainium)
-cp -f "${IRONFOX_TEMPLATES}/updates.json" "${IRONFOX_ROOT}/updates.json"
+"${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/updates.json" "${IRONFOX_ROOT}/updates.json"
 
-readonly IRONFOX_ARM64_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-arm64-v8a.apk" | "${IRONFOX_AWK}" '{print $1}')
-readonly IRONFOX_ARM_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk" | "${IRONFOX_AWK}" '{print $1}')
-readonly IRONFOX_X86_64_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-x86_64.apk" | "${IRONFOX_AWK}" '{print $1}')
-readonly IRONFOX_UNIVERSAL_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk" | "${IRONFOX_AWK}" '{print $1}')
-readonly IRONFOX_BUNDLE_SHA512SUM=$(sha512sum "${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_ARM64_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-arm64-v8a.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_ARM_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_X86_64_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-x86_64.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_UNIVERSAL_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_BUNDLE_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks" | "${IRONFOX_AWK}" '{print $1}')
 
 "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_ROOT}/updates.json"
 "${IRONFOX_SED}" -i "s|ironfox-{IRONFOX_VERSION}|ironfox-${IRONFOX_VERSION}|" "${IRONFOX_ROOT}/updates.json"
@@ -286,12 +286,12 @@ upload_to_s3 "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
 
 # Because we now upload all releases to releases.ironfoxoss.org, we only want to keep the last 3 releases in ex. F-Droid
 ## In order to do so, we need to store/upload the current and prior 2 versions of IronFox as text files
-curl ${IRONFOX_CURL_FLAGS} --location 'https://releases.ironfoxoss.org/ironfox/releases/latest_release.txt' --output "${IRONFOX_ROOT}/current-latest_release.txt"
-curl ${IRONFOX_CURL_FLAGS} --location 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' --output "${IRONFOX_ROOT}/current-previous_release.txt"
+"${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location 'https://releases.ironfoxoss.org/ironfox/releases/latest_release.txt' --output "${IRONFOX_ROOT}/current-latest_release.txt"
+"${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' --output "${IRONFOX_ROOT}/current-previous_release.txt"
 
 echo -n "${IRONFOX_VERSION}" > "${IRONFOX_ROOT}/latest_release.txt"
-cp "${IRONFOX_ROOT}/current-latest_release.txt" "${IRONFOX_ROOT}/previous_release.txt"
-cp "${IRONFOX_ROOT}/current-previous_release.txt" "${IRONFOX_ROOT}/previous_previous_release.txt"
+"${IRONFOX_CP}" "${IRONFOX_ROOT}/current-latest_release.txt" "${IRONFOX_ROOT}/previous_release.txt"
+"${IRONFOX_CP}" "${IRONFOX_ROOT}/current-previous_release.txt" "${IRONFOX_ROOT}/previous_previous_release.txt"
 
 upload_to_s3 "${IRONFOX_ROOT}/latest_release.txt" 'ironfox/releases'
 add_sha512sum "${IRONFOX_ROOT}/latest_release.txt" 'ironfox/releases'
@@ -305,7 +305,7 @@ add_sha512sum "${IRONFOX_ROOT}/previous_previous_release.txt" 'ironfox/releases'
 {
   readonly changelog_file="${IRONFOX_ROOT}/changelogs/${IRONFOX_VERSION}.md"
   if [[ -f "${changelog_file}" ]]; then
-    cat "${changelog_file}"
+    "${IRONFOX_CAT}" "${changelog_file}"
   fi
 
   echo "# IronFox ${IRONFOX_VERSION}"
@@ -332,7 +332,7 @@ add_sha512sum "${IRONFOX_ROOT}/previous_previous_release.txt" 'ironfox/releases'
 
   echo '## Checksums'
   echo ''
-  cat ${CHECKSUMS_FILE}
+  "${IRONFOX_CAT}" ${CHECKSUMS_FILE}
   echo ''
 
   echo '---'

@@ -94,24 +94,24 @@ function download_artifact() {
   local readonly output_expected_sha512sum="${output_dir}/${target_expected_sha512sum}"
 
   # Download the artifact
-  mkdir -p "${output_dir}"
+  "${IRONFOX_MKDIR}" -p "${output_dir}"
   echo_red_text "Downloading ${target_file} from ${target_file_url}..."
-  curl ${IRONFOX_CURL_FLAGS} --location "${target_file_url}" --output "${output_file}"
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${target_file_url}" --output "${output_file}"
   echo_green_text "SUCCESS: Downloaded ${target_file}"
 
   # Check the SHA512sum
   echo_red_text "Validating SHA512sum for ${target_file}.."
-  curl ${IRONFOX_CURL_FLAGS} --location "${target_expected_sha512sum_url}" --output "${output_expected_sha512sum}"
-  local readonly expected_sha512sum=$(cat "${output_expected_sha512sum}" | xargs)
-  local readonly local_sha512sum=$(sha512sum "${output_file}" | "${IRONFOX_AWK}" '{print $1}')
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${target_expected_sha512sum_url}" --output "${output_expected_sha512sum}"
+  local readonly expected_sha512sum=$("${IRONFOX_CAT}" "${output_expected_sha512sum}" | "${IRONFOX_XARGS}")
+  local readonly local_sha512sum=$("${IRONFOX_SHA512SUM}" "${output_file}" | "${IRONFOX_AWK}" '{print $1}')
   if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
     echo_red_text 'ERROR: Checksum validation failed.'
     echo "Expected SHA512sum: ${expected_sha512sum}"
     echo "Actual SHA512sum:   ${local_sha512sum}"
 
     # If checksum validation fails, also just clean-up the files
-    rm -f "${output_file}"
-    rm -f "${output_expected_sha512sum}"
+    "${IRONFOX_RM}" -f "${output_file}"
+    "${IRONFOX_RM}" -f "${output_expected_sha512sum}"
     exit 1
   fi
   echo_green_text "SUCCESS: Checksum validated for ${target_file}"

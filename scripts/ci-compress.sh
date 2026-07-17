@@ -21,7 +21,7 @@ readonly artifact_path="${IRONFOX_ARTIFACTS}/${artifact_archive}"
 function ironfox_package_artifacts() {
   # For debugging purposes
   echo "Listing available artifacts"
-  find "${IRONFOX_ARTIFACTS}"
+  "${IRONFOX_FIND}" "${IRONFOX_ARTIFACTS}"
 
   local readonly includes=$(echo "${IRONFOX_ARTIFACT_INCLUDES}" | tr ";" "\n")
   local paths=()
@@ -37,17 +37,17 @@ function ironfox_package_artifacts() {
 
   if [[ ${#paths[@]} -eq 0 ]]; then
     echo_red_text "No valid artifact paths found. Creating empty artifact."
-    touch "${artifact_path}"
+    "${IRONFOX_TOUCH}" "${artifact_path}"
     return
   fi
 
-  mkdir -p "${IRONFOX_ARTIFACTS}"
-  tar cvJf "${artifact_path}" -C "${IRONFOX_ARTIFACTS}" "${paths[@]}"
+  "${IRONFOX_MKDIR}" -p "${IRONFOX_ARTIFACTS}"
+  "${IRONFOX_TAR}" cvJf "${artifact_path}" -C "${IRONFOX_ARTIFACTS}" "${paths[@]}"
 }
 
 if [[ -z "${IRONFOX_ARTIFACT_INCLUDES+x}" ]]; then
   echo_red_text "IRONFOX_ARTIFACT_INCLUDES has not been specified. Creating empty artifact."
-  touch "${artifact_path}"
+  "${IRONFOX_TOUCH}" "${artifact_path}"
 else
   ironfox_package_artifacts
 fi
