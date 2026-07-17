@@ -74,6 +74,7 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   "${IRONFOX_LN}" -sf "${IRONFOX_MKTEMP}"         "${IRONFOX_PATH}/mktemp"
   "${IRONFOX_LN}" -sf "${IRONFOX_M4}"             "${IRONFOX_PATH}/m4"
   "${IRONFOX_LN}" -sf "${IRONFOX_MV}"             "${IRONFOX_PATH}/mv"
+  "${IRONFOX_LN}" -sf "${IRONFOX_NASM}"           "${IRONFOX_PATH}/nasm"
   "${IRONFOX_LN}" -sf "${IRONFOX_NINJA}"          "${IRONFOX_PATH}/ninja"
   "${IRONFOX_LN}" -sf "${IRONFOX_NODEJS}"         "${IRONFOX_PATH}/node"
   "${IRONFOX_LN}" -sf "${IRONFOX_NM}"             "${IRONFOX_PATH}/nm"
