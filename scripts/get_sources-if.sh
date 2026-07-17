@@ -1823,7 +1823,7 @@ function get_wasi() {
 }
 
 # Clean-up
-"${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/downloads"
+"${IRONFOX_RM}" -rf "${IRONFOX_DOWNLOADS}"
 "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
 
 # These need to run before we get androguard, glean_parser, gyp, PyYAML, and s3cmd
