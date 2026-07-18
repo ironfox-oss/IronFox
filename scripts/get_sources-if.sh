@@ -791,10 +791,12 @@ function get_android_sdk() {
     echo_red_text 'Downloading Android SDK...'
     download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-${ANDROID_SDK_PLATFORM}-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}" "${ANDROID_SDK_SHA512SUM}"
 
-    # Accept Android SDK licenses
-    { "${IRONFOX_YES}" || true; } | "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}/bin/sdkmanager" --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
+    if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
+      # Accept Android SDK licenses
+      { "${IRONFOX_YES}" || true; } | "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}/bin/sdkmanager" --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
 
-    echo_green_text "SUCCESS: Set-up Android SDK at ${IRONFOX_ANDROID_SDK}"
+      echo_green_text "SUCCESS: Set-up Android SDK at ${IRONFOX_ANDROID_SDK}"
+    fi
   fi
 }
 
