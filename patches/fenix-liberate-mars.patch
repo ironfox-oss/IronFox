@@ -56,7 +56,7 @@ index 87a4f911c0cf..f92e2c53742e 100644
  
      val relayEligibilityStore by lazyMonitored {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index f7aaa39f3990..802a8c1586f2 100644
+index f7aaa39f3990..88b49cdb3111 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -88,14 +88,14 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
@@ -85,16 +85,14 @@ index f7aaa39f3990..802a8c1586f2 100644
          MarsTopSitesProvider(
              context = context,
              client = client,
-@@ -665,7 +665,7 @@ class Core(
-             ),
-             maxCacheAgeInSeconds = MARS_TOP_SITES_MAX_CACHE_AGE,
+@@ -691,17 +691,17 @@ class Core(
+             },
+             frequency = Frequency(3, TimeUnit.HOURS),
          )
 -    }
 +    } */
  
-     val macTopSitesProvider by lazyMonitored {
-         MacTopSitesProvider(
-@@ -697,11 +697,11 @@ class Core(
+     val topSitesStorage by lazyMonitored {
          DefaultTopSitesStorage(
              pinnedSitesStorage = pinnedSiteStorage,
              historyStorage = historyStorage,
