@@ -11,7 +11,7 @@ export IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE='/opt/IronFox/ironfox-android-sign
 export IRONFOX_ANDROID_KEYSTORE_PASS_FILE='/opt/IronFox/ironfox-android-keystore-pass.txt'
 
 # Build date
-export IRONFOX_DATE='date'
+export IRONFOX_DATE='/bin/date'
 export IRONFOX_BUILD_DATE_OVERRIDE="${CI_PIPELINE_CREATED_AT}"
 export IRONFOX_BUILD_ID_OVERRIDE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
 export IRONFOX_CORE_TIMESTAMP_OVERRIDE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_CREATED_AT}" "+%s%N")"
