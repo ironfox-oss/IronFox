@@ -126,6 +126,7 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
     # OS X-specific
     "${IRONFOX_LN}" -sf "${IRONFOX_DOT_CLEAN}"        "${IRONFOX_PATH}/dot_clean"
     "${IRONFOX_LN}" -sf "${IRONFOX_XCRUN}"            "${IRONFOX_PATH}/xcrun"
+    "${IRONFOX_LN}" -sf "${IRONFOX_SW_VERS}"          "${IRONFOX_PATH}/sw_vers"
   else
     # Linux-specific
     "${IRONFOX_LN}" -sf "${IRONFOX_NPROC}"            "${IRONFOX_PATH}/nproc"

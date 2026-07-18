@@ -591,6 +591,7 @@ readonly IRONFOX_DIRNAME
 export IRONFOX_DIRNAME
 
 # dot_clean
+## (for OS X)
 readonly IRONFOX_DOT_CLEAN_DEFAULT='/usr/sbin/dot_clean'
 if [[ -z "${IRONFOX_DOT_CLEAN+x}" ]]; then
   IRONFOX_DOT_CLEAN="${IRONFOX_DOT_CLEAN_DEFAULT}"
@@ -1178,6 +1179,15 @@ if [[ -z "${IRONFOX_STRIP+x}" ]]; then
 fi
 readonly IRONFOX_STRIP
 export IRONFOX_STRIP
+
+# sw_vers
+## (for OS X)
+readonly IRONFOX_SW_VERS_DEFAULT='/usr/bin/sw_vers'
+if [[ -z "${IRONFOX_SW_VERS+x}" ]]; then
+  IRONFOX_SW_VERS="${IRONFOX_SW_VERS_DEFAULT}"
+fi
+readonly IRONFOX_SW_VERS
+export IRONFOX_SW_VERS
 
 # sysctl
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
