@@ -29,6 +29,7 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   "${IRONFOX_LN}" -sf "${IRONFOX_ANDROGUARD}"     "${IRONFOX_PATH}/androguard"
   "${IRONFOX_LN}" -sf "${IRONFOX_APKSIGNER}"      "${IRONFOX_PATH}/apksigner"
   "${IRONFOX_LN}" -sf "${IRONFOX_AR}"             "${IRONFOX_PATH}/ar"
+  "${IRONFOX_LN}" -sf "${IRONFOX_ASSEMBLER}"      "${IRONFOX_PATH}/as"
   "${IRONFOX_LN}" -sf "${IRONFOX_AWK}"            "${IRONFOX_PATH}/awk"
   "${IRONFOX_LN}" -sf "${IRONFOX_AWK}"            "${IRONFOX_PATH}/gawk"
   "${IRONFOX_LN}" -sf "${IRONFOX_BASENAME}"       "${IRONFOX_PATH}/basename"
@@ -129,6 +130,7 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
     "${IRONFOX_LN}" -sf "${IRONFOX_SW_VERS}"          "${IRONFOX_PATH}/sw_vers"
   else
     # Linux-specific
+    "${IRONFOX_LN}" -sf "${IRONFOX_GCC}"              "${IRONFOX_PATH}/gcc"
     "${IRONFOX_LN}" -sf "${IRONFOX_NPROC}"            "${IRONFOX_PATH}/nproc"
   fi
 

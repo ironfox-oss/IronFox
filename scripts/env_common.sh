@@ -444,6 +444,18 @@ fi
 readonly IRONFOX_AR
 export IRONFOX_AR
 
+# as (assembler)
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+  readonly IRONFOX_ASSEMBLER_DEFAULT='/usr/bin/as'
+else
+  readonly IRONFOX_ASSEMBLER_DEFAULT='/bin/as'
+fi
+if [[ -z "${IRONFOX_ASSEMBLER+x}" ]]; then
+  IRONFOX_ASSEMBLER="${IRONFOX_ASSEMBLER_DEFAULT}"
+fi
+readonly IRONFOX_ASSEMBLER
+export IRONFOX_ASSEMBLER
+
 # basename
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
   readonly IRONFOX_BASENAME_DEFAULT='/usr/bin/basename'
@@ -638,6 +650,15 @@ if [[ -z "${IRONFOX_FIND+x}" ]]; then
 fi
 readonly IRONFOX_FIND
 export IRONFOX_FIND
+
+# gcc
+## (For Linux)
+readonly IRONFOX_GCC_DEFAULT='/bin/gcc'
+if [[ -z "${IRONFOX_GCC+x}" ]]; then
+  IRONFOX_GCC="${IRONFOX_GCC_DEFAULT}"
+fi
+readonly IRONFOX_GCC
+export IRONFOX_GCC
 
 # git
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
