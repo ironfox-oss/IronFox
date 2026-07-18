@@ -87,6 +87,7 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   "${IRONFOX_LN}" -sf "${IRONFOX_PWD}"            "${IRONFOX_PATH}/pwd"
   "${IRONFOX_LN}" -sf "${IRONFOX_PYTHON}"         "${IRONFOX_PATH}/python"
   "${IRONFOX_LN}" -sf "${IRONFOX_PYTHON}"         "${IRONFOX_PATH}/python3"
+  "${IRONFOX_LN}" -sf "${IRONFOX_REALPATH}"       "${IRONFOX_PATH}/realpath"
   "${IRONFOX_LN}" -sf "${IRONFOX_RM}"             "${IRONFOX_PATH}/rm"
   "${IRONFOX_LN}" -sf "${IRONFOX_RMDIR}"          "${IRONFOX_PATH}/rmdir"
   "${IRONFOX_LN}" -sf "${IRONFOX_RUSTC}"          "${IRONFOX_PATH}/rustc"

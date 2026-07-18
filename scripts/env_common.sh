@@ -1065,6 +1065,14 @@ fi
 readonly IRONFOX_PWD
 export IRONFOX_PWD
 
+# realpath
+readonly IRONFOX_REALPATH_DEFAULT='/bin/realpath'
+if [[ -z "${IRONFOX_REALPATH+x}" ]]; then
+  IRONFOX_REALPATH="${IRONFOX_REALPATH_DEFAULT}"
+fi
+readonly IRONFOX_REALPATH
+export IRONFOX_REALPATH
+
 # rm
 readonly IRONFOX_RM_DEFAULT='/bin/rm'
 if [[ -z "${IRONFOX_RM+x}" ]]; then
