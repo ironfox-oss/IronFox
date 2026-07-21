@@ -219,7 +219,7 @@ function upload_asset() {
 
   echo "\`${asset_file_name}\`: " >> "${CHECKSUMS_FILE}"
   echo "\`\`\`text" >> "${CHECKSUMS_FILE}"
-  echo "$("${IRONFOX_SHA512SUM}" -b "${asset_file}" | cut -d ' ' -f 1)" >> "${CHECKSUMS_FILE}"
+  echo "$("${IRONFOX_SHA512SUM}" -b "${asset_file}" | "${IRONFOX_CUT}" -d ' ' -f 1)" >> "${CHECKSUMS_FILE}"
   echo "\`\`\`" >> "${CHECKSUMS_FILE}"
   echo '' >> "${CHECKSUMS_FILE}"
   upload_to_package_registry "${asset_file}" "${asset_package_name}"
