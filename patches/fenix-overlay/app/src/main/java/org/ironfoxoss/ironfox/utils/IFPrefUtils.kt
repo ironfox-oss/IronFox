@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import mozilla.components.support.base.log.logger.Logger
+import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.getPreferenceKey
-import org.mozilla.fenix.ext.settings
 
 /**
  * IronFox Fenix Preference Utilities
@@ -15,7 +15,7 @@ import org.mozilla.fenix.ext.settings
 class IFPrefUtils(private val context: Context) {
   private val logger = Logger("IFPrefUtils")
 
-  internal val sharedPrefs: SharedPreferences = context.settings().preferences
+  internal val sharedPrefs: SharedPreferences = context.components.settings.preferences
 
   /**
    * Clear a preference from a resource ID

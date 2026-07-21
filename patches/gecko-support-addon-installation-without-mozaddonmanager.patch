@@ -80,33 +80,32 @@ index 4fe6aaa127d12..e166515c880a3 100644
        } else if (installPerm === Ci.nsIPermissionManager.DENY_ACTION) {
          // Block without prompt
 diff --git a/toolkit/mozapps/extensions/amContentHandler.sys.mjs b/toolkit/mozapps/extensions/amContentHandler.sys.mjs
-index 3218d50512106..e64ef8a250fc8 100644
+index 03f4e80539e7..1fa9a6fd7e9c 100644
 --- a/toolkit/mozapps/extensions/amContentHandler.sys.mjs
 +++ b/toolkit/mozapps/extensions/amContentHandler.sys.mjs
-@@ -6,8 +6,12 @@ const XPI_CONTENT_TYPE = "application/x-xpinstall";
- const MSG_INSTALL_ADDON = "WebInstallerInstallAddonFromWebpage";
+@@ -10,9 +10,11 @@
+ const XPI_CONTENT_TYPE = "application/x-xpinstall";
  
  import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
 +import { XPIExports } from "resource://gre/modules/addons/XPIExports.sys.mjs";
  
- const lazy = {};
-+ChromeUtils.defineESModuleGetters(lazy, {
-+  IFPrefUtils: "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
-+});
- 
- XPCOMUtils.defineLazyServiceGetters(lazy, {
-   ThirdPartyUtil: ["@mozilla.org/thirdpartyutil;1", Ci.mozIThirdPartyUtil],
-@@ -55,8 +59,6 @@ amContentHandler.prototype = {
+ const lazy = XPCOMUtils.declareLazy({
+   AddonManager: "resource://gre/modules/AddonManager.sys.mjs",
++  IFPrefUtils:  "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+   ThirdPartyUtil: {
+     service: "@mozilla.org/thirdpartyutil;1",
+     iid: Ci.mozIThirdPartyUtil,
+@@ -75,8 +77,6 @@ amContentHandler.prototype = {
        throw error;
      }
  
 -    aRequest.cancel(Cr.NS_BINDING_ABORTED);
 -
-     let { loadInfo } = aRequest;
-     const { triggeringPrincipal } = loadInfo;
- 
-@@ -74,6 +76,19 @@ amContentHandler.prototype = {
-       // an NS_ERROR_FAILURE when principal.host is accessed).
+     let sourceHost;
+     let sourceURL;
+     try {
+@@ -105,6 +105,19 @@ amContentHandler.prototype = {
+       }
      }
  
 +    XPIExports.XPIDatabase.importPermissions();
@@ -122,9 +121,9 @@ index 3218d50512106..e64ef8a250fc8 100644
 +        return Cr.NS_OK;
 +    };
 +
-     let install = {
-       uri: uri.spec,
-       hash: null,
+     lazy.AddonManager.getInstallForURL(uri.spec, {
+       browser,
+       triggeringPrincipal,
 diff --git a/toolkit/mozapps/extensions/components.conf b/toolkit/mozapps/extensions/components.conf
 index 20d433329de61..927ee950f854a 100644
 --- a/toolkit/mozapps/extensions/components.conf

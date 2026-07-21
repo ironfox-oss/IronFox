@@ -1800,7 +1800,7 @@ function _build_geckoview() {
     # Publish GeckoView to our local Maven repo
     "${IRONFOX_MACH}" gradle :geckoview:publishReleasePublicationToMavenLocal
   else
-     # Create our AAR archives
+    # Create our AAR archives
     "${IRONFOX_MACH}" gradle :machConfigure
     MOZ_AUTOMATION=1 "${IRONFOX_MACH}" android archive-geckoview
     unset MOZ_AUTOMATION

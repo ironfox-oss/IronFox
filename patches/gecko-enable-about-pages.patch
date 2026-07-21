@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Enable about pages
+
+Enables the `about:pdf` and `about:translations` pages.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
+index 22bef400fd45..ba12983c966c 100644
+--- a/docshell/base/nsAboutRedirector.cpp
++++ b/docshell/base/nsAboutRedirector.cpp
+@@ -165,7 +165,7 @@ static const RedirEntry kRedirMap[] = {
+          nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+     {"networking", "chrome://global/content/aboutNetworking.html",
+      nsIAboutModule::ALLOW_SCRIPT},
+-#ifndef MOZ_WIDGET_ANDROID
++#if true
+     {"pdf", "chrome://global/content/aboutPDF.html",
+      nsIAboutModule::ALLOW_SCRIPT |
+          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index 8173a460fd10..1ca5b4feaffa 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -39,7 +39,7 @@ if defined('MOZ_CRASHREPORTER'):
+     about_pages.append('crashes')
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
+     about_pages.append('profiles')
+-if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
++if True:
+     about_pages.append('pdf')
+     about_pages.append('translations')
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
+diff --git a/toolkit/components/moz.build b/toolkit/components/moz.build
+index 1435813505f2..17da3590af64 100644
+--- a/toolkit/components/moz.build
++++ b/toolkit/components/moz.build
+@@ -113,7 +113,7 @@ if CONFIG["MOZ_BUILD_APP"] != "mobile/android":
+ if CONFIG["BUILD_CTYPES"]:
+     DIRS += ["ctypes"]
+ 
+-DIRS += ["autocomplete", "printingui", "satchel", "captivedetect"]
++DIRS += ["aboutpdf", "autocomplete", "printingui", "satchel", "captivedetect"]
+ 
+ if CONFIG["OS_TARGET"] != "Android":
+     DIRS += ["terminator"]
+diff --git a/toolkit/modules/ActorManagerParent.sys.mjs b/toolkit/modules/ActorManagerParent.sys.mjs
+index 8cab331f21d9..b7f30660f194 100644
+--- a/toolkit/modules/ActorManagerParent.sys.mjs
++++ b/toolkit/modules/ActorManagerParent.sys.mjs
+@@ -776,7 +776,7 @@ if (AppConstants.platform != "android") {
+     messageManagerGroups: ["browsers"],
+     allFrames: true,
+   };
+-
++} else {
+   JSWINDOWACTORS.AboutPDF = {
+     parent: {
+       esModuleURI: "resource://gre/actors/AboutPDFParent.sys.mjs",
+@@ -805,8 +805,9 @@ if (AppConstants.platform != "android") {
+     },
+     matches: ["about:translations"],
+     remoteTypes: ["privilegedabout"],
++    enablePreference: "browser.translations.enable",
+   };
+-
++} if (AppConstants.platform != "android") {
+   JSWINDOWACTORS.ColorPicker = {
+     parent: {
+       esModuleURI: "moz-src:///toolkit/actors/ColorPickerParent.sys.mjs",
+-- 

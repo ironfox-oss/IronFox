@@ -42,7 +42,6 @@ object FenixSettingsVisibilityManager {
     context: Context,
     prefFragment: PreferenceFragmentCompat
   ) {
-    displayPreference(context, R.string.pref_key_allow_settings_search, prefFragment)
     displayPreference(context, R.string.pref_key_enable_address_sync, prefFragment)
     displayPreference(context, R.string.pref_key_enable_homepage_as_new_tab, prefFragment)
     displayPreference(context, R.string.pref_key_enable_import_bookmarks, prefFragment)
@@ -56,7 +55,6 @@ object FenixSettingsVisibilityManager {
     displayPreference(context, R.string.pref_key_should_show_custom_tab_extensions, prefFragment)
     displayPreference(context, R.string.pref_key_tab_groups, prefFragment)
     displayPreference(context, R.string.pref_key_tab_groups_drag_and_drop, prefFragment)
-    displayPreference(context, R.string.pref_key_tracking_protection_dashboard_status, prefFragment)
     displayPreference(context, R.string.pref_key_use_minimal_bottom_toolbar_while_entering_text, prefFragment)
     displayPreference(context, R.string.pref_key_use_scroll_data_for_dynamic_toolbar, prefFragment)
     displayAppZygote(context, prefFragment)

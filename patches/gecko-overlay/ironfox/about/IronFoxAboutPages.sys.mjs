@@ -69,6 +69,18 @@ ChromeUtils.defineLazyGetter(IronFoxAboutPages, "aboutIronFox", () => {
   return aboutIronFox;
 });
 
+ChromeUtils.defineLazyGetter(IronFoxAboutPages, "aboutLibreWolf", () => {
+  const aboutLibreWolf = new AboutPage({
+    chromeUrl: "chrome://ironfox/content/lol.jpg",
+    aboutHost: "librewolf",
+    classID: "{9a09220e-2b89-464b-8441-6ca521be9939}",
+    description: "about:librewolf",
+    uriFlags:
+      Ci.nsIAboutModule.URI_SAFE_FOR_UNTRUSTED_CONTENT,
+  });
+  return aboutLibreWolf;
+});
+
 ChromeUtils.defineLazyGetter(IronFoxAboutPages, "aboutPolicies", () => {
   const aboutPolicies = new AboutPage({
     chromeUrl: "chrome://browser/content/policies/aboutPolicies.html",
@@ -101,6 +113,10 @@ export function AboutAttribution() {
 
 export function AboutIronFox() {
   return IronFoxAboutPages.aboutIronFox;
+}
+
+export function AboutLibreWolf() {
+  return IronFoxAboutPages.aboutLibreWolf;
 }
 
 export function AboutPolicies() {

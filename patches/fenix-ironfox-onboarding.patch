@@ -120,19 +120,19 @@ index 3fd5cf551dcf..0ef2818991cb 100644
    ToolbarType:
      description: An enum to describe a toolbar placement option.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 7a166ddc83aa..cb08719b1e4c 100644
+index 3c71fd5f01a1..dcd975a24095 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -366,6 +366,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -363,6 +363,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          setupLeakCanary()
  
          if (components.fenixOnboarding.userHasBeenOnboarded()) {
-+            settings().ironfox.ironFoxOnboardingCompleted = true
++            components.settings.ironfox.ironFoxOnboardingCompleted = true
              startMetricsIfEnabled(
                  logger = logger,
                  analytics = components.analytics,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index a8a997445c27..a4886d7420f0 100644
+index 5b173db95928..d2f4d0467ab3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 @@ -4,6 +4,7 @@
@@ -143,10 +143,10 @@ index a8a997445c27..a4886d7420f0 100644
  import android.annotation.SuppressLint
  import android.appwidget.AppWidgetManager
  import android.content.Context
-@@ -373,16 +374,18 @@ class OnboardingFragment : Fragment() {
+@@ -372,16 +373,18 @@ class OnboardingFragment : Fragment() {
          requireComponents.fenixOnboarding.finish()
  
-         val settings = requireContext().settings()
+         val settings = requireComponents.settings
 +        settings.ironfox.ironFoxOnboardingCompleted = true
 +        GeckoSettingsBridge.setIronFoxPrefs(requireContext(), requireComponents.core.engine)
          settings.onboardingCompletedTimestamp = System.currentTimeMillis()

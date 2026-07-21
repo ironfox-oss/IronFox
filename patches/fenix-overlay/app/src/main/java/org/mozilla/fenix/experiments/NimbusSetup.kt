@@ -10,9 +10,9 @@ import mozilla.components.service.nimbus.NimbusBuilder
 import org.json.JSONObject
 import org.mozilla.experiments.nimbus.internal.NimbusServerSettings
 import org.mozilla.fenix.R
-import org.mozilla.fenix.ext.settings
+import org.mozilla.fenix.utils.Settings
 
-fun createNimbus(context: Context, urlString: String?, remoteSettingsService: RemoteSettingsService?, geckoPrefHandler: Any?): NimbusApi {
+fun createNimbus(context: Context, settings: Settings, urlString: String?, remoteSettingsService: RemoteSettingsService?, geckoPrefHandler: Any?): NimbusApi {
   val serverSettings: NimbusServerSettings? = remoteSettingsService?.let { service ->
     NimbusServerSettings(
       rsService = service,
@@ -31,7 +31,7 @@ fun createNimbus(context: Context, urlString: String?, remoteSettingsService: Re
     errorReporter = context::reportError
     initialExperiments = R.raw.initial_experiments
     timeoutLoadingExperiment = 200L
-    sharedPreferences = context.settings().preferences
+    settings.preferences
     isFirstRun = true
     featureManifest = null
     onFetchCallback = {}

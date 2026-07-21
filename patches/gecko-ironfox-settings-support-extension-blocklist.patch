@@ -8,7 +8,7 @@ Adds a preference to enable/disable Phoenix's blocklist of malicious/unwanted/sk
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 0d081a03a92d4..a5c579bf7e9ef 100644
+index 217d51f4c765..bc0f9ad604e6 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 @@ -14,6 +14,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -19,13 +19,13 @@ index 0d081a03a92d4..a5c579bf7e9ef 100644
  });
  
  // This is the file that will be searched for in the
-@@ -479,7 +480,7 @@ EnterprisePoliciesManager.prototype = {
-       if ("installation_mode" in ExtensionSettings[addon.id]) {
-         switch (ExtensionSettings[addon.id].installation_mode) {
-           case "blocked":
--            return false;
-+            return !lazy.IFPrefUtils.getBoolPref("browser.ironfox.extensions.blocklist.enabled");
-           default:
-             return true;
-         }
+@@ -530,7 +531,7 @@ EnterprisePoliciesManager.prototype = {
+     // the "*" defaults entirely.
+     if (addon.id in ExtensionSettings) {
+       if (ExtensionSettings[addon.id].installation_mode === "blocked") {
+-        return false;
++        return !lazy.IFPrefUtils.getBoolPref("browser.ironfox.extensions.blocklist.enabled");
+       }
+       return true;
+     }
 -- 

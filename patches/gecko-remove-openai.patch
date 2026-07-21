@@ -30,13 +30,13 @@ index 01533ad4c9f2..041bdcaeaeaf 100644
  
  const PREDEFINED = Object.keys(INFERENCE_PAD_PRESETS);
 diff --git a/toolkit/components/ml/content/EngineProcess.sys.mjs b/toolkit/components/ml/content/EngineProcess.sys.mjs
-index 5dc3e3daa1eb..c3b9129c9eae 100644
+index 025d5aaacf8e..8007123c2ddb 100644
 --- a/toolkit/components/ml/content/EngineProcess.sys.mjs
 +++ b/toolkit/components/ml/content/EngineProcess.sys.mjs
-@@ -24,7 +24,7 @@ export const BACKENDS = Object.freeze({
-   onnxNative: "onnx-native",
+@@ -27,7 +27,7 @@ export const BACKENDS = Object.freeze({
    llamaCpp: "llama.cpp",
    bestLlama: "best-llama",
+   bestOnnx: "best-onnx",
 -  openai: "openai",
 +//  openai: "openai",
    staticEmbeddings: "static-embeddings",

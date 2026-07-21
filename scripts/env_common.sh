@@ -1318,14 +1318,6 @@ fi
 readonly IRONFOX_WC
 export IRONFOX_WC
 
-# which
-readonly IRONFOX_WHICH_DEFAULT="${IRONFOX_TOOLS}/which.sh"
-if [[ -z "${IRONFOX_WHICH+x}" ]]; then
-  IRONFOX_WHICH="${IRONFOX_WHICH_DEFAULT}"
-fi
-readonly IRONFOX_WHICH
-export IRONFOX_WHICH
-
 # whoami
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
   readonly IRONFOX_WHOAMI_DEFAULT='/usr/bin/whoami'

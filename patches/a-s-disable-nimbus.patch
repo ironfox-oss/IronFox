@@ -8,10 +8,10 @@ Disables and prevents A/B testing/experimentation and remote configuration of se
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 2b7f08734..8587e0752 100644
+index 20e459dbb..26d1dda6e 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-@@ -136,23 +136,23 @@ open class Nimbus(
+@@ -165,21 +165,21 @@ open class Nimbus(
  
      private val nimbusClient: NimbusClientInterface
  
@@ -21,8 +21,7 @@ index 2b7f08734..8587e0752 100644
 +/*        get() = nimbusClient.getExperimentParticipation()
          set(active) {
              dbScope.launch {
-                 nimbusClient.setExperimentParticipation(active)
-                 applyPendingExperimentsOnThisThread()
+                 setExperimentParticipationOnThisThread(active)
              }
 -        }
 +        } */
@@ -33,15 +32,14 @@ index 2b7f08734..8587e0752 100644
 +/*        get() = nimbusClient.getRolloutParticipation()
          set(active) {
              dbScope.launch {
-                 nimbusClient.setRolloutParticipation(active)
-                 applyPendingExperimentsOnThisThread()
+                 setRolloutParticipationOnThisThread(active)
              }
 -        }
 +        } */
  
      init {
          NullVariables.instance.setContext(context)
-@@ -271,9 +271,9 @@ open class Nimbus(
+@@ -300,9 +300,9 @@ open class Nimbus(
          }
      }
  

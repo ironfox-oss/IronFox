@@ -14,7 +14,7 @@ emojis, and improves compatibility as well by ensuring that emojis are always av
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 193d1ddabcdac..81dc3ca827870 100644
+index a79c1e025be8..5fee61f449b5 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
 @@ -159,6 +159,7 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
@@ -22,21 +22,21 @@ index 193d1ddabcdac..81dc3ca827870 100644
  androidx-drawerlayout = { module = "androidx.drawerlayout:drawerlayout", version.ref = "drawerlayout" }
  androidx-emoji2 = { module = "androidx.emoji2:emoji2", version.ref = "emoji2" }
 +androidx-emoji2-bundled = { module = "androidx.emoji2:emoji2-bundled", version.ref = "emoji2" }
+ androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
  androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
  androidx-fragment-compose = { module = "androidx.fragment:fragment-compose", version.ref = "fragment" }
- androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment" }
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index ad28bfb8c8ffd..8f8e64238dbd0 100644
+index d867c71ba500..7c926e8be14b 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -659,6 +659,7 @@ dependencies {
+@@ -585,6 +585,7 @@ dependencies {
      implementation libs.androidx.datastore
      implementation libs.androidx.datastore.preferences
      implementation libs.androidx.emoji2
 +    implementation libs.androidx.emoji2.bundled
+     implementation libs.androidx.exifinterface
      implementation libs.androidx.fragment
      implementation libs.androidx.fragment.compose
-     implementation libs.androidx.lifecycle.common
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index 7a166ddc83aae..e554eb0eb352f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt

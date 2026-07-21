@@ -86,6 +86,13 @@ patches:
     effect: "Reduces build-time, and reduces the complexity of the overall build process."
     category: "Build System"
 
+  - file: "geckoview-target-release.patch"
+    name: "GeckoView - Target release"
+    description: "Ensures that we build and publish the release variant of GeckoView."
+    reason: "To ensure that we build and publish the release variant of GeckoView."
+    effect: "Ensures that we build and publish the release (non-debug) variant of GeckoView."
+    category: "Build System"
+
   - file: "gecko-support-native-manifests.patch"
     name: "Gecko - Support native manifests"
     description: "Adds support for native manifests to GeckoView."
@@ -802,11 +809,13 @@ patches:
     effect: "Users can access `about:config` easier to customize advanced Firefox settings not available in the regular settings menu, and can access `about:translations` easier for local translations."
     category: "User Interface"
 
-  - file: "gecko-enable-abouttranslations.patch"
-    name: "Gecko - Enable about:translations"
-    description: "Enables the `about:translations` page."
-    reason: "To provide users with direct access to the Firefox Translations feature."
-    effect: "Like on Desktop, users can access `about:translations` to translate text directly, without needing the text to be on an external webpage."
+  - file: "gecko-enable-about-pages.patch"
+    name: "Gecko - Enable about: pages"
+    description: "Enables the `about:pdf` and `about:translations` pages."
+    reason: "To provide users with direct access to the Firefox Translations and PDF viewer features."
+    effect: |
+     Like on Desktop, users can access `about:translations` to translate text directly, without needing the text to be on an external webpage.
+     Users can also access the built-in PDF viewer directly via `about:pdf`.
     category: "User Interface"
 
   - file: "fenix-ironfox-settings.patch"
@@ -915,13 +924,6 @@ patches:
     description: "Provides support for a UI setting to enable/disable the installation of add-ons."
     reason: "Leverages enterprise policies to enable/disable installation of add-ons."
     effect: "Users can receive a prompt when add-on installation is disabled from the UI, and the installation of add-ons can be better controlled/fully disabled from policies."
-    category: "User Interface"
-
-  - file: "a-c-ironfox-oled-theme.patch"
-    name: "Android Components - OLED Theme"
-    description: "Adds support for a true OLED black theme."
-    reason: "To provide users with the option to reduce battery consumption and eye strain on OLED displays by using true black theme."
-    effect: "Users can toggle a UI option for an OLED-optimized dark theme, which helps improve visual comfort and power efficiency on OLED screens."
     category: "User Interface"
 
   - file: "fenix-ironfox-oled-theme.patch"

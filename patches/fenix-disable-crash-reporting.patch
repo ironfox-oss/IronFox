@@ -7,19 +7,6 @@ Disables and prevents the collection/submission of crash reports.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
-diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index ad28bfb8c8ff..3f3a29843fcb 100644
---- a/mobile/android/fenix/app/build.gradle
-+++ b/mobile/android/fenix/app/build.gradle
-@@ -342,7 +342,7 @@ android.applicationVariants.configureEach { variant ->
- 
-     buildConfigField 'String', 'SENTRY_TOKEN', 'null'
-     if (!isDebug) {
--        buildConfigField 'boolean', 'CRASH_REPORTING', 'true'
-+        buildConfigField 'boolean', 'CRASH_REPORTING', 'false'
-         // Reading sentry token from local file (if it exists). In a release task on taskcluster it will be available.
-         try {
-             def token = new File("${rootDir}/.sentry_token").text.trim()
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 index 324a25a10af0..4225ec0a1ead 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml

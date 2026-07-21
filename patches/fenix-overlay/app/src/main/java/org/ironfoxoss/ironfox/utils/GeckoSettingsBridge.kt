@@ -11,7 +11,7 @@ import mozilla.components.concept.engine.preferences.BrowserPreference
 import mozilla.components.ExperimentalAndroidComponentsApi
 import mozilla.components.concept.engine.Engine
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
-import org.mozilla.fenix.ext.settings
+import org.mozilla.fenix.ext.components
 
 // Helpers for managing Gecko preferences from Fenix
 /// (Thus, the name is Gecko Settings "Bridge" - this is meant to serve as a bridge between Fenix settings
@@ -221,17 +221,17 @@ object GeckoSettingsBridge {
   }
 
   fun setAddressAutofillEnabled(context: Context, engine: Engine) {
-    val addressAutofillEnabled = context.settings().shouldAutofillAddressDetails
+    val addressAutofillEnabled = context.components.settings.shouldAutofillAddressDetails
     setDefaultPref(engine, "extensions.formautofill.addresses.enabled", addressAutofillEnabled)
   }
 
   fun setCardAutofillEnabled(context: Context, engine: Engine) {
-    val cardAutofillEnabled = context.settings().shouldAutofillCreditCardDetails
+    val cardAutofillEnabled = context.components.settings.shouldAutofillCreditCardDetails
     setDefaultPref(engine, "extensions.formautofill.creditCards.enabled", cardAutofillEnabled)
   }
 
   fun setPasswordManagerEnabled(context: Context, engine: Engine) {
-    val passwordManagerEnabled = context.settings().shouldPromptToSaveLogins
+    val passwordManagerEnabled = context.components.settings.shouldPromptToSaveLogins
     setDefaultPref(engine, "signon.rememberSignons", passwordManagerEnabled)
   }
 }

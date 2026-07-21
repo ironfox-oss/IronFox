@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 21 Jul 2026 01:00:59 +0000
+Subject: [PATCH] GeckoView - Target release
+
+Ensure that we build and publish the release variant of GeckoView.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/geckoview/build.gradle b/mobile/android/geckoview/build.gradle
+index c2e19e45d814..63d125935a13 100644
+--- a/mobile/android/geckoview/build.gradle
++++ b/mobile/android/geckoview/build.gradle
+@@ -151,7 +151,7 @@ android {
+     }
+ 
+     publishing {
+-        singleVariant('debug')
++        singleVariant('release')
+     }
+ 
+     namespace = 'org.mozilla.geckoview'
+@@ -409,8 +409,8 @@ publishing {
+ 
+ // Declared in afterEvaluate so the `debug` software component (from singleVariant('debug')) exists.
+ afterEvaluate {
+-    publishing.publications.create('debug', MavenPublication) {
+-        from components.debug
++    publishing.publications.create('release', MavenPublication) {
++        from components.release
+         artifactId = computeArtifactId()
+ 
+         pom {
+@@ -439,8 +439,8 @@ afterEvaluate {
+         }
+ 
+         // Javadoc and sources for developer ergononomics.
+-        artifact tasks.named("javadocJarDebug")
+-        artifact tasks.named("sourcesJarDebug")
++        artifact tasks.named("javadocJarRelease")
++        artifact tasks.named("sourcesJarRelease")
+     }
+ }
+ 
+-- 

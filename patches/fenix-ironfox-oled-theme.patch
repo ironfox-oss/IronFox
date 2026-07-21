@@ -21,30 +21,30 @@ index 8dd1374d2d94f..601cf1cf2a38a 100644
                      AppCompatDelegate.MODE_NIGHT_YES,
                  )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index ff4c7a014c2c1..78d7cddb9549a 100644
+index 5e4c49f47ff8..fdb03cd0ec18 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -153,6 +153,11 @@ class Core(
+@@ -169,6 +169,11 @@ class Core(
       * configuration (see build variants).
       */
      val engine: Engine by lazyMonitored {
-+        val clearColor = if (context.settings().ironfox.shouldUseOledTheme) {
++        val clearColor = if (context.components.settings.ironfox.shouldUseOledTheme) {
 +            R.color.fx_mobile_surface_oled
 +        } else {
 +            R.color.fx_mobile_surface
 +        }
          val defaultSettings = DefaultSettings(
              requestInterceptor = requestInterceptor,
-             remoteDebuggingEnabled = context.settings().isRemoteDebuggingEnabled,
-@@ -168,7 +173,7 @@ class Core(
-             enterpriseRootsEnabled = context.settings().allowThirdPartyRootCerts,
+             remoteDebuggingEnabled = context.components.settings.isRemoteDebuggingEnabled,
+@@ -184,7 +189,7 @@ class Core(
+             enterpriseRootsEnabled = context.components.settings.allowThirdPartyRootCerts,
              clearColor = ContextCompat.getColor(
                  context,
 -                R.color.fx_mobile_surface,
 +                clearColor,
              ),
-             httpsOnlyMode = context.settings().getHttpsOnlyMode(),
-             dohSettingsMode = context.settings().getDohSettingsMode(),
+             httpsOnlyMode = context.components.settings.getHttpsOnlyMode(),
+             dohSettingsMode = context.components.settings.getDohSettingsMode(),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt
 index 4066633bbc427..473e3c755765c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt

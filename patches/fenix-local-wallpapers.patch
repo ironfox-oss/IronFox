@@ -7,6 +7,18 @@ Adds support for local wallpapers, to prevent downloading them from Mozilla serv
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt
+index 24554c7ab197..e238a030d3e1 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt
+@@ -150,6 +150,7 @@ class UseCases(
+             rootStorageDirectory to currentLocale
+         }
+         WallpapersUseCases(
++            context.resources,
+             context.components.settings,
+             rootStorageDirectory,
+             appStore.value,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
 index ab7ba29ba34c..08b2a72aaca7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
@@ -57,10 +69,10 @@ index ab7ba29ba34c..08b2a72aaca7 100644
  
      private fun JSONObject.parseAsWallpapers(): List<Wallpaper> =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
-index a6f1b2e91cad..6f407dd84354 100644
+index d11145f10a38..185b1a955ca3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
-@@ -19,6 +19,8 @@ import org.mozilla.fenix.ext.settings
+@@ -17,6 +17,8 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.utils.Settings
  import java.io.File
  import java.util.Date
@@ -69,31 +81,39 @@ index a6f1b2e91cad..6f407dd84354 100644
  
  /**
   * Contains use cases related to the wallpaper feature.
-@@ -46,7 +48,7 @@ class WallpapersUseCases(
+@@ -29,6 +31,7 @@ import java.util.Date
+  * @param currentLocale The locale currently being used on the device.
+  */
+ class WallpapersUseCases(
++    resources: Resources,
+     settings: Settings,
+     filesDir: File,
+     appStore: AppStore,
+@@ -46,7 +49,7 @@ class WallpapersUseCases(
      // Use case for initializing wallpaper feature. Should usually be called early
      // in the app's lifetime to ensure that any potential long-running tasks can complete quickly.
      val initialize: InitializeWallpapersUseCase by lazy {
 -        val metadataFetcher = WallpaperMetadataFetcher(client)
-+        val metadataFetcher = WallpaperMetadataFetcher(context.resources)
++        val metadataFetcher = WallpaperMetadataFetcher(resources)
          val migrationHelper = LegacyWallpaperMigration(
              storageRootDirectory = storageRootDirectory,
-             settings = context.settings(),
-@@ -66,12 +68,12 @@ class WallpapersUseCases(
+             settings = settings,
+@@ -66,12 +69,12 @@ class WallpapersUseCases(
      // Use case for loading specific wallpaper bitmaps.
      val loadBitmap: LoadBitmapUseCase by lazy {
          DefaultLoadBitmapUseCase(
--            getFilesDir = { context.filesDir },
-+            resources = context.resources
+-            getFilesDir = { filesDir },
++            resources = resources
          )
      }
  
      val loadThumbnail: LoadThumbnailUseCase by lazy {
 -        DefaultLoadThumbnailUseCase(storageRootDirectory)
-+        DefaultLoadThumbnailUseCase(resources = context.resources)
++        DefaultLoadThumbnailUseCase(resources = resources)
      }
  
      // Use case for selecting a new wallpaper.
-@@ -196,7 +198,7 @@ class WallpapersUseCases(
+@@ -196,7 +199,7 @@ class WallpapersUseCases(
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal class DefaultLoadBitmapUseCase(
@@ -102,7 +122,7 @@ index a6f1b2e91cad..6f407dd84354 100644
      ) : LoadBitmapUseCase {
          override suspend fun invoke(wallpaper: Wallpaper, orientation: Int): Bitmap? =
              loadWallpaperFromDisk(wallpaper, orientation)
-@@ -206,10 +208,10 @@ class WallpapersUseCases(
+@@ -206,10 +209,10 @@ class WallpapersUseCases(
              wallpaper: Wallpaper,
              orientation: Int,
          ): Bitmap? = try {
@@ -116,7 +136,7 @@ index a6f1b2e91cad..6f407dd84354 100644
              }
          } catch (e: CancellationException) {
              // CancellationException must not be swallowed: if the coroutine was canceled while loading,
-@@ -247,13 +249,13 @@ class WallpapersUseCases(
+@@ -247,13 +250,13 @@ class WallpapersUseCases(
      }
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -134,7 +154,7 @@ index a6f1b2e91cad..6f407dd84354 100644
                  }
              }.getOrNull()
          }
-@@ -285,7 +287,7 @@ class WallpapersUseCases(
+@@ -285,7 +288,7 @@ class WallpapersUseCases(
           */
          override suspend fun invoke(wallpaper: Wallpaper): Wallpaper.ImageFileState {
              return if (wallpaper.collection == Wallpaper.DefaultCollection ||

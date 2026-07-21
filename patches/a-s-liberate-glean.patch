@@ -8,11 +8,11 @@ Removes the Glean SDK.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 4e550544d..9f8b10fca 100644
+index 20e459dbb..0d6e16224 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-@@ -27,11 +27,11 @@ import kotlinx.coroutines.launch
- import kotlinx.coroutines.runBlocking
+@@ -26,11 +26,11 @@ import kotlinx.coroutines.async
+ import kotlinx.coroutines.launch
  import kotlinx.coroutines.withContext
  import mozilla.appservices.remotesettings.RemoteSettingsService
 -import mozilla.telemetry.glean.Glean
@@ -26,7 +26,7 @@ index 4e550544d..9f8b10fca 100644
  import org.mozilla.experiments.nimbus.internal.AppContext
  import org.mozilla.experiments.nimbus.internal.AvailableExperiment
  import org.mozilla.experiments.nimbus.internal.DatabaseLoadExtraDef
-@@ -88,7 +88,7 @@ open class Nimbus(
+@@ -92,7 +92,7 @@ open class Nimbus(
  
      private val metricsHandler = object : MetricsHandler {
          override fun recordDatabaseLoad(event: DatabaseLoadExtraDef) {
@@ -35,7 +35,7 @@ index 4e550544d..9f8b10fca 100644
                  NimbusEvents.DatabaseLoadExtra(
                      corrupt = event.corrupt,
                      initialVersion = event.initialVersion?.toInt(),
-@@ -96,20 +96,20 @@ open class Nimbus(
+@@ -100,20 +100,20 @@ open class Nimbus(
                      migratedVersion = event.migratedVersion?.toInt(),
                      migrationError = event.migrationError,
                  ),
@@ -60,7 +60,7 @@ index 4e550544d..9f8b10fca 100644
                  NimbusEvents.enrollmentStatus.record(
                      NimbusEvents.EnrollmentStatusExtra(
                          branch = extra.branch,
-@@ -120,42 +120,42 @@ open class Nimbus(
+@@ -124,42 +124,42 @@ open class Nimbus(
                          conflictSlug = extra.conflictSlug,
                      ),
                  )
@@ -111,7 +111,7 @@ index 4e550544d..9f8b10fca 100644
          }
      }
  
-@@ -224,11 +224,11 @@ open class Nimbus(
+@@ -228,11 +228,11 @@ open class Nimbus(
          try {
              nimbusClient.getFeatureConfigVariables(featureId)?.let { JSONObject(it) }
          } catch (e: NimbusException.DatabaseNotReady) {
@@ -125,7 +125,7 @@ index 4e550544d..9f8b10fca 100644
              null
          } catch (e: Throwable) {
              reportError("getFeatureConfigVariablesJson", e)
-@@ -304,9 +304,9 @@ open class Nimbus(
+@@ -308,9 +308,9 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun fetchExperimentsOnThisThread() = withCatchAll("fetchExperiments") {
          try {
@@ -138,16 +138,16 @@ index 4e550544d..9f8b10fca 100644
              updateObserver {
                  it.onExperimentsFetched()
              }
-@@ -341,7 +341,7 @@ open class Nimbus(
+@@ -345,7 +345,7 @@ open class Nimbus(
              val time = measureTimeMillis {
                  events = nimbusClient.applyPendingExperiments()
              }
 -            NimbusHealth.applyPendingExperimentsTime.accumulateSingleSample(time)
 +//            NimbusHealth.applyPendingExperimentsTime.accumulateSingleSample(time)
-             recordExperimentTelemetryEvents(events!!)
-             // Get the experiments to record in telemetry
-             postEnrolmentCalculation()
-@@ -548,19 +548,19 @@ open class Nimbus(
+ 
+             // SAFETY: events is only null at declaration time and is
+             // immediately assigned a non-null value inside the
+@@ -620,19 +620,19 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun recordExperimentTelemetry(experiments: List<EnrolledExperiment>) {
          // Call Glean.setExperimentActive() for each active experiment.
@@ -170,7 +170,7 @@ index 4e550544d..9f8b10fca 100644
              when (event.change) {
                  EnrollmentChangeEventType.ENROLLMENT -> {
                      NimbusEvents.enrollment.record(
-@@ -608,7 +608,7 @@ open class Nimbus(
+@@ -680,7 +680,7 @@ open class Nimbus(
                      )
                  }
              }
@@ -271,6 +271,63 @@ index c9078a52f..87f4e5078 100644
                  }
              }
              throw e
+diff --git a/components/places/build.rs b/components/places/build.rs
+index fa4b5578a..6faab0f2e 100644
+--- a/components/places/build.rs
++++ b/components/places/build.rs
+@@ -2,7 +2,7 @@
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+-use glean_build::Builder;
++// use glean_build::Builder;
+ 
+ fn main() {
+     uniffi::generate_scaffolding("./src/places.udl").unwrap();
+@@ -11,10 +11,10 @@ fn main() {
+         .as_ref()
+         .map(String::as_str)
+     {
+-        Builder::default()
++/*        Builder::default()
+             .file("metrics.yaml")
+             .format("rust_sym")
+             .generate()
+-            .expect("Error generating Glean Rust bindings");
++            .expect("Error generating Glean Rust bindings"); */
+     }
+ }
+diff --git a/components/places/Cargo.toml b/components/places/Cargo.toml
+index 0dde69a32..866b17a52 100644
+--- a/components/places/Cargo.toml
++++ b/components/places/Cargo.toml
+@@ -7,9 +7,9 @@ license = "MPL-2.0"
+ exclude = ["/android", "/ios"]
+ 
+ [features]
+-default = ["glean-sym"]
++# default = ["glean-sym"]
+ # Enable metric recording through glean-sym (Android only)
+-glean-sym = ["dep:glean-sym"]
++# glean-sym = ["dep:glean-sym"]
+ 
+ [dependencies]
+ sync15 = { path = "../sync15" }
+@@ -34,7 +34,7 @@ sync-guid = { path = "../support/guid", features = ["rusqlite_support", "random"
+ thiserror = "2"
+ anyhow = "1.0"
+ uniffi = { version = "0.31" }
+-glean-sym = { git = "https://github.com/mozilla/glean", rev = "a16cb6034dc2c37ba62eae85f6304c637e53b2ae", optional = true }
++# glean-sym = { git = "https://github.com/mozilla/glean", rev = "a16cb6034dc2c37ba62eae85f6304c637e53b2ae", optional = true }
+ 
+ [dev-dependencies]
+ error-support = { path = "../support/error", features = ["testing"] }
+@@ -43,4 +43,4 @@ sql-support = { path = "../support/sql" }
+ 
+ [build-dependencies]
+ uniffi = { version = "0.31", features=["build"]}
+-glean-build = { git = "https://github.com/mozilla/glean", rev = "0401cd87c365fd8356e5d3bb6d72a67c8940c934" }
++# glean-build = { git = "https://github.com/mozilla/glean", rev = "0401cd87c365fd8356e5d3bb6d72a67c8940c934" }
 diff --git a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
 index 4dfc3178f..89816d107 100644
 --- a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt

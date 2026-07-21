@@ -8,17 +8,17 @@ Provides support for a UI setting to always use private browsing mode.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
-index b600bf6b3d43..86fc25c15b52 100644
+index 826acce5d92d..6300f494cad8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
-@@ -72,6 +72,7 @@ class PrivateBrowsingFragment : PreferenceFragmentCompat() {
-         requirePreference<SwitchPreference>(R.string.pref_key_open_links_in_a_private_tab).apply {
+@@ -74,6 +74,7 @@ class PrivateBrowsingFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
+         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_open_links_in_a_private_tab).apply {
              onPreferenceChangeListener = SharedPreferenceUpdater()
-             isChecked = context.settings().openLinksInAPrivateTab
-+            isVisible = !context.settings().ironfox.alwaysUsePrivateBrowsing
+             isChecked = context.components.settings.openLinksInAPrivateTab
++            isVisible = !context.components.settings.ironfox.alwaysUsePrivateBrowsing
          }
  
-         requirePreference<SwitchPreference>(R.string.pref_key_allow_screenshots_in_private_mode).apply {
+         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_allow_screenshots_in_private_mode).apply {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 83e0f40483b7..fac08fa708f9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

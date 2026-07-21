@@ -245,9 +245,6 @@ object IFPrefs {
     // Display the toolbar on the top by default
     prefs.setDefaultBoolPref(R.string.pref_key_toolbar_bottom, false)
 
-    // Enable app icon selection
-    prefs.setDefaultBoolPref(R.string.pref_key_app_icon_selection_enabled, true)
-
     // Enable Cookie Banner Reduction (in Private Browsing) by default
     prefs.setDefaultBoolPref(R.string.pref_key_cookie_banner_private_mode, true)
 
@@ -295,9 +292,6 @@ object IFPrefs {
 
     // Enable Pull-to-refresh by default
     prefs.setDefaultBoolPref(R.string.pref_key_website_pull_to_refresh, true) // [DEFAULT]
-
-    // Enable Settings Search by default
-    prefs.setDefaultBoolPref(R.string.pref_key_allow_settings_search, true)
 
     // Skip Mozilla's Privacy Notice and Terms of Use
     val tosTime = TOU_TIME_IN_MILLIS + 1_000

@@ -8,15 +8,15 @@ Provides support for a UI setting to enable/disable Firefox Translations.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-index 684f6b1c8007..cc200715b351 100644
+index fb3fb7211084..e98044f2faed 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-@@ -350,7 +350,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler, SystemIns
+@@ -357,7 +357,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler, SystemIns
              view = rootView,
          )
  
 -        if (FxNimbus.features.translations.value().mainFlowToolbarEnabled) {
-+        if (requireContext().settings().ironfox.translationsEnabled) {
++        if (requireContext().components.settings.ironfox.translationsEnabled) {
              translationsBinding.set(
                  feature = TranslationsBinding(
                      browserStore = rootView.context.components.core.store,

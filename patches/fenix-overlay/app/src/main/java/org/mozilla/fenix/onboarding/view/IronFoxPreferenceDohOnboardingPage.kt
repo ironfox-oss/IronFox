@@ -49,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import mozilla.components.compose.base.button.FilledButton
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.components
-import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.onboarding.view.OnboardingPageState
 import org.mozilla.fenix.settings.doh.CustomProviderErrorState
 import org.mozilla.fenix.settings.doh.DefaultDohSettingsProvider
@@ -144,7 +143,7 @@ fun IronFoxPreferenceDohOnboardingPage(
         val dohSettingsProvider = remember(context) {
           DefaultDohSettingsProvider(
             engine = context.components.core.engine,
-            settings = context.settings(),
+            settings = context.components.settings,
           )
         }
 

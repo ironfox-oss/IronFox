@@ -37,10 +37,10 @@ index 8c61dbb0291c..fbe56f557ec0 100644
      channel: release
      features:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index d8e4023d8790..d3346ecfc902 100644
+index 3c71fd5f01a1..34db4143fbc3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -108,7 +108,7 @@ import org.mozilla.fenix.components.appstate.AppAction
+@@ -107,7 +107,7 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.initializeGlean
  import org.mozilla.fenix.components.metrics.MozillaProductDetector
  import org.mozilla.fenix.components.startMetricsIfEnabled
@@ -49,7 +49,7 @@ index d8e4023d8790..d3346ecfc902 100644
  import org.mozilla.fenix.ext.application
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.containsQueryParameters
-@@ -584,15 +584,15 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -581,15 +581,15 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
      }
  
      @OptIn(DelicateCoroutinesApi::class, ExperimentalAndroidComponentsApi::class) // GlobalScope usage
@@ -60,7 +60,7 @@ index d8e4023d8790..d3346ecfc902 100644
              components.nimbus.geckoPrefHandler.start()
              GlobalScope.launch(IO) {
                  components.nimbus.sdk.maybeFetchExperiments(
-                     context = this@FenixApplication,
+                     settings = components.settings,
                  )
                  components.nimbus.geckoPrefHandler.getPreferenceStateFromGecko().await()
 -            }

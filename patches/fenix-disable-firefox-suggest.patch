@@ -9,24 +9,24 @@ only queried if the user actually enables suggestions.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 8dd1374d2d94f..bd1322dfc5ab3 100644
+index 3c71fd5f01a1..31bc175e8472 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -417,7 +417,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-         queueSetAutofillMetrics(queue)
+@@ -442,7 +442,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+         queueNimbusFetchInForeground(queue)
          queueDownloadWallpapers(queue)
  
--        if (settings().enableFxSuggest) {
-+        if (settings().enableFxSuggest && settings().showNonSponsoredSuggestions) {
+-        if (components.settings.enableFxSuggest) {
++        if (components.settings.enableFxSuggest && components.settings.showNonSponsoredSuggestions) {
              queueSuggestIngest(queue)
          }
  
-@@ -478,7 +478,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -503,7 +503,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                      // new search suggestions. The worker requires us to have called
                      // `GlobalFxSuggestDependencyProvider.initialize`, which we did before
                      // scheduling these tasks. When disabled we stop the periodic work.
--                    if (settings().enableFxSuggest) {
-+                    if (settings().enableFxSuggest && settings().showNonSponsoredSuggestions) {
+-                    if (components.settings.enableFxSuggest) {
++                    if (components.settings.enableFxSuggest && components.settings.showNonSponsoredSuggestions) {
                          components.fxSuggest.ingestionScheduler.startPeriodicIngestion()
                      } else {
                          components.fxSuggest.ingestionScheduler.stopPeriodicIngestion()
@@ -98,16 +98,16 @@ index 7c68a88f9f45..1ef39c9efaec 100644
          )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
-index df0483c0788a..4c74d65239e9 100644
+index e71478723548..a6e3a286622b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
-@@ -46,7 +46,7 @@ class SearchEngineFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
+@@ -45,7 +45,7 @@ class SearchEngineFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
          )
  
          requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_sponsored_suggestions).apply {
--            isVisible = context.settings().enableFxSuggest
+-            isVisible = context.components.settings.enableFxSuggest
 +            isVisible = false
          }
          requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_nonsponsored_suggestions).apply {
-             isVisible = context.settings().enableFxSuggest
+             isVisible = context.components.settings.enableFxSuggest
 -- 

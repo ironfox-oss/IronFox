@@ -8,20 +8,22 @@ Disables telemetry at build-time and removes various data reporting mechanisms.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index ad28bfb8c8ff..4f3136c67a91 100644
+index d867c71ba500..8b6f86ab1ecc 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -353,7 +353,7 @@ android.applicationVariants.configureEach { variant ->
-     }
+@@ -334,8 +334,8 @@ androidComponents {
+ // -------------------------------------------------------------------------------------------------
  
-     if (!isDebug) {
--        buildConfigField 'boolean', 'TELEMETRY', 'true'
-+        buildConfigField 'boolean', 'TELEMETRY', 'false'
-     } else {
-         buildConfigField 'boolean', 'TELEMETRY', 'false'
-     }
+ android.defaultConfig.with {
+-    buildConfigField 'boolean', 'CRASH_REPORTING', 'true'
+-    buildConfigField 'boolean', 'TELEMETRY', 'true'
++    buildConfigField 'boolean', 'CRASH_REPORTING', 'false'
++    buildConfigField 'boolean', 'TELEMETRY', 'false'
+ 
+     // Reading the sentry token from a local file (if it exists). In a release task on taskcluster it will be available.
+     buildConfigField 'String', 'SENTRY_TOKEN', 'null'
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index f7aaa39f3990..8470c8247464 100644
+index 5e4c49f47ff8..5d4f324f1fdb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -65,14 +65,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
@@ -42,7 +44,7 @@ index f7aaa39f3990..8470c8247464 100644
  import mozilla.components.feature.session.HistoryDelegate
  import mozilla.components.feature.session.middleware.LastAccessMiddleware
  import mozilla.components.feature.session.middleware.undo.UndoMiddleware
-@@ -147,7 +147,7 @@ import org.mozilla.fenix.summarization.onboarding.FenixSummarizationFeatureConfi
+@@ -146,7 +146,7 @@ import org.mozilla.fenix.summarization.onboarding.FenixSummarizationFeatureConfi
  import org.mozilla.fenix.summarization.onboarding.SummarizationFeatureDiscoveryConfiguration
  import org.mozilla.fenix.tabgroups.storage.redux.middleware.TabGroupMiddleware
  import org.mozilla.fenix.tabgroups.storage.repository.DefaultTabGroupRepository
@@ -51,16 +53,16 @@ index f7aaa39f3990..8470c8247464 100644
  import org.mozilla.fenix.translations.TranslationsEnabledSettings
  import org.mozilla.fenix.utils.Settings.DeleteDownloadBehavior
  import org.mozilla.fenix.utils.getUndoDelay
-@@ -378,7 +378,7 @@ class Core(
+@@ -381,7 +381,7 @@ class Core(
                      ),
                  ),
                  ReaderViewMiddleware(),
--                TelemetryMiddleware(context, context.settings(), metrics, crashReporter),
-+//                TelemetryMiddleware(context, context.settings(), metrics, crashReporter),
+-                TelemetryMiddleware(context, context.components.settings, metrics, crashReporter),
++//                TelemetryMiddleware(context, context.components.settings, metrics, crashReporter),
                  ThumbnailsMiddleware(thumbnailStorage),
-                 UndoMiddleware(context.getUndoDelay()),
+                 UndoMiddleware(context.components.settings.getUndoDelay()),
                  RegionMiddleware(context, locationService),
-@@ -391,7 +391,7 @@ class Core(
+@@ -394,7 +394,7 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -69,7 +71,7 @@ index f7aaa39f3990..8470c8247464 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  ProtectionsDashboardMiddleware(protectionsStorage),
-@@ -443,7 +443,7 @@ class Core(
+@@ -446,7 +446,7 @@ class Core(
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
  
@@ -78,7 +80,7 @@ index f7aaa39f3990..8470c8247464 100644
                  val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
                  val providerList = withContext(Dispatchers.IO) {
                      SerpTelemetryRepository(
-@@ -456,7 +456,7 @@ class Core(
+@@ -459,7 +459,7 @@ class Core(
                  adsTelemetry.install(engine, this@apply, providerList)
                  // Install the "cookies" WebExtension and tracks user interaction with SERPs.
                  searchTelemetry.install(engine, this@apply, providerList)
@@ -87,7 +89,7 @@ index f7aaa39f3990..8470c8247464 100644
  
              WebNotificationFeature(
                  context,
-@@ -529,7 +529,7 @@ class Core(
+@@ -532,7 +532,7 @@ class Core(
          )
      }
  
@@ -96,7 +98,7 @@ index f7aaa39f3990..8470c8247464 100644
          context.components.analytics.metrics
      }
  
-@@ -539,7 +539,7 @@ class Core(
+@@ -542,7 +542,7 @@ class Core(
  
      val searchTelemetry by lazyMonitored {
          InContentTelemetry()
@@ -105,28 +107,4 @@ index f7aaa39f3990..8470c8247464 100644
  
      /**
       * Shortcut component for managing shortcuts on the device home screen.
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt
-index 83a940b91e88..41b1288c9280 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt
-@@ -22,7 +22,7 @@ import mozilla.components.support.locale.LocaleManager
- import org.mozilla.fenix.FenixApplication
- import org.mozilla.fenix.R
- import org.mozilla.fenix.components.Components
--import org.mozilla.fenix.components.metrics.MetricController
-+// import org.mozilla.fenix.components.metrics.MetricController
- import org.mozilla.fenix.components.toolbar.ToolbarPosition
- import org.mozilla.fenix.settings.advanced.getSelectedLocale
- import org.mozilla.fenix.utils.isLargeScreenSize
-@@ -44,8 +44,8 @@ val Context.components: Components
- /**
-  * Helper function to get the MetricController off of context.
-  */
--val Context.metrics: MetricController
--    get() = this.components.analytics.metrics
-+// val Context.metrics: MetricController
-+//    get() = this.components.analytics.metrics
- 
- fun Context.asActivity() = (this as? ContextThemeWrapper)?.baseContext as? Activity
-     ?: this as? Activity
 -- 

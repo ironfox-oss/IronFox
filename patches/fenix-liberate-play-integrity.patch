@@ -58,26 +58,24 @@ index c9e41120b3979..6064d053ef564 100644
          /**
           * Convenience initializer that creates a [SharedPreferences] to be used by [ClientUUID].
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 87a4f911c0cf..79fae6d61680 100644
+index 058a5b356250..5916d5eea081 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -427,13 +427,13 @@ class Components(private val context: Context) {
+@@ -435,11 +435,11 @@ class Components(private val context: Context) {
      }
  
      val integrityClient by lazyMonitored {
--        GooglePlayIntegrityClient(
-+/*        GooglePlayIntegrityClient(
-             TokenProviderFactory.create(
-                 IntegrityManagerProvider.create(context),
-                 GoogleProjectNumber.create(BuildConfig.GPS_INTEGRITY_TOKEN),
-             ),
-             clientUUID,
+-        GooglePlayIntegrityClient.create(
++/*        GooglePlayIntegrityClient.create(
+             context = context,
+             projectNumberToken = BuildConfig.GPS_INTEGRITY_TOKEN,
+             requestHashProvider = clientUUID,
 -        )
 +        ) */
      }
  
      val termsOfUsePromptRepository by lazyMonitored {
-@@ -525,7 +525,7 @@ class Components(private val context: Context) {
+@@ -560,7 +560,7 @@ class Components(private val context: Context) {
              client = core.client,
              storage = MlpaTokenStorage.sharedPrefs(context),
              fxaTokenProvider = backgroundServices.accountManager.accessTokenProvider,
@@ -87,15 +85,17 @@ index 87a4f911c0cf..79fae6d61680 100644
          )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
-index efb47806713b..d24a6609e9f7 100644
+index d7a410697ee9..d1f0ef666a51 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
-@@ -5,13 +5,13 @@
+@@ -5,14 +5,14 @@
  package org.mozilla.fenix.components.llm
  
  import mozilla.components.concept.fetch.Client
--import mozilla.components.concept.integrity.IntegrityClient
-+// import mozilla.components.concept.integrity.IntegrityClient
+-import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient
+-import mozilla.components.lib.integrity.googleplay.IntegrityConsumer
++// import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient
++// import mozilla.components.lib.integrity.googleplay.IntegrityConsumer
  import mozilla.components.lib.llm.mlpa.MlpaLlmProvider
  import mozilla.components.lib.llm.mlpa.MlpaTokenProvider
  import mozilla.components.lib.llm.mlpa.MlpaTokenStorage
@@ -107,23 +107,23 @@ index efb47806713b..d24a6609e9f7 100644
  import org.mozilla.fenix.components.llm.ext.FxaAccessTokenProvider
  import org.mozilla.fenix.components.llm.ext.choose
  import org.mozilla.fenix.components.llm.ext.fxaTokenProvider
-@@ -24,7 +24,7 @@ class Llm(
+@@ -25,7 +25,7 @@ class Llm(
      private val client: Client,
      private val storage: MlpaTokenStorage,
      private val fxaTokenProvider: FxaAccessTokenProvider,
--    private val integrityClient: IntegrityClient,
+-    private val integrityClient: GooglePlayIntegrityClient,
 +    private val integrityClient: Unit?,
      private val userIdProvider: UserIdProvider,
  ) {
  
-@@ -34,13 +34,13 @@ class Llm(
+@@ -35,13 +35,13 @@ class Llm(
          MlpaLlmProvider(
              MlpaTokenProvider.choose(
                  MlpaTokenProvider.fxaTokenProvider(fxaTokenProvider),
 -                MlpaTokenProvider.mlpaIntegrityHandshake(
--                    integrityClient = integrityClient,
+-                    integrityClient = integrityClient.forConsumer(IntegrityConsumer.Summarize),
 +                MlpaTokenProvider.static(AuthorizationToken.Integrity("my-test-token")),
-+/*                    integrityClient = integrityClient,
++/*                    integrityClient = integrityClient.forConsumer(IntegrityConsumer.Summarize),
                      authenticationService = fenixMlpaService,
                      userIdProvider = userIdProvider,
                      storage = storage,
@@ -134,23 +134,15 @@ index efb47806713b..d24a6609e9f7 100644
              storage = storage,
              mlpaService = fenixMlpaService,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 9d95e5b6f1de..2de03c8dbd06 100644
+index 3c71fd5f01a1..f7ffe6549d50 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -577,14 +577,14 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -575,7 +575,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          }
          runOnVisualCompleteness(queue) {
              GlobalScope.launch(IO) {
--                val start = System.currentTimeMillis()
-+/*                val start = System.currentTimeMillis()
-                 val result = components.integrityClient.warmUp()
-                 Integrity.warmedUp.record(
-                     Integrity.WarmedUpExtra(
-                         durationMs = (System.currentTimeMillis() - start).toInt(),
-                         success = result,
-                         ),
--                    )
-+                    ) */
+-                components.integrityClient.warmUp()
++//                components.integrityClient.warmUp()
              }
          }
      }

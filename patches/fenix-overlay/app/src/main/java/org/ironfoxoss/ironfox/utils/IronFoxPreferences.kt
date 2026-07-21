@@ -1,7 +1,7 @@
 package org.ironfoxoss.ironfox.utils
 
 import android.content.Context
-import org.mozilla.fenix.ext.settings
+import org.mozilla.fenix.ext.components
 
 object IronFoxPreferences {
 
@@ -15,7 +15,7 @@ object IronFoxPreferences {
     context: Context,
     isDisabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.webglDisabled = isDisabled
   }
@@ -27,7 +27,7 @@ object IronFoxPreferences {
    */
   fun isWebGLDisabled(
     context: Context
-  ): Boolean = context.settings().ironfox.webglDisabled
+  ): Boolean = context.components.settings.ironfox.webglDisabled
 
   /**
    * Set whether to enable support for Accessibility Services
@@ -39,7 +39,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.accessibilityEnabled = isEnabled
   }
@@ -51,7 +51,7 @@ object IronFoxPreferences {
    */
   fun isAccessibilityEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.accessibilityEnabled
+  ): Boolean = context.components.settings.ironfox.accessibilityEnabled
 
   /**
    * Set whether to enable JavaScript
@@ -63,7 +63,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.javascriptEnabled = isEnabled
   }
@@ -75,7 +75,7 @@ object IronFoxPreferences {
    */
   fun isJavaScriptEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.javascriptEnabled
+  ): Boolean = context.components.settings.ironfox.javascriptEnabled
 
   /**
    * Set whether to enable our WebGL overrides
@@ -87,7 +87,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.fppOverridesIronFoxWebGLEnabled = isEnabled
   }
@@ -99,7 +99,7 @@ object IronFoxPreferences {
    */
   fun isFPPOverridesIronFoxWebGLEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.fppOverridesIronFoxWebGLEnabled
+  ): Boolean = context.components.settings.ironfox.fppOverridesIronFoxWebGLEnabled
 
   /**
    * Set whether to always use private browsing mode
@@ -111,7 +111,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.alwaysUsePrivateBrowsing = isEnabled
 
@@ -131,7 +131,7 @@ object IronFoxPreferences {
    */
   fun isAlwaysUsePrivateBrowsing(
     context: Context
-  ): Boolean = context.settings().ironfox.alwaysUsePrivateBrowsing
+  ): Boolean = context.components.settings.ironfox.alwaysUsePrivateBrowsing
 
   /**
    * Set whether to enable disk cache
@@ -143,7 +143,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.cacheEnabled = isEnabled
   }
@@ -155,7 +155,7 @@ object IronFoxPreferences {
    */
   fun isCacheEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.cacheEnabled
+  ): Boolean = context.components.settings.ironfox.cacheEnabled
 
   /**
    * Set whether to enable our fingerprinting protection overrides
@@ -167,7 +167,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.fppOverridesIronFoxEnabled = isEnabled
   }
@@ -179,7 +179,7 @@ object IronFoxPreferences {
    */
   fun isFPPOverridesIronFoxEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.fppOverridesIronFoxEnabled
+  ): Boolean = context.components.settings.ironfox.fppOverridesIronFoxEnabled
 
   /**
    * Set whether to enable Mozilla's fingerprinting protection overrides
@@ -191,7 +191,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.fppOverridesMozillaEnabled = isEnabled
   }
@@ -203,7 +203,7 @@ object IronFoxPreferences {
    */
   fun isFPPOverridesMozillaEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.fppOverridesMozillaEnabled
+  ): Boolean = context.components.settings.ironfox.fppOverridesMozillaEnabled
 
   /**
    * Set whether to enable our timezone spoofing overrides
@@ -215,7 +215,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.fppOverridesIronFoxTimezoneEnabled = isEnabled
   }
@@ -227,7 +227,7 @@ object IronFoxPreferences {
    */
   fun isFPPOverridesIronFoxTimezoneEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.fppOverridesIronFoxTimezoneEnabled
+  ): Boolean = context.components.settings.ironfox.fppOverridesIronFoxTimezoneEnabled
 
   /**
    * Set whether to enable locale spoofing
@@ -239,7 +239,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.spoofEnglish = isEnabled
   }
@@ -251,7 +251,7 @@ object IronFoxPreferences {
    */
   fun isSpoofEnglishEnabled(
     context: Context,
-  ): Boolean = context.settings().ironfox.spoofEnglish
+  ): Boolean = context.components.settings.ironfox.spoofEnglish
 
   /**
    * Set whether to enable timezone spoofing
@@ -263,7 +263,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.spoofTimezone = isEnabled
   }
@@ -275,7 +275,7 @@ object IronFoxPreferences {
    */
   fun isSpoofTimezoneEnabled(
     context: Context,
-  ): Boolean = context.settings().ironfox.spoofTimezone
+  ): Boolean = context.components.settings.ironfox.spoofTimezone
 
   /**
    * Set whether to enable add-on installation
@@ -287,7 +287,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.xpinstallEnabled = isEnabled
   }
@@ -299,7 +299,7 @@ object IronFoxPreferences {
    */
   fun isXPInstallEnabled(
     context: Context,
-  ): Boolean = context.settings().ironfox.xpinstallEnabled
+  ): Boolean = context.components.settings.ironfox.xpinstallEnabled
 
   /**
    * Set whether to enable JavaScript Just-in-time compilation (JIT)
@@ -311,7 +311,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.javascriptJitEnabled = isEnabled
   }
@@ -323,7 +323,7 @@ object IronFoxPreferences {
    */
   fun isJITEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.javascriptJitEnabled
+  ): Boolean = context.components.settings.ironfox.javascriptJitEnabled
 
   /**
    * Set whether to enable JavaScript Just-in-time compilation (JIT) for extensions
@@ -336,7 +336,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.javascriptJitTrustedPrincipalsEnabled = isEnabled
   }
@@ -349,7 +349,7 @@ object IronFoxPreferences {
    */
   fun isJITTrustedPrincipalsEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.javascriptJitTrustedPrincipalsEnabled
+  ): Boolean = context.components.settings.ironfox.javascriptJitTrustedPrincipalsEnabled
 
   /**
    * Set whether to enable printing capabilities
@@ -361,7 +361,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.printEnabled = isEnabled
   }
@@ -373,7 +373,7 @@ object IronFoxPreferences {
    */
   fun isPrintEnabled(
     context: Context,
-  ): Boolean = context.settings().ironfox.printEnabled
+  ): Boolean = context.components.settings.ironfox.printEnabled
 
   /**
    * Set whether to enable Safe Browsing
@@ -385,7 +385,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.safeBrowsingEnabled = isEnabled
   }
@@ -397,7 +397,7 @@ object IronFoxPreferences {
    */
   fun isSafeBrowsingEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.safeBrowsingEnabled
+  ): Boolean = context.components.settings.ironfox.safeBrowsingEnabled
 
   /**
    * Set whether to enable Scalar Vector Graphics (SVG)
@@ -409,7 +409,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.svgEnabled = isEnabled
   }
@@ -421,7 +421,7 @@ object IronFoxPreferences {
    */
   fun isSVGEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.svgEnabled
+  ): Boolean = context.components.settings.ironfox.svgEnabled
 
   /**
    * Set whether to enable WebAssembly (WASM)
@@ -433,7 +433,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.wasmEnabled = isEnabled
   }
@@ -445,7 +445,7 @@ object IronFoxPreferences {
    */
   fun isWASMEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.wasmEnabled
+  ): Boolean = context.components.settings.ironfox.wasmEnabled
 
   /**
    * Set whether to enable WebRTC globally
@@ -457,7 +457,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.webrtcEnabled = isEnabled
   }
@@ -469,7 +469,7 @@ object IronFoxPreferences {
    */
   fun isWebRTCEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.webrtcEnabled
+  ): Boolean = context.components.settings.ironfox.webrtcEnabled
 
   /**
    * Set whether to enable collections
@@ -481,7 +481,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.collections = isEnabled
   }
@@ -493,7 +493,7 @@ object IronFoxPreferences {
    */
   fun isCollectionsEnabled(
     context: Context
-  ): Boolean = context.settings().collections
+  ): Boolean = context.components.settings.collections
 
   /**
    * Set whether to enable Firefox Translations
@@ -505,7 +505,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.translationsEnabled = isEnabled
   }
@@ -517,7 +517,7 @@ object IronFoxPreferences {
    */
   fun isTranslationsEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.translationsEnabled
+  ): Boolean = context.components.settings.ironfox.translationsEnabled
 
   /**
    * Set whether to enable IPv6 network connectivity
@@ -529,7 +529,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.ipv6Enabled = isEnabled
   }
@@ -541,7 +541,7 @@ object IronFoxPreferences {
    */
   fun isIPv6Enabled(
     context: Context
-  ): Boolean = context.settings().ironfox.ipv6Enabled
+  ): Boolean = context.components.settings.ironfox.ipv6Enabled
 
   /**
    * Set whether to disable PDF.js
@@ -553,7 +553,7 @@ object IronFoxPreferences {
     context: Context,
     isDisabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.pdfjsDisabled = isDisabled
   }
@@ -565,7 +565,7 @@ object IronFoxPreferences {
    */
   fun isPDFjsDisabled(
     context: Context
-  ): Boolean = context.settings().ironfox.pdfjsDisabled
+  ): Boolean = context.components.settings.ironfox.pdfjsDisabled
 
   /**
    * Set whether to enable support for UnifiedPush
@@ -577,7 +577,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.enableUnifiedPush = isEnabled
   }
@@ -589,7 +589,7 @@ object IronFoxPreferences {
    */
   fun isUnifiedPushEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.enableUnifiedPush
+  ): Boolean = context.components.settings.ironfox.enableUnifiedPush
 
   /**
    * Set whether we should use UnifiedPush to deliver push notifications
@@ -601,7 +601,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.useUnifiedPush = isEnabled
   }
@@ -613,7 +613,7 @@ object IronFoxPreferences {
    */
   fun shouldUseUnifiedPush(
     context: Context
-  ): Boolean = context.settings().ironfox.useUnifiedPush
+  ): Boolean = context.components.settings.ironfox.useUnifiedPush
 
   /**
    * Set whether to enable Encrypted Media Extensions (EME)
@@ -625,7 +625,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.emeEnabled = isEnabled
   }
@@ -637,7 +637,7 @@ object IronFoxPreferences {
    */
   fun isEMEEnabled(
     context: Context
-  ): Boolean = context.settings().ironfox.emeEnabled
+  ): Boolean = context.components.settings.ironfox.emeEnabled
 
   /**
    * Set whether the onboarding has been completed
@@ -649,7 +649,7 @@ object IronFoxPreferences {
     context: Context,
     isCompleted: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.ironFoxOnboardingCompleted = isCompleted
   }
@@ -661,7 +661,7 @@ object IronFoxPreferences {
    */
   fun isIronFoxOnboardingCompleted(
     context: Context
-  ): Boolean = context.settings().ironfox.ironFoxOnboardingCompleted
+  ): Boolean = context.components.settings.ironfox.ironFoxOnboardingCompleted
 
   /**
    * Set whether we should use the sticky media autoplay blocking policy
@@ -673,7 +673,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.autoplayBlockingSticky = isEnabled
   }
@@ -685,7 +685,7 @@ object IronFoxPreferences {
    */
   fun isAutoplayBlockingSticky(
     context: Context
-  ): Boolean = context.settings().ironfox.autoplayBlockingSticky
+  ): Boolean = context.components.settings.ironfox.autoplayBlockingSticky
 
   /**
    * Set whether we should use the transient media autoplay blocking policy
@@ -697,7 +697,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.autoplayBlockingTransient = isEnabled
   }
@@ -709,7 +709,7 @@ object IronFoxPreferences {
    */
   fun isAutoplayBlockingTransient(
     context: Context
-  ): Boolean = context.settings().ironfox.autoplayBlockingTransient
+  ): Boolean = context.components.settings.ironfox.autoplayBlockingTransient
 
   /**
    * Set whether we should use the click-to-play media autoplay blocking policy
@@ -721,7 +721,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.autoplayBlockingClickToPlay = isEnabled
   }
@@ -733,7 +733,7 @@ object IronFoxPreferences {
    */
   fun isAutoplayBlockingClickToPlay(
     context: Context
-  ): Boolean = context.settings().ironfox.autoplayBlockingClickToPlay
+  ): Boolean = context.components.settings.ironfox.autoplayBlockingClickToPlay
 
   /**
    * Set whether we should always send cross-origin referers
@@ -745,7 +745,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.refererXOriginAlways = isEnabled
   }
@@ -757,7 +757,7 @@ object IronFoxPreferences {
    */
   fun isRefererXOriginAlways(
     context: Context
-  ): Boolean = context.settings().ironfox.refererXOriginAlways
+  ): Boolean = context.components.settings.ironfox.refererXOriginAlways
 
   /**
    * Set whether we should only send cross-origin referers when base domains match
@@ -769,7 +769,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.refererXOriginBaseDomainsMatch = isEnabled
   }
@@ -781,7 +781,7 @@ object IronFoxPreferences {
    */
   fun isRefererXOriginBaseDomainsMatch(
     context: Context
-  ): Boolean = context.settings().ironfox.refererXOriginBaseDomainsMatch
+  ): Boolean = context.components.settings.ironfox.refererXOriginBaseDomainsMatch
 
   /**
    * Set whether we should disable cross-origin referers
@@ -793,7 +793,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.refererXOriginHostsMatch = isEnabled
   }
@@ -805,7 +805,7 @@ object IronFoxPreferences {
    */
   fun isRefererXOriginHostsMatch(
     context: Context
-  ): Boolean = context.settings().ironfox.refererXOriginHostsMatch
+  ): Boolean = context.components.settings.ironfox.refererXOriginHostsMatch
 
   /**
    * Set whether we should use the OLED theme
@@ -814,7 +814,7 @@ object IronFoxPreferences {
    * @param isEnabled Whether we should use the OLED theme
    */
   fun setShouldUseOledTheme(context: Context, isEnabled: Boolean) {
-    val settings = context.settings()
+    val settings = context.components.settings
     settings.ironfox.shouldUseOledTheme = isEnabled
   }
 
@@ -824,7 +824,7 @@ object IronFoxPreferences {
    * @param context The application context
    */
   fun shouldUseOledTheme(context: Context): Boolean {
-    return context.settings().ironfox.shouldUseOledTheme
+    return context.components.settings.ironfox.shouldUseOledTheme
   }
 
   /**
@@ -837,7 +837,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.prefersBrowserColorScheme = isEnabled
   }
@@ -849,7 +849,7 @@ object IronFoxPreferences {
    */
   fun isPrefersBrowserColorScheme(
     context: Context
-  ): Boolean = context.settings().ironfox.prefersBrowserColorScheme
+  ): Boolean = context.components.settings.ironfox.prefersBrowserColorScheme
 
   /**
    * Set whether we should set the preferred color scheme for websites to dark
@@ -861,7 +861,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.prefersDarkColorScheme = isEnabled
   }
@@ -873,7 +873,7 @@ object IronFoxPreferences {
    */
   fun isPrefersDarkColorScheme(
     context: Context
-  ): Boolean = context.settings().ironfox.prefersDarkColorScheme
+  ): Boolean = context.components.settings.ironfox.prefersDarkColorScheme
 
   /**
    * Set whether we should set the preferred color scheme for websites to light
@@ -885,7 +885,7 @@ object IronFoxPreferences {
     context: Context,
     isEnabled: Boolean,
   ) {
-    val settings = context.settings()
+    val settings = context.components.settings
 
     settings.ironfox.prefersLightColorScheme = isEnabled
   }
@@ -897,7 +897,7 @@ object IronFoxPreferences {
    */
   fun isPrefersLightColorScheme(
     context: Context
-  ): Boolean = context.settings().ironfox.prefersLightColorScheme
+  ): Boolean = context.components.settings.ironfox.prefersLightColorScheme
 
   /**
    * Check if debug settings are enabled
@@ -906,5 +906,5 @@ object IronFoxPreferences {
    */
   fun shouldShowSecretDebugMenuThisSession(
     context: Context
-  ): Boolean = context.settings().showSecretDebugMenuThisSession
+  ): Boolean = context.components.settings.showSecretDebugMenuThisSession
 }

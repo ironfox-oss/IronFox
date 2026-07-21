@@ -2,19 +2,19 @@ package org.ironfoxoss.ironfox.utils
 
 import android.content.Context
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.darkColorScheme
 import mozilla.components.compose.base.theme.AcornColors
 import mozilla.components.compose.base.theme.acornDarkColorScheme
-import mozilla.components.compose.base.theme.buildColorScheme
 import mozilla.components.compose.base.theme.darkColorPalette
 import mozilla.components.ui.colors.PhotonColors
 
 val oledColorPalette = darkColorPalette.copy(
-  layer3 = PhotonColors.DarkGrey80,
+  surfaceDimVariant = PhotonColors.DarkGrey80,
 )
 
 val darkScheme = acornDarkColorScheme()
 
-fun acornOledColorScheme(): ColorScheme = buildColorScheme(
+fun acornOledColorScheme(): ColorScheme = darkColorScheme(
   primary = darkScheme.primary,
   primaryContainer = darkScheme.primaryContainer,
   inversePrimary = darkScheme.inversePrimary,

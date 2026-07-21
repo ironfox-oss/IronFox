@@ -116,7 +116,6 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   "${IRONFOX_LN}" -sf "${IRONFOX_UNZIP}"          "${IRONFOX_PATH}/unzip"
   "${IRONFOX_LN}" -sf "${IRONFOX_UV}"             "${IRONFOX_PATH}/uv"
   "${IRONFOX_LN}" -sf "${IRONFOX_WC}"             "${IRONFOX_PATH}/wc"
-  "${IRONFOX_LN}" -sf "${IRONFOX_WHICH}"          "${IRONFOX_PATH}/which"
   "${IRONFOX_LN}" -sf "${IRONFOX_WHOAMI}"         "${IRONFOX_PATH}/whoami"
   "${IRONFOX_LN}" -sf "${IRONFOX_XARGS}"          "${IRONFOX_PATH}/xargs"
   "${IRONFOX_LN}" -sf "${IRONFOX_XZ}"             "${IRONFOX_PATH}/xz"

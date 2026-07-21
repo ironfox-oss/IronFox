@@ -150,6 +150,115 @@ index 39a6df6fb62e..b4208f9c266d 100644
  # Keep code generated from Glean Metrics
 --keep class org.mozilla.fenix.GleanMetrics.** {  *; }
 +# -keep class org.mozilla.fenix.GleanMetrics.** {  *; }
+diff --git a/mobile/android/fenix/app/longfox/build.gradle b/mobile/android/fenix/app/longfox/build.gradle
+index d721ff56966a..bf2883837852 100644
+--- a/mobile/android/fenix/app/longfox/build.gradle
++++ b/mobile/android/fenix/app/longfox/build.gradle
+@@ -46,7 +46,7 @@ dependencies {
+     implementation libs.androidx.datastore.core
+     implementation libs.androidx.datastore.preferences
+     implementation libs.google.material
+-    implementation libs.mozilla.glean
++//    implementation libs.mozilla.glean
+     testImplementation libs.junit4
+     testImplementation platform(libs.androidx.compose.bom)
+     testImplementation libs.androidx.compose.ui.test
+@@ -61,7 +61,7 @@ dependencies {
+ }
+ 
+ // Generate Kotlin code for the Longfox module's Glean metrics.
+-ext {
++/* ext {
+     gleanExpireByVersion = Config.majorVersion(project)
+     gleanNamespace = "mozilla.telemetry.glean"
+     gleanPythonEnvDir = gradle.mozconfig.substs.GRADLE_GLEAN_PARSER_VENV
+@@ -69,4 +69,4 @@ ext {
+             "${project.projectDir}/metrics.yaml",
+     ]
+ }
+-apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
++apply plugin: "org.mozilla.telemetry.glean-gradle-plugin" */
+diff --git a/mobile/android/fenix/app/longfox/src/main/kotlin/org/mozilla/fenix/longfox/LongFoxFeature.kt b/mobile/android/fenix/app/longfox/src/main/kotlin/org/mozilla/fenix/longfox/LongFoxFeature.kt
+index 5ed4cc6c0294..812a9cd80582 100644
+--- a/mobile/android/fenix/app/longfox/src/main/kotlin/org/mozilla/fenix/longfox/LongFoxFeature.kt
++++ b/mobile/android/fenix/app/longfox/src/main/kotlin/org/mozilla/fenix/longfox/LongFoxFeature.kt
+@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.ComposeView
+ import androidx.compose.ui.platform.ViewCompositionStrategy
+ import androidx.lifecycle.DefaultLifecycleObserver
+ import androidx.lifecycle.LifecycleOwner
+-import org.mozilla.fenix.longfox.GleanMetrics.Longfox
++// import org.mozilla.fenix.longfox.GleanMetrics.Longfox
+ 
+ /**
+  * Defines the api for using Long Fox.
+@@ -49,7 +49,7 @@ class LongFoxFeature : LongFoxFeatureApi {
+      *  @param context an activity [Context] the game should be shown over.
+      */
+     override fun start(context: Context) {
+-        Longfox.gameLaunched.record()
++//        Longfox.gameLaunched.record()
+ 
+         val dialog = ComponentDialog(context, android.R.style.Theme_Translucent_NoTitleBar)
+         dialog.window?.apply {
+@@ -91,7 +91,7 @@ class LongFoxFeature : LongFoxFeatureApi {
+      * When the entry point is shown, send a glean telemetry event.
+      */
+     override fun onEntryPointShown() {
+-        Longfox.entryPointShown.record()
++ //       Longfox.entryPointShown.record()
+     }
+ }
+ 
+diff --git a/mobile/android/fenix/app/longfox/src/main/kotlin/org/mozilla/fenix/longfox/LongFoxGameScreen.kt b/mobile/android/fenix/app/longfox/src/main/kotlin/org/mozilla/fenix/longfox/LongFoxGameScreen.kt
+index d1ea4e428233..a95f0e4d8642 100644
+--- a/mobile/android/fenix/app/longfox/src/main/kotlin/org/mozilla/fenix/longfox/LongFoxGameScreen.kt
++++ b/mobile/android/fenix/app/longfox/src/main/kotlin/org/mozilla/fenix/longfox/LongFoxGameScreen.kt
+@@ -48,12 +48,12 @@ import androidx.compose.ui.tooling.preview.Preview
+ import androidx.compose.ui.unit.dp
+ import kotlinx.coroutines.delay
+ import kotlinx.coroutines.launch
+-import mozilla.telemetry.glean.GleanTimerId
++// import mozilla.telemetry.glean.GleanTimerId
+ import org.mozilla.fenix.longfox.GameState.Companion.CELL_SIZE_DP
+ import org.mozilla.fenix.longfox.GameState.Companion.GAME_INTERVAL_TIME_MS
+ import org.mozilla.fenix.longfox.GameState.Companion.MAX_JUST_EATEN_COUNTDOWN
+ import org.mozilla.fenix.longfox.GameState.Companion.MAX_SCORE_CELEBRATION_COUNTDOWN
+-import org.mozilla.fenix.longfox.GleanMetrics.Longfox
++// import org.mozilla.fenix.longfox.GleanMetrics.Longfox
+ 
+ // Minimum drag distance (in dp) for a gesture to count as a swipe rather than a tap. Kept well
+ // above the platform touch slop so ordinary taps with a little finger movement are not misread as
+@@ -68,7 +68,7 @@ private const val MIN_SWIPE_DISTANCE_DP = 16
+ fun LongFoxGameScreen() {
+     var celebrationShown by remember { mutableStateOf(false) }
+     var celebrationSeed by remember { mutableIntStateOf(0) }
+-    var gleanTimerId: GleanTimerId? by remember { mutableStateOf(null) }
++//    var gleanTimerId: GleanTimerId? by remember { mutableStateOf(null) }
+     GameBackground(celebrationShown, celebrationSeed) {
+         // Make a square game grid that fits on the screen
+         val density = LocalDensity.current.density
+@@ -78,7 +78,7 @@ fun LongFoxGameScreen() {
+             mutableStateOf(GameState(numCells = numCells, size = Size(canvasSizePx, canvasSizePx), isGameOver = true))
+         }
+         val startGame = {
+-            gleanTimerId = Longfox.gamePlayedLength.start()
++//            gleanTimerId = Longfox.gamePlayedLength.start()
+             gameState = GameState(numCells = numCells, size = Size(canvasSizePx, canvasSizePx))
+         }
+         SideEffect {
+@@ -115,10 +115,10 @@ fun LongFoxGameScreen() {
+             onDispose { soundEffectsPlayer.release() }
+         }
+         LaunchedEffect(gameState.isGameOver) {
+-            gleanTimerId?.also {
++            if (true) {
+                 if (gameState.isGameOver) {
+                     soundEffectsPlayer.playSound(R.raw.sadwobble)
+-                    Longfox.gamePlayedLength.stopAndAccumulate(it)
++//                    Longfox.gamePlayedLength.stopAndAccumulate(it)
+                 }
+             }
+         }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index d8e4023d8790..cbbfdeacb501 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
@@ -243,12 +352,12 @@ index d8e4023d8790..cbbfdeacb501 100644
      override fun onConfigurationChanged(config: android.content.res.Configuration) {
          // Workaround for androidx appcompat issue where follow system day/night mode config changes
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index ab6617d5cf3ce..cc6dde45a7917 100644
+index 34d74f1d51e7..d8ba7a695ccf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -84,14 +84,14 @@ import mozilla.components.support.utils.BuildManufacturerChecker
- import mozilla.components.support.utils.SafeIntent
+@@ -86,14 +86,14 @@ import mozilla.components.support.utils.SafeIntent
  import mozilla.components.support.utils.toSafeIntent
+ import mozilla.components.support.webextensions.WebExtensionOptionsPageObserver
  import mozilla.components.support.webextensions.WebExtensionPopupObserver
 -import mozilla.telemetry.glean.private.NoExtras
 +/* import mozilla.telemetry.glean.private.NoExtras
@@ -263,7 +372,7 @@ index ab6617d5cf3ce..cc6dde45a7917 100644
  import org.mozilla.fenix.addons.ExtensionsProcessDisabledBackgroundController
  import org.mozilla.fenix.addons.ExtensionsProcessDisabledForegroundController
  import org.mozilla.fenix.bindings.ExternalAppLinkStatusBinding
-@@ -109,10 +109,10 @@ import org.mozilla.fenix.components.ipprotection.ErrorMessages
+@@ -110,10 +110,10 @@ import org.mozilla.fenix.components.ipprotection.ErrorMessages
  import org.mozilla.fenix.components.ipprotection.IPProtectionInfoPrompter
  import org.mozilla.fenix.components.menu.MenuAccessPoint
  import org.mozilla.fenix.components.menu.share.QRCodeDialogFragment
@@ -276,17 +385,17 @@ index ab6617d5cf3ce..cc6dde45a7917 100644
  import org.mozilla.fenix.components.share.QR_CODE_URI_KEY
  import org.mozilla.fenix.components.share.SEND_TO_DEVICES_ACTION
  import org.mozilla.fenix.components.share.SendToDevicesDialogFragment
-@@ -136,7 +136,7 @@ import org.mozilla.fenix.ext.getNavDirections
- import org.mozilla.fenix.ext.hasTopDestination
+@@ -138,7 +138,7 @@ import org.mozilla.fenix.ext.hasTopDestination
+ import org.mozilla.fenix.ext.isAllowedDuringOnboardingIntent
  import org.mozilla.fenix.ext.nav
  import org.mozilla.fenix.ext.openSetDefaultBrowserOption
 -import org.mozilla.fenix.ext.recordEventInNimbus
 +// import org.mozilla.fenix.ext.recordEventInNimbus
  import org.mozilla.fenix.ext.setNavigationIcon
- import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.extension.WebExtensionPromptFeature
-@@ -479,11 +479,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
-                 // Before the slashscreen ends the application has a different theme not supporting edge to edge.
+ import org.mozilla.fenix.home.HomeFragment
+@@ -471,11 +471,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+                 // Before the splashscreen ends the application has a different theme not supporting edge to edge.
                  EdgeToEdgeFragmentLifecycleCallbacks.register(supportFragmentManager, window)
  
 -                if (result.sendTelemetry) {
@@ -299,7 +408,7 @@ index ab6617d5cf3ce..cc6dde45a7917 100644
  
                  if (savedInstanceState == null && shouldShowOnboarding) {
                      navHost.navController.navigate(NavGraphDirections.actionGlobalOnboarding())
-@@ -549,14 +549,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -541,12 +541,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                  }
                  maybeShowSetAsDefaultBrowserPrompt()
              } else {
@@ -308,15 +417,13 @@ index ab6617d5cf3ce..cc6dde45a7917 100644
              }
          }
  
-         Performance.processIntentIfPerformanceTest(intent, this)
- 
          // This will record an event in Nimbus' internal event store. Used for behavioral targeting
 -        recordEventInNimbus("app_opened")
 +/*        recordEventInNimbus("app_opened")
-         if (settings().isTelemetryEnabled) {
+         if (components.settings.isTelemetryEnabled) {
              lifecycle.addObserver(
                  BreadcrumbsRecorder(
-@@ -580,7 +580,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -570,7 +570,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                          AppIcon.newPrivateTabTapped.record(NoExtras())
                      }
                  }
@@ -325,25 +432,25 @@ index ab6617d5cf3ce..cc6dde45a7917 100644
          supportActionBar?.hide()
  
          lifecycle.addObservers(
-@@ -689,7 +689,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -678,7 +678,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              components.strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
                  components.appStore.dispatch(AppAction.UpdateWasNativeDefaultBrowserPromptShown(true))
                  showSetDefaultBrowserPrompt()
 -                Metrics.setAsDefaultBrowserNativePromptShown.record()
 +//                Metrics.setAsDefaultBrowserNativePromptShown.record()
-                 settings().setAsDefaultPromptCalled()
+                 components.settings.setAsDefaultPromptCalled()
              }
          }
-@@ -756,7 +756,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -745,7 +745,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
          }
  
          lifecycleScope.launch(IO) {
--            if (settings().checkIfFenixIsDefaultBrowserOnAppResume()) {
-+/*            if (settings().checkIfFenixIsDefaultBrowserOnAppResume()) {
+-            if (components.settings.checkIfFenixIsDefaultBrowserOnAppResume()) {
++/*            if (components.settings.checkIfFenixIsDefaultBrowserOnAppResume()) {
                  if (components.appStore.state.wasNativeDefaultBrowserPromptShown) {
                      Metrics.defaultBrowserChangedViaNativeSystemPrompt.record(NoExtras())
                  }
-@@ -766,7 +766,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -755,7 +755,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              }
  
              GrowthDataWorker.sendActivatedSignalIfNeeded(applicationContext)
@@ -352,7 +459,7 @@ index ab6617d5cf3ce..cc6dde45a7917 100644
  
              if (NotificationManagerCompat.from(applicationContext).areNotificationsEnabled()) {
                  MessageNotificationWorker.setMessageNotificationWorker(applicationContext)
-@@ -989,7 +989,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -986,7 +986,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
          if (qrCodeUri != null) {
              if (supportFragmentManager.findFragmentByTag(QRCodeDialogFragment.TAG) == null) {
                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -361,7 +468,7 @@ index ab6617d5cf3ce..cc6dde45a7917 100644
                  }
  
                  QRCodeDialogFragment.newInstance(qrCodeUri).showNow(
-@@ -1278,9 +1278,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -1275,9 +1275,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              )
          }
  
@@ -373,7 +480,7 @@ index ab6617d5cf3ce..cc6dde45a7917 100644
  
          return nimbusOperation
      }
-@@ -1492,14 +1492,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -1535,14 +1535,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                  )
              }
              if (recentlyUsedPwaCount == 0) {
@@ -392,7 +499,7 @@ index ab6617d5cf3ce..cc6dde45a7917 100644
          }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-index 0bb38f8e5773..d1427389dc8f 100644
+index ffaf8374e719..4acd094709b0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 @@ -46,15 +46,15 @@ import mozilla.components.service.fxa.sync.GlobalSyncableStoreProvider
@@ -412,21 +519,23 @@ index 0bb38f8e5773..d1427389dc8f 100644
  import org.mozilla.fenix.ext.maxActiveTime
 -import org.mozilla.fenix.ext.recordEventInNimbus
 +// import org.mozilla.fenix.ext.recordEventInNimbus
- import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.perf.StrictModeManager
  import org.mozilla.fenix.perf.lazyMonitored
-@@ -272,8 +272,8 @@ internal class TelemetryMiddleware : Middleware<SyncState, SyncAction> {
+ import org.mozilla.fenix.sync.SyncedTabsIntegration
+@@ -271,10 +271,10 @@ internal class TelemetryMiddleware : Middleware<SyncState, SyncAction> {
+         val prevState = store.state
          next(action)
          val accountUid = store.state.account?.uid
-         if (prevState.account?.uid != accountUid && accountUid != null) {
--            ClientAssociation.uid.set(accountUid)
--            fxAccounts.submit()
-+//            ClientAssociation.uid.set(accountUid)
-+//            fxAccounts.submit()
-         }
+-        if (prevState.account?.uid != accountUid && accountUid != null) {
++/*        if (prevState.account?.uid != accountUid && accountUid != null) {
+             ClientAssociation.uid.set(accountUid)
+             fxAccounts.submit()
+-        }
++        } */
      }
  }
-@@ -287,22 +287,22 @@ internal class TelemetryAccountObserver(
+ 
+@@ -288,22 +288,22 @@ internal class TelemetryAccountObserver(
          when (authType) {
              // User signed-in into an existing FxA account.
              AuthType.Signin -> {
@@ -455,13 +564,13 @@ index 0bb38f8e5773..d1427389dc8f 100644
  
              // User signed-in into an FxA account shared from another locally installed app using the copy flow.
              AuthType.MigratedCopy,
-@@ -317,7 +317,7 @@ internal class TelemetryAccountObserver(
+@@ -318,7 +318,7 @@ internal class TelemetryAccountObserver(
      }
  
      override fun onLoggedOut() {
 -        SyncAuth.signOut.record(NoExtras())
 +//        SyncAuth.signOut.record(NoExtras())
-         context.settings().signedInFxaAccount = false
+         settings.signedInFxaAccount = false
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsFragment.kt
@@ -527,7 +636,7 @@ index a23df32558b2..32320d4715b5 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index a8a997445c27..148e12916400 100644
+index 5b173db95928..d00147d26eaf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 @@ -34,16 +34,16 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
@@ -550,19 +659,19 @@ index a8a997445c27..148e12916400 100644
  import org.mozilla.fenix.ext.application
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.hideToolbar
-@@ -76,9 +76,9 @@ class OnboardingFragment : Fragment() {
+@@ -75,9 +75,9 @@ class OnboardingFragment : Fragment() {
  
      private val removeMarketingFeature = ViewBoundFeatureWrapper<MarketingPageRemovalSupport>()
  
 -    private val rtamoAttributionHandler by lazy {
 +/*    private val rtamoAttributionHandler by lazy {
-         RtamoAttributionHandler(requireContext(), requireContext().settings(), requireComponents.addonsProvider)
+         RtamoAttributionHandler(requireContext(), requireComponents.settings, requireComponents.addonsProvider)
 -    }
 +    } */
  
      private val termsOfServiceEventHandler by lazy {
          DefaultOnboardingTermsOfServiceEventHandler(
-@@ -111,10 +111,10 @@ class OnboardingFragment : Fragment() {
+@@ -110,10 +110,10 @@ class OnboardingFragment : Fragment() {
              } else {
                  OnboardingReason.NEW_USER
              },
@@ -576,16 +685,16 @@ index a8a997445c27..148e12916400 100644
          )
      }
  
-@@ -331,7 +331,7 @@ class OnboardingFragment : Fragment() {
+@@ -330,7 +330,7 @@ class OnboardingFragment : Fragment() {
      }
  
      private fun startGlean() {
--        val settings = requireContext().settings()
-+/*        val settings = requireContext().settings()
+-        val settings = requireComponents.settings
++/*        val settings = requireComponents.settings
          viewLifecycleOwner.lifecycleScope.launch {
              initializeGlean(
                  requireContext().applicationContext,
-@@ -355,7 +355,7 @@ class OnboardingFragment : Fragment() {
+@@ -354,7 +354,7 @@ class OnboardingFragment : Fragment() {
              isTelemetryEnabled = settings.isTelemetryEnabled,
              isMarketingTelemetryEnabled = false,
              isDailyUsagePingEnabled = settings.isDailyUsagePingEnabled,

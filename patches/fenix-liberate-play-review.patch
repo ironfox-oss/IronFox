@@ -8,7 +8,7 @@ Removes the Google Play Review library.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 89e36017bdc2..9bced95a54fd 100644
+index 058a5b356250..65059ad778ce 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -12,7 +12,7 @@ import androidx.compose.runtime.ReadOnlyComposable
@@ -17,10 +17,10 @@ index 89e36017bdc2..9bced95a54fd 100644
  import androidx.core.content.getSystemService
 -import com.google.android.play.core.review.ReviewManagerFactory
 +// import com.google.android.play.core.review.ReviewManagerFactory
+ import kotlinx.coroutines.CoroutineScope
+ import kotlinx.coroutines.Dispatchers
  import kotlinx.coroutines.MainScope
- import mozilla.components.concept.ai.controls.AIFeatureBlock
- import mozilla.components.concept.ai.controls.AIFeatureRegistry
-@@ -280,7 +280,7 @@ class Components(private val context: Context) {
+@@ -285,7 +285,7 @@ class Components(private val context: Context) {
  
      val playStoreReviewPromptController by lazyMonitored {
          PlayStoreReviewPromptController(

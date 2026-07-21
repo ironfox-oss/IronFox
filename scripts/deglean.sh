@@ -211,6 +211,8 @@ function deglean_fenix() {
 
   "${IRONFOX_SED}" -i -e 's|Metrics|// Metrics|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko/search/SearchWidgetProvider.kt"
 
+  "${IRONFOX_RM}" "${IRONFOX_FENIX}/app/longfox/metrics.yaml"
+
   echo_green_text 'SUCCESS: De-gleaned Fenix'
 }
 
