@@ -135,6 +135,6 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
 
   "${IRONFOX_LN}" -sf '/bin/bash'                   "${IRONFOX_PATH}/bash"
 
-  readonly PATH="${IRONFOX_PATH}"
+  PATH="${IRONFOX_PATH}"
   export PATH
 fi
