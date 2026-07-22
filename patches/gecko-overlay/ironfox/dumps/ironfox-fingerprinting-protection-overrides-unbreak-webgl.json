@@ -30,11 +30,19 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "backofyourhand.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "beacondb.net"
     },
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "beep8.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "blockbench.net"
     },
     {
       "overrides": "-DisableWebGL",
@@ -66,6 +74,14 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "deutschepost.de"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "dhl.de"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "dndbeyond.com"
     },
     {
@@ -88,6 +104,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "enza.fun"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "f4map.com"
     },
     {
       "overrides": "-DisableWebGL",
@@ -139,6 +159,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "indoorequal.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "jerseymikes.com"
     },
     {
@@ -152,6 +176,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "libretro.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "lokjo.com"
     },
     {
       "overrides": "-DisableWebGL",
@@ -208,7 +236,31 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "openclimbing.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "openstreetmap.de"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "openstreetmap.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "osm2world.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "osmapp.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "panerabread.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "panoramax.fr"
     },
     {
       "overrides": "-DisableWebGL",
@@ -260,6 +312,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "thecastlemap.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "ttc.com.ge"
     },
     {
@@ -293,6 +349,14 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "webglsamples.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "werwolv.net"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "wheelmap.org"
     },
     {
       "overrides": "-DisableWebGL",
