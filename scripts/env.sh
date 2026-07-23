@@ -55,6 +55,7 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   "${IRONFOX_LN}" -sf "${IRONFOX_EXPR}"           "${IRONFOX_PATH}/expr"
   "${IRONFOX_LN}" -sf "${IRONFOX_FIND}"           "${IRONFOX_PATH}/find"
   "${IRONFOX_LN}" -sf "${IRONFOX_GIT}"            "${IRONFOX_PATH}/git"
+  "${IRONFOX_LN}" -sf "${IRONFOX_GIT_LFS}"        "${IRONFOX_PATH}/git-lfs"
   "${IRONFOX_LN}" -sf "${IRONFOX_GRADLE}"         "${IRONFOX_PATH}/gradle"
   "${IRONFOX_LN}" -sf "${IRONFOX_GREP}"           "${IRONFOX_PATH}/grep"
   "${IRONFOX_LN}" -sf "${IRONFOX_GZIP}"           "${IRONFOX_PATH}/gzip"

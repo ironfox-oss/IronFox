@@ -672,6 +672,15 @@ fi
 readonly IRONFOX_GIT
 export IRONFOX_GIT
 
+# git-lfs
+## (For CI)
+readonly IRONFOX_GIT_LFS_DEFAULT='/bin/git-lfs'
+if [[ -z "${IRONFOX_GIT_LFS+x}" ]]; then
+  IRONFOX_GIT_LFS="${IRONFOX_GIT_LFS_DEFAULT}"
+fi
+readonly IRONFOX_GIT_LFS
+export IRONFOX_GIT_LFS
+
 # GNU awk
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
   readonly IRONFOX_AWK_DEFAULT='/opt/homebrew/bin/gawk'
