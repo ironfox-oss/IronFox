@@ -40,6 +40,13 @@ if [[ -z "${IRONFOX_FROM_PREBUILD+x}" ]]; then
   exit 1
 fi
 
+# Set verbosity
+if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
+  set -x
+else
+  set +x
+fi
+
 if [[ -f "${IRONFOX_BUILD}/finished-prebuild" ]]; then
   "${IRONFOX_RM}" -f "${IRONFOX_BUILD}/finished-prebuild"
 fi
@@ -214,7 +221,7 @@ function prepare_ac() {
   "${IRONFOX_RM}" -v "${IRONFOX_AC}/components/feature/search/src/main/assets/search/search_telemetry_v2.json"
 
   # Nuke undesired Mozilla endpoints
-  /bin/bash -x "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'ac'
+  /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'ac'
 
   # Remove unused/unwanted sample libraries
   ## Since we remove the Glean Service and Web Compat Reporter dependencies, the existence of these files causes build issues
@@ -326,10 +333,10 @@ function prepare_as() {
   "${IRONFOX_RM}" -vr "${IRONFOX_AS}"/components/remote_settings/dumps/main/attachments/search-config-icons/*
 
   # Remove Glean
-  /bin/bash -x "${IRONFOX_SCRIPTS}/deglean.sh" 'as'
+  /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'as'
 
   # Nuke undesired Mozilla endpoints
-  /bin/bash -x "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'as'
+  /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'as'
 
   # Remove the AI summarizer models configuration collection
   "${IRONFOX_RM}" -v "${IRONFOX_AS}/components/remote_settings/dumps/main/summarizer-models-config.json"
@@ -526,10 +533,10 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/TopSitesRefresher.kt"
 
   # Remove Glean
-  /bin/bash -x "${IRONFOX_SCRIPTS}/deglean.sh" 'fenix'
+  /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'fenix'
 
   # Nuke undesired Mozilla endpoints
-  /bin/bash -x "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'fenix'
+  /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'fenix'
 
   # Let it be IronFox
   "${IRONFOX_SED}" -i \
@@ -826,13 +833,13 @@ function prepare_firefox() {
   "${IRONFOX_SED}" -i 's|sentry|# sentry|g'                                                     "${IRONFOX_GECKO}/gradle/libs.versions.toml"
 
   # Remove Glean
-  /bin/bash -x "${IRONFOX_SCRIPTS}/deglean.sh" 'firefox'
+  /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'firefox'
 
   ## We also need to de-glean Android Components here, as not doing so appears to cause build failures for ex. GeckoView
-  /bin/bash -x "${IRONFOX_SCRIPTS}/deglean.sh" 'ac'
+  /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'ac'
 
   # Nuke undesired Mozilla endpoints
-  /bin/bash -x "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'firefox'
+  /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'firefox'
 
   # Fail on use of prebuilt binary
   "${IRONFOX_SED}" -i 's|https://github.com|hxxps://github.com|' "${IRONFOX_GECKO}/python/mozboot/mozboot/android.py"
@@ -947,7 +954,7 @@ function prepare_glean() {
   "${IRONFOX_RM}" -v "${IRONFOX_GLEAN}/glean-core/android/metrics.yaml"
 
   # Nuke undesired Mozilla endpoints
-  /bin/bash -x "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'glean'
+  /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'glean'
 
   # Ensure we're building for release
   "${IRONFOX_SED}" -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' "${IRONFOX_GLEAN}/build.gradle"
@@ -1022,7 +1029,7 @@ function prepare_prebuilds() {
   echo_red_text 'Preparing IronFox prebuilds...'
 
   pushd "${IRONFOX_PREBUILDS}"
-  /bin/bash -x "${IRONFOX_PREBUILDS}/scripts/prebuild.sh"
+  /bin/bash "${IRONFOX_PREBUILDS}/scripts/prebuild.sh"
   popd
 
   echo_green_text 'SUCCESS: Prepared IronFox prebuilds'

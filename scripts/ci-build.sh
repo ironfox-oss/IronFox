@@ -12,7 +12,7 @@ if [[ -z "${IRONFOX_CI+x}" ]]; then
   export IRONFOX_CI=1
 fi
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash -x $(dirname $0)/env.sh
+  /bin/bash $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -35,7 +35,7 @@ function compress_archives() {
   elif [[ "${ci_project}" == 'fenix' ]]; then
     local readonly ci_job_artifact="build-fenix-${ci_target}"
   fi
-  /bin/bash -x "${IRONFOX_SCRIPTS}/ci-compress.sh" "${ci_job_artifact}"
+  /bin/bash "${IRONFOX_SCRIPTS}/ci-compress.sh" "${ci_job_artifact}"
 }
 
 # By default, we know the build hasn't failed...
@@ -44,7 +44,7 @@ IRONFOX_CI_BUILD_FAILED=0
 # Build IronFox
 readonly IRONFOX_FROM_CI_BUILD=1
 export IRONFOX_FROM_CI_BUILD
-/bin/bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}" "${ci_project}" || IRONFOX_CI_BUILD_FAILED=1
+/bin/bash "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}" "${ci_project}" || IRONFOX_CI_BUILD_FAILED=1
 
 readonly IRONFOX_CI_BUILD_FAILED
 export IRONFOX_CI_BUILD_FAILED

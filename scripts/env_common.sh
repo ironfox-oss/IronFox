@@ -230,6 +230,14 @@ fi
 readonly IRONFOX_LOG_DIR
 export IRONFOX_LOG_DIR
 
+# Whether we should display verbose build output
+readonly IRONFOX_VERBOSE_DEFAULT=0
+if [[ -z "${IRONFOX_VERBOSE+x}" ]]; then
+  IRONFOX_VERBOSE="${IRONFOX_VERBOSE_DEFAULT}"
+fi
+readonly IRONFOX_VERBOSE
+export IRONFOX_VERBOSE
+
 # CI-specific build variables
 # These variables are set for CI primarily to allow parallel builds (for specific stages)
 readonly IRONFOX_CI_BUILD_GECKO_ARM64_DEFAULT=0

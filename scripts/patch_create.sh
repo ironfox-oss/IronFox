@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash -x $(dirname $0)/env.sh
+  /bin/bash $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -13,6 +13,13 @@ source "${IRONFOX_UTILS}"
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
+
+# Set verbosity
+if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
+  set -x
+else
+  set +x
+fi
 
 # Set timezone to UTC for consistency
 unset TZ

@@ -14,6 +14,13 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Set verbosity
+if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
+  set -x
+else
+  set +x
+fi
+
 readonly artifact_name="$1"
 readonly artifact_archive="${artifact_name}.tar.xz"
 readonly artifact_path="${IRONFOX_ARTIFACTS}/${artifact_archive}"

@@ -13,6 +13,13 @@ if [[ -z "${IRONFOX_FROM_SOURCES+x}" ]]; then
   exit 1
 fi
 
+# Set verbosity
+if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
+  set -x
+else
+  set +x
+fi
+
 readonly target="$1"
 readonly mode="$2"
 

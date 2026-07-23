@@ -10,9 +10,16 @@ if [[ -z "${IRONFOX_CI+x}" ]]; then
   export IRONFOX_CI=1
 fi
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash -x "$(realpath $(dirname "$0"))/env.sh"
+  /bin/bash "$(realpath $(dirname "$0"))/env.sh"
 fi
 source "$(realpath $(dirname "$0"))/env.sh"
+
+# Set verbosity
+if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
+  set -x
+else
+  set +x
+fi
 
 "${IRONFOX_GIT}" clone "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${TARGET_REPO_PATH}.git" target-repo
 cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };

@@ -12,7 +12,7 @@ if [[ -z "${IRONFOX_CI+x}" ]]; then
   export IRONFOX_CI=1
 fi
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash -x $(dirname $0)/env.sh
+  /bin/bash $(dirname $0)/env.sh
 fi
 source $(dirname $0)/env.sh
 
@@ -37,7 +37,7 @@ if [[ "${IRONFOX_LOG_AR_DOWN}" == 1 ]]; then
   # Ensure our log directory exists
   "${IRONFOX_MKDIR}" -vp "${IRONFOX_LOG_DIR}"
 
-  /bin/bash -x "${IRONFOX_SCRIPTS}/ci-download-artifacts-if.sh" "${target_artifact}" "${target_arch}" > >("${IRONFOX_TEE}" -a "${AR_DOWN_LOG_FILE}") 2>&1
+  /bin/bash "${IRONFOX_SCRIPTS}/ci-download-artifacts-if.sh" "${target_artifact}" "${target_arch}" > >("${IRONFOX_TEE}" -a "${AR_DOWN_LOG_FILE}") 2>&1
 else
-  /bin/bash -x "${IRONFOX_SCRIPTS}/ci-download-artifacts-if.sh" "${target_artifact}" "${target_arch}"
+  /bin/bash "${IRONFOX_SCRIPTS}/ci-download-artifacts-if.sh" "${target_artifact}" "${target_arch}"
 fi

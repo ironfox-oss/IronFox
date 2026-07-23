@@ -86,9 +86,9 @@ update-fdroid-repo:
   script:
     - set -euo pipefail
     - echo 'CI - Downloading dependencies...'
-    - /bin/bash -x scripts/get_sources.sh uv
-    - /bin/bash -x scripts/get_sources.sh python
-    - /bin/bash -x scripts/get_sources.sh androguard
+    - /bin/bash scripts/get_sources.sh uv
+    - /bin/bash scripts/get_sources.sh python
+    - /bin/bash scripts/get_sources.sh androguard
     - echo 'CI - Downloaded dependencies.'
     - echo 'Updating F-Droid repo...'
     - /bin/bash scripts/ci-update-fdroid.sh
@@ -122,9 +122,9 @@ update-site-repo:
   script:
     - set -euo pipefail
     - echo 'CI - Downloading dependencies...'
-    - /bin/bash -x scripts/get_sources.sh uv
-    - /bin/bash -x scripts/get_sources.sh python
-    - /bin/bash -x scripts/get_sources.sh pyyaml
+    - /bin/bash scripts/get_sources.sh uv
+    - /bin/bash scripts/get_sources.sh python
+    - /bin/bash scripts/get_sources.sh pyyaml
     - echo 'CI - Downloaded dependencies.'
     - echo 'CI - Updating website repo...'
     - /bin/bash scripts/ci-update-site.sh
@@ -183,7 +183,7 @@ build-geckoview:
     - /bin/bash scripts/ci-prep.sh sb
     - echo 'CI - Prepared secrets.'
     - echo "CI - Building GeckoView (${BUILD_VARIANT})..."
-    - /bin/bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'geckoview'
+    - /bin/bash scripts/ci-build.sh "${BUILD_VARIANT}" 'geckoview'
     - echo "CI - Built GeckoView (${BUILD_VARIANT})."
     - echo 'CI - Uploading artifact...'
     - /bin/bash scripts/ci-upload-artifacts.sh geckoview "${BUILD_VARIANT}"
@@ -231,7 +231,7 @@ build-fenix:
     - /bin/bash scripts/ci-prep.sh sb
     - echo 'CI - Prepared secrets.'
     - echo "CI - Building Fenix (${BUILD_VARIANT_PRETTY})..."
-    - /bin/bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'fenix'
+    - /bin/bash scripts/ci-build.sh "${BUILD_VARIANT}" 'fenix'
     - echo "CI - Built Fenix (${BUILD_VARIANT_PRETTY})."
     - echo 'CI - Uploading artifact...'
     - /bin/bash scripts/ci-upload-artifacts.sh fenix "${BUILD_VARIANT}"
@@ -286,15 +286,15 @@ prepare-release:
     - /bin/bash scripts/ci-prep.sh s3-releases
     - echo 'CI - Prepared secrets.'
     - echo 'CI - Downloading dependencies...'
-    - /bin/bash -x scripts/get_sources.sh uv
-    - /bin/bash -x scripts/get_sources.sh python
-    - /bin/bash -x scripts/get_sources.sh s3cmd
+    - /bin/bash scripts/get_sources.sh uv
+    - /bin/bash scripts/get_sources.sh python
+    - /bin/bash scripts/get_sources.sh s3cmd
     - echo 'CI - Downloaded dependencies.'
     - echo 'CI - Downloading artifacts...'
-    - /bin/bash -x scripts/ci-download-artifacts.sh fenix arm64
-    - /bin/bash -x scripts/ci-download-artifacts.sh fenix arm
-    - /bin/bash -x scripts/ci-download-artifacts.sh fenix x86_64
-    - /bin/bash -x scripts/ci-download-artifacts.sh fenix bundle
+    - /bin/bash scripts/ci-download-artifacts.sh fenix arm64
+    - /bin/bash scripts/ci-download-artifacts.sh fenix arm
+    - /bin/bash scripts/ci-download-artifacts.sh fenix x86_64
+    - /bin/bash scripts/ci-download-artifacts.sh fenix bundle
     - echo 'CI - Downloaded artifacts.'
     - echo 'CI - Publishing packages...'
     - /bin/bash scripts/ci-publish-packages.sh

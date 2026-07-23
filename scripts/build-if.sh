@@ -38,6 +38,13 @@ if [[ ! -f "${IRONFOX_BUILD}/finished-prebuild" ]]; then
   exit 1
 fi
 
+# Set verbosity
+if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
+  set -x
+else
+  set +x
+fi
+
 # Set-up target parameters
 readonly build_arch="$1"
 readonly build_project="$2"
@@ -1627,7 +1634,7 @@ function build_phoenix() {
   echo_red_text 'Building Phoenix...'
 
   pushd "${IRONFOX_PHOENIX}"
-  /bin/bash -x "${IRONFOX_PHOENIX}/scripts/build.sh"
+  /bin/bash "${IRONFOX_PHOENIX}/scripts/build.sh"
   popd
 
   # Ensure our cfg and policy files don't already exist in mozilla-central
@@ -1645,7 +1652,7 @@ function build_uniffi() {
   echo_red_text 'Building uniffi-bindgen...'
 
   pushd "${IRONFOX_PREBUILDS}"
-  /bin/bash -x "${IRONFOX_PREBUILDS}/scripts/build.sh" 'uniffi'
+  /bin/bash "${IRONFOX_PREBUILDS}/scripts/build.sh" 'uniffi'
   popd
 
   echo_green_text 'SUCCESS: Built uniffi-bindgen'
@@ -1656,7 +1663,7 @@ function build_wasi() {
   echo_red_text 'Building WASI SDK...'
 
   pushd "${IRONFOX_PREBUILDS}"
-  /bin/bash -x "${IRONFOX_PREBUILDS}/scripts/build.sh" 'wasi'
+  /bin/bash "${IRONFOX_PREBUILDS}/scripts/build.sh" 'wasi'
   popd
 
   echo_green_text 'SUCCESS: Built WASI SDK'
@@ -1700,7 +1707,7 @@ function build_as() {
 
   pushd "${IRONFOX_AS}"
   export JAVA_HOME="${IRONFOX_JDK_17_HOME}"
-  /bin/bash -x "${IRONFOX_AS}/libs/verify-android-environment.sh"
+  /bin/bash "${IRONFOX_AS}/libs/verify-android-environment.sh"
   unset JAVA_HOME
   export JAVA_HOME="${IRONFOX_JAVA_HOME}"
 

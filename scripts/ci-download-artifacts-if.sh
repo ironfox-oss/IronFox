@@ -19,6 +19,13 @@ if [[ -z "${IRONFOX_FROM_AR_DOWN+x}" ]]; then
   exit 1
 fi
 
+# Set verbosity
+if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
+  set -x
+else
+  set +x
+fi
+
 readonly down_artifact="$1"
 
 # Set-up target parameters
