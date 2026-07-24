@@ -517,223 +517,71 @@ if [[ "${IRONFOX_NAME}" != 'IronFox' ]] && [[ "${IRONFOX_NAME}" != 'IronFox Nigh
   exit 1
 fi
 
-if [[ -z "${IRONFOX_BUILD+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_BUILD is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_BUILD}" ]]; then
-  echo_red_text "ERROR: Build directory (${IRONFOX_BUILD}) is missing!"
-  echo 'Please ensure that IRONFOX_BUILD is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-
-if [[ -z "${IRONFOX_TEMP+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_TEMP is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_TEMP}" ]]; then
-  echo_red_text "ERROR: Temporary directory (${IRONFOX_TEMP}) is missing!"
-  echo 'Please ensure that IRONFOX_TEMP is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-
-if [[ -z "${IRONFOX_TEMPLATES+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_TEMPLATES is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_TEMPLATES}" ]]; then
-  echo_red_text "ERROR: Templates directory (${IRONFOX_TEMPLATES}) is missing!"
-  echo 'Please ensure that IRONFOX_TEMPLATES is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+# Verify core directories
+verify_dir_with_env "${IRONFOX_BUILD}" 'IRONFOX_BUILD'
+verify_dir_with_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP'
+verify_dir_with_env "${IRONFOX_TEMPLATES}" 'IRONFOX_TEMPLATES'
 
 # Fail early if our source directories are missing...
 
 # mozilla-central
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
  [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
-  if [[ -z "${IRONFOX_GECKO+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_GECKO is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_GECKO}" ]]; then
-    echo_red_text "ERROR: mozilla-central (${IRONFOX_GECKO}) is missing!"
-    echo 'Please ensure that IRONFOX_GECKO is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-
-  if [[ -z "${IRONFOX_MOZCONFIGS+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_MOZCONFIGS is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_MOZCONFIGS}" ]]; then
-    echo_red_text "ERROR: The IronFox mozconfigs directory (${IRONFOX_MOZCONFIGS}) is missing!"
-    echo 'Please ensure that IRONFOX_MOZCONFIGS is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO'
+  verify_dir_with_env "${IRONFOX_MOZCONFIGS}" 'IRONFOX_MOZCONFIGS'
 fi
 
 # Android Components
 if [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] || [[ "${IRONFOX_BUILD_AC}" == 1 ]]; then
-  if [[ -z "${IRONFOX_AC+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_AC is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_AC}" ]]; then
-    echo_red_text "ERROR: Android Components (${IRONFOX_AC}) is missing!"
-    echo 'Please ensure that IRONFOX_AC is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC'
 fi
 
 # Fenix
 if [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
-  if [[ -z "${IRONFOX_FENIX+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_FENIX is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_FENIX}" ]]; then
-    echo_red_text "ERROR: Fenix (${IRONFOX_FENIX}) is missing!"
-    echo 'Please ensure that IRONFOX_FENIX is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_FENIX}" 'IRONFOX_FENIX'
 fi
 
 # l10n-central
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
   # CI only needs l10n-central if we're producing a bundle...
   if [[ "${IRONFOX_CI}" == 1 ]] && [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
-    if [[ -z "${IRONFOX_L10N_CENTRAL+x}" ]]; then
-      echo_red_text 'ERROR: IRONFOX_L10N_CENTRAL is missing!'
-      echo_red_text 'Aborting...'
-      exit 1
-    fi
-    if [[ ! -d "${IRONFOX_L10N_CENTRAL}" ]]; then
-      echo_red_text "ERROR: l10n-central (${IRONFOX_L10N_CENTRAL}) is missing!"
-      echo 'Please ensure that IRONFOX_L10N_CENTRAL is set to a valid directory.'
-      echo_red_text 'Aborting...'
-      exit 1
-    fi
+    verify_dir_with_env "${IRONFOX_L10N_CENTRAL}" 'IRONFOX_L10N_CENTRAL'
   fi
 fi
 
 # microG
 if [[ "${IRONFOX_BUILD_MICROG}" == 1 ]]; then
-  if [[ -z "${IRONFOX_GMSCORE+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_GMSCORE is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_GMSCORE}" ]]; then
-    echo_red_text "ERROR: microG (${IRONFOX_GMSCORE}) is missing!"
-    echo 'Please ensure that IRONFOX_GMSCORE is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_GMSCORE}" 'IRONFOX_GMSCORE'
 fi
 
 # Phoenix
 if [[ "${IRONFOX_BUILD_PHOENIX}" == 1 ]]; then
-  if [[ -z "${IRONFOX_PHOENIX+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_PHOENIX is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_PHOENIX}" ]]; then
-    echo_red_text "ERROR: Phoenix (${IRONFOX_PHOENIX}) is missing!"
-    echo 'Please ensure that IRONFOX_PHOENIX is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_PHOENIX}" 'IRONFOX_PHOENIX'
 fi
 
 # Application Services
 if [[ "${IRONFOX_BUILD_AS}" == 1 ]] || [[ "${IRONFOX_BUILD_NIMBUS_FML}" == 1 ]]; then
-  if [[ -z "${IRONFOX_AS+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_AS is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_AS}" ]]; then
-    echo_red_text "ERROR: Application Services (${IRONFOX_AS}) is missing!"
-    echo 'Please ensure that IRONFOX_AS is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS'
 fi
 
 # UnifiedPush-AC
 if [[ "${IRONFOX_BUILD_UP_AC}" == 1 ]]; then
-  if [[ -z "${IRONFOX_UP_AC+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_UP_AC is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_UP_AC}" ]]; then
-    echo_red_text "ERROR: UnifiedPush-AC (${IRONFOX_UP_AC}) is missing!"
-    echo 'Please ensure that IRONFOX_UP_AC is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_UP_AC}" 'IRONFOX_UP_AC'
 fi
 
 # Glean
 if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
-  if [[ -z "${IRONFOX_GLEAN+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_GLEAN is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_GLEAN}" ]]; then
-    echo_red_text "ERROR: Glean (${IRONFOX_GLEAN}) is missing!"
-    echo 'Please ensure that IRONFOX_GLEAN is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN'
 fi
 
 # Prebuilds repo
 if [[ "${IRONFOX_BUILD_UNIFFI}" == 1 ]] || [[ "${IRONFOX_BUILD_WASI}" == 1 ]]; then
-  if [[ -z "${IRONFOX_PREBUILDS+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_PREBUILDS is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_PREBUILDS}" ]]; then
-    echo_red_text "ERROR: The IronFox prebuilds repository (${IRONFOX_PREBUILDS}) is missing!"
-    echo 'Please ensure that IRONFOX_PREBUILDS is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS'
 fi
 
 # Bundletool
 if [[ "${IRONFOX_BUILD_BUNDLETOOL}" == 1 ]]; then
-  if [[ -z "${IRONFOX_BUNDLETOOL_DIR+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_BUNDLETOOL_DIR is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_BUNDLETOOL_DIR}" ]]; then
-    echo_red_text "ERROR: Bundletool (${IRONFOX_BUNDLETOOL_DIR}) is missing!"
-    echo 'Please ensure that IRONFOX_BUNDLETOOL_DIR is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_BUNDLETOOL_DIR}" 'IRONFOX_BUNDLETOOL_DIR'
   if [[ -z "${IRONFOX_BUNDLETOOL_JAR+x}" ]]; then
     echo_red_text 'ERROR: IRONFOX_BUNDLETOOL_JAR is missing!'
     echo_red_text 'Aborting...'
@@ -744,186 +592,44 @@ fi
 # Now, fail early if our build dependencies are missing...
 
 # Android NDK
-if [[ -z "${IRONFOX_ANDROID_NDK+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_ANDROID_NDK is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_ANDROID_NDK}" ]]; then
-  echo_red_text "ERROR: Android NDK (${IRONFOX_ANDROID_NDK}) is missing!"
-  echo 'Please ensure that IRONFOX_ANDROID_NDK is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_ANDROID_NDK}" 'IRONFOX_ANDROID_NDK'
 
 # Android SDK
-if [[ -z "${IRONFOX_ANDROID_SDK+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_ANDROID_SDK is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_ANDROID_SDK}" ]]; then
-  echo_red_text "ERROR: Android SDK (${IRONFOX_ANDROID_SDK}) is missing!"
-  echo 'Please ensure that IRONFOX_ANDROID_SDK is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK'
 
 # Android SDK Build Tools
-if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_ANDROID_SDK_BUILD_TOOLS is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" ]]; then
-  echo_red_text "ERROR: Android SDK Build Tools (${IRONFOX_ANDROID_SDK_BUILD_TOOLS}) is missing!"
-  echo 'Please ensure that IRONFOX_ANDROID_SDK_BUILD_TOOLS is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS'
 
 # Android SDK Platform Tools
-if [[ -z "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_ANDROID_SDK_PLATFORM_TOOLS is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" ]]; then
-  echo_red_text "ERROR: Android SDK Platform Tools (${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}) is missing!"
-  echo 'Please ensure that IRONFOX_ANDROID_SDK_PLATFORM_TOOLS is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" 'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS'
 
 # GNU awk
-if [[ -z "${IRONFOX_AWK+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_AWK is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK'
 
 # GNU date
-if [[ -z "${IRONFOX_DATE+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_DATE is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_exec "${IRONFOX_DATE}" 'IRONFOX_DATE'
 
 # GNU sed
-if [[ -z "${IRONFOX_SED+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_SED is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_exec "${IRONFOX_SED}" 'IRONFOX_SED'
 
 # Gradle
-if [[ -z "${IRONFOX_GRADLE+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_GRADLE is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ -z "${IRONFOX_GRADLE_PY+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_GRADLE_PY is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_exec "${IRONFOX_GRADLE}" 'IRONFOX_GRADLE'
+verify_file_with_env "${IRONFOX_GRADLE_PY}" 'IRONFOX_GRADLE_PY'
 if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
   echo_red_text 'ERROR: IRONFOX_GRADLE_FLAGS is missing!'
   echo_red_text 'Aborting...'
   exit 1
 fi
-if [[ ! -f "${IRONFOX_GRADLE}" ]]; then
-  echo_red_text "ERROR: Gradle (${IRONFOX_GRADLE}) is missing!"
-  echo 'Please ensure that IRONFOX_GRADLE is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_GRADLE}" ]]; then
-  echo_red_text "ERROR: Gradle (${IRONFOX_GRADLE}) is empty!"
-  echo 'Please ensure that IRONFOX_GRADLE is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -x "${IRONFOX_GRADLE}" ]]; then
-  echo_red_text "ERROR: Gradle (${IRONFOX_GRADLE}) is not executable!"
-  echo 'Please ensure that IRONFOX_GRADLE is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -f "${IRONFOX_GRADLE_PY}" ]]; then
-  echo_red_text "ERROR: Gradle (${IRONFOX_GRADLE_PY}) is missing!"
-  echo 'Please ensure that IRONFOX_GRADLE_PY is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_GRADLE_PY}" ]]; then
-  echo_red_text "ERROR: Gradle (${IRONFOX_GRADLE_PY}) is empty!"
-  echo 'Please ensure that IRONFOX_GRADLE_PY is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
 
 # Java
-if [[ -z "${IRONFOX_JAVA_HOME+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_JAVA_HOME is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ -z "${IRONFOX_JAVA+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_JAVA is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_JAVA_HOME}" ]]; then
-  echo_red_text "ERROR: JDK (${IRONFOX_JAVA_HOME}) is missing!"
-  echo 'Please ensure that IRONFOX_JAVA_HOME is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -f "${IRONFOX_JAVA}" ]]; then
-  echo_red_text "ERROR: Java (${IRONFOX_JAVA}) is missing!"
-  echo 'Please ensure that IRONFOX_JAVA is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_JAVA}" ]]; then
-  echo_red_text "ERROR: Java (${IRONFOX_JAVA}) is empty!"
-  echo 'Please ensure that IRONFOX_JAVA is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -x "${IRONFOX_JAVA}" ]]; then
-  echo_red_text "ERROR: Java (${IRONFOX_JAVA}) is not executable!"
-  echo 'Please ensure that IRONFOX_JAVA is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_JAVA_HOME}" 'IRONFOX_JAVA_HOME'
+verify_exec "${IRONFOX_JAVA}" 'IRONFOX_JAVA'
 
 ## Java 21
-if [[ -z "${IRONFOX_JDK_21_HOME+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_JDK_21_HOME is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_JDK_21_HOME}" ]]; then
-  echo_red_text "ERROR: JDK 21 (${IRONFOX_JDK_21_HOME}) is missing!"
-  echo 'Please ensure that IRONFOX_JDK_21_HOME is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_JDK_21_HOME}" 'IRONFOX_JDK_21_HOME'
 
 ## Java 17
-if [[ -z "${IRONFOX_JDK_17_HOME+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_JDK_17_HOME is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_JDK_17_HOME}" ]]; then
-  echo_red_text "ERROR: JDK 17 (${IRONFOX_JDK_17_HOME}) is missing!"
-  echo 'Please ensure that IRONFOX_JDK_17_HOME is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_JDK_17_HOME}" 'IRONFOX_JDK_17_HOME'
 
 readonly JAVA_VER=$("${IRONFOX_JAVA}" -version 2>&1 | "${IRONFOX_AWK}" -F '"' '/version/ {print $2}' | "${IRONFOX_AWK}" -F '.' '{sub("^$", "0", $2); print $1$2}')
 [[ "${JAVA_VER}" -ge 15 ]] || {
@@ -933,274 +639,44 @@ readonly JAVA_VER=$("${IRONFOX_JAVA}" -version 2>&1 | "${IRONFOX_AWK}" -F '"' '/
 }
 
 # Node.js
-if [[ -z "${IRONFOX_NODEJS+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_NODEJS is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -f "${IRONFOX_NODEJS}" ]]; then
-  echo_red_text "ERROR: Node.js (${IRONFOX_NODEJS}) is missing!"
-  echo 'Please ensure that IRONFOX_NODEJS is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_NODEJS}" ]]; then
-  echo_red_text "ERROR: Node.js (${IRONFOX_NODEJS}) is empty!"
-  echo 'Please ensure that IRONFOX_NODEJS is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -x "${IRONFOX_NODEJS}" ]]; then
-  echo_red_text "ERROR: Node.js (${IRONFOX_NODEJS}) is not executable!"
-  echo 'Please ensure that IRONFOX_NODEJS is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_exec "${IRONFOX_NODEJS}" 'IRONFOX_NODEJS'
 
 # npm
-if [[ -z "${IRONFOX_NPM+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_NPM is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -f "${IRONFOX_NPM}" ]]; then
-  echo_red_text "ERROR: npm (${IRONFOX_NPM}) is missing!"
-  echo 'Please ensure that IRONFOX_NPM is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_NPM}" ]]; then
-  echo_red_text "ERROR: npm (${IRONFOX_NPM}) is empty!"
-  echo 'Please ensure that IRONFOX_NPM is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -x "${IRONFOX_NPM}" ]]; then
-  echo_red_text "ERROR: npm (${IRONFOX_NPM}) is not executable!"
-  echo 'Please ensure that IRONFOX_NPM is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_exec "${IRONFOX_NPM}" 'IRONFOX_NPM'
 
 # nvm
-if [[ -z "${IRONFOX_NVM+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_NVM is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ -z "${IRONFOX_NVM_ENV+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_NVM_ENV is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_NVM}" ]]; then
-  echo_red_text "ERROR: nvm (${IRONFOX_NVM}) is missing!"
-  echo 'Please ensure that IRONFOX_NVM is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -f "${IRONFOX_NVM_ENV}" ]]; then
-  echo_red_text "ERROR: nvm environment activation file (${IRONFOX_NVM_ENV}) is missing!"
-  echo 'Please ensure that IRONFOX_NVM_ENV is set to a valid file.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_NVM_ENV}" ]]; then
-  echo_red_text "ERROR: nvm environment activation file (${IRONFOX_NVM_ENV}) is empty!"
-  echo 'Please ensure that IRONFOX_NVM_ENV is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_NVM}" 'IRONFOX_NVM'
+verify_file_with_env "${IRONFOX_NVM_ENV}" 'IRONFOX_NVM_ENV'
 
 # Python
-if [[ -z "${IRONFOX_PYTHON+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_PYTHON is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -f "${IRONFOX_PYTHON}" ]]; then
-  echo_red_text "ERROR: Python (${IRONFOX_PYTHON}) is missing!"
-  echo 'Please ensure that IRONFOX_PYTHON is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_PYTHON}" ]]; then
-  echo_red_text "ERROR: Python (${IRONFOX_PYTHON}) is empty!"
-  echo 'Please ensure that IRONFOX_PYTHON is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -x "${IRONFOX_PYTHON}" ]]; then
-  echo_red_text "ERROR: Python (${IRONFOX_PYTHON}) is not executable!"
-  echo 'Please ensure that IRONFOX_PYTHON is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON'
 
 # Python (uv) environment
-if [[ -z "${IRONFOX_PYENV_DIR+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_PYENV_DIR is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ -z "${IRONFOX_PYENV+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_PYENV is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_PYENV_DIR}" ]]; then
-  echo_red_text "ERROR: Python (uv) environment (${IRONFOX_PYENV}) is missing!"
-  echo 'Please ensure that IRONFOX_PYENV_DIR is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -f "${IRONFOX_PYENV}" ]]; then
-  echo_red_text "ERROR: Python (uv) environment activation file (${IRONFOX_PYENV}) is missing!"
-  echo 'Please ensure that IRONFOX_PYENV is set to a valid file.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_PYENV}" ]]; then
-  echo_red_text "ERROR: Python (uv) environment activation file (${IRONFOX_PYENV}) is empty!"
-  echo 'Please ensure that IRONFOX_PYENV is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_PYENV_DIR}" 'IRONFOX_PYENV_DIR'
+verify_file_with_env "${IRONFOX_PYENV}" 'IRONFOX_PYENV'
 
 ## uv
-if [[ -z "${IRONFOX_UV+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_PYENV is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -f "${IRONFOX_UV}" ]]; then
-  echo_red_text "ERROR: uv (${IRONFOX_UV}) is missing!"
-  echo 'Please ensure that IRONFOX_UV is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_UV}" ]]; then
-  echo_red_text "ERROR: uv (${IRONFOX_UV}) is empty!"
-  echo 'Please ensure that IRONFOX_UV is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -x "${IRONFOX_UV}" ]]; then
-  echo_red_text "ERROR: uv (${IRONFOX_UV}) is not executable!"
-  echo 'Please ensure that IRONFOX_UV is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_exec "${IRONFOX_UV}" 'IRONFOX_UV'
 
 # uv local directory
-if [[ -z "${IRONFOX_UV_LOCAL+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_UV_LOCAL is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_UV_LOCAL}" ]]; then
-  echo_red_text "ERROR: uv local directory (${IRONFOX_UV_LOCAL}) is missing!"
-  echo 'Please ensure that IRONFOX_UV_LOCAL is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_UV_LOCAL}" 'IRONFOX_UV_LOCAL'
 
 # Rust (cargo) environment
-if [[ -z "${IRONFOX_CARGO_HOME+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_CARGO_HOME is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ -z "${IRONFOX_CARGO_ENV+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_CARGO_ENV is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -d "${IRONFOX_CARGO_HOME}" ]]; then
-  echo_red_text "ERROR: Rust (cargo) environment (${IRONFOX_CARGO_HOME}) is missing!"
-  echo 'Please ensure that IRONFOX_CARGO_HOME is set to a valid directory.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -f "${IRONFOX_CARGO_ENV}" ]]; then
-  echo_red_text "ERROR: Rust (cargo) environment activation file (${IRONFOX_CARGO_ENV}) is missing!"
-  echo 'Please ensure that IRONFOX_CARGO_ENV is set to a valid file.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_CARGO_ENV}" ]]; then
-  echo_red_text "ERROR: Rust (cargo) environment activation file (${IRONFOX_CARGO_ENV}) is empty!"
-  echo 'Please ensure that IRONFOX_CARGO_ENV is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_dir_with_env "${IRONFOX_CARGO_HOME}" 'IRONFOX_CARGO_HOME'
+verify_file_with_env "${IRONFOX_CARGO_ENV}" 'IRONFOX_CARGO_ENV'
 
 ## cargo
-if [[ -z "${IRONFOX_CARGO+x}" ]]; then
-  echo_red_text 'ERROR: IRONFOX_CARGO is missing!'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -f "${IRONFOX_CARGO}" ]]; then
-  echo_red_text "ERROR: cargo (${IRONFOX_CARGO}) is missing!"
-  echo 'Please ensure that IRONFOX_CARGO is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -s "${IRONFOX_CARGO}" ]]; then
-  echo_red_text "ERROR: cargo (${IRONFOX_CARGO}) is empty!"
-  echo 'Please ensure that IRONFOX_CARGO is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
-if [[ ! -x "${IRONFOX_CARGO}" ]]; then
-  echo_red_text "ERROR: cargo (${IRONFOX_CARGO}) is not executable!"
-  echo 'Please ensure that IRONFOX_CARGO is set to a valid executable.'
-  echo_red_text 'Aborting...'
-  exit 1
-fi
+verify_exec "${IRONFOX_CARGO}" 'IRONFOX_CARGO'
 
 # mach
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
  [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
-  if [[ -z "${IRONFOX_MACH+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_MACH is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -f "${IRONFOX_MACH}" ]]; then
-    echo_red_text "ERROR: mach (${IRONFOX_MACH}) is missing!"
-    echo 'Please ensure that IRONFOX_MACH is set to a valid executable.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -s "${IRONFOX_MACH}" ]]; then
-    echo_red_text "ERROR: mach (${IRONFOX_MACH}) is empty!"
-    echo 'Please ensure that IRONFOX_MACH is set to a valid executable.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -x "${IRONFOX_MACH}" ]]; then
-    echo_red_text "ERROR: mach (${IRONFOX_MACH}) is not executable!"
-    echo 'Please ensure that IRONFOX_MACH is set to a valid executable.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_exec "${IRONFOX_MACH}" 'IRONFOX_MACH'
 fi
 
 # Glean's Python (uv) environment
 if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
-  if [[ -z "${IRONFOX_GLEAN_PYENV+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_GLEAN_PYENV is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ ! -d "${IRONFOX_GLEAN_PYENV}" ]]; then
-    echo_red_text "ERROR: Glean's Python (uv) environment (${IRONFOX_GLEAN_PYENV}) is missing!"
-    echo 'Please ensure that IRONFOX_GLEAN_PYENV is set to a valid directory.'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
+  verify_dir_with_env "${IRONFOX_GLEAN_PYENV}" 'IRONFOX_GLEAN_PYENV'
 fi
 
 # Safe Browsing API key
@@ -1272,10 +748,6 @@ if [[ -z "${GLEAN_VERSION+x}" ]]; then
   echo_red_text 'Aborting...'
   exit 1
 fi
-
-# Set timezone to UTC for consistency
-unset TZ
-export TZ="UTC"
 
 # Functions
 
@@ -1930,40 +1402,13 @@ function _build_gecko() {
   # If we're producing a bundle, we need to prepare to assemble our fat AAR
   if [[ "${target_arch}" == 'bundle' ]]; then
     # Verify that our ARM64 GeckoView AAR archive exists
-    if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]]; then
-      echo_red_text "ERROR: ARM64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
-      exit 1
-    fi
-
-    # Verify that our ARM64 GeckoView AAR archive is not an empty file
-    if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]]; then
-      echo_red_text "ERROR: ARM64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
-      exit 1
-    fi
+    verify_file_with_env "${IRONFOX_GECKOVIEW_AAR_ARM64}" 'IRONFOX_GECKOVIEW_AAR_ARM64'
 
     # Verify that our ARM GeckoView AAR archive exists
-    if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_ARM}" ]]; then
-      echo_red_text "ERROR: ARM GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM})"
-      exit 1
-    fi
-
-    # Verify that our ARM GeckoView AAR archive is not an empty file
-    if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_ARM}" ]]; then
-      echo_red_text "ERROR: ARM GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_ARM})"
-      exit 1
-    fi
+    verify_file_with_env "${IRONFOX_GECKOVIEW_AAR_ARM}" 'IRONFOX_GECKOVIEW_AAR_ARM'
 
     # Verify that our x86_64 GeckoView AAR archive exists
-    if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]]; then
-      echo_red_text "ERROR: x86_64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
-      exit 1
-    fi
-
-    # Verify that our x86_64 GeckoView AAR archive is not an empty file
-    if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]]; then
-      echo_red_text "ERROR: x86_64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
-      exit 1
-    fi
+    verify_file_with_env "${IRONFOX_GECKOVIEW_AAR_X86_64}" 'IRONFOX_GECKOVIEW_AAR_X86_64'
 
     if [[ -z "${MOZ_ANDROID_FAT_AAR_ARCHITECTURES+x}" ]]; then
       readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'

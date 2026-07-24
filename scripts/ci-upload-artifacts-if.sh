@@ -19,93 +19,11 @@ if [[ -z "${IRONFOX_FROM_AR_UP+x}" ]]; then
   exit 1
 fi
 
-if [[ -z "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" ]]; then
-  echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE environment variable is missing! Aborting...'
-  exit 1
-fi
-
-if [[ "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" == 'null' ]]; then
-  echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE environment variable has not been specified! Aborting...'
-  exit 1
-fi
-
-if [[ ! -f "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" ]]; then
-  echo_red_text "ERROR: S3 access key file not found! (${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE})"
-  echo_green_text "Please ensure the IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE environment variable is set to the correct path in which the key file is located."
-  echo_red_text "Aborting..."
-  exit 1
-fi
-
-if [[ ! -s "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" ]]; then
-  echo_red_text "ERROR: S3 access key file ${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE} is empty!"
-  exit 1
-fi
-
-if [[ -z "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" ]]; then
-  echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE environment variable is missing! Aborting...'
-  exit 1
-fi
-
-if [[ "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" == 'null' ]]; then
-  echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_BUCKET_NAME_FILE environment variable has not been specified! Aborting...'
-  exit 1
-fi
-
-if [[ ! -f "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" ]]; then
-  echo_red_text "ERROR: S3 bucket name file not found! (${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE})"
-  echo_green_text "Please ensure the IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE environment variable is set to the correct path in which the bucket name file is located."
-  echo_red_text "Aborting..."
-  exit 1
-fi
-
-if [[ ! -s "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" ]]; then
-  echo_red_text "ERROR: S3 bucket name file ${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE} is empty!"
-  exit 1
-fi
-
-if [[ -z "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" ]]; then
-  echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE environment variable is missing! Aborting...'
-  exit 1
-fi
-
-if [[ "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" == 'null' ]]; then
-  echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE environment variable has not been specified! Aborting...'
-  exit 1
-fi
-
-if [[ ! -f "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" ]]; then
-  echo_red_text "ERROR: S3 endpoint file not found! (${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE})"
-  echo_green_text "Please ensure the IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE environment variable is set to the correct path in which the endpoint file is located."
-  echo_red_text "Aborting..."
-  exit 1
-fi
-
-if [[ ! -s "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" ]]; then
-  echo_red_text "ERROR: S3 bucket name file ${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE} is empty!"
-  exit 1
-fi
-
-if [[ "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" == 'null' ]]; then
-  echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE environment variable has not been specified! Aborting...'
-  exit 1
-fi
-
-if [[ -z "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" ]]; then
-  echo_red_text 'ERROR: The IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE environment variable is missing! Aborting...'
-  exit 1
-fi
-
-if [[ ! -f "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" ]]; then
-  echo_red_text "ERROR: S3 secret key file not found! (${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE})"
-  echo_green_text "Please ensure the IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE environment variable is set to the correct path in which the key file is located."
-  echo_red_text "Aborting..."
-  exit 1
-fi
-
-if [[ ! -s "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" ]]; then
-  echo_red_text "ERROR: S3 secret key file ${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE} is empty!"
-  exit 1
-fi
+# Verify secrets
+verify_file_with_env "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" 'IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE'
+verify_file_with_env "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" 'IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE'
+verify_file_with_env "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" 'IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE'
+verify_file_with_env "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" 'IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE'
 
 readonly up_artifact="$1"
 
@@ -139,35 +57,6 @@ if [[ "${up_arch}" != 'arm64' ]] && [[ "${up_arch}" != 'arm' ]] && [[ "${up_arch
   exit 1
 fi
 readonly IRONFOX_AR_UP_ARCH="${up_arch}"
-
-# Set timezone to UTC for consistency
-unset TZ
-export TZ="UTC"
-
-# Verifies that a file exists and is not empty
-function verify_file() {
-  function print_usage() {
-    echo "Usage: verify_file '/path/to/file'"
-  }
-
-  if [[ -z "${1+x}" ]]; then
-    echo_red_text 'ERROR: Please specify the path to a file to verify'
-    print_usage
-    exit 1
-  fi
-
-  local readonly file_to_verify="$1"
-
-  if [[ ! -f "${file_to_verify}" ]]; then
-    echo_red_text "ERROR: File ${file_to_verify} does not exist!"
-    exit 1
-  fi
-
-  if [[ ! -s "${file_to_verify}" ]]; then
-    echo_red_text "ERROR: File ${file_to_verify} is empty!"
-    exit 1
-  fi
-}
 
 # Pushes a file to S3
 function push_file() {
@@ -225,9 +114,15 @@ function push_file() {
   local readonly s3_endpoint=$("${IRONFOX_CAT}" "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" | "${IRONFOX_XARGS}")
   local readonly s3_secret_key=$("${IRONFOX_CAT}" "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" | "${IRONFOX_XARGS}")
 
+  if [[ "${s3_path}" == 'root' ]]; then
+    local readonly s3_target_path="s3://${s3_bucket_name}/ironfox"
+  else
+    local readonly s3_target_path="s3://${s3_bucket_name}/ironfox/${s3_full_path}"
+  fi
+
   echo_red_text "Uploading ${push_file} to S3..."
   source "${IRONFOX_PYENV}"
-  "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} --mime-type="${mime_type}" put "${push_file}" "s3://${s3_bucket_name}/ironfox/${s3_full_path}" \
+  "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} --mime-type="${mime_type}" put "${push_file}" "${s3_target_path}" \
     --access_key="${s3_access_key}" \
     --secret_key="${s3_secret_key}" \
     --host="${s3_endpoint}" \
@@ -324,15 +219,15 @@ if [[ "${IRONFOX_AR_UP_FENIX}" == 1 ]]; then
 fi
 
 if [[ "${IRONFOX_AR_UP_GECKOVIEW}" == 1 ]]; then
-    if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm64' ]]; then
-      push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}"   "${CI_PIPELINE_ID}"
-    fi
+  if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm64' ]]; then
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}"   "${CI_PIPELINE_ID}"
+  fi
 
-    if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm' ]]; then
-      push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"     "${CI_PIPELINE_ID}"
-    fi
+  if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm' ]]; then
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"     "${CI_PIPELINE_ID}"
+  fi
 
-    if [[ "${IRONFOX_AR_UP_ARCH}" == 'x86_64' ]]; then
-      push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}"  "${CI_PIPELINE_ID}"
-    fi
+  if [[ "${IRONFOX_AR_UP_ARCH}" == 'x86_64' ]]; then
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}"  "${CI_PIPELINE_ID}"
+  fi
 fi

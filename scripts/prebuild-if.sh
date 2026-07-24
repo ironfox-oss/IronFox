@@ -175,6 +175,10 @@ function apply_overlay() {
 
 function prepare_ac() {
   echo_red_text 'Preparing Android Components...'
+ 
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC'
+  verify_dir_with_env "${IRONFOX_AC_OVERLAY}" 'IRONFOX_AC_OVERLAY'
 
   pushd "${IRONFOX_AC}"
 
@@ -265,6 +269,9 @@ function prepare_ac() {
 function prepare_android_sdk() {
   echo_red_text 'Preparing Android SDK...'
 
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK'
+
   # Create Android NDK symlink
   if [[ ! -d "${IRONFOX_ANDROID_SDK}/ndk/${ANDROID_NDK_REVISION}" ]]; then
     "${IRONFOX_MKDIR}" -p "${IRONFOX_ANDROID_SDK}/ndk"
@@ -291,6 +298,10 @@ function prepare_android_sdk() {
 
 function prepare_as() {
   echo_red_text 'Preparing Application Services...'
+
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS'
+  verify_dir_with_env "${IRONFOX_AS_OVERLAY}" 'IRONFOX_AS_OVERLAY'
 
   pushd "${IRONFOX_AS}"
 
@@ -379,6 +390,9 @@ function prepare_as() {
 function prepare_bundletool() {
   echo_red_text 'Preparing Bundletool...'
 
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_BUNDLETOOL_DIR}" 'IRONFOX_BUNDLETOOL_DIR'
+
   pushd "${IRONFOX_BUNDLETOOL_DIR}"
 
   # Always use our Gradle wrapper with our Gradle flags/configuration
@@ -394,6 +408,11 @@ function prepare_bundletool() {
 
 function prepare_fenix() {
   echo_red_text 'Preparing Fenix...'
+
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_FENIX}" 'IRONFOX_FENIX'
+  verify_dir_with_env "${IRONFOX_FENIX_OVERLAY}" 'IRONFOX_FENIX_OVERLAY'
+  verify_dir_with_env "${IRONFOX_UP_AC}" 'IRONFOX_UP_AC'
 
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/fenix/app/src/main/res"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/fenix/app/src/release/res/values"
@@ -642,6 +661,10 @@ function prepare_fenix() {
 function prepare_firefox() {
   echo_red_text 'Preparing Firefox...'
 
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO'
+  verify_dir_with_env "${IRONFOX_GECKO_OVERLAY}" 'IRONFOX_GECKO_OVERLAY'
+
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/gecko/ironfox"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_MOZBUILD}"
@@ -886,6 +909,10 @@ function prepare_firefox() {
 function prepare_glean() {
   echo_red_text 'Preparing Glean...'
 
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN'
+  verify_dir_with_env "${IRONFOX_GLEAN_OVERLAY}" 'IRONFOX_GLEAN_OVERLAY'
+
   "${IRONFOX_MKDIR}" -p "${IRONFOX_GLEAN_PYENV}/bootstrap-24.3.0-0"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/glean"
 
@@ -999,6 +1026,9 @@ function prepare_llvm() {
 function prepare_microg() {
   echo_red_text 'Preparing microG...'
 
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_GMSCORE}" 'IRONFOX_GMSCORE'
+
   pushd "${IRONFOX_GMSCORE}"
 
   # Apply patches
@@ -1027,6 +1057,9 @@ function prepare_microg() {
 
 function prepare_prebuilds() {
   echo_red_text 'Preparing IronFox prebuilds...'
+
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS'
 
   pushd "${IRONFOX_PREBUILDS}"
   /bin/bash "${IRONFOX_PREBUILDS}/scripts/prebuild.sh"

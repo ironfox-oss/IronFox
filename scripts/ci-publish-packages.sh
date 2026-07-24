@@ -20,93 +20,11 @@ source "$(realpath $(dirname "$0"))/env.sh"
 # Include utilities
 source "${IRONFOX_UTILS}"
 
-if [[ -z "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
-  echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ACCESS_KEY_FILE environment variable is missing! Aborting...'
-  exit 1
-fi
-
-if [[ "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" == 'null' ]]; then
-  echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ACCESS_KEY_FILE environment variable has not been specified! Aborting...'
-  exit 1
-fi
-
-if [[ ! -f "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
-  echo_red_text "ERROR: S3 access key file not found! (${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE})"
-  echo_green_text "Please ensure the IRONFOX_RELEASES_S3_ACCESS_KEY_FILE environment variable is set to the correct path in which the key file is located."
-  echo_red_text "Aborting..."
-  exit 1
-fi
-
-if [[ ! -s "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
-  echo_red_text "ERROR: S3 access key file ${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE} is empty!"
-  exit 1
-fi
-
-if [[ -z "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
-  echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_BUCKET_NAME_FILE environment variable is missing! Aborting...'
-  exit 1
-fi
-
-if [[ "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" == 'null' ]]; then
-  echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_BUCKET_NAME_FILE environment variable has not been specified! Aborting...'
-  exit 1
-fi
-
-if [[ ! -f "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
-  echo_red_text "ERROR: S3 bucket name file not found! (${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE})"
-  echo_green_text "Please ensure the IRONFOX_RELEASES_S3_BUCKET_NAME_FILE environment variable is set to the correct path in which the bucket name file is located."
-  echo_red_text "Aborting..."
-  exit 1
-fi
-
-if [[ ! -s "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
-  echo_red_text "ERROR: S3 bucket name file ${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE} is empty!"
-  exit 1
-fi
-
-if [[ -z "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
-  echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ENDPOINT_FILE environment variable is missing! Aborting...'
-  exit 1
-fi
-
-if [[ "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" == 'null' ]]; then
-  echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ENDPOINT_FILE environment variable has not been specified! Aborting...'
-  exit 1
-fi
-
-if [[ ! -f "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
-  echo_red_text "ERROR: S3 endpoint file not found! (${IRONFOX_RELEASES_S3_ENDPOINT_FILE})"
-  echo_green_text "Please ensure the IRONFOX_RELEASES_S3_ENDPOINT_FILE environment variable is set to the correct path in which the endpoint file is located."
-  echo_red_text "Aborting..."
-  exit 1
-fi
-
-if [[ ! -s "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
-  echo_red_text "ERROR: S3 bucket name file ${IRONFOX_RELEASES_S3_ENDPOINT_FILE} is empty!"
-  exit 1
-fi
-
-if [[ "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" == 'null' ]]; then
-  echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_SECRET_KEY_FILE environment variable has not been specified! Aborting...'
-  exit 1
-fi
-
-if [[ -z "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" ]]; then
-  echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_SECRET_KEY_FILE environment variable is missing! Aborting...'
-  exit 1
-fi
-
-if [[ ! -f "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" ]]; then
-  echo_red_text "ERROR: S3 secret key file not found! (${IRONFOX_RELEASES_S3_SECRET_KEY_FILE})"
-  echo_green_text "Please ensure the IRONFOX_RELEASES_S3_SECRET_KEY_FILE environment variable is set to the correct path in which the key file is located."
-  echo_red_text "Aborting..."
-  exit 1
-fi
-
-if [[ ! -s "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" ]]; then
-  echo_red_text "ERROR: S3 secret key file ${IRONFOX_RELEASES_S3_SECRET_KEY_FILE} is empty!"
-  exit 1
-fi
+# Verify secrets
+verify_file_with_env "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" 'IRONFOX_RELEASES_S3_ACCESS_KEY_FILE'
+verify_file_with_env "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" 'IRONFOX_RELEASES_S3_BUCKET_NAME_FILE'
+verify_file_with_env "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" 'IRONFOX_RELEASES_S3_ENDPOINT_FILE'
+verify_file_with_env "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" 'IRONFOX_RELEASES_S3_SECRET_KEY_FILE'
 
 readonly GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic"
 
@@ -119,20 +37,30 @@ function upload_to_package_registry() {
     "${GENERIC_PACKAGES_URL}/${upload_package_name}/${IRONFOX_VERSION}/${upload_file_name}"
 }
 
-function upload_to_s3() {
-  local readonly upload_file="$1"
+# Pushes a file to S3
+function push_to_s3() {
+  function print_usage() {
+    echo "Usage: push_to_s3 '/path/to/file' 'path/on/s3'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file that should be uploaded to S3 storage'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${2+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the target path on S3 storage for where the file should be uploaded'
+    print_usage
+    exit 1
+  fi
+
+  local readonly push_file="$1"
   local readonly s3_path="$2"
   local readonly s3_full_path="${s3_path}/$("${IRONFOX_BASENAME}" "${upload_file}")"
 
-  if [[ ! -f "${upload_file}" ]]; then
-    echo_red_text "ERROR: File ${upload_file} does not exist!"
-    exit 1
-  fi
-
-  if [[ ! -s "${upload_file}" ]]; then
-    echo_red_text "ERROR: File ${upload_file} is empty!"
-    exit 1
-  fi
+  # Ensure our file to push is valid
+  verify_file "${push_file}"
 
   # Set our MIME type
   case "${upload_file}" in
@@ -159,14 +87,20 @@ function upload_to_s3() {
   local readonly s3_endpoint=$("${IRONFOX_CAT}" "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" | "${IRONFOX_XARGS}")
   local readonly s3_secret_key=$("${IRONFOX_CAT}" "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" | "${IRONFOX_XARGS}")
 
-  echo_red_text "Uploading ${upload_file} to S3..."
+  if [[ "${s3_path}" == 'root' ]]; then
+    local readonly s3_target_path="s3://${s3_bucket_name}"
+  else
+    local readonly s3_target_path="s3://${s3_bucket_name}/${s3_full_path}"
+  fi
+
+  echo_red_text "Pushing ${push_file} to S3..."
   source "${IRONFOX_PYENV}"
-  "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} --mime-type="${mime_type}" put "${upload_file}" "s3://${s3_bucket_name}/${s3_full_path}" \
+  "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} --mime-type="${mime_type}" put "${push_file}" "${s3_target_path}" \
     --access_key="${s3_access_key}" \
     --secret_key="${s3_secret_key}" \
     --host="${s3_endpoint}" \
     --host-bucket="${s3_endpoint}"
-  echo_green_text "SUCCESS: Uploaded ${upload_file} to S3"
+  echo_green_text "SUCCESS: Pushed ${push_file} to S3"
 }
 
 function add_sha512sum() {
@@ -190,7 +124,7 @@ function add_sha512sum() {
   local readonly local_sha512sum=$("${IRONFOX_SHA512SUM}" "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
   echo -n "${local_sha512sum}" > "${sha512sum_file_out}"
 
-  upload_to_s3 "${sha512sum_file_out}" "${sha512sum_s3path}"
+  push_to_s3 "${sha512sum_file_out}" "${sha512sum_s3path}"
 }
 
 # Extract compressed artifacts
@@ -223,7 +157,7 @@ function upload_asset() {
   echo "\`\`\`" >> "${CHECKSUMS_FILE}"
   echo '' >> "${CHECKSUMS_FILE}"
   upload_to_package_registry "${asset_file}" "${asset_package_name}"
-  upload_to_s3 "${asset_file}" "${asset_s3_path}"
+  push_to_s3 "${asset_file}" "${asset_s3_path}"
   add_sha512sum "${asset_file}" "${asset_s3_path}"
 }
 
@@ -282,7 +216,7 @@ readonly IRONFOX_BUNDLE_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APKS_ARTIF
 "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
 "${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
 
-upload_to_s3 "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
+push_to_s3 "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
 
 # Because we now upload all releases to releases.ironfoxoss.org, we only want to keep the last 3 releases in ex. F-Droid
 ## In order to do so, we need to store/upload the current and prior 2 versions of IronFox as text files
@@ -293,13 +227,13 @@ echo -n "${IRONFOX_VERSION}" > "${IRONFOX_ROOT}/latest_release.txt"
 "${IRONFOX_CP}" "${IRONFOX_ROOT}/current-latest_release.txt" "${IRONFOX_ROOT}/previous_release.txt"
 "${IRONFOX_CP}" "${IRONFOX_ROOT}/current-previous_release.txt" "${IRONFOX_ROOT}/previous_previous_release.txt"
 
-upload_to_s3 "${IRONFOX_ROOT}/latest_release.txt" 'ironfox/releases'
+push_to_s3 "${IRONFOX_ROOT}/latest_release.txt" 'ironfox/releases'
 add_sha512sum "${IRONFOX_ROOT}/latest_release.txt" 'ironfox/releases'
 
-upload_to_s3 "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
+push_to_s3 "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
 add_sha512sum "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
 
-upload_to_s3 "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
+push_to_s3 "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
 add_sha512sum "${IRONFOX_ROOT}/previous_previous_release.txt" 'ironfox/releases'
 
 {

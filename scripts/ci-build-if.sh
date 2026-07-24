@@ -51,15 +51,7 @@ esac
 
 if [[ "${ci_build_project}" == 'fenix' ]]; then
   # Fail-fast in case the signing key is unavailable or empty file
-  if [[ ! -f "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
-    echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} does not exist!"
-    exit 1
-  fi
-
-  if [[ ! -s "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
-    echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} is empty!"
-    exit 1
-  fi
+  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE}" 'IRONFOX_ANDROID_KEYSTORE'
 fi
 
 # Get sources
