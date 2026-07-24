@@ -208,7 +208,6 @@ readonly PROFILE='/dev/null'
 export PROFILE
 
 # Phoenix
-readonly PHOENIX_ANDROID_ONLY=1
 readonly PHOENIX_ANDROID_POLICIES=1
 readonly PHOENIX_AWK="${IRONFOX_AWK}"
 readonly PHOENIX_BASENAME="${IRONFOX_BASENAME}"
@@ -251,7 +250,6 @@ readonly PHOENIX_TEE="${IRONFOX_TEE}"
 readonly PHOENIX_TLS13_CIPHERS="${IRONFOX_TLS13_CIPHERS}"
 readonly PHOENIX_TOUCH="${IRONFOX_TOUCH}"
 readonly PHOENIX_UNAME="${IRONFOX_UNAME}"
-readonly PHOENIX_UNIVERSAL=0
 readonly PHOENIX_UNZIP="${IRONFOX_UNZIP}"
 readonly PHOENIX_UV_CACHE="${IRONFOX_UV_CACHE}"
 readonly PHOENIX_UV_DIR="${IRONFOX_UV_DIR}"
@@ -261,7 +259,6 @@ readonly PHOENIX_UV_TOOLS="${IRONFOX_UV_TOOLS}"
 readonly PHOENIX_VERBOSE="${IRONFOX_VERBOSE}"
 readonly PHOENIX_XARGS="${IRONFOX_XARGS}"
 readonly PHOENIX_XZ="${IRONFOX_XZ}"
-export PHOENIX_ANDROID_ONLY
 export PHOENIX_ANDROID_POLICIES
 export PHOENIX_AWK
 export PHOENIX_BASENAME
@@ -303,7 +300,6 @@ export PHOENIX_TAR
 export PHOENIX_TEE
 export PHOENIX_TLS13_CIPHERS
 export PHOENIX_UNAME
-export PHOENIX_UNIVERSAL
 export PHOENIX_UNZIP
 export PHOENIX_UV_CACHE
 export PHOENIX_UV_DIR
@@ -313,6 +309,14 @@ export PHOENIX_UV_TOOLS
 export PHOENIX_VERBOSE
 export PHOENIX_XARGS
 export PHOENIX_XZ
+
+## Disable build logging, as it's redundant with our own build log
+readonly PHOENIX_LOG_BUILD=0
+export PHOENIX_LOG_BUILD
+
+## We don't need to produce Phoenix archives...
+readonly PHOENIX_PRODUCE_ARCHIVES=0
+export PHOENIX_PRODUCE_ARCHIVES
 
 # Python
 ## https://docs.python.org/3/using/cmdline.html#environment-variables

@@ -1092,7 +1092,7 @@ function build_phoenix() {
   echo_red_text 'Building Phoenix...'
 
   pushd "${IRONFOX_PHOENIX}"
-  /bin/bash "${IRONFOX_PHOENIX}/scripts/build.sh"
+  /bin/bash "${IRONFOX_PHOENIX}/scripts/build.sh" 'android'
   popd
 
   # Ensure our cfg and policy files don't already exist in mozilla-central
