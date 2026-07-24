@@ -23,7 +23,7 @@ function sign_apk() {
   local readonly apk_out="$2"
 
   # Ensure the APK to sign exists
-  verify_file "${apk_in}"
+  verify_file "${apk_in}" || exit 1
 
   "${IRONFOX_APKSIGNER}" sign \
     --ks="${IRONFOX_ANDROID_KEYSTORE}" \
@@ -38,7 +38,7 @@ function sign_bundle() {
   echo_red_text 'Building signed bundleset...'
 
   # Ensure the AAB to sign exists
-  verify_file_with_env "${IRONFOX_OUTPUTS_BUNDLE_AAB}" 'IRONFOX_OUTPUTS_BUNDLE_AAB'
+  verify_file_with_env "${IRONFOX_OUTPUTS_BUNDLE_AAB}" 'IRONFOX_OUTPUTS_BUNDLE_AAB' || exit 1
 
   # Create our output directory
   "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_BUNDLE}")

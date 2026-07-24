@@ -177,8 +177,8 @@ function prepare_ac() {
   echo_red_text 'Preparing Android Components...'
  
   # Verify directories
-  verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC'
-  verify_dir_with_env "${IRONFOX_AC_OVERLAY}" 'IRONFOX_AC_OVERLAY'
+  verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC' || exit 1
+  verify_dir_with_env "${IRONFOX_AC_OVERLAY}" 'IRONFOX_AC_OVERLAY' || exit 1
 
   pushd "${IRONFOX_AC}"
 
@@ -270,7 +270,11 @@ function prepare_android_sdk() {
   echo_red_text 'Preparing Android SDK...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK'
+  verify_dir_with_env "${IRONFOX_ANDROID_NDK}"                  'IRONFOX_ANDROID_NDK' || exit 1
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK}"                  'IRONFOX_ANDROID_SDK' || exit 1
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}"      'IRONFOX_ANDROID_SDK_BUILD_TOOLS' || exit 1
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}"   'IRONFOX_ANDROID_SDK_BUILD_TOOLS_35' || exit 1
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}"   'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS' || exit 1
 
   # Create Android NDK symlink
   if [[ ! -d "${IRONFOX_ANDROID_SDK}/ndk/${ANDROID_NDK_REVISION}" ]]; then
@@ -300,8 +304,8 @@ function prepare_as() {
   echo_red_text 'Preparing Application Services...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS'
-  verify_dir_with_env "${IRONFOX_AS_OVERLAY}" 'IRONFOX_AS_OVERLAY'
+  verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS' || exit 1
+  verify_dir_with_env "${IRONFOX_AS_OVERLAY}" 'IRONFOX_AS_OVERLAY' || exit 1
 
   pushd "${IRONFOX_AS}"
 
@@ -391,7 +395,7 @@ function prepare_bundletool() {
   echo_red_text 'Preparing Bundletool...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_BUNDLETOOL_DIR}" 'IRONFOX_BUNDLETOOL_DIR'
+  verify_dir_with_env "${IRONFOX_BUNDLETOOL_DIR}" 'IRONFOX_BUNDLETOOL_DIR' || exit 1
 
   pushd "${IRONFOX_BUNDLETOOL_DIR}"
 
@@ -410,9 +414,10 @@ function prepare_fenix() {
   echo_red_text 'Preparing Fenix...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_FENIX}" 'IRONFOX_FENIX'
-  verify_dir_with_env "${IRONFOX_FENIX_OVERLAY}" 'IRONFOX_FENIX_OVERLAY'
-  verify_dir_with_env "${IRONFOX_UP_AC}" 'IRONFOX_UP_AC'
+  verify_dir_with_env "${IRONFOX_FENIX}" 'IRONFOX_FENIX' || exit 1
+  verify_dir_with_env "${IRONFOX_FENIX_OVERLAY}" 'IRONFOX_FENIX_OVERLAY' || exit 1
+  verify_dir_with_env "${IRONFOX_UP_AC}" 'IRONFOX_UP_AC' || exit 1
+  verify_dir "${IRONFOX_UP_AC}/fenix-overlay" || exit 1
 
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/fenix/app/src/main/res"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/fenix/app/src/release/res/values"
@@ -662,8 +667,8 @@ function prepare_firefox() {
   echo_red_text 'Preparing Firefox...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO'
-  verify_dir_with_env "${IRONFOX_GECKO_OVERLAY}" 'IRONFOX_GECKO_OVERLAY'
+  verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO' || exit 1
+  verify_dir_with_env "${IRONFOX_GECKO_OVERLAY}" 'IRONFOX_GECKO_OVERLAY' || exit 1
 
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/gecko/ironfox"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages"
@@ -910,8 +915,8 @@ function prepare_glean() {
   echo_red_text 'Preparing Glean...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN'
-  verify_dir_with_env "${IRONFOX_GLEAN_OVERLAY}" 'IRONFOX_GLEAN_OVERLAY'
+  verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN' || exit 1
+  verify_dir_with_env "${IRONFOX_GLEAN_OVERLAY}" 'IRONFOX_GLEAN_OVERLAY' || exit 1
 
   "${IRONFOX_MKDIR}" -p "${IRONFOX_GLEAN_PYENV}/bootstrap-24.3.0-0"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/glean"
@@ -1027,7 +1032,7 @@ function prepare_microg() {
   echo_red_text 'Preparing microG...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_GMSCORE}" 'IRONFOX_GMSCORE'
+  verify_dir_with_env "${IRONFOX_GMSCORE}" 'IRONFOX_GMSCORE' || exit 1
 
   pushd "${IRONFOX_GMSCORE}"
 
@@ -1059,7 +1064,7 @@ function prepare_prebuilds() {
   echo_red_text 'Preparing IronFox prebuilds...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS'
+  verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS' || exit 1
 
   pushd "${IRONFOX_PREBUILDS}"
   /bin/bash "${IRONFOX_PREBUILDS}/scripts/prebuild.sh"
@@ -1070,6 +1075,13 @@ function prepare_prebuilds() {
 
 function prepare_rust() {
   echo_red_text 'Preparing Rust...'
+
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_CONFIGS}"  'IRONFOX_CONFIGS' || exit 1
+  verify_dir "${IRONFOX_CONFIGS}/cargo" || exit 1
+
+  # Verify files
+  verify_file "${IRONFOX_CONFIGS}/cargo/config.toml" || exit 1
 
   # Create Cargo home directory
   "${IRONFOX_MKDIR}" -p "${IRONFOX_CARGO_HOME}"

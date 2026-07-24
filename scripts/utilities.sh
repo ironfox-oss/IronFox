@@ -74,12 +74,12 @@ function verify_file() {
 
   if [[ ! -f "${verify_file}" ]]; then
     echo_red_text "ERROR: ${verify_file} does not exist! Aborting..."
-    exit 1
+    return 1
   fi
 
   if [[ ! -s "${verify_file}" ]]; then
     echo_red_text "ERROR: ${verify_file} is empty! Aborting..."
-    exit 1
+    return 1
   fi
 }
 
@@ -111,17 +111,37 @@ function verify_file_with_env() {
 
   if [[ "${verify_file}" == 'null' ]]; then
     echo_red_text "ERROR: Environment variable: ${verify_file_env} has not been specified! Aborting..."
-    exit 1
+    return 1
   fi
 
   if [[ ! -f "${verify_file}" ]]; then
     echo_red_text "ERROR: ${verify_file_env} is set, but ${verify_file} does not exist! Aborting..."
-    exit 1
+    return 1
   fi
 
   if [[ ! -s "${verify_file}" ]]; then
     echo_red_text "ERROR: ${verify_file_env} is set, but ${verify_file} is empty! Aborting..."
+    return 1
+  fi
+}
+
+# Verify that a directory exists
+function verify_dir() {
+  function print_usage() {
+    echo "Usage: verify_dir /path/to/dir"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a directory to verify'
+    print_usage
     exit 1
+  fi
+
+  local readonly verify_dir="$1"
+
+  if [[ ! -d "${verify_dir}" ]]; then
+    echo_red_text "ERROR: ${verify_dir} does not exist! Aborting..."
+    return 1
   fi
 }
 
@@ -153,6 +173,6 @@ function verify_dir_with_env() {
 
   if [[ ! -d "${verify_dir}" ]]; then
     echo_red_text "ERROR: ${verify_dir_env} is set, but ${verify_dir} does not exist! Aborting..."
-    exit 1
+    return 1
   fi
 }

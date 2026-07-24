@@ -518,70 +518,70 @@ if [[ "${IRONFOX_NAME}" != 'IronFox' ]] && [[ "${IRONFOX_NAME}" != 'IronFox Nigh
 fi
 
 # Verify core directories
-verify_dir_with_env "${IRONFOX_BUILD}" 'IRONFOX_BUILD'
-verify_dir_with_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP'
-verify_dir_with_env "${IRONFOX_TEMPLATES}" 'IRONFOX_TEMPLATES'
+verify_dir_with_env "${IRONFOX_BUILD}" 'IRONFOX_BUILD' || exit 1
+verify_dir_with_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP' || exit 1
+verify_dir_with_env "${IRONFOX_TEMPLATES}" 'IRONFOX_TEMPLATES' || exit 1
 
 # Fail early if our source directories are missing...
 
 # mozilla-central
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
  [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO'
-  verify_dir_with_env "${IRONFOX_MOZCONFIGS}" 'IRONFOX_MOZCONFIGS'
+  verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO' || exit 1
+  verify_dir_with_env "${IRONFOX_MOZCONFIGS}" 'IRONFOX_MOZCONFIGS' || exit 1
 fi
 
 # Android Components
 if [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] || [[ "${IRONFOX_BUILD_AC}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC'
+  verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC' || exit 1
 fi
 
 # Fenix
 if [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_FENIX}" 'IRONFOX_FENIX'
+  verify_dir_with_env "${IRONFOX_FENIX}" 'IRONFOX_FENIX' || exit 1
 fi
 
 # l10n-central
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
   # CI only needs l10n-central if we're producing a bundle...
   if [[ "${IRONFOX_CI}" == 1 ]] && [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
-    verify_dir_with_env "${IRONFOX_L10N_CENTRAL}" 'IRONFOX_L10N_CENTRAL'
+    verify_dir_with_env "${IRONFOX_L10N_CENTRAL}" 'IRONFOX_L10N_CENTRAL' || exit 1
   fi
 fi
 
 # microG
 if [[ "${IRONFOX_BUILD_MICROG}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_GMSCORE}" 'IRONFOX_GMSCORE'
+  verify_dir_with_env "${IRONFOX_GMSCORE}" 'IRONFOX_GMSCORE' || exit 1
 fi
 
 # Phoenix
 if [[ "${IRONFOX_BUILD_PHOENIX}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_PHOENIX}" 'IRONFOX_PHOENIX'
+  verify_dir_with_env "${IRONFOX_PHOENIX}" 'IRONFOX_PHOENIX' || exit 1
 fi
 
 # Application Services
 if [[ "${IRONFOX_BUILD_AS}" == 1 ]] || [[ "${IRONFOX_BUILD_NIMBUS_FML}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS'
+  verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS' || exit 1
 fi
 
 # UnifiedPush-AC
 if [[ "${IRONFOX_BUILD_UP_AC}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_UP_AC}" 'IRONFOX_UP_AC'
+  verify_dir_with_env "${IRONFOX_UP_AC}" 'IRONFOX_UP_AC' || exit 1
 fi
 
 # Glean
 if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN'
+  verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN' || exit 1
 fi
 
 # Prebuilds repo
 if [[ "${IRONFOX_BUILD_UNIFFI}" == 1 ]] || [[ "${IRONFOX_BUILD_WASI}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS'
+  verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS' || exit 1
 fi
 
 # Bundletool
 if [[ "${IRONFOX_BUILD_BUNDLETOOL}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_BUNDLETOOL_DIR}" 'IRONFOX_BUNDLETOOL_DIR'
+  verify_dir_with_env "${IRONFOX_BUNDLETOOL_DIR}" 'IRONFOX_BUNDLETOOL_DIR' || exit 1
   if [[ -z "${IRONFOX_BUNDLETOOL_JAR+x}" ]]; then
     echo_red_text 'ERROR: IRONFOX_BUNDLETOOL_JAR is missing!'
     echo_red_text 'Aborting...'
@@ -592,29 +592,29 @@ fi
 # Now, fail early if our build dependencies are missing...
 
 # Android NDK
-verify_dir_with_env "${IRONFOX_ANDROID_NDK}" 'IRONFOX_ANDROID_NDK'
+verify_dir_with_env "${IRONFOX_ANDROID_NDK}" 'IRONFOX_ANDROID_NDK' || exit 1
 
 # Android SDK
-verify_dir_with_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK'
+verify_dir_with_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK' || exit 1
 
 # Android SDK Build Tools
-verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS'
+verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS' || exit 1
 
 # Android SDK Platform Tools
-verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" 'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS'
+verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" 'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS' || exit 1
 
 # GNU awk
-verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK'
+verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || exit 1
 
 # GNU date
-verify_exec "${IRONFOX_DATE}" 'IRONFOX_DATE'
+verify_exec "${IRONFOX_DATE}" 'IRONFOX_DATE' || exit 1
 
 # GNU sed
-verify_exec "${IRONFOX_SED}" 'IRONFOX_SED'
+verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
 
 # Gradle
-verify_exec "${IRONFOX_GRADLE}" 'IRONFOX_GRADLE'
-verify_file_with_env "${IRONFOX_GRADLE_PY}" 'IRONFOX_GRADLE_PY'
+verify_exec "${IRONFOX_GRADLE}" 'IRONFOX_GRADLE' || exit 1
+verify_file_with_env "${IRONFOX_GRADLE_PY}" 'IRONFOX_GRADLE_PY' || exit 1
 if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
   echo_red_text 'ERROR: IRONFOX_GRADLE_FLAGS is missing!'
   echo_red_text 'Aborting...'
@@ -622,14 +622,14 @@ if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
 fi
 
 # Java
-verify_dir_with_env "${IRONFOX_JAVA_HOME}" 'IRONFOX_JAVA_HOME'
-verify_exec "${IRONFOX_JAVA}" 'IRONFOX_JAVA'
+verify_dir_with_env "${IRONFOX_JAVA_HOME}" 'IRONFOX_JAVA_HOME' || exit 1
+verify_exec "${IRONFOX_JAVA}" 'IRONFOX_JAVA' || exit 1
 
 ## Java 21
-verify_dir_with_env "${IRONFOX_JDK_21_HOME}" 'IRONFOX_JDK_21_HOME'
+verify_dir_with_env "${IRONFOX_JDK_21_HOME}" 'IRONFOX_JDK_21_HOME' || exit 1
 
 ## Java 17
-verify_dir_with_env "${IRONFOX_JDK_17_HOME}" 'IRONFOX_JDK_17_HOME'
+verify_dir_with_env "${IRONFOX_JDK_17_HOME}" 'IRONFOX_JDK_17_HOME' || exit 1
 
 readonly JAVA_VER=$("${IRONFOX_JAVA}" -version 2>&1 | "${IRONFOX_AWK}" -F '"' '/version/ {print $2}' | "${IRONFOX_AWK}" -F '.' '{sub("^$", "0", $2); print $1$2}')
 [[ "${JAVA_VER}" -ge 15 ]] || {
@@ -639,55 +639,53 @@ readonly JAVA_VER=$("${IRONFOX_JAVA}" -version 2>&1 | "${IRONFOX_AWK}" -F '"' '/
 }
 
 # Node.js
-verify_exec "${IRONFOX_NODEJS}" 'IRONFOX_NODEJS'
+verify_exec "${IRONFOX_NODEJS}" 'IRONFOX_NODEJS' || exit 1
 
 # npm
-verify_exec "${IRONFOX_NPM}" 'IRONFOX_NPM'
+verify_exec "${IRONFOX_NPM}" 'IRONFOX_NPM' || exit 1
 
 # nvm
-verify_dir_with_env "${IRONFOX_NVM}" 'IRONFOX_NVM'
-verify_file_with_env "${IRONFOX_NVM_ENV}" 'IRONFOX_NVM_ENV'
+verify_dir_with_env "${IRONFOX_NVM}" 'IRONFOX_NVM' || exit 1
+verify_file_with_env "${IRONFOX_NVM_ENV}" 'IRONFOX_NVM_ENV' || exit 1
 
 # Python
-verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON'
+verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' || exit 1
 
 # Python (uv) environment
-verify_dir_with_env "${IRONFOX_PYENV_DIR}" 'IRONFOX_PYENV_DIR'
-verify_file_with_env "${IRONFOX_PYENV}" 'IRONFOX_PYENV'
+verify_dir_with_env "${IRONFOX_PYENV_DIR}" 'IRONFOX_PYENV_DIR' || exit 1
+verify_file_with_env "${IRONFOX_PYENV}" 'IRONFOX_PYENV' || exit 1
 
 ## uv
-verify_exec "${IRONFOX_UV}" 'IRONFOX_UV'
+verify_exec "${IRONFOX_UV}" 'IRONFOX_UV' || exit 1
 
 # uv local directory
-verify_dir_with_env "${IRONFOX_UV_LOCAL}" 'IRONFOX_UV_LOCAL'
+verify_dir_with_env "${IRONFOX_UV_LOCAL}" 'IRONFOX_UV_LOCAL' || exit 1
 
 # Rust (cargo) environment
-verify_dir_with_env "${IRONFOX_CARGO_HOME}" 'IRONFOX_CARGO_HOME'
-verify_file_with_env "${IRONFOX_CARGO_ENV}" 'IRONFOX_CARGO_ENV'
+verify_dir_with_env "${IRONFOX_CARGO_HOME}" 'IRONFOX_CARGO_HOME' || exit 1
+verify_file_with_env "${IRONFOX_CARGO_ENV}" 'IRONFOX_CARGO_ENV' || exit 1
 
 ## cargo
-verify_exec "${IRONFOX_CARGO}" 'IRONFOX_CARGO'
+verify_exec "${IRONFOX_CARGO}" 'IRONFOX_CARGO' || exit 1
 
 # mach
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
  [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
-  verify_exec "${IRONFOX_MACH}" 'IRONFOX_MACH'
+  verify_exec "${IRONFOX_MACH}" 'IRONFOX_MACH' || exit 1
 fi
 
 # Glean's Python (uv) environment
 if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
-  verify_dir_with_env "${IRONFOX_GLEAN_PYENV}" 'IRONFOX_GLEAN_PYENV'
+  verify_dir_with_env "${IRONFOX_GLEAN_PYENV}" 'IRONFOX_GLEAN_PYENV' || exit 1
 fi
 
 # Safe Browsing API key
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
-  if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
-    echo_red_text 'ERROR: IRONFOX_SB_GAPI_KEY_FILE is missing!'
-    echo_red_text 'Aborting...'
-    exit 1
-  fi
-  if [[ "${IRONFOX_SB_GAPI_KEY_FILE}" == 'null' ]]; then
+  IRONFOX_SB_GAPI_KEY_AVAILABLE=1
+  verify_file_with_env "${IRONFOX_SB_GAPI_KEY_FILE}" 'IRONFOX_SB_GAPI_KEY_FILE' || IRONFOX_SB_GAPI_KEY_AVAILABLE=0
+  if [[ "${IRONFOX_SB_GAPI_KEY_AVAILABLE}" == 0 ]]; then
     echo_red_text 'IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build.'
+    echo "If this is unexpected, please ensure that IRONFOX_SB_GAPI_KEY_FILE is set to a valid file path."
     if [[ "${IRONFOX_CI}" == 1 ]]; then
       # CI should always include Safe Browsing, so always fail if it's missing here
       echo_red_text "ERROR: IRONFOX_SB_GAPI_KEY_FILE has not been set! Aborting..."
@@ -699,18 +697,6 @@ if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
       echo_red_text 'Aborting...'
       exit 1
     fi
-  # Verify that the Safe Browsing key file exists
-  elif [[ ! -f "${IRONFOX_SB_GAPI_KEY_FILE}" ]]; then
-    echo_red_text "ERROR: Safe Browsing API key file (${IRONFOX_SB_GAPI_KEY_FILE}) does not exist!"
-    echo 'Please ensure that IRONFOX_SB_GAPI_KEY_FILE is set to a valid file.'
-    echo_red_text 'Aborting...'
-    exit 1
-  # Verify that the Safe Browsing key file isn't empty
-  elif [[ ! -s "${IRONFOX_SB_GAPI_KEY_FILE}" ]]; then
-    echo_red_text "ERROR: Safe Browsing API key file (${IRONFOX_SB_GAPI_KEY_FILE}) is empty!"
-    echo 'Please ensure that IRONFOX_SB_GAPI_KEY_FILE is set to a valid file.'
-    echo_red_text 'Aborting...'
-    exit 1
   fi
 fi
 
@@ -1402,13 +1388,13 @@ function _build_gecko() {
   # If we're producing a bundle, we need to prepare to assemble our fat AAR
   if [[ "${target_arch}" == 'bundle' ]]; then
     # Verify that our ARM64 GeckoView AAR archive exists
-    verify_file_with_env "${IRONFOX_GECKOVIEW_AAR_ARM64}" 'IRONFOX_GECKOVIEW_AAR_ARM64'
+    verify_file_with_env "${IRONFOX_GECKOVIEW_AAR_ARM64}" 'IRONFOX_GECKOVIEW_AAR_ARM64' || exit 1
 
     # Verify that our ARM GeckoView AAR archive exists
-    verify_file_with_env "${IRONFOX_GECKOVIEW_AAR_ARM}" 'IRONFOX_GECKOVIEW_AAR_ARM'
+    verify_file_with_env "${IRONFOX_GECKOVIEW_AAR_ARM}" 'IRONFOX_GECKOVIEW_AAR_ARM' || exit 1
 
     # Verify that our x86_64 GeckoView AAR archive exists
-    verify_file_with_env "${IRONFOX_GECKOVIEW_AAR_X86_64}" 'IRONFOX_GECKOVIEW_AAR_X86_64'
+    verify_file_with_env "${IRONFOX_GECKOVIEW_AAR_X86_64}" 'IRONFOX_GECKOVIEW_AAR_X86_64' || exit 1
 
     if [[ -z "${MOZ_ANDROID_FAT_AAR_ARCHITECTURES+x}" ]]; then
       readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'

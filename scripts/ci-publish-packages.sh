@@ -21,10 +21,10 @@ source "$(realpath $(dirname "$0"))/env.sh"
 source "${IRONFOX_UTILS}"
 
 # Verify secrets
-verify_file_with_env "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" 'IRONFOX_RELEASES_S3_ACCESS_KEY_FILE'
-verify_file_with_env "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" 'IRONFOX_RELEASES_S3_BUCKET_NAME_FILE'
-verify_file_with_env "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" 'IRONFOX_RELEASES_S3_ENDPOINT_FILE'
-verify_file_with_env "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" 'IRONFOX_RELEASES_S3_SECRET_KEY_FILE'
+verify_file_with_env "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" 'IRONFOX_RELEASES_S3_ACCESS_KEY_FILE' || exit 1
+verify_file_with_env "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" 'IRONFOX_RELEASES_S3_BUCKET_NAME_FILE' || exit 1
+verify_file_with_env "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" 'IRONFOX_RELEASES_S3_ENDPOINT_FILE' || exit 1
+verify_file_with_env "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" 'IRONFOX_RELEASES_S3_SECRET_KEY_FILE' || exit 1
 
 readonly GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic"
 
@@ -60,7 +60,7 @@ function push_to_s3() {
   local readonly s3_full_path="${s3_path}/$("${IRONFOX_BASENAME}" "${upload_file}")"
 
   # Ensure our file to push is valid
-  verify_file "${push_file}"
+  verify_file "${push_file}" || exit 1
 
   # Set our MIME type
   case "${upload_file}" in
