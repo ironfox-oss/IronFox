@@ -166,7 +166,7 @@ function verify_dir_with_env() {
   local readonly verify_dir="$1"
   local readonly verify_dir_env="$2"
 
-  if [[ -z "${verify_file_env+x}" ]]; then
+  if [[ -z "${verify_dir_env+x}" ]]; then
     echo_red_text "ERROR: Environment variable is missing!: ${verify_dir_env}"
     exit 1
   fi
