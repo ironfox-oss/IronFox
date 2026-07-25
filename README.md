@@ -177,6 +177,26 @@ Where `<build-variant>` specifies the variant to build, and is **one** of the fo
 
 In addition to the `AAB`, the `bundle` target also produces APKs for each architecture *(`arm`, `arm64`, and `x86_64`)*, as well as a universal APK containing all architectures.
 
+### Linting
+
+IronFox is largely driven by shell scripts, which are checked with [`shellcheck`](https://www.shellcheck.net/) *(static analysis)* and [`shfmt`](https://github.com/mvdan/sh) *(formatting)*. These run automatically in CI *(the `lint-scripts` job)* and are enforced there — a lint failure stops the pipeline before any build starts.
+
+`./scripts/bootstrap.sh` installs both tools and enables a git pre-commit hook *(via `core.hooksPath`)* that lints your staged scripts before each commit. The hook is a convenience and can be bypassed with `git commit --no-verify`; CI remains the source of truth.
+
+To run the checks manually:
+
+```sh
+./scripts/lint.sh
+```
+
+To auto-fix formatting:
+
+```sh
+git ls-files 'scripts/*.sh' | xargs shfmt -w
+```
+
+Linter configuration lives in `.shellcheckrc` *(checks)* and `.editorconfig` *(formatting)*.
+
 ## Translation
 
 IronFox is translated using Weblate. Visit the [Weblate project](https://hosted.weblate.org/engage/ironfox/) to help with translations.

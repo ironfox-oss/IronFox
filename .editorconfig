@@ -7,3 +7,9 @@ indent_size = 2
 indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
+
+# shfmt reads these keys directly (see scripts/lint.sh, which runs bare `shfmt`).
+[*.sh]
+switch_case_indent = true
+space_redirects = true
+binary_next_line = false
