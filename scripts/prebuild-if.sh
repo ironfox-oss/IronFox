@@ -273,7 +273,6 @@ function prepare_android_sdk() {
   verify_dir_with_env "${IRONFOX_ANDROID_NDK}"                  'IRONFOX_ANDROID_NDK' || exit 1
   verify_dir_with_env "${IRONFOX_ANDROID_SDK}"                  'IRONFOX_ANDROID_SDK' || exit 1
   verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}"      'IRONFOX_ANDROID_SDK_BUILD_TOOLS' || exit 1
-  verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}"   'IRONFOX_ANDROID_SDK_BUILD_TOOLS_35' || exit 1
   verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}"   'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS' || exit 1
 
   # Create Android NDK symlink
@@ -287,7 +286,8 @@ function prepare_android_sdk() {
     "${IRONFOX_MKDIR}" -p "${IRONFOX_ANDROID_SDK}/build-tools"
     "${IRONFOX_LN}" -s "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}"
   fi
-  if [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/35.0.0" ]]; then
+
+  if [[ -d "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}" ]] && [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/35.0.0" ]]; then
     "${IRONFOX_MKDIR}" -p "${IRONFOX_ANDROID_SDK}/build-tools"
     "${IRONFOX_LN}" -s "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}" "${IRONFOX_ANDROID_SDK}/build-tools/35.0.0"
   fi
