@@ -63,10 +63,10 @@ readonly IRONFOX_DEGLEAN_FENIX
 readonly IRONFOX_DEGLEAN_GECKO
 
 function deglean() {
-  local readonly dir="$1"
-  local readonly gradle_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.gradle")
-  local readonly kt_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.kt")
-  local readonly yaml_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "metrics.yaml" -o -name "pings.yaml")
+  local -r dir="$1"
+  local -r gradle_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.gradle")
+  local -r kt_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.kt")
+  local -r yaml_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "metrics.yaml" -o -name "pings.yaml")
 
   if [[ -n "${gradle_files}" ]]; then
     for file in $gradle_files; do
@@ -139,8 +139,8 @@ function deglean() {
 }
 
 function fenix_deglean() {
-  local readonly dir="$1"
-  local readonly gradle_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.gradle")
+  local -r dir="$1"
+  local -r gradle_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.gradle")
 
   if [[ -n "${gradle_files}" ]]; then
     for file in $gradle_files; do

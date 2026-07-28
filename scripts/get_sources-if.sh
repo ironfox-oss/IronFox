@@ -301,9 +301,9 @@ source "${IRONFOX_VERSIONS}"
 
 # Back-up (and remove) a file if it exists
 function backup_file() {
-  local readonly file="$1"
-  local readonly file_name="$("${IRONFOX_BASENAME}" "${file}")"
-  local readonly backup_file="${IRONFOX_EXTERNAL}/temp/backup/${file_name}"
+  local -r file="$1"
+  local -r file_name="$("${IRONFOX_BASENAME}" "${file}")"
+  local -r backup_file="${IRONFOX_EXTERNAL}/temp/backup/${file_name}"
 
   if [[ -f "${file}" ]]; then
     "${IRONFOX_RM}" -f "${backup_file}"
@@ -315,9 +315,9 @@ function backup_file() {
 
 # Back-up (and remove) a directory if it exists
 function backup_dir() {
-  local readonly dir="$1"
-  local readonly dir_name="$("${IRONFOX_BASENAME}" "${dir}")"
-  local readonly backup_dir="${IRONFOX_EXTERNAL}/temp/backup/${dir_name}"
+  local -r dir="$1"
+  local -r dir_name="$("${IRONFOX_BASENAME}" "${dir}")"
+  local -r backup_dir="${IRONFOX_EXTERNAL}/temp/backup/${dir_name}"
 
   if [[ -d "${dir}" ]]; then
     "${IRONFOX_RM}" -rf "${backup_dir}"
@@ -329,9 +329,9 @@ function backup_dir() {
 
 # Restore a backed-up file
 function restore_file() {
-  local readonly file="$1"
-  local readonly file_name="$("${IRONFOX_BASENAME}" "${file}")"
-  local readonly backed_up_file="${IRONFOX_EXTERNAL}/temp/backup/${file_name}"
+  local -r file="$1"
+  local -r file_name="$("${IRONFOX_BASENAME}" "${file}")"
+  local -r backed_up_file="${IRONFOX_EXTERNAL}/temp/backup/${file_name}"
 
   if [[ -f "${backed_up_file}" ]]; then
     "${IRONFOX_RM}" -f "${file}"
@@ -343,9 +343,9 @@ function restore_file() {
 
 # Restore a backed-up directory
 function restore_dir() {
-  local readonly dir="$1"
-  local readonly dir_name="$("${IRONFOX_BASENAME}" "${dir}")"
-  local readonly backed_up_dir="${IRONFOX_EXTERNAL}/temp/backup/${dir_name}"
+  local -r dir="$1"
+  local -r dir_name="$("${IRONFOX_BASENAME}" "${dir}")"
+  local -r backed_up_dir="${IRONFOX_EXTERNAL}/temp/backup/${dir_name}"
 
   if [[ -d "${backed_up_dir}" ]]; then
     "${IRONFOX_RM}" -rf "${dir}"
@@ -357,19 +357,19 @@ function restore_dir() {
 
 # Function to automate updating checksums of dependencies
 function update_checksum() {
-  local readonly old_checksum="$1"
-  local readonly new_checksum="$2"
-  local readonly file="$3"
-  local readonly checksum_type="$4"
+  local -r old_checksum="$1"
+  local -r new_checksum="$2"
+  local -r file="$3"
+  local -r checksum_type="$4"
 
   if [[ "${checksum_type}" == 'md5sum' ]]; then
-    local readonly checksum_type_pretty='MD5sum'
+    local -r checksum_type_pretty='MD5sum'
   elif [[ "${checksum_type}" == 'sha1sum' ]]; then
-    local readonly checksum_type_pretty='SHA1sum'
+    local -r checksum_type_pretty='SHA1sum'
   elif [[ "${checksum_type}" == 'sha256sum' ]]; then
-    local readonly checksum_type_pretty='SHA256sum'
+    local -r checksum_type_pretty='SHA256sum'
   elif [[ "${checksum_type}" == 'sha512sum' ]]; then
-    local readonly checksum_type_pretty='SHA512sum'
+    local -r checksum_type_pretty='SHA512sum'
   else
     echo_red_text 'ERROR: Unknown checksum type.'
     exit 1
@@ -387,22 +387,22 @@ function update_checksum() {
 }
 
 function validate_checksum() {
-  local readonly expected_checksum="$1"
-  local readonly file="$2"
-  local readonly checksum_type="$3"
+  local -r expected_checksum="$1"
+  local -r file="$2"
+  local -r checksum_type="$3"
 
   if [[ "${checksum_type}" == 'md5sum' ]]; then
-    local readonly checksum_type_pretty='MD5sum'
-    local readonly local_checksum=$("${IRONFOX_MD5SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    local -r checksum_type_pretty='MD5sum'
+    local -r local_checksum=$("${IRONFOX_MD5SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
   elif [[ "${checksum_type}" == 'sha1sum' ]]; then
-    local readonly checksum_type_pretty='SHA1sum'
-    local readonly local_checksum=$("${IRONFOX_SHA1SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    local -r checksum_type_pretty='SHA1sum'
+    local -r local_checksum=$("${IRONFOX_SHA1SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
   elif [[ "${checksum_type}" == 'sha256sum' ]]; then
-    local readonly checksum_type_pretty='SHA256sum'
-    local readonly local_checksum=$("${IRONFOX_SHA256SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    local -r checksum_type_pretty='SHA256sum'
+    local -r local_checksum=$("${IRONFOX_SHA256SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
   elif [[ "${checksum_type}" == 'sha512sum' ]]; then
-    local readonly checksum_type_pretty='SHA512sum'
-    local readonly local_checksum=$("${IRONFOX_SHA512SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    local -r checksum_type_pretty='SHA512sum'
+    local -r local_checksum=$("${IRONFOX_SHA512SUM}" "${file}" | "${IRONFOX_AWK}" '{print $1}')
   else
     echo_red_text 'ERROR: Unknown checksum type.'
     return 1
@@ -426,9 +426,9 @@ function validate_checksum() {
 }
 
 function clone_repo() {
-  local readonly url="$1"
-  local readonly path="$2"
-  local readonly revision="$3"
+  local -r url="$1"
+  local -r path="$2"
+  local -r revision="$3"
 
   if [[ "${url}" == "" ]]; then
     echo_red_text "ERROR: URL missing for clone"
@@ -467,10 +467,10 @@ function clone_repo() {
 }
 
 function download() {
-  local readonly url="$1"
-  local readonly file_in="$2"
-  local readonly file_name=$("${IRONFOX_BASENAME}" "${file_in}")
-  local readonly expected_sha512sum="$3"
+  local -r url="$1"
+  local -r file_in="$2"
+  local -r file_name=$("${IRONFOX_BASENAME}" "${file_in}")
+  local -r expected_sha512sum="$3"
 
   # By default, we want to exit upon an error
   if [[ -z "${IRONFOX_DOWNLOAD_EXIT+x}" ]]; then
@@ -502,9 +502,9 @@ function download() {
   # If we're doing a checksum update, we download the file to a separate temporary directory, instead of our standard one
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
     "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp/chksm"
-    local readonly file="${IRONFOX_EXTERNAL}/temp/chksm/${file_name}"
+    local -r file="${IRONFOX_EXTERNAL}/temp/chksm/${file_name}"
   else
-    local readonly file="${file_in}"
+    local -r file="${file_in}"
   fi
 
   if [[ -f "${file}" ]]; then
@@ -528,9 +528,9 @@ function download() {
 
   if [[ ! -d "$("${IRONFOX_DIRNAME}" "${file}")" ]]; then
     "${IRONFOX_MKDIR}" -vp "$("${IRONFOX_DIRNAME}" "${file}")"
-    local readonly CREATED_DIR_FOR_DL=1
+    local -r CREATED_DIR_FOR_DL=1
   else
-    local readonly CREATED_DIR_FOR_DL=0
+    local -r CREATED_DIR_FOR_DL=0
   fi
 
   echo_red_text "Downloading ${url}..."
@@ -581,9 +581,9 @@ function download() {
 
 # Extract archives
 function extract() {
-  local readonly archive_path="$1"
-  local readonly target_path="$2"
-  local readonly temp_repo_name="$3"
+  local -r archive_path="$1"
+  local -r target_path="$2"
+  local -r temp_repo_name="$3"
 
   if [[ ! -f "${archive_path}" ]]; then
     echo_red_text "ERROR: Archive '${archive_path}' does not exist!"
@@ -618,16 +618,16 @@ function extract() {
       ;;
   esac
 
-  local readonly top_input_dir=$("${IRONFOX_LS}" "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
+  local -r top_input_dir=$("${IRONFOX_LS}" "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
   "${IRONFOX_CP}" -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}/${top_input_dir}/" "${target_path}"
   "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
 }
 
 function download_and_extract() {
-  local readonly repo_name="$1"
-  local readonly url="$2"
-  local readonly path="$3"
-  local readonly expected_sha512sum="$4"
+  local -r repo_name="$1"
+  local -r url="$2"
+  local -r path="$3"
+  local -r expected_sha512sum="$4"
 
   # By default, we want to perform post-download actions for sources
   ## (this includes things like ex. installing a dependency or creating/setting-up an environment)
@@ -655,13 +655,13 @@ function download_and_extract() {
   fi
 
   if [[ "${url}" =~ \.tar\.xz$ ]]; then
-    local readonly extension=".tar.xz"
+    local -r extension=".tar.xz"
   elif [[ "${url}" =~ \.tar\.gz$ ]]; then
-    local readonly extension=".tar.gz"
+    local -r extension=".tar.gz"
   elif [[ "${url}" =~ \.tar\.zst$ ]]; then
-    local readonly extension=".tar.zst"
+    local -r extension=".tar.zst"
   else
-    local readonly extension=".zip"
+    local -r extension=".zip"
   fi
 
   # Tell `download` to return instead of exit upon an error
@@ -670,7 +670,7 @@ function download_and_extract() {
   # By default, we know the download hasn't failed...
   local IRONFOX_DOWNLOAD_FAILED=0
 
-  local readonly repo_archive="${IRONFOX_DOWNLOADS}/${repo_name}${extension}"
+  local -r repo_archive="${IRONFOX_DOWNLOADS}/${repo_name}${extension}"
   download "${url}" "${repo_archive}" "${expected_sha512sum}" || local IRONFOX_DOWNLOAD_FAILED=1
 
   # If we're just updating the checksum, we're done, so go ahead and exit
@@ -783,16 +783,16 @@ function get_android_sdk() {
   else
     # Set our platform
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_ANDROID_SDK_PLATFORM='mac'
+      local -r IRONFOX_ANDROID_SDK_PLATFORM='mac'
     else
-      local readonly IRONFOX_ANDROID_SDK_PLATFORM='linux'
+      local -r IRONFOX_ANDROID_SDK_PLATFORM='linux'
     fi
 
     # Set our checksum to verify
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_ANDROID_SDK_SHA512SUM="${IRONFOX_ANDROID_SDK_SHA512SUM_OSX}"
+      local -r IRONFOX_ANDROID_SDK_SHA512SUM="${IRONFOX_ANDROID_SDK_SHA512SUM_OSX}"
     else
-      local readonly IRONFOX_ANDROID_SDK_SHA512SUM="${IRONFOX_ANDROID_SDK_SHA512SUM_LINUX}"
+      local -r IRONFOX_ANDROID_SDK_SHA512SUM="${IRONFOX_ANDROID_SDK_SHA512SUM_LINUX}"
     fi
 
     echo_red_text 'Downloading Android SDK...'
@@ -818,16 +818,16 @@ function get_android_sdk_build_tools() {
   else
     # Set our platform
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_PLATFORM='macosx'
+      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_PLATFORM='macosx'
     else
-      local readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_PLATFORM='linux'
+      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_PLATFORM='linux'
     fi
 
     # Set our checksum to verify
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM_OSX}"
+      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM_OSX}"
     else
-      local readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM_LINUX}"
+      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM_LINUX}"
     fi
 
     echo_red_text 'Downloading Android SDK Build Tools (latest)...'
@@ -852,16 +852,16 @@ function get_android_sdk_build_tools_35() {
   else
     # Set our platform
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_PLATFORM='macosx'
+      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_PLATFORM='macosx'
     else
-      local readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_PLATFORM='linux'
+      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_PLATFORM='linux'
     fi
 
     # Set our checksum to verify
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX}"
+      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX}"
     else
-      local readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_LINUX}"
+      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_LINUX}"
     fi
 
     echo_red_text 'Downloading Android SDK Build Tools (35.0.0)...'
@@ -972,16 +972,16 @@ function get_android_sdk_platform_tools() {
   else
     # Set our platform
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_PLATFORM='darwin'
+      local -r IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_PLATFORM='darwin'
     else
-      local readonly IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_PLATFORM='linux'
+      local -r IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_PLATFORM='linux'
     fi
 
     # Set our checksum to verify
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX}"
+      local -r IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX}"
     else
-      local readonly IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX}"
+      local -r IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX}"
     fi
 
     echo_red_text 'Downloading Android SDK Platform Tools...'
@@ -1094,9 +1094,9 @@ function get_glean_parser() {
 
   # Set our Glean Parser wheels directory
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
-    local readonly glean_parser_wheels="${IRONFOX_EXTERNAL}/temp/chksm/glean_parser-wheels"
+    local -r glean_parser_wheels="${IRONFOX_EXTERNAL}/temp/chksm/glean_parser-wheels"
   else
-    local readonly glean_parser_wheels="${IRONFOX_GLEAN_PARSER_WHEELS}"
+    local -r glean_parser_wheels="${IRONFOX_GLEAN_PARSER_WHEELS}"
   fi
 
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]] && [[ -d "${IRONFOX_PYENV_DIR}/bin/glean_parser" ]]; then
@@ -1190,30 +1190,30 @@ function get_jdk_17() {
   else
     # Set our platform
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_JDK_17_PLATFORM='mac'
+      local -r IRONFOX_JDK_17_PLATFORM='mac'
     else
-      local readonly IRONFOX_JDK_17_PLATFORM='linux'
+      local -r IRONFOX_JDK_17_PLATFORM='linux'
     fi
 
     # Set our platform architecture
     if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
-      local readonly IRONFOX_JDK_17_ARCH='aarch64'
+      local -r IRONFOX_JDK_17_ARCH='aarch64'
     else
-      local readonly IRONFOX_JDK_17_ARCH='x64'
+      local -r IRONFOX_JDK_17_ARCH='x64'
     fi
 
     # Set our checksum to verify
     if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
       if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-        local readonly IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_OSX_ARM64}"
+        local -r IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_OSX_ARM64}"
       else
-        local readonly IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_LINUX_ARM64}"
+        local -r IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_LINUX_ARM64}"
       fi
     else
       if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-        local readonly IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_OSX_X86_64}"
+        local -r IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_OSX_X86_64}"
       else
-        local readonly IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_LINUX_X86_64}"
+        local -r IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_LINUX_X86_64}"
       fi
     fi
 
@@ -1233,7 +1233,7 @@ function get_jdk_21() {
 
     echo_red_text 'Downloading JDK (21) (Linux - x86_64)...'
     download "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-${IRONFOX_JDK_21_VERSION}%2B${IRONFOX_JDK_21_REVISION}/OpenJDK21U-jdk_x64_linux_hotspot_${IRONFOX_JDK_21_VERSION}_${IRONFOX_JDK_21_REVISION}.tar.gz" "${IRONFOX_JDK_21}" "${IRONFOX_JDK_21_SHA512SUM_LINUX_X86_64}"
- 
+
     echo_red_text 'Downloading JDK (21) (OS X - ARM64)...'
     download "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-${IRONFOX_JDK_21_VERSION}%2B${IRONFOX_JDK_21_REVISION}/OpenJDK21U-jdk_aarch64_mac_hotspot_${IRONFOX_JDK_21_VERSION}_${IRONFOX_JDK_21_REVISION}.tar.gz" "${IRONFOX_JDK_21}" "${IRONFOX_JDK_21_SHA512SUM_OSX_ARM64}"
 
@@ -1242,30 +1242,30 @@ function get_jdk_21() {
   else
     # Set our platform
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_JDK_21_PLATFORM='mac'
+      local -r IRONFOX_JDK_21_PLATFORM='mac'
     else
-      local readonly IRONFOX_JDK_21_PLATFORM='linux'
+      local -r IRONFOX_JDK_21_PLATFORM='linux'
     fi
 
     # Set our platform architecture
     if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
-      local readonly IRONFOX_JDK_21_ARCH='aarch64'
+      local -r IRONFOX_JDK_21_ARCH='aarch64'
     else
-      local readonly IRONFOX_JDK_21_ARCH='x64'
+      local -r IRONFOX_JDK_21_ARCH='x64'
     fi
 
     # Set our checksum to verify
     if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
       if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-        local readonly IRONFOX_JDK_21_SHA512SUM="${IRONFOX_JDK_21_SHA512SUM_OSX_ARM64}"
+        local -r IRONFOX_JDK_21_SHA512SUM="${IRONFOX_JDK_21_SHA512SUM_OSX_ARM64}"
       else
-        local readonly IRONFOX_JDK_21_SHA512SUM="${IRONFOX_JDK_21_SHA512SUM_LINUX_ARM64}"
+        local -r IRONFOX_JDK_21_SHA512SUM="${IRONFOX_JDK_21_SHA512SUM_LINUX_ARM64}"
       fi
     else
       if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-        local readonly IRONFOX_JDK_21_SHA512SUM="${IRONFOX_JDK_21_SHA512SUM_OSX_X86_64}"
+        local -r IRONFOX_JDK_21_SHA512SUM="${IRONFOX_JDK_21_SHA512SUM_OSX_X86_64}"
       else
-        local readonly IRONFOX_JDK_21_SHA512SUM="${IRONFOX_JDK_21_SHA512SUM_LINUX_X86_64}"
+        local -r IRONFOX_JDK_21_SHA512SUM="${IRONFOX_JDK_21_SHA512SUM_LINUX_X86_64}"
       fi
     fi
 
@@ -1294,30 +1294,30 @@ function get_jdk_25() {
   else
     # Set our platform
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_JDK_25_PLATFORM='mac'
+      local -r IRONFOX_JDK_25_PLATFORM='mac'
     else
-      local readonly IRONFOX_JDK_25_PLATFORM='linux'
+      local -r IRONFOX_JDK_25_PLATFORM='linux'
     fi
 
     # Set our platform architecture
     if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
-      local readonly IRONFOX_JDK_25_ARCH='aarch64'
+      local -r IRONFOX_JDK_25_ARCH='aarch64'
     else
-      local readonly IRONFOX_JDK_25_ARCH='x64'
+      local -r IRONFOX_JDK_25_ARCH='x64'
     fi
 
     # Set our checksum to verify
     if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
       if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-        local readonly IRONFOX_JDK_25_SHA512SUM="${IRONFOX_JDK_25_SHA512SUM_OSX_ARM64}"
+        local -r IRONFOX_JDK_25_SHA512SUM="${IRONFOX_JDK_25_SHA512SUM_OSX_ARM64}"
       else
-        local readonly IRONFOX_JDK_25_SHA512SUM="${IRONFOX_JDK_25_SHA512SUM_LINUX_ARM64}"
+        local -r IRONFOX_JDK_25_SHA512SUM="${IRONFOX_JDK_25_SHA512SUM_LINUX_ARM64}"
       fi
     else
       if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-        local readonly IRONFOX_JDK_25_SHA512SUM="${IRONFOX_JDK_25_SHA512SUM_OSX_X86_64}"
+        local -r IRONFOX_JDK_25_SHA512SUM="${IRONFOX_JDK_25_SHA512SUM_OSX_X86_64}"
       else
-        local readonly IRONFOX_JDK_25_SHA512SUM="${IRONFOX_JDK_25_SHA512SUM_LINUX_X86_64}"
+        local -r IRONFOX_JDK_25_SHA512SUM="${IRONFOX_JDK_25_SHA512SUM_LINUX_X86_64}"
       fi
     fi
 
@@ -1479,30 +1479,30 @@ function get_python() {
   else
     # Set our platform
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_PYTHON_PLATFORM='apple-darwin'
+      local -r IRONFOX_PYTHON_PLATFORM='apple-darwin'
     else
-      local readonly IRONFOX_PYTHON_PLATFORM='unknown-linux-gnu'
+      local -r IRONFOX_PYTHON_PLATFORM='unknown-linux-gnu'
     fi
 
     # Set our platform architecture
     if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
-      local readonly IRONFOX_PYTHON_ARCH='aarch64'
+      local -r IRONFOX_PYTHON_ARCH='aarch64'
     else
-      local readonly IRONFOX_PYTHON_ARCH='x86_64'
+      local -r IRONFOX_PYTHON_ARCH='x86_64'
     fi
 
     # Set our checksum to verify
     if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
       if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-        local readonly IRONFOX_PYTHON_SHA512SUM="${IRONFOX_PYTHON_SHA512SUM_OSX_ARM64}"
+        local -r IRONFOX_PYTHON_SHA512SUM="${IRONFOX_PYTHON_SHA512SUM_OSX_ARM64}"
       else
-        local readonly IRONFOX_PYTHON_SHA512SUM="${IRONFOX_PYTHON_SHA512SUM_LINUX_ARM64}"
+        local -r IRONFOX_PYTHON_SHA512SUM="${IRONFOX_PYTHON_SHA512SUM_LINUX_ARM64}"
       fi
     else
       if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-        local readonly IRONFOX_PYTHON_SHA512SUM="${IRONFOX_PYTHON_SHA512SUM_OSX_X86_64}"
+        local -r IRONFOX_PYTHON_SHA512SUM="${IRONFOX_PYTHON_SHA512SUM_OSX_X86_64}"
       else
-        local readonly IRONFOX_PYTHON_SHA512SUM="${IRONFOX_PYTHON_SHA512SUM_LINUX_X86_64}"
+        local -r IRONFOX_PYTHON_SHA512SUM="${IRONFOX_PYTHON_SHA512SUM_LINUX_X86_64}"
       fi
     fi
 
@@ -1763,30 +1763,30 @@ function get_uv() {
   else
     # Set our platform
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local readonly IRONFOX_UV_PLATFORM='apple-darwin'
+      local -r IRONFOX_UV_PLATFORM='apple-darwin'
     else
-      local readonly IRONFOX_UV_PLATFORM='unknown-linux-gnu'
+      local -r IRONFOX_UV_PLATFORM='unknown-linux-gnu'
     fi
 
     # Set our platform architecture
     if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
-      local readonly IRONFOX_UV_ARCH='aarch64'
+      local -r IRONFOX_UV_ARCH='aarch64'
     else
-      local readonly IRONFOX_UV_ARCH='x86_64'
+      local -r IRONFOX_UV_ARCH='x86_64'
     fi
 
     # Set our checksum to verify
     if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
       if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-        local readonly IRONFOX_UV_SHA512SUM="${IRONFOX_UV_SHA512SUM_OSX_ARM64}"
+        local -r IRONFOX_UV_SHA512SUM="${IRONFOX_UV_SHA512SUM_OSX_ARM64}"
       else
-        local readonly IRONFOX_UV_SHA512SUM="${IRONFOX_UV_SHA512SUM_LINUX_ARM64}"
+        local -r IRONFOX_UV_SHA512SUM="${IRONFOX_UV_SHA512SUM_LINUX_ARM64}"
       fi
     else
       if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-        local readonly IRONFOX_UV_SHA512SUM="${IRONFOX_UV_SHA512SUM_OSX_X86_64}"
+        local -r IRONFOX_UV_SHA512SUM="${IRONFOX_UV_SHA512SUM_OSX_X86_64}"
       else
-        local readonly IRONFOX_UV_SHA512SUM="${IRONFOX_UV_SHA512SUM_LINUX_X86_64}"
+        local -r IRONFOX_UV_SHA512SUM="${IRONFOX_UV_SHA512SUM_LINUX_X86_64}"
       fi
     fi
 

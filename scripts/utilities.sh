@@ -31,8 +31,8 @@ function verify_exec() {
     exit 1
   fi
 
-  local readonly exec="$1"
-  local readonly exec_env="$2"
+  local -r exec="$1"
+  local -r exec_env="$2"
 
   if [[ -z "${exec_env+x}" ]]; then
     echo_red_text "ERROR: Environment variable is missing!: ${exec_env}"
@@ -70,7 +70,7 @@ function verify_file() {
     exit 1
   fi
 
-  local readonly verify_file="$1"
+  local -r verify_file="$1"
 
   if [[ ! -f "${verify_file}" ]]; then
     echo_red_text "ERROR: ${verify_file} does not exist! Aborting..."
@@ -101,8 +101,8 @@ function verify_file_with_env() {
     exit 1
   fi
 
-  local readonly verify_file="$1"
-  local readonly verify_file_env="$2"
+  local -r verify_file="$1"
+  local -r verify_file_env="$2"
 
   if [[ -z "${verify_file_env+x}" ]]; then
     echo_red_text "ERROR: Environment variable is missing!: ${verify_file_env}"
@@ -137,7 +137,7 @@ function verify_dir() {
     exit 1
   fi
 
-  local readonly verify_dir="$1"
+  local -r verify_dir="$1"
 
   if [[ ! -d "${verify_dir}" ]]; then
     echo_red_text "ERROR: ${verify_dir} does not exist! Aborting..."
@@ -163,8 +163,8 @@ function verify_dir_with_env() {
     exit 1
   fi
 
-  local readonly verify_dir="$1"
-  local readonly verify_dir_env="$2"
+  local -r verify_dir="$1"
+  local -r verify_dir_env="$2"
 
   if [[ -z "${verify_dir_env+x}" ]]; then
     echo_red_text "ERROR: Environment variable is missing!: ${verify_dir_env}"

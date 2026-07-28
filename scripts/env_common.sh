@@ -397,7 +397,7 @@ readonly IRONFOX_FENIX_OVERLAY="${IRONFOX_PATCHES}/fenix-overlay"
 export IRONFOX_FENIX_OVERLAY
 
 ## Gecko locales
-readonly IRONFOX_LOCALES_DEFAULT=$(<"${IRONFOX_CONFIGS}/locales")
+readonly IRONFOX_LOCALES_DEFAULT=$(< "${IRONFOX_CONFIGS}/locales")
 if [[ -z "${IRONFOX_LOCALES+x}" ]]; then
   IRONFOX_LOCALES="${IRONFOX_LOCALES_DEFAULT}"
 fi
@@ -1925,7 +1925,7 @@ export IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE
 # Should we automatically sign our output APK(S) files?
 readonly IRONFOX_SIGN_DEFAULT=0
 if [[ "${IRONFOX_ANDROID_KEYSTORE}" != 'null' ]] && [[ "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" != 'null' ]] &&
- [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_ALIAS}" != 'null' ]] && [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" != 'null' ]]; then
+  [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_ALIAS}" != 'null' ]] && [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" != 'null' ]]; then
   IRONFOX_SIGN=1
 else
   IRONFOX_SIGN="${IRONFOX_SIGN_DEFAULT}"

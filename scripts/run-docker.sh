@@ -84,15 +84,15 @@ if [[ "${PARSE_COMMAND}" == true ]]; then
 fi
 
 function image_exists() {
-  docker image inspect "${IMAGE_NAME}" >/dev/null 2>&1
+  docker image inspect "${IMAGE_NAME}" > /dev/null 2>&1
 }
 
 function container_exists() {
-  docker container inspect "${CONTAINER_NAME}" >/dev/null 2>&1
+  docker container inspect "${CONTAINER_NAME}" > /dev/null 2>&1
 }
 
 function container_running() {
-  [[ "$(docker container inspect -f '{{.State.Running}}' "${CONTAINER_NAME}" 2>/dev/null)" == "true" ]]
+  [[ "$(docker container inspect -f '{{.State.Running}}' "${CONTAINER_NAME}" 2> /dev/null)" == "true" ]]
 }
 
 function build_image() {
@@ -108,7 +108,7 @@ function build_image() {
 function create_container() {
   echo "Creating container '${CONTAINER_NAME}'..."
 
-  local readonly docker_cmd=(
+  local -r docker_cmd=(
     "docker" "run" "-d" "-it"
     "--name" "${CONTAINER_NAME}"
     "-v" "${root_dir}:/app"
@@ -128,7 +128,7 @@ function start_container() {
 }
 
 function execute_in_container() {
-  local readonly cmd=("$@")
+  local -r cmd=("$@")
 
   if [[ ${#cmd[@]} -eq 0 ]]; then
     echo "Starting interactive shell in container '${CONTAINER_NAME}'..."

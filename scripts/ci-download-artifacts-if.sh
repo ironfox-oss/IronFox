@@ -61,44 +61,44 @@ readonly IRONFOX_AR_DOWN_ARCH="${down_arch}"
 
 # Function to download and verify the SHA512sum of an artifact
 function download_artifact() {
-  local readonly pipeline_id="$1"
-  local readonly artifact="$2"
-  local readonly arch="$3"
-  local readonly output_dir="$4"
+  local -r pipeline_id="$1"
+  local -r artifact="$2"
+  local -r arch="$3"
+  local -r output_dir="$4"
 
   if [[ "${arch}" == 'arm64' ]]; then
-    local readonly arch_suffix='arm64-v8a'
+    local -r arch_suffix='arm64-v8a'
   elif [[ "${arch}" == 'arm' ]]; then
-    local readonly arch_suffix='armeabi-v7a'
+    local -r arch_suffix='armeabi-v7a'
   elif [[ "${arch}" == 'x86_64' ]]; then
-    local readonly arch_suffix='x86_64'
+    local -r arch_suffix='x86_64'
   elif [[ "${arch}" == 'universal' ]]; then
-    local readonly arch_suffix='universal'
+    local -r arch_suffix='universal'
   fi
 
   if [[ "${artifact}" == 'fenix' ]]; then
     if [[ "${arch}" == 'bundle' ]]; then
       if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-        local readonly target_file="ironfox-${IRONFOX_VERSION}.apks"
+        local -r target_file="ironfox-${IRONFOX_VERSION}.apks"
       else
-        local readonly target_file="ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}.apks"
+        local -r target_file="ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}.apks"
       fi
     else
       if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-        local readonly target_file="ironfox-${IRONFOX_VERSION}-${arch_suffix}.apk"
+        local -r target_file="ironfox-${IRONFOX_VERSION}-${arch_suffix}.apk"
       else
-        local readonly target_file="ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-${arch_suffix}.apk"
+        local -r target_file="ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-${arch_suffix}.apk"
       fi
     fi
   elif [[ "${artifact}" == 'geckoview' ]]; then
-    local readonly target_file="geckoview-${arch_suffix}.zip"
+    local -r target_file="geckoview-${arch_suffix}.zip"
   fi
 
-  local readonly target_expected_sha512sum="${target_file}-sha512sum.txt"
-  local readonly target_expected_sha512sum_url="https://artifacts.ironfoxoss.org/ironfox/${pipeline_id}/${target_expected_sha512sum}"
-  local readonly target_file_url="https://artifacts.ironfoxoss.org/ironfox/${pipeline_id}/${target_file}"
-  local readonly output_file="${output_dir}/${target_file}"
-  local readonly output_expected_sha512sum="${output_dir}/${target_expected_sha512sum}"
+  local -r target_expected_sha512sum="${target_file}-sha512sum.txt"
+  local -r target_expected_sha512sum_url="https://artifacts.ironfoxoss.org/ironfox/${pipeline_id}/${target_expected_sha512sum}"
+  local -r target_file_url="https://artifacts.ironfoxoss.org/ironfox/${pipeline_id}/${target_file}"
+  local -r output_file="${output_dir}/${target_file}"
+  local -r output_expected_sha512sum="${output_dir}/${target_expected_sha512sum}"
 
   # Download the artifact
   "${IRONFOX_MKDIR}" -p "${output_dir}"
@@ -109,8 +109,8 @@ function download_artifact() {
   # Check the SHA512sum
   echo_red_text "Validating SHA512sum for ${target_file}.."
   "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${target_expected_sha512sum_url}" --output "${output_expected_sha512sum}"
-  local readonly expected_sha512sum=$("${IRONFOX_CAT}" "${output_expected_sha512sum}" | "${IRONFOX_XARGS}")
-  local readonly local_sha512sum=$("${IRONFOX_SHA512SUM}" "${output_file}" | "${IRONFOX_AWK}" '{print $1}')
+  local -r expected_sha512sum=$("${IRONFOX_CAT}" "${output_expected_sha512sum}" | "${IRONFOX_XARGS}")
+  local -r local_sha512sum=$("${IRONFOX_SHA512SUM}" "${output_file}" | "${IRONFOX_AWK}" '{print $1}')
   if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
     echo_red_text 'ERROR: Checksum validation failed.'
     echo "Expected SHA512sum: ${expected_sha512sum}"

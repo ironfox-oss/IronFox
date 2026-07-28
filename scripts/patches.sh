@@ -33,14 +33,14 @@ readonly GLEAN_PATCH_FILES=($("${IRONFOX_YQ}" '.patches[].file' "$("${IRONFOX_DI
 readonly UP_AC_PATCH_FILES=($("${IRONFOX_YQ}" '.patches[].file' "${IRONFOX_UP_AC}"/patches/patches.yaml))
 
 function check_patch() {
-  local readonly patch="${IRONFOX_PATCHES}/$1"
+  local -r patch="${IRONFOX_PATCHES}/$1"
   if [[ ! -f "${patch}" ]]; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "'${patch}' does not exist or is not a file"
     return 1
   fi
 
-  if ! "${PATCH_CMD[@]}" --dry-run <"${patch}"; then
+  if ! "${PATCH_CMD[@]}" --dry-run < "${patch}"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Incompatible patch: '${patch}'"
     return 1
@@ -48,14 +48,14 @@ function check_patch() {
 }
 
 function up_ac_check_patch() {
-  local readonly patch="${IRONFOX_UP_AC}/patches/$1"
+  local -r patch="${IRONFOX_UP_AC}/patches/$1"
   if [[ ! -f "${patch}" ]]; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "'${patch}' does not exist or is not a file"
     return 1
   fi
 
-  if ! "${PATCH_CMD[@]}" --dry-run <"${patch}"; then
+  if ! "${PATCH_CMD[@]}" --dry-run < "${patch}"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Incompatible patch: '${patch}'"
     return 1
@@ -96,7 +96,7 @@ function up_ac_check_patches() {
 
 function test_patches() {
   for patch in "${PATCH_FILES[@]}"; do
-    if ! check_patch "${patch}" >/dev/null 2>&1; then
+    if ! check_patch "${patch}" > /dev/null 2>&1; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     else
       printf "${GREEN}✓ %-45s: OK${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
@@ -106,7 +106,7 @@ function test_patches() {
 
 function a-s_test_patches() {
   for patch in "${AS_PATCH_FILES[@]}"; do
-    if ! check_patch "${patch}" >/dev/null 2>&1; then
+    if ! check_patch "${patch}" > /dev/null 2>&1; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     else
       printf "${GREEN}✓ %-45s: OK${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
@@ -116,7 +116,7 @@ function a-s_test_patches() {
 
 function glean_test_patches() {
   for patch in "${GLEAN_PATCH_FILES[@]}"; do
-    if ! check_patch "${patch}" >/dev/null 2>&1; then
+    if ! check_patch "${patch}" > /dev/null 2>&1; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     else
       printf "${GREEN}✓ %-45s: OK${NC}\n" "$("${IRONFOX_BASENAME}"e "${patch}")"
@@ -126,7 +126,7 @@ function glean_test_patches() {
 
 function up_ac_test_patches() {
   for patch in "${UP_AC_PATCH_FILES[@]}"; do
-    if ! up_ac_check_patch "${patch}" >/dev/null 2>&1; then
+    if ! up_ac_check_patch "${patch}" > /dev/null 2>&1; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     else
       printf "${GREEN}✓ %-45s: OK${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
@@ -135,18 +135,18 @@ function up_ac_test_patches() {
 }
 
 function apply_patch() {
-  local readonly name="$1"
+  local -r name="$1"
   echo "Applying patch: ${name}"
   check_patch "${name}" || return 1
-  "${PATCH_CMD[@]}" <"${IRONFOX_PATCHES}/${name}"
+  "${PATCH_CMD[@]}" < "${IRONFOX_PATCHES}/${name}"
   return $?
 }
 
 function up_ac_apply_patch() {
-  local readonly name="$1"
+  local -r name="$1"
   echo "Applying patch: ${name}"
   up_ac_check_patch "${name}" || return 1
-  "${PATCH_CMD[@]}" <"${IRONFOX_UP_AC}/patches/${name}"
+  "${PATCH_CMD[@]}" < "${IRONFOX_UP_AC}/patches/${name}"
   return $?
 }
 
@@ -215,19 +215,19 @@ function up_ac_list_patches() {
 }
 
 function slugify() {
-  local readonly input="$1"
-  echo "${input}" |                  \
-    tr '[:upper:]' '[:lower:]' | \
-    "${IRONFOX_SED}" -E 's/[^a-z0-9]+/-/g' |  \
+  local -r input="$1"
+  echo "${input}" |
+    tr '[:upper:]' '[:lower:]' |
+    "${IRONFOX_SED}" -E 's/[^a-z0-9]+/-/g' |
     "${IRONFOX_SED}" -E 's/^-+|-+$//g'
 }
 
 # Function to rebase a single patch file atomically
 # Usage: rebase_patch <compatible_tag> <target_tag> <patch_file_path>
 function rebase_patch() {
-  local readonly compatible_tag="$1"
-  local readonly target_tag="$2"
-  local readonly patch_file="$3"
+  local -r compatible_tag="$1"
+  local -r target_tag="$2"
+  local -r patch_file="$3"
 
   # Validate inputs
   if [[ -z "${compatible_tag}" || -z "${target_tag}" || -z "${patch_file}" ]]; then
@@ -244,37 +244,37 @@ function rebase_patch() {
   fi
 
   # Store original state for rollback
-  local readonly original_branch=$("${IRONFOX_GIT}" rev-parse --abbrev-ref HEAD 2>/dev/null)
+  local -r original_branch=$("${IRONFOX_GIT}" rev-parse --abbrev-ref HEAD 2> /dev/null)
 
-  local readonly original_stash_count=$("${IRONFOX_GIT}" stash list | "${IRONFOX_WC}" -l)
+  local -r original_stash_count=$("${IRONFOX_GIT}" stash list | "${IRONFOX_WC}" -l)
 
-  local readonly patch_name=$("${IRONFOX_BASENAME}" "${patch_file}" .patch)
+  local -r patch_name=$("${IRONFOX_BASENAME}" "${patch_file}" .patch)
 
-  local readonly branch_name="rebase-${patch_name}"
+  local -r branch_name="rebase-${patch_name}"
 
   function cleanup_and_rollback() {
     echo "Error occurred, rolling back changes..." >&2
 
     # Check if we're in the middle of a rebase and abort it
-    if "${IRONFOX_GIT}" status --porcelain=v1 2>/dev/null | "${IRONFOX_GREP}" -q "^R" ||
-     [[ -d "$("${IRONFOX_GIT}" rev-parse --git-dir)/rebase-merge" ]] ||
-     [[ -d "$("${IRONFOX_GIT}" rev-parse --git-dir)/rebase-apply" ]]; then
+    if "${IRONFOX_GIT}" status --porcelain=v1 2> /dev/null | "${IRONFOX_GREP}" -q "^R" ||
+      [[ -d "$("${IRONFOX_GIT}" rev-parse --git-dir)/rebase-merge" ]] ||
+      [[ -d "$("${IRONFOX_GIT}" rev-parse --git-dir)/rebase-apply" ]]; then
       echo "Aborting rebase in progress..."
-      "${IRONFOX_GIT}" rebase --abort 2>/dev/null
+      "${IRONFOX_GIT}" rebase --abort 2> /dev/null
     fi
 
     # Switch back to original branch if it exists
     if [[ -n "${original_branch}" && "${original_branch}" != "HEAD" ]]; then
-      "${IRONFOX_GIT}" checkout "${original_branch}" 2>/dev/null
+      "${IRONFOX_GIT}" checkout "${original_branch}" 2> /dev/null
     fi
 
     # Delete the temporary branch if it was created
-    "${IRONFOX_GIT}" branch -D "${branch_name}" 2>/dev/null
+    "${IRONFOX_GIT}" branch -D "${branch_name}" 2> /dev/null
 
     # Restore stashed changes if any were created
-    local readonly current_stash_count=$("${IRONFOX_GIT}" stash list | "${IRONFOX_WC}" -l)
+    local -r current_stash_count=$("${IRONFOX_GIT}" stash list | "${IRONFOX_WC}" -l)
     if [[ "${current_stash_count}" -gt "${original_stash_count}" ]]; then
-      "${IRONFOX_GIT}" stash pop 2>/dev/null
+      "${IRONFOX_GIT}" stash pop 2> /dev/null
     fi
 
     return 1
@@ -291,14 +291,14 @@ function rebase_patch() {
   fi
 
   # Check if tags exist
-  if ! "${IRONFOX_GIT}" rev-parse --verify "${compatible_tag}" >/dev/null 2>&1; then
+  if ! "${IRONFOX_GIT}" rev-parse --verify "${compatible_tag}" > /dev/null 2>&1; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Compatible tag '${compatible_tag}' does not exist" >&2
     cleanup_and_rollback
     return 1
   fi
 
-  if ! "${IRONFOX_GIT}" rev-parse --verify "${target_tag}" >/dev/null 2>&1; then
+  if ! "${IRONFOX_GIT}" rev-parse --verify "${target_tag}" > /dev/null 2>&1; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Target tag '${target_tag}' does not exist" >&2
     cleanup_and_rollback
@@ -341,7 +341,7 @@ function rebase_patch() {
   fi
 
   # Commit the changes
-  local readonly commit_message="Apply patch $("${IRONFOX_BASENAME}" "${patch_file}") - rebased to ${target_tag}"
+  local -r commit_message="Apply patch $("${IRONFOX_BASENAME}" "${patch_file}") - rebased to ${target_tag}"
   echo "Committing changes..."
   if ! "${IRONFOX_GIT}" commit -m "${commit_message}"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
@@ -361,8 +361,8 @@ function rebase_patch() {
 
   # Update the patch file using git format-patch
   echo "Updating patch file..."
-  local readonly temp_patch=$("${IRONFOX_MKTEMP}")
-  if ! "${IRONFOX_GIT}" format-patch -1 --stdout >"${temp_patch}"; then
+  local -r temp_patch=$("${IRONFOX_MKTEMP}")
+  if ! "${IRONFOX_GIT}" format-patch -1 --stdout > "${temp_patch}"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patc}h")"
     echo "Failed to generate new patch" >&2
     "${IRONFOX_RM}" -f "${temp_patch}"
@@ -389,7 +389,7 @@ function rebase_patch() {
   "${IRONFOX_GIT}" branch -D "${branch_name}"
 
   # Restore stashed changes if any
-  local readonly current_stash_count=$("${IRONFOX_GIT}" stash list | "${IRONFOX_WC}" -l)
+  local -r current_stash_count=$("${IRONFOX_GIT}" stash list | "${IRONFOX_WC}" -l)
   if [[ "${current_stash_count}" -gt "${original_stash_count}" ]]; then
     echo "Restoring stashed changes..."
     "${IRONFOX_GIT}" stash pop
@@ -403,8 +403,8 @@ function rebase_patch() {
 # Function to rebase multiple patch files
 # Usage: rebase_patches <compatible_tag> <target_tag> <patch_file1> [patch_file2] [...]
 function rebase_patches() {
-  local readonly compatible_tag="$1"
-  local readonly target_tag="$2"
+  local -r compatible_tag="$1"
+  local -r target_tag="$2"
 
   # Validate inputs
   if [[ -z "${compatible_tag}" || -z "${target_tag}" ]]; then

@@ -22,7 +22,10 @@ else
 fi
 
 "${IRONFOX_GIT}" clone "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${TARGET_REPO_PATH}.git" target-repo
-cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };
+cd target-repo || {
+  echo "Unable to cd into target-repo"
+  exit 1
+}
 
 # Generate documentation for patches
 source "${IRONFOX_PYENV}"

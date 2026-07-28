@@ -27,15 +27,15 @@ fi
 
 # Function to download an APK for a desired release
 function download_release() {
-  local readonly version="$1"
-  local readonly arch="$2"
-  local readonly output_dir="$3"
-  local readonly target_apk="ironfox-${version}-${arch}.apk"
-  local readonly target_expected_sha512sum="${target_apk}-sha512sum.txt"
-  local readonly target_expected_sha512sum_url="https://releases.ironfoxoss.org/ironfox/releases/${version}/${arch}/${target_expected_sha512sum}"
-  local readonly target_apk_url="https://releases.ironfoxoss.org/ironfox/releases/${version}/${arch}/${target_apk}"
-  local readonly output_apk="${output_dir}/${target_apk}"
-  local readonly output_expected_sha512sum="${output_dir}/${target_expected_sha512sum}"
+  local -r version="$1"
+  local -r arch="$2"
+  local -r output_dir="$3"
+  local -r target_apk="ironfox-${version}-${arch}.apk"
+  local -r target_expected_sha512sum="${target_apk}-sha512sum.txt"
+  local -r target_expected_sha512sum_url="https://releases.ironfoxoss.org/ironfox/releases/${version}/${arch}/${target_expected_sha512sum}"
+  local -r target_apk_url="https://releases.ironfoxoss.org/ironfox/releases/${version}/${arch}/${target_apk}"
+  local -r output_apk="${output_dir}/${target_apk}"
+  local -r output_expected_sha512sum="${output_dir}/${target_expected_sha512sum}"
 
   # Download the APK
   echo_red_text "Downloading ${target_apk} from ${target_apk_url}..."
@@ -45,8 +45,8 @@ function download_release() {
   # Check the SHA512sum
   echo_red_text "Validating SHA512sum for ${target_apk}.."
   "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${target_expected_sha512sum_url}" --output "${output_expected_sha512sum}"
-  local readonly expected_sha512sum=$("${IRONFOX_CAT}" "${output_expected_sha512sum}" | "${IRONFOX_XARGS}")
-  local readonly local_sha512sum=$("${IRONFOX_SHA512SUM}" "${output_apk}" | "${IRONFOX_AWK}" '{print $1}')
+  local -r expected_sha512sum=$("${IRONFOX_CAT}" "${output_expected_sha512sum}" | "${IRONFOX_XARGS}")
+  local -r local_sha512sum=$("${IRONFOX_SHA512SUM}" "${output_apk}" | "${IRONFOX_AWK}" '{print $1}')
   if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
     echo_red_text 'ERROR: Checksum validation failed.'
     echo "Expected SHA512sum: ${expected_sha512sum}"
@@ -74,7 +74,10 @@ function download_releases() {
 }
 
 "${IRONFOX_GIT}" clone --recurse-submodules "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${FDROID_REPO_PATH}.git" fdroid
-pushd fdroid || { echo "Unable to pushd into 'fdroid'"; exit 1; };
+pushd fdroid || {
+  echo "Unable to pushd into 'fdroid'"
+  exit 1
+}
 "${IRONFOX_MKDIR}" -vp "${REPO_DIR_PATH}"
 "${IRONFOX_GIT}" lfs install
 
@@ -105,10 +108,10 @@ readonly previous_previous_apk_x86_64="ironfox-${previous_previous_version}-x86_
 for apk in "${REPO_DIR_PATH}"/*.apk; do
   apk_basename=$("${IRONFOX_BASENAME}" "${apk}")
   if [[ "${apk_basename}" != "${current_apk_arm64}" ]] && [[ "${apk_basename}" != "${previous_apk_arm64}" ]] &&
-   [[ "${apk_basename}" != "${previous_previous_apk_arm64}" ]] && [[ "${apk_basename}" != "${current_apk_arm}" ]] &&
-   [[ "${apk_basename}" != "${previous_apk_arm}" ]] && [[ "${apk_basename}" != "${previous_previous_apk_arm}" ]] &&
-   [[ "${apk_basename}" != "${current_apk_x86_64}" ]] && [[ "${apk_basename}" != "${previous_apk_x86_64}" ]] &&
-   [[ "${apk_basename}" != "${previous_previous_apk_x86_64}" ]]; then
+    [[ "${apk_basename}" != "${previous_previous_apk_arm64}" ]] && [[ "${apk_basename}" != "${current_apk_arm}" ]] &&
+    [[ "${apk_basename}" != "${previous_apk_arm}" ]] && [[ "${apk_basename}" != "${previous_previous_apk_arm}" ]] &&
+    [[ "${apk_basename}" != "${current_apk_x86_64}" ]] && [[ "${apk_basename}" != "${previous_apk_x86_64}" ]] &&
+    [[ "${apk_basename}" != "${previous_previous_apk_x86_64}" ]]; then
     "${IRONFOX_RM}" -vf "${apk}"
   fi
 done
@@ -122,14 +125,20 @@ readonly META_FILE_PATH="${META_DIR_PATH}/${META_FILE_NAME}"
   -e "s/CurrentVersion: .*/CurrentVersion: \"v${vername}\"/" \
   -e "s/CurrentVersionCode: .*/CurrentVersionCode: ${vercode}/" "${META_FILE_PATH}"
 
-pushd "${META_DIR_PATH}" || { echo "Unable to pushd into '${META_DIR_PATH}'"; exit 1; }
+pushd "${META_DIR_PATH}" || {
+  echo "Unable to pushd into '${META_DIR_PATH}'"
+  exit 1
+}
 
 # Update metadata repository
 "${IRONFOX_GIT}" add "${META_FILE_NAME}"
 "${IRONFOX_GIT}" commit -m "feat: update for release ${CI_COMMIT_TAG}"
 "${IRONFOX_GIT}" push origin "HEAD:${META_REPO_BRANCH}"
 
-popd || { echo "Unable to popd from '${META_DIR_PATH}'"; exit 1; }
+popd || {
+  echo "Unable to popd from '${META_DIR_PATH}'"
+  exit 1
+}
 
 # Update F-Droid repository
 "${IRONFOX_GIT}" add "${REPO_DIR_PATH}" "${META_DIR_PATH}"
