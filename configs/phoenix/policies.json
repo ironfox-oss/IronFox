@@ -28,7 +28,6 @@
         ]
       }
     },
-    "HttpsOnlyMode": "enabled",
     "InstallAddonsPermission": {
       "Default": false
     },

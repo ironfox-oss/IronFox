@@ -49,9 +49,10 @@ object GeckoSettingsBridge {
     setAddressAutofillEnabled(context, engine)
     setCardAutofillEnabled(context, engine)
     setPasswordManagerEnabled(context, engine)
+    setHttpsOnlyMode(context, engine)
     setIronFoxOnboardingCompleted(context, engine)
 
-    // We don't support EME, but, if a user enables it from the about:config,
+    // We don't support EME, but, if a user enables it from `about:config`,
     // we need to expose the permision UI for it.
     // If we don't, and a user enables it, Gecko will just allow every site unconditionally to use EME...
     @OptIn(ExperimentalAndroidComponentsApi::class)
@@ -233,6 +234,12 @@ object GeckoSettingsBridge {
   fun setPasswordManagerEnabled(context: Context, engine: Engine) {
     val passwordManagerEnabled = context.components.settings.shouldPromptToSaveLogins
     setDefaultPref(engine, "signon.rememberSignons", passwordManagerEnabled)
+  }
+
+  // HTTPS-Only mode is a weird edge case, for some reason the value is not being reflected on the first launch
+  // So this ensures Gecko is always using the correct state
+  fun setHttpsOnlyMode(context: Context, engine: Engine) {
+    engine.settings.httpsOnlyMode = context.components.settings.getHttpsOnlyMode()
   }
 }
 
