@@ -65,12 +65,12 @@ echo_green_text "For Fenix: fenix-patch-name"
 echo_green_text "For GeckoView: geckoview-patch-name"
 echo_green_text "For anywhere else in the Firefox/Gecko repository: gecko-patch-name"
 echo_green_text "For Glean: glean-patch-name"
-read -p 'Please enter your desired patch name: ' PATCH_NAME
+read -rp 'Please enter your desired patch name: ' PATCH_NAME
 
 # Ensure the patch doesn't already exist
 if [[ -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch" ]]; then
   echo_red_text "WARNING: A Patch with your chosen name already exists"
-  read -p 'Are you sure you want to continue? (y/n): ' OVERWRITE
+  read -rp 'Are you sure you want to continue? (y/n): ' OVERWRITE
   case ${OVERWRITE} in
     "y" | "Y" | "yes" | "Yes" | "YES")
       echo_green_text "Removing ${IRONFOX_PATCHES}/${PATCH_NAME}.patch..."
@@ -78,7 +78,7 @@ if [[ -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch" ]]; then
       ;;
 
     "n" | "N" | "no" | "No" | "NO")
-      read -p 'Please enter a different patch name: ' PATCH_NAME
+      read -rp 'Please enter a different patch name: ' PATCH_NAME
       ;;
 
     *)
@@ -98,9 +98,9 @@ echo_green_text "Please now make your desired changes to the target project."
 "${IRONFOX_SLEEP}" 5
 echo
 echo_red_text "Press enter to continue."
-read
+read -r
 
-read -p 'Please enter your desired patch message: ' PATCH_MSG
+read -rp 'Please enter your desired patch message: ' PATCH_MSG
 
 # Commit our changes
 "${IRONFOX_GIT}" commit -am "${PATCH_MSG}" --sign

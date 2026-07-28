@@ -74,6 +74,7 @@ case "${build_arch}" in
   bundle)
     # arm64-v8a, armeabi-v7a, and x86_64
     readonly IRONFOX_TARGET_ARCH='bundle'
+    # shellcheck disable=SC2089
     readonly IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
     readonly IRONFOX_TARGET_PRETTY='Bundle'
     readonly IRONFOX_TARGET_RUST='arm64,arm,x86_64'
@@ -84,6 +85,7 @@ case "${build_arch}" in
     ;;
 esac
 export IRONFOX_TARGET_ARCH
+# shellcheck disable=SC2090
 export IRONFOX_TARGET_ABI
 export IRONFOX_TARGET_PRETTY
 

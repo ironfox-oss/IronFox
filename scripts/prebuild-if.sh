@@ -563,6 +563,7 @@ function prepare_fenix() {
   /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'fenix'
 
   # Let it be IronFox
+  # shellcheck disable=SC1112
   "${IRONFOX_SED}" -i \
     -e 's/Address bar - Firefox Suggest/Address bar/' \
     -e 's/Agree and continue/Continue/' \

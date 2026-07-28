@@ -110,7 +110,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
     "${IRONFOX_SLEEP}" 5 || error_fn
     echo
     echo_green_text "Press enter to continue."
-    read
+    read -r
     /usr/bin/systemctl reboot || error_fn
     echo
   fi

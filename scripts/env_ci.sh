@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # IronFox CI environment variables
 
 # Set timezone to UTC for consistency
