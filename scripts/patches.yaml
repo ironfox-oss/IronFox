@@ -700,6 +700,13 @@ patches:
     effect: "Users can easily test and configure installed machine learning models, as well as other related functionality."
     category: "User Control"
 
+  - file: "gecko-rs-preview-mode.patch"
+    name: "Gecko - Remote Settings Preview Mode"
+    description: "Allows users to enable Remote Settings Preview Mode if desired."
+    reason: "To allow users to download preview buckets from Remote Settings."
+    effect: "Users have more control over Remote Settings."
+    category: "User Control"
+
   - file: "a-c-display-builtin-addons.patch"
     name: "Android Components - Display built-in add-ons"
     description: "Displays built-in add-ons alongside user-installed ones."
