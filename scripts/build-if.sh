@@ -711,8 +711,8 @@ source "${IRONFOX_PYENV}"
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
-if [[ -z "${FIREFOX_VERSION+x}" ]]; then
-  echo_red_text 'ERROR: FIREFOX_VERSION is missing!'
+if [[ -z "${IRONFOX_GECKO_VERSION+x}" ]]; then
+  echo_red_text 'ERROR: IRONFOX_GECKO_VERSION is missing!'
   echo_red_text 'Aborting...'
   exit 1
 fi
@@ -723,14 +723,14 @@ if [[ -z "${IRONFOX_VERSION+x}" ]]; then
   exit 1
 fi
 
-if [[ -z "${APPSERVICES_VERSION+x}" ]]; then
-  echo_red_text 'ERROR: APPSERVICES_VERSION is missing!'
+if [[ -z "${IRONFOX_AS_VERSION+x}" ]]; then
+  echo_red_text 'ERROR: IRONFOX_AS_VERSION is missing!'
   echo_red_text 'Aborting...'
   exit 1
 fi
 
-if [[ -z "${GLEAN_VERSION+x}" ]]; then
-  echo_red_text 'ERROR: GLEAN_VERSION is missing!'
+if [[ -z "${IRONFOX_GLEAN_VERSION+x}" ]]; then
+  echo_red_text 'ERROR: IRONFOX_GLEAN_VERSION is missing!'
   echo_red_text 'Aborting...'
   exit 1
 fi
@@ -789,7 +789,7 @@ function set_build_env() {
     if [[ -f "${ac_version_file}" ]] && [[ -s "${ac_version_file}" ]]; then
       local readonly current_ac_version=$("${IRONFOX_CAT}" "${ac_version_file}" | "${IRONFOX_XARGS}")
       # Ensure the specified Android Components version has actually been built before re-using it...
-      if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/components/browser-engine-gecko/0.0.1-local-${FIREFOX_VERSION}-${current_ac_version}" ]]; then
+      if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/components/browser-engine-gecko/0.0.1-local-${IRONFOX_GECKO_VERSION}-${current_ac_version}" ]]; then
         local readonly IF_LOCAL_AC_VERSION_STAMP="${current_ac_version}"
       fi
     fi
@@ -819,7 +819,7 @@ function set_build_env() {
     if [[ -f "${as_version_file}" ]] && [[ -s "${as_version_file}" ]]; then
       local readonly current_as_version=$("${IRONFOX_CAT}" "${as_version_file}" | "${IRONFOX_XARGS}")
       # Ensure the specified Application Services version has actually been built before re-using it...
-      if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/appservices/full-megazord/0.0.1-SNAPSHOT-${APPSERVICES_VERSION}-${current_as_version}" ]]; then
+      if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/appservices/full-megazord/0.0.1-SNAPSHOT-${IRONFOX_AS_VERSION}-${current_as_version}" ]]; then
         local readonly IF_LOCAL_AS_VERSION_STAMP="${current_as_version}"
       fi
     fi
@@ -849,9 +849,9 @@ function set_build_env() {
     if [[ -f "${glean_version_file}" ]] && [[ -s "${glean_version_file}" ]]; then
       local readonly current_glean_version=$("${IRONFOX_CAT}" "${glean_version_file}" | "${IRONFOX_XARGS}")
       # Ensure the specified Glean version has actually been built before re-using it...
-      if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean/0.0.1-SNAPSHOT-${GLEAN_VERSION}-${current_glean_version}" ]] &&
-       [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean-gradle-plugin/0.0.1-SNAPSHOT-${GLEAN_VERSION}-${current_glean_version}" ]] &&
-       [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean-native/0.0.1-SNAPSHOT-${GLEAN_VERSION}-${current_glean_version}" ]]; then
+      if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean/0.0.1-SNAPSHOT-${IRONFOX_GLEAN_VERSION}-${current_glean_version}" ]] &&
+       [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean-gradle-plugin/0.0.1-SNAPSHOT-${IRONFOX_GLEAN_VERSION}-${current_glean_version}" ]] &&
+       [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean-native/0.0.1-SNAPSHOT-${IRONFOX_GLEAN_VERSION}-${current_glean_version}" ]]; then
         local readonly IF_LOCAL_GLEAN_VERSION_STAMP="${current_glean_version}"
       fi
     fi
@@ -892,12 +892,12 @@ function set_build_env() {
   if [[ "${IF_LOCAL_GLEAN_VERSION_STAMP_TEMP}" != 'undefined' ]]; then
     local readonly IF_LOCAL_GLEAN_VERSION_STAMP=$("${IRONFOX_CAT}" "${glean_version_file}" | "${IRONFOX_XARGS}")
   fi
-  readonly IF_LOCAL_AC_VERSION="0.0.1-local-${FIREFOX_VERSION}-${IF_LOCAL_AC_VERSION_STAMP}"
-  readonly IF_LOCAL_AC_VERSION_GRADLE="-${FIREFOX_VERSION}-${IF_LOCAL_AC_VERSION_STAMP}"
-  readonly IF_LOCAL_AS_VERSION="0.0.1-SNAPSHOT-${APPSERVICES_VERSION}-${IF_LOCAL_AS_VERSION_STAMP}"
-  readonly IF_LOCAL_AS_VERSION_GRADLE="${APPSERVICES_VERSION}-${IF_LOCAL_AS_VERSION_STAMP}"
-  readonly IF_LOCAL_GLEAN_VERSION="0.0.1-SNAPSHOT-${GLEAN_VERSION}-${IF_LOCAL_GLEAN_VERSION_STAMP}"
-  readonly IF_LOCAL_GLEAN_VERSION_GRADLE="${GLEAN_VERSION}-${IF_LOCAL_GLEAN_VERSION_STAMP}"
+  readonly IF_LOCAL_AC_VERSION="0.0.1-local-${IRONFOX_GECKO_VERSION}-${IF_LOCAL_AC_VERSION_STAMP}"
+  readonly IF_LOCAL_AC_VERSION_GRADLE="-${IRONFOX_GECKO_VERSION}-${IF_LOCAL_AC_VERSION_STAMP}"
+  readonly IF_LOCAL_AS_VERSION="0.0.1-SNAPSHOT-${IRONFOX_AS_VERSION}-${IF_LOCAL_AS_VERSION_STAMP}"
+  readonly IF_LOCAL_AS_VERSION_GRADLE="${IRONFOX_AS_VERSION}-${IF_LOCAL_AS_VERSION_STAMP}"
+  readonly IF_LOCAL_GLEAN_VERSION="0.0.1-SNAPSHOT-${IRONFOX_GLEAN_VERSION}-${IF_LOCAL_GLEAN_VERSION_STAMP}"
+  readonly IF_LOCAL_GLEAN_VERSION_GRADLE="${IRONFOX_GLEAN_VERSION}-${IF_LOCAL_GLEAN_VERSION_STAMP}"
 
   echo_green_text 'SUCCESS: Set build environment variables'
 }

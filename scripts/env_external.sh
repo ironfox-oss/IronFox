@@ -518,22 +518,24 @@ export UV_TOOL_BIN_DIR
 export UV_TOOL_DIR
 
 ## Pin Python version
-readonly UV_PYTHON_CPYTHON_BUILD="${PYTHON_GIT_RELEASE}"
+readonly UV_PYTHON_CPYTHON_BUILD="${IRONFOX_PYTHON_GIT_RELEASE}"
 export UV_PYTHON_CPYTHON_BUILD
 
 # Set IronFox version
 export IRONFOX_VERSION
 
 ## Set Node.js bin path
-readonly NVM_BIN="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin"
+readonly NVM_BIN="${IRONFOX_NVM}/versions/node/v${IRONFOX_NODE_VERSION}/bin"
 export NVM_BIN
 
 ## Set Node.js version
+readonly NODE_VERSION="${IRONFOX_NODE_VERSION}"
 export NODE_VERSION
 
 ## Set Rust version
-readonly RUSTUP_TOOLCHAIN="${RUST_VERSION}"
+readonly RUSTUP_TOOLCHAIN="${IRONFOX_RUST_VERSION}"
 export RUSTUP_TOOLCHAIN
 
 ## Set Rustup version
+readonly RUSTUP_VERSION="${IRONFOX_RUSTUP_VERSION}"
 export RUSTUP_VERSION

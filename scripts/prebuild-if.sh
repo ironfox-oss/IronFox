@@ -276,15 +276,15 @@ function prepare_android_sdk() {
   verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}"   'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS' || exit 1
 
   # Create Android NDK symlink
-  if [[ ! -d "${IRONFOX_ANDROID_SDK}/ndk/${ANDROID_NDK_REVISION}" ]]; then
+  if [[ ! -d "${IRONFOX_ANDROID_SDK}/ndk/${IRONFOX_ANDROID_NDK_REVISION}" ]]; then
     "${IRONFOX_MKDIR}" -p "${IRONFOX_ANDROID_SDK}/ndk"
-    "${IRONFOX_LN}" -s "${IRONFOX_ANDROID_NDK}" "${IRONFOX_ANDROID_SDK}/ndk/${ANDROID_NDK_REVISION}"
+    "${IRONFOX_LN}" -s "${IRONFOX_ANDROID_NDK}" "${IRONFOX_ANDROID_SDK}/ndk/${IRONFOX_ANDROID_NDK_REVISION}"
   fi
 
   # Create Android SDK Build Tools symlinks
-  if [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" ]]; then
+  if [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" ]]; then
     "${IRONFOX_MKDIR}" -p "${IRONFOX_ANDROID_SDK}/build-tools"
-    "${IRONFOX_LN}" -s "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}"
+    "${IRONFOX_LN}" -s "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" "${IRONFOX_ANDROID_SDK}/build-tools/${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}"
   fi
 
   if [[ -d "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}" ]] && [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/35.0.0" ]]; then
@@ -322,7 +322,7 @@ function prepare_as() {
   localize_gradle
 
   # Break the dependency on older Rust
-  "${IRONFOX_SED}" -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" "${IRONFOX_AS}/rust-toolchain.toml"
+  "${IRONFOX_SED}" -i -e "s|channel = .*|channel = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_AS}/rust-toolchain.toml"
 
   # Disable debug
   "${IRONFOX_SED}" -i -e 's|debug = .*|debug = false|g' "${IRONFOX_AS}/Cargo.toml"
@@ -740,9 +740,9 @@ function prepare_firefox() {
   "${IRONFOX_SED}" -i 's|https://|hxxps://|' "${IRONFOX_GECKO}/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt"
 
   # Break the dependency on older Rust
-  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GECKO}/Cargo.toml"
-  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_capi/Cargo.toml"
-  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_segmenter_data/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GECKO}/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_capi/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_segmenter_data/Cargo.toml"
 
   # Disable debug
   "${IRONFOX_SED}" -i -e 's|debug = .*|debug = false|g' "${IRONFOX_GECKO}/gfx/harfbuzz/src/rust/Cargo.toml"
@@ -951,9 +951,9 @@ function prepare_glean() {
   localize_maven
 
   # Break the dependency on older Rust
-  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml"
-  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/build/Cargo.toml"
-  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/rlb/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/build/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/rlb/Cargo.toml"
 
   # Disable debug
   "${IRONFOX_SED}" -i -e "s|debug = .*|debug = false|g" "${IRONFOX_GLEAN}/Cargo.toml"
@@ -1043,17 +1043,17 @@ function prepare_microg() {
   localize_gradle
 
   # Bump Android build tools
-  "${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}'|g" "${IRONFOX_GMSCORE}/build.gradle"
+  "${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}'|g" "${IRONFOX_GMSCORE}/build.gradle"
 
   # Bump Android compile SDK
-  "${IRONFOX_SED}" -i -e "s|ext.androidCompileSdk = .*|ext.androidCompileSdk = ${MICROG_ANDROID_SDK_COMPILE_VERSION}|g" "${IRONFOX_GMSCORE}/build.gradle"
+  "${IRONFOX_SED}" -i -e "s|ext.androidCompileSdk = .*|ext.androidCompileSdk = ${IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION}|g" "${IRONFOX_GMSCORE}/build.gradle"
 
   # Bump Android minimum SDK
   ## (This matches what we're using for the browser itself, as well as Mozilla's various components/dependencies)
   "${IRONFOX_SED}" -i -e 's|ext.androidMinSdk = .*|ext.androidMinSdk = 26|g' "${IRONFOX_GMSCORE}/build.gradle"
 
   # Bump Android target SDK
-  "${IRONFOX_SED}" -i -e "s|ext.androidTargetSdk = .*|ext.androidTargetSdk = ${ANDROID_SDK_TARGET}|g" "${IRONFOX_GMSCORE}/build.gradle"
+  "${IRONFOX_SED}" -i -e "s|ext.androidTargetSdk = .*|ext.androidTargetSdk = ${IRONFOX_ANDROID_SDK_TARGET}|g" "${IRONFOX_GMSCORE}/build.gradle"
 
   popd
 
