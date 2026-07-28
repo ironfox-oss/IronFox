@@ -2040,7 +2040,7 @@ export IRONFOX_GECKOVIEW_AAR_X86_64
 source "${IRONFOX_VERSIONS}"
 
 # Node.js
-readonly IRONFOX_NODEJS_DEFAULT="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin/node"
+readonly IRONFOX_NODEJS_DEFAULT="${IRONFOX_NVM}/versions/node/v${IRONFOX_NODE_VERSION}/bin/node"
 if [[ -z "${IRONFOX_NODEJS+x}" ]]; then
   IRONFOX_NODEJS="${IRONFOX_NODEJS_DEFAULT}"
 fi
@@ -2048,7 +2048,7 @@ readonly IRONFOX_NODEJS
 export IRONFOX_NODEJS
 
 # npm
-readonly IRONFOX_NPM_DEFAULT="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin/npm"
+readonly IRONFOX_NPM_DEFAULT="${IRONFOX_NVM}/versions/node/v${IRONFOX_NODE_VERSION}/bin/npm"
 if [[ -z "${IRONFOX_NPM+x}" ]]; then
   IRONFOX_NPM="${IRONFOX_NPM_DEFAULT}"
 fi
