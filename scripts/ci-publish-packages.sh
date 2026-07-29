@@ -57,13 +57,13 @@ function push_to_s3() {
 
   local readonly push_file="$1"
   local readonly s3_path="$2"
-  local readonly s3_full_path="${s3_path}/$("${IRONFOX_BASENAME}" "${upload_file}")"
+  local readonly s3_full_path="${s3_path}/$("${IRONFOX_BASENAME}" "${push_file}")"
 
   # Ensure our file to push is valid
   verify_file "${push_file}" || exit 1
 
   # Set our MIME type
-  case "${upload_file}" in
+  case "${push_file}" in
     *.apk)
       local readonly mime_type='application/vnd.android.package-archive'
       ;;
@@ -77,7 +77,7 @@ function push_to_s3() {
       local readonly mime_type='text/plain'
       ;;
     *)
-      echo_red_text "ERROR: Unsupported file type: ${upload_file}"
+      echo_red_text "ERROR: Unsupported file type: ${push_file}"
       exit 1
       ;;
   esac
