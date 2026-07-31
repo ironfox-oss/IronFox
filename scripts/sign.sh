@@ -19,8 +19,8 @@ readonly target="$1"
 # Functions
 
 function sign_apk() {
-  local readonly apk_in="$1"
-  local readonly apk_out="$2"
+  local -r apk_in="$1"
+  local -r apk_out="$2"
 
   # Ensure the APK to sign exists
   verify_file "${apk_in}" || exit 1
@@ -31,7 +31,7 @@ function sign_apk() {
     --ks-key-alias="${IRONFOX_ANDROID_KEYSTORE_KEY_ALIAS}" \
     --key-pass="file:/${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" \
     --out="${apk_out}" \
-  "${apk_in}"
+    "${apk_in}"
 }
 
 function sign_bundle() {

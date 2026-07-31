@@ -54,11 +54,31 @@ variables: &build_variables
   TRANSFER_METER_FREQUENCY: "2s"
 
 stages:
+  - lint
   - build_fdroid
   - build_site
   - build_docker
   - build_ironfox
   - release
+
+# Fast, lightweight gate: shellcheck + shfmt over the shell scripts.
+# Runs first so a lint failure stops the pipeline before the multi-hour builds.
+# Uses a minimal Alpine image (both tools are in Alpine's community repo) and is
+# NOT namespace-gated, so it also runs for forks / contributor pipelines.
+lint-scripts:
+  image: alpine:3.21
+  stage: lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+  before_script:
+    - apk add --no-cache bash git shellcheck shfmt
+    # Print tool versions so any local-vs-CI skew (e.g. default-check changes
+    # between shellcheck releases) is visible in the logs.
+    - shellcheck --version
+    - shfmt --version
+  script:
+    - bash scripts/lint.sh
 
 update-fdroid-repo:
   image: fedora:43

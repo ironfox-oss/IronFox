@@ -1,5 +1,8 @@
 FROM fedora:43
 
+# Cosmetic, bump to re-build container image
+ENV IRONFOX_IMAGE_VERSION=1
+
 # Ensure we're up to date
 RUN dnf update -y --refresh
 

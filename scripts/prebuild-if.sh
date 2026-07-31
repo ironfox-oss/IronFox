@@ -152,7 +152,7 @@ source "${IRONFOX_VERSIONS}"
 
 function localize_gradle() {
   "${IRONFOX_FIND}" ./* -name gradlew -type f | while read -r gradlew; do
-    echo -e "#!/bin/sh\n\""'${IRONFOX_GRADLE}'"\" \${IRONFOX_GRADLE_FLAGS} \""'$@'"\"" >"${gradlew}"
+    echo -e "#!/bin/sh\n\""'${IRONFOX_GRADLE}'"\" \${IRONFOX_GRADLE_FLAGS} \""'$@'"\"" > "${gradlew}"
     "${IRONFOX_CHMOD}" 755 "${gradlew}"
   done
 }
@@ -165,8 +165,8 @@ function localize_maven() {
 # Applies the overlay files in the given directory
 # to the current directory
 function apply_overlay() {
-  local readonly source_dir="$1"
-  "${IRONFOX_FIND}" "${source_dir}" -type f| while read -r src; do
+  local -r source_dir="$1"
+  "${IRONFOX_FIND}" "${source_dir}" -type f | while read -r src; do
     local overlay_target="${src#"${source_dir}"}"
     "${IRONFOX_MKDIR}" -vp "$("${IRONFOX_DIRNAME}" "${overlay_target}")"
     "${IRONFOX_CP}" -vrf "${src}" "${overlay_target}"
@@ -175,7 +175,7 @@ function apply_overlay() {
 
 function prepare_ac() {
   echo_red_text 'Preparing Android Components...'
- 
+
   # Verify directories
   verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC' || exit 1
   verify_dir_with_env "${IRONFOX_AC_OVERLAY}" 'IRONFOX_AC_OVERLAY' || exit 1
@@ -190,7 +190,7 @@ function prepare_ac() {
   "${IRONFOX_SED}" -i 's|7e8d6dc651b54ab385fb8791bf9dac||g' "${IRONFOX_AC}/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt"
   "${IRONFOX_SED}" -i -e 's/DEFAULT_COLLECTION_USER = ".*"/DEFAULT_COLLECTION_USER = ""/' "${IRONFOX_AC}/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt"
   "${IRONFOX_SED}" -i -e 's/DEFAULT_SERVER_URL = ".*"/DEFAULT_SERVER_URL = ""/' "${IRONFOX_AC}/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt"
- 
+
   # No-op crash reporting
   "${IRONFOX_SED}" -i -e 's|enabled: Boolean = .*|enabled: Boolean = false,|g' "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt"
   "${IRONFOX_SED}" -i -e 's|shouldPrompt: Prompt = .*|shouldPrompt: Prompt = Prompt.ALWAYS,|g' "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt"
@@ -270,10 +270,10 @@ function prepare_android_sdk() {
   echo_red_text 'Preparing Android SDK...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_ANDROID_NDK}"                  'IRONFOX_ANDROID_NDK' || exit 1
-  verify_dir_with_env "${IRONFOX_ANDROID_SDK}"                  'IRONFOX_ANDROID_SDK' || exit 1
-  verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}"      'IRONFOX_ANDROID_SDK_BUILD_TOOLS' || exit 1
-  verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}"   'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS' || exit 1
+  verify_dir_with_env "${IRONFOX_ANDROID_NDK}" 'IRONFOX_ANDROID_NDK' || exit 1
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK' || exit 1
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS' || exit 1
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" 'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS' || exit 1
 
   # Create Android NDK symlink
   if [[ ! -d "${IRONFOX_ANDROID_SDK}/ndk/${IRONFOX_ANDROID_NDK_REVISION}" ]]; then
@@ -563,6 +563,7 @@ function prepare_fenix() {
   /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'fenix'
 
   # Let it be IronFox
+  # shellcheck disable=SC1112
   "${IRONFOX_SED}" -i \
     -e 's/Address bar - Firefox Suggest/Address bar/' \
     -e 's/Agree and continue/Continue/' \
@@ -673,7 +674,7 @@ function prepare_firefox() {
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/gecko/ironfox"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_MOZBUILD}"
- 
+
   ## Copy machrc config
   "${IRONFOX_CP}" -f "${IRONFOX_CONFIGS}/mach/machrc" "${IRONFOX_MOZBUILD}/machrc"
 
@@ -717,17 +718,17 @@ function prepare_firefox() {
 
   # about:policies
   "${IRONFOX_MKDIR}" -vp "${IRONFOX_GECKO}/ironfox/locales/en-US/browser/policies"
-  "${IRONFOX_CP}" -vf browser/locales/en-US/browser/aboutPolicies.ftl                   "${IRONFOX_GECKO}/ironfox/locales/en-US/browser/"
-  "${IRONFOX_CP}" -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl  "${IRONFOX_GECKO}/ironfox/locales/en-US/browser/policies/"
+  "${IRONFOX_CP}" -vf browser/locales/en-US/browser/aboutPolicies.ftl "${IRONFOX_GECKO}/ironfox/locales/en-US/browser/"
+  "${IRONFOX_CP}" -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl "${IRONFOX_GECKO}/ironfox/locales/en-US/browser/policies/"
 
   # about:robots
   "${IRONFOX_MKDIR}" -vp "${IRONFOX_GECKO}/ironfox/about/browser/robots"
-  "${IRONFOX_CP}" -vf browser/base/content/aboutRobots.css          "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
-  "${IRONFOX_CP}" -vf browser/base/content/aboutRobots.js           "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
-  "${IRONFOX_CP}" -vf browser/base/content/aboutRobots.xhtml        "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
-  "${IRONFOX_CP}" -vf browser/base/content/aboutRobots-icon.png     "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
-  "${IRONFOX_CP}" -vf browser/base/content/robot.ico                "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
-  "${IRONFOX_CP}" -vf browser/base/content/static-robot.png         "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
+  "${IRONFOX_CP}" -vf browser/base/content/aboutRobots.css "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
+  "${IRONFOX_CP}" -vf browser/base/content/aboutRobots.js "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
+  "${IRONFOX_CP}" -vf browser/base/content/aboutRobots.xhtml "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
+  "${IRONFOX_CP}" -vf browser/base/content/aboutRobots-icon.png "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
+  "${IRONFOX_CP}" -vf browser/base/content/robot.ico "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
+  "${IRONFOX_CP}" -vf browser/base/content/static-robot.png "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
   "${IRONFOX_CP}" -vf browser/locales/en-US/browser/aboutRobots.ftl "${IRONFOX_GECKO}/ironfox/locales/en-US/browser/"
 
   # about:logo
@@ -752,7 +753,7 @@ function prepare_firefox() {
   "${IRONFOX_SED}" -i -e 's|overflow-checks = .*|overflow-checks = true|g' "${IRONFOX_GECKO}/gfx/harfbuzz/src/rust/Cargo.toml"
 
   # Enable performance optimizations
-  "${IRONFOX_SED}" -i -e "s|lto = .*|lto = true|g"          "${IRONFOX_GECKO}/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|lto = .*|lto = true|g" "${IRONFOX_GECKO}/Cargo.toml"
   "${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" "${IRONFOX_GECKO}/Cargo.toml"
   "${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" "${IRONFOX_GECKO}/gfx/wr/Cargo.toml"
 
@@ -760,34 +761,34 @@ function prepare_firefox() {
   ## https://bugzilla.mozilla.org/show_bug.cgi?id=1183318
   ## https://bugzilla.mozilla.org/show_bug.cgi?id=1915224
   "${IRONFOX_SED}" -i -e 's|NSS_ALLOW_SSLKEYLOGFILE ?= .*|NSS_ALLOW_SSLKEYLOGFILE ?= 0|g' "${IRONFOX_GECKO}/security/nss/lib/ssl/Makefile"
-  echo '' >>"${IRONFOX_GECKO}/security/moz.build"
-  echo 'gyp_vars["enable_sslkeylogfile"] = 0' >>"${IRONFOX_GECKO}/security/moz.build"
+  echo '' >> "${IRONFOX_GECKO}/security/moz.build"
+  echo 'gyp_vars["enable_sslkeylogfile"] = 0' >> "${IRONFOX_GECKO}/security/moz.build"
 
   # Include additional Remote Settings local dumps (+ add our own...)
   "${IRONFOX_SED}" -i -e 's|"mobile/"|"0"|g' "${IRONFOX_GECKO}/services/settings/dumps/blocklists/moz.build"
   "${IRONFOX_SED}" -i -e 's|"mobile/"|"0"|g' "${IRONFOX_GECKO}/services/settings/dumps/security-state/moz.build"
-  echo '' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
-  echo 'FINAL_TARGET_FILES.defaults.settings.main += [' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
-  echo '    "anti-tracking-url-decoration.json",' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
-  echo '    "cookie-banner-rules-list.json",' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
-  echo '    "hijack-blocklists.json",' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
-  echo '    "translations-models.json",' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
-  echo '    "translations-wasm.json",' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
-  echo '    "url-classifier-skip-urls.json",' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
-  echo '    "url-parser-default-unknown-schemes-interventions.json",' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
-  echo ']' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
+  echo '' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
+  echo 'FINAL_TARGET_FILES.defaults.settings.main += [' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
+  echo '    "anti-tracking-url-decoration.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
+  echo '    "cookie-banner-rules-list.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
+  echo '    "hijack-blocklists.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
+  echo '    "translations-models.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
+  echo '    "translations-wasm.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
+  echo '    "url-classifier-skip-urls.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
+  echo '    "url-parser-default-unknown-schemes-interventions.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
+  echo ']' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
 
   # Remove unused about:telemetry CSS
   "${IRONFOX_RM}" -v "${IRONFOX_GECKO}/toolkit/content/aboutTelemetry.css"
 
   # Remove unused localizations
-  "${IRONFOX_SED}" -i 's|locale/@AB_CD@/global/aboutStudies|# locale/@AB_CD@/global/aboutStudies|'  "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
-  "${IRONFOX_SED}" -i 's|crashreporter|# crashreporter|'                                            "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
-  "${IRONFOX_SED}" -i 's|locales-preview/aboutRestricted|# locales-preview/aboutRestricted|'        "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
+  "${IRONFOX_SED}" -i 's|locale/@AB_CD@/global/aboutStudies|# locale/@AB_CD@/global/aboutStudies|' "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
+  "${IRONFOX_SED}" -i 's|crashreporter|# crashreporter|' "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
+  "${IRONFOX_SED}" -i 's|locales-preview/aboutRestricted|# locales-preview/aboutRestricted|' "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
   "${IRONFOX_RM}" -vr "${IRONFOX_GECKO}/toolkit/locales/en-US/crashreporter"
-  "${IRONFOX_RM}" -v  "${IRONFOX_GECKO}/toolkit/locales/en-US/toolkit/about/aboutGlean.ftl"
-  "${IRONFOX_RM}" -v  "${IRONFOX_GECKO}/toolkit/locales/en-US/toolkit/about/aboutTelemetry.ftl"
-  "${IRONFOX_RM}" -v  "${IRONFOX_GECKO}/toolkit/locales-preview/aboutRestricted.ftl"
+  "${IRONFOX_RM}" -v "${IRONFOX_GECKO}/toolkit/locales/en-US/toolkit/about/aboutGlean.ftl"
+  "${IRONFOX_RM}" -v "${IRONFOX_GECKO}/toolkit/locales/en-US/toolkit/about/aboutTelemetry.ftl"
+  "${IRONFOX_RM}" -v "${IRONFOX_GECKO}/toolkit/locales-preview/aboutRestricted.ftl"
 
   # Prevent registration of the Glean add-on ping scheduler
   "${IRONFOX_SED}" -i 's|category update-timer amGleanDaily|# category update-timer amGleanDaily|' "${IRONFOX_GECKO}/toolkit/mozapps/extensions/extensions.manifest"
@@ -801,64 +802,64 @@ function prepare_firefox() {
   "${IRONFOX_RM}" -vr "${IRONFOX_GECKO}/.codex"
 
   # No-op RemoteSettingsCrashPull
-  "${IRONFOX_SED}" -i 's|crash-reports-ondemand||g'                                                         "${IRONFOX_GECKO}/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs"
+  "${IRONFOX_SED}" -i 's|crash-reports-ondemand||g' "${IRONFOX_GECKO}/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs"
   "${IRONFOX_SED}" -i -e 's/REMOTE_SETTINGS_CRASH_COLLECTION = ".*"/REMOTE_SETTINGS_CRASH_COLLECTION = ""/' "${IRONFOX_GECKO}/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs"
 
   # No-op Normandy (Experimentation)
   "${IRONFOX_SED}" -i -e 's/REMOTE_SETTINGS_COLLECTION = ".*"/REMOTE_SETTINGS_COLLECTION = ""/' "${IRONFOX_GECKO}/toolkit/components/normandy/lib/RecipeRunner.sys.mjs"
-  "${IRONFOX_SED}" -i 's|normandy-recipes-capabilities||g'                                      "${IRONFOX_GECKO}/toolkit/components/normandy/lib/RecipeRunner.sys.mjs"
+  "${IRONFOX_SED}" -i 's|normandy-recipes-capabilities||g' "${IRONFOX_GECKO}/toolkit/components/normandy/lib/RecipeRunner.sys.mjs"
 
   # No-op Nimbus (Experimentation) (Gecko)
   ## (Primarily for defense in depth)
-  "${IRONFOX_SED}" -i -e 's/COLLECTION_ID_FALLBACK = ".*"/COLLECTION_ID_FALLBACK = ""/'                     "${IRONFOX_GECKO}/toolkit/components/nimbus/ExperimentAPI.sys.mjs"
-  "${IRONFOX_SED}" -i -e 's/COLLECTION_ID_FALLBACK = ".*"/COLLECTION_ID_FALLBACK = ""/'                     "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
-  "${IRONFOX_SED}" -i -e 's/EXPERIMENTS_COLLECTION = ".*"/EXPERIMENTS_COLLECTION = ""/'                     "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
-  "${IRONFOX_SED}" -i -e 's/SECURE_EXPERIMENTS_COLLECTION = ".*"/SECURE_EXPERIMENTS_COLLECTION = ""/'       "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
+  "${IRONFOX_SED}" -i -e 's/COLLECTION_ID_FALLBACK = ".*"/COLLECTION_ID_FALLBACK = ""/' "${IRONFOX_GECKO}/toolkit/components/nimbus/ExperimentAPI.sys.mjs"
+  "${IRONFOX_SED}" -i -e 's/COLLECTION_ID_FALLBACK = ".*"/COLLECTION_ID_FALLBACK = ""/' "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
+  "${IRONFOX_SED}" -i -e 's/EXPERIMENTS_COLLECTION = ".*"/EXPERIMENTS_COLLECTION = ""/' "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
+  "${IRONFOX_SED}" -i -e 's/SECURE_EXPERIMENTS_COLLECTION = ".*"/SECURE_EXPERIMENTS_COLLECTION = ""/' "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
   "${IRONFOX_SED}" -i -e 's/SECURE_EXPERIMENTS_COLLECTION_ID = ".*"/SECURE_EXPERIMENTS_COLLECTION_ID = ""/' "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
-  "${IRONFOX_SED}" -i 's|nimbus-desktop-experiments||g'                                                     "${IRONFOX_GECKO}/toolkit/components/nimbus/ExperimentAPI.sys.mjs"
-  "${IRONFOX_SED}" -i 's|nimbus-desktop-experiments||g'                                                     "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
-  "${IRONFOX_SED}" -i 's|nimbus-secure-experiments||g'                                                      "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
+  "${IRONFOX_SED}" -i 's|nimbus-desktop-experiments||g' "${IRONFOX_GECKO}/toolkit/components/nimbus/ExperimentAPI.sys.mjs"
+  "${IRONFOX_SED}" -i 's|nimbus-desktop-experiments||g' "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
+  "${IRONFOX_SED}" -i 's|nimbus-secure-experiments||g' "${IRONFOX_GECKO}/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs"
 
   # No-op telemetry (Gecko)
   "${IRONFOX_SED}" -i -e 's/usageDeletionRequest.setEnabled(.*)/usageDeletionRequest.setEnabled(false)/' "${IRONFOX_GECKO}/toolkit/components/telemetry/app/UsageReporting.sys.mjs"
 
   "${IRONFOX_SED}" -i -e 's|include_client_id: .*|include_client_id: false|g' "${IRONFOX_GECKO}/toolkit/components/glean/pings.yaml"
-  "${IRONFOX_SED}" -i -e 's|send_if_empty: .*|send_if_empty: false|g'         "${IRONFOX_GECKO}/toolkit/components/glean/pings.yaml"
+  "${IRONFOX_SED}" -i -e 's|send_if_empty: .*|send_if_empty: false|g' "${IRONFOX_GECKO}/toolkit/components/glean/pings.yaml"
   "${IRONFOX_SED}" -i -e 's|include_client_id: .*|include_client_id: false|g' "${IRONFOX_GECKO}/toolkit/components/nimbus/pings.yaml"
-  "${IRONFOX_SED}" -i -e 's|send_if_empty: .*|send_if_empty: false|g'         "${IRONFOX_GECKO}/toolkit/components/nimbus/pings.yaml"
+  "${IRONFOX_SED}" -i -e 's|send_if_empty: .*|send_if_empty: false|g' "${IRONFOX_GECKO}/toolkit/components/nimbus/pings.yaml"
 
   # Prevent DoH canary requests
-  "${IRONFOX_SED}" -i -e 's/GLOBAL_CANARY = ".*"/GLOBAL_CANARY = ""/'   "${IRONFOX_GECKO}/toolkit/components/doh/DoHHeuristics.sys.mjs"
+  "${IRONFOX_SED}" -i -e 's/GLOBAL_CANARY = ".*"/GLOBAL_CANARY = ""/' "${IRONFOX_GECKO}/toolkit/components/doh/DoHHeuristics.sys.mjs"
   "${IRONFOX_SED}" -i -e 's/ZSCALER_CANARY = ".*"/ZSCALER_CANARY = ""/' "${IRONFOX_GECKO}/toolkit/components/doh/DoHHeuristics.sys.mjs"
 
   # Prevent DoH remote config/rollout
-  "${IRONFOX_SED}" -i -e 's/RemoteSettings(".*"/RemoteSettings(""/'                     "${IRONFOX_GECKO}/toolkit/components/doh/DoHConfig.sys.mjs"
-  "${IRONFOX_SED}" -i -e 's/kConfigCollectionKey = ".*"/kConfigCollectionKey = ""/'     "${IRONFOX_GECKO}/toolkit/components/doh/DoHTestUtils.sys.mjs"
+  "${IRONFOX_SED}" -i -e 's/RemoteSettings(".*"/RemoteSettings(""/' "${IRONFOX_GECKO}/toolkit/components/doh/DoHConfig.sys.mjs"
+  "${IRONFOX_SED}" -i -e 's/kConfigCollectionKey = ".*"/kConfigCollectionKey = ""/' "${IRONFOX_GECKO}/toolkit/components/doh/DoHTestUtils.sys.mjs"
   "${IRONFOX_SED}" -i -e 's/kProviderCollectionKey = ".*"/kProviderCollectionKey = ""/' "${IRONFOX_GECKO}/toolkit/components/doh/DoHTestUtils.sys.mjs"
-  "${IRONFOX_SED}" -i 's|"doh-config"||g'                                               "${IRONFOX_GECKO}/toolkit/components/doh/DoHConfig.sys.mjs"
-  "${IRONFOX_SED}" -i 's|"doh-providers"||g'                                            "${IRONFOX_GECKO}/toolkit/components/doh/DoHConfig.sys.mjs"
-  "${IRONFOX_SED}" -i 's|"doh-config"||g'                                               "${IRONFOX_GECKO}/toolkit/components/doh/DoHTestUtils.sys.mjs"
-  "${IRONFOX_SED}" -i 's|"doh-providers"||g'                                            "${IRONFOX_GECKO}/toolkit/components/doh/DoHTestUtils.sys.mjs"
+  "${IRONFOX_SED}" -i 's|"doh-config"||g' "${IRONFOX_GECKO}/toolkit/components/doh/DoHConfig.sys.mjs"
+  "${IRONFOX_SED}" -i 's|"doh-providers"||g' "${IRONFOX_GECKO}/toolkit/components/doh/DoHConfig.sys.mjs"
+  "${IRONFOX_SED}" -i 's|"doh-config"||g' "${IRONFOX_GECKO}/toolkit/components/doh/DoHTestUtils.sys.mjs"
+  "${IRONFOX_SED}" -i 's|"doh-providers"||g' "${IRONFOX_GECKO}/toolkit/components/doh/DoHTestUtils.sys.mjs"
 
   # Remove DoH config/rollout local dumps
-  "${IRONFOX_SED}" -i -e 's|"doh-config.json"|# "doh-config.json"|g'        "${IRONFOX_GECKO}/services/settings/static-dumps/main/moz.build"
-  "${IRONFOX_SED}" -i -e 's|"doh-providers.json"|# "doh-providers.json"|g'  "${IRONFOX_GECKO}/services/settings/static-dumps/main/moz.build"
-  "${IRONFOX_RM}" -vf services/settings/static-dumps/main/doh-config.json   "${IRONFOX_GECKO}/services/settings/static-dumps/main/doh-providers.json"
+  "${IRONFOX_SED}" -i -e 's|"doh-config.json"|# "doh-config.json"|g' "${IRONFOX_GECKO}/services/settings/static-dumps/main/moz.build"
+  "${IRONFOX_SED}" -i -e 's|"doh-providers.json"|# "doh-providers.json"|g' "${IRONFOX_GECKO}/services/settings/static-dumps/main/moz.build"
+  "${IRONFOX_RM}" -vf services/settings/static-dumps/main/doh-config.json "${IRONFOX_GECKO}/services/settings/static-dumps/main/doh-providers.json"
 
   # Remove example dependencies
   ## Also see `gecko-remove-example-dependencies.patch` and `gecko-substitute-geckoview.patch`
-  "${IRONFOX_SED}" -i "s|project(':messaging_example'|// project(':messaging_example'|g"            "${IRONFOX_GECKO}/settings.gradle"
-  "${IRONFOX_SED}" -i "s|project(':port_messaging_example'|// project(':port_messaging_example'|g"  "${IRONFOX_GECKO}/settings.gradle"
+  "${IRONFOX_SED}" -i "s|project(':messaging_example'|// project(':messaging_example'|g" "${IRONFOX_GECKO}/settings.gradle"
+  "${IRONFOX_SED}" -i "s|project(':port_messaging_example'|// project(':port_messaging_example'|g" "${IRONFOX_GECKO}/settings.gradle"
 
   # Remove proprietary/tracking libraries
-  "${IRONFOX_SED}" -i 's|adjust|# adjust|g'                                                     "${IRONFOX_GECKO}/gradle/libs.versions.toml"
-  "${IRONFOX_SED}" -i 's|firebase-messaging|# firebase-messaging|g'                             "${IRONFOX_GECKO}/gradle/libs.versions.toml"
-  "${IRONFOX_SED}" -i 's|installreferrer|# installreferrer|g'                                   "${IRONFOX_GECKO}/gradle/libs.versions.toml"
+  "${IRONFOX_SED}" -i 's|adjust|# adjust|g' "${IRONFOX_GECKO}/gradle/libs.versions.toml"
+  "${IRONFOX_SED}" -i 's|firebase-messaging|# firebase-messaging|g' "${IRONFOX_GECKO}/gradle/libs.versions.toml"
+  "${IRONFOX_SED}" -i 's|installreferrer|# installreferrer|g' "${IRONFOX_GECKO}/gradle/libs.versions.toml"
   "${IRONFOX_SED}" -i 's|kotlinx-coroutines-play-services|# kotlinx-coroutines-play-services|g' "${IRONFOX_GECKO}/gradle/libs.versions.toml"
-  "${IRONFOX_SED}" -i 's|play-integrity|# play-integrity|g'                                     "${IRONFOX_GECKO}/gradle/libs.versions.toml"
-  "${IRONFOX_SED}" -i 's|play-review|# play-review|g'                                           "${IRONFOX_GECKO}/gradle/libs.versions.toml"
-  "${IRONFOX_SED}" -i 's|play-services-|# play-services-|g'                                     "${IRONFOX_GECKO}/gradle/libs.versions.toml"
-  "${IRONFOX_SED}" -i 's|sentry|# sentry|g'                                                     "${IRONFOX_GECKO}/gradle/libs.versions.toml"
+  "${IRONFOX_SED}" -i 's|play-integrity|# play-integrity|g' "${IRONFOX_GECKO}/gradle/libs.versions.toml"
+  "${IRONFOX_SED}" -i 's|play-review|# play-review|g' "${IRONFOX_GECKO}/gradle/libs.versions.toml"
+  "${IRONFOX_SED}" -i 's|play-services-|# play-services-|g' "${IRONFOX_GECKO}/gradle/libs.versions.toml"
+  "${IRONFOX_SED}" -i 's|sentry|# sentry|g' "${IRONFOX_GECKO}/gradle/libs.versions.toml"
 
   # Remove Glean
   /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'firefox'
@@ -959,29 +960,29 @@ function prepare_glean() {
   "${IRONFOX_SED}" -i -e "s|debug = .*|debug = false|g" "${IRONFOX_GLEAN}/Cargo.toml"
 
   # Enable performance optimizations
-  "${IRONFOX_SED}" -i -e "s|lto = .*|lto = true|g"          "${IRONFOX_GLEAN}/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|lto = .*|lto = true|g" "${IRONFOX_GLEAN}/Cargo.toml"
   "${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" "${IRONFOX_GLEAN}/Cargo.toml"
 
   # Ensure that the Glean gradle plug-in/glean_parser always runs offline
-  "${IRONFOX_SED}" -i "s|(isOffline)|(true)|"           "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
+  "${IRONFOX_SED}" -i "s|(isOffline)|(true)|" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
   "${IRONFOX_SED}" -i "s|pypi.python.org|noop.invalid|" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
 
   # No-op Glean
-  "${IRONFOX_SED}" -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g'                                       "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
-  "${IRONFOX_SED}" -i -e '/minifyEnabled/s/false/true/'                                                                 "${IRONFOX_GLEAN}/glean-core/android-native/build.gradle"
-  "${IRONFOX_SED}" -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/'                         "${IRONFOX_GLEAN}/glean-core/python/glean/config.py"
-  "${IRONFOX_SED}" -i -e '/enable_internal_pings:/s/true/false/'                                                        "${IRONFOX_GLEAN}/glean-core/python/glean/config.py"
-  "${IRONFOX_SED}" -i -e "s|DEFAULT_GLEAN_ENDPOINT: .*|DEFAULT_GLEAN_ENDPOINT: \&\str = \"\";|g"                        "${IRONFOX_GLEAN}/glean-core/rlb/src/configuration.rs"
-  "${IRONFOX_SED}" -i -e '/enable_internal_pings:/s/true/false/'                                                        "${IRONFOX_GLEAN}/glean-core/rlb/src/configuration.rs"
-  "${IRONFOX_SED}" -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/'                         "${IRONFOX_GLEAN}/glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt"
-  "${IRONFOX_SED}" -i -e '/enableInternalPings:/s/true/false/'                                                          "${IRONFOX_GLEAN}/glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt"
-  "${IRONFOX_SED}" -i -e '/enableEventTimestamps:/s/true/false/'                                                        "${IRONFOX_GLEAN}/glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt"
-  "${IRONFOX_SED}" -i -e 's|disabled: .*|disabled: true,|g'                                                             "${IRONFOX_GLEAN}/glean-core/src/core_metrics.rs"
-  "${IRONFOX_SED}" -i -e 's|disabled: .*|disabled: true,|g'                                                             "${IRONFOX_GLEAN}/glean-core/src/glean_metrics.rs"
-  "${IRONFOX_SED}" -i -e 's|disabled: .*|disabled: true,|g'                                                             "${IRONFOX_GLEAN}/glean-core/src/internal_metrics.rs"
-  "${IRONFOX_SED}" -i -e 's|disabled: .*|disabled: true,|g'                                                             "${IRONFOX_GLEAN}/glean-core/src/lib_unit_tests.rs"
-  "${IRONFOX_SED}" -i -e 's|include_client_id: .*|include_client_id: false|g'                                           "${IRONFOX_GLEAN}/glean-core/pings.yaml"
-  "${IRONFOX_SED}" -i -e 's|send_if_empty: .*|send_if_empty: false|g'                                                   "${IRONFOX_GLEAN}/glean-core/pings.yaml"
+  "${IRONFOX_SED}" -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
+  "${IRONFOX_SED}" -i -e '/minifyEnabled/s/false/true/' "${IRONFOX_GLEAN}/glean-core/android-native/build.gradle"
+  "${IRONFOX_SED}" -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' "${IRONFOX_GLEAN}/glean-core/python/glean/config.py"
+  "${IRONFOX_SED}" -i -e '/enable_internal_pings:/s/true/false/' "${IRONFOX_GLEAN}/glean-core/python/glean/config.py"
+  "${IRONFOX_SED}" -i -e "s|DEFAULT_GLEAN_ENDPOINT: .*|DEFAULT_GLEAN_ENDPOINT: \&\str = \"\";|g" "${IRONFOX_GLEAN}/glean-core/rlb/src/configuration.rs"
+  "${IRONFOX_SED}" -i -e '/enable_internal_pings:/s/true/false/' "${IRONFOX_GLEAN}/glean-core/rlb/src/configuration.rs"
+  "${IRONFOX_SED}" -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' "${IRONFOX_GLEAN}/glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt"
+  "${IRONFOX_SED}" -i -e '/enableInternalPings:/s/true/false/' "${IRONFOX_GLEAN}/glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt"
+  "${IRONFOX_SED}" -i -e '/enableEventTimestamps:/s/true/false/' "${IRONFOX_GLEAN}/glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt"
+  "${IRONFOX_SED}" -i -e 's|disabled: .*|disabled: true,|g' "${IRONFOX_GLEAN}/glean-core/src/core_metrics.rs"
+  "${IRONFOX_SED}" -i -e 's|disabled: .*|disabled: true,|g' "${IRONFOX_GLEAN}/glean-core/src/glean_metrics.rs"
+  "${IRONFOX_SED}" -i -e 's|disabled: .*|disabled: true,|g' "${IRONFOX_GLEAN}/glean-core/src/internal_metrics.rs"
+  "${IRONFOX_SED}" -i -e 's|disabled: .*|disabled: true,|g' "${IRONFOX_GLEAN}/glean-core/src/lib_unit_tests.rs"
+  "${IRONFOX_SED}" -i -e 's|include_client_id: .*|include_client_id: false|g' "${IRONFOX_GLEAN}/glean-core/pings.yaml"
+  "${IRONFOX_SED}" -i -e 's|send_if_empty: .*|send_if_empty: false|g' "${IRONFOX_GLEAN}/glean-core/pings.yaml"
   "${IRONFOX_SED}" -i -e 's|"$rootDir/glean-core/android/metrics.yaml"|// "$rootDir/glean-core/android/metrics.yaml"|g' "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
   "${IRONFOX_RM}" -v "${IRONFOX_GLEAN}/glean-core/android/metrics.yaml"
 
@@ -995,7 +996,7 @@ function prepare_glean() {
   if [[ "${IRONFOX_OS}" == 'osx' ]]; then
     "${IRONFOX_SED}" -i "s|{libxul_dir}|aarch64-linux-android/release|" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
   else
-    "${IRONFOX_SED}" -i "s|{libxul_dir}|release|"                       "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
+    "${IRONFOX_SED}" -i "s|{libxul_dir}|release|" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
   fi
 
   # Apply Glean overlay
@@ -1077,7 +1078,7 @@ function prepare_rust() {
   echo_red_text 'Preparing Rust...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_CONFIGS}"  'IRONFOX_CONFIGS' || exit 1
+  verify_dir_with_env "${IRONFOX_CONFIGS}" 'IRONFOX_CONFIGS' || exit 1
   verify_dir "${IRONFOX_CONFIGS}/cargo" || exit 1
 
   # Verify files

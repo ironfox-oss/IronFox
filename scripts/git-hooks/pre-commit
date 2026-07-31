@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# IronFox pre-commit hook: lints staged shell scripts with shellcheck + shfmt.
+#
+# Enabled by pointing git at this directory (done automatically by
+# scripts/bootstrap.sh):
+#   git config core.hooksPath scripts/git-hooks
+#
+# This is a convenience only. It can be bypassed with `git commit --no-verify`,
+# and it is not installed on fresh clones until bootstrap runs — so CI (the
+# `lint-scripts` job) remains the real enforcement gate.
+
+set -euo pipefail
+
+exec "$(git rev-parse --show-toplevel)/scripts/lint.sh" --staged

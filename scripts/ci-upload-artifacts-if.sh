@@ -76,9 +76,9 @@ function push_file() {
     exit 1
   fi
 
-  local readonly push_file="$1"
-  local readonly s3_path="$2"
-  local readonly s3_full_path="${s3_path}/$("${IRONFOX_BASENAME}" "${push_file}")"
+  local -r push_file="$1"
+  local -r s3_path="$2"
+  local -r s3_full_path="${s3_path}/$("${IRONFOX_BASENAME}" "${push_file}")"
 
   # Ensure our file to push is valid
   verify_file "${push_file}" || exit 1
@@ -86,22 +86,22 @@ function push_file() {
   # Set our MIME type
   case "${push_file}" in
     *.apk)
-      local readonly mime_type='application/vnd.android.package-archive'
+      local -r mime_type='application/vnd.android.package-archive'
       ;;
     *.apks)
-      local readonly mime_type='application/vnd.android.package-archive'
+      local -r mime_type='application/vnd.android.package-archive'
       ;;
     *.json)
-      local readonly mime_type='application/json'
+      local -r mime_type='application/json'
       ;;
     *.log)
-      local readonly mime_type='text/plain'
+      local -r mime_type='text/plain'
       ;;
     *.txt)
-      local readonly mime_type='text/plain'
+      local -r mime_type='text/plain'
       ;;
     *.zip)
-      local readonly mime_type='application/zip'
+      local -r mime_type='application/zip'
       ;;
     *)
       echo_red_text "ERROR: Unsupported file type: ${push_file}"
@@ -109,15 +109,15 @@ function push_file() {
       ;;
   esac
 
-  local readonly s3_access_key=$("${IRONFOX_CAT}" "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" | "${IRONFOX_XARGS}")
-  local readonly s3_bucket_name=$("${IRONFOX_CAT}" "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" | "${IRONFOX_XARGS}")
-  local readonly s3_endpoint=$("${IRONFOX_CAT}" "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" | "${IRONFOX_XARGS}")
-  local readonly s3_secret_key=$("${IRONFOX_CAT}" "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" | "${IRONFOX_XARGS}")
+  local -r s3_access_key=$("${IRONFOX_CAT}" "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" | "${IRONFOX_XARGS}")
+  local -r s3_bucket_name=$("${IRONFOX_CAT}" "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" | "${IRONFOX_XARGS}")
+  local -r s3_endpoint=$("${IRONFOX_CAT}" "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" | "${IRONFOX_XARGS}")
+  local -r s3_secret_key=$("${IRONFOX_CAT}" "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" | "${IRONFOX_XARGS}")
 
   if [[ "${s3_path}" == 'root' ]]; then
-    local readonly s3_target_path="s3://${s3_bucket_name}/ironfox"
+    local -r s3_target_path="s3://${s3_bucket_name}/ironfox"
   else
-    local readonly s3_target_path="s3://${s3_bucket_name}/ironfox/${s3_full_path}"
+    local -r s3_target_path="s3://${s3_bucket_name}/ironfox/${s3_full_path}"
   fi
 
   echo_red_text "Uploading ${push_file} to S3..."
@@ -142,27 +142,27 @@ function add_sha512sum() {
     exit 1
   fi
 
-  local readonly sha512sum_file_in="$1"
-  local readonly sha512sum_file_name=$("${IRONFOX_BASENAME}" "${sha512sum_file_in}")
-  local readonly sha512sum_file_path=$("${IRONFOX_DIRNAME}" "${sha512sum_file_in}")
+  local -r sha512sum_file_in="$1"
+  local -r sha512sum_file_name=$("${IRONFOX_BASENAME}" "${sha512sum_file_in}")
+  local -r sha512sum_file_path=$("${IRONFOX_DIRNAME}" "${sha512sum_file_in}")
 
   if [[ -z "${2+x}" ]]; then
-    local readonly sha512sum_s3path=$("${IRONFOX_BASENAME}" "${sha512sum_file_path}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+    local -r sha512sum_s3path=$("${IRONFOX_BASENAME}" "${sha512sum_file_path}" | "${IRONFOX_AWK}" '{print tolower($0)}')
   else
-    local readonly sha512sum_s3path="$2"
+    local -r sha512sum_s3path="$2"
   fi
 
   # Ensure our file to create a SHA512sum for is valid
   verify_file "${sha512sum_file_in}" || exit 1
 
-  local readonly sha512sum_file_out="${sha512sum_file_path}/${sha512sum_file_name}-sha512sum.txt"
+  local -r sha512sum_file_out="${sha512sum_file_path}/${sha512sum_file_name}-sha512sum.txt"
 
   # If there's already a SHA512sum file, remove it
   if [[ -f "${sha512sum_file_out}" ]]; then
     "${IRONFOX_RM}" -f "${sha512sum_file_out}"
   fi
 
-  local readonly local_sha512sum=$("${IRONFOX_SHA512SUM}" "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
+  local -r local_sha512sum=$("${IRONFOX_SHA512SUM}" "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
   echo -n "${local_sha512sum}" > "${sha512sum_file_out}"
 
   push_file "${sha512sum_file_out}" "${sha512sum_s3path}"
@@ -186,8 +186,8 @@ function push_and_add_sha512sum() {
     exit 1
   fi
 
-  local readonly file_in="$1"
-  local readonly s3_path_out="$2"
+  local -r file_in="$1"
+  local -r s3_path_out="$2"
 
   # Ensure our file to create a SHA512sum for and push is valid
   verify_file "${file_in}" || exit 1
@@ -201,33 +201,33 @@ function push_and_add_sha512sum() {
 
 if [[ "${IRONFOX_AR_UP_FENIX}" == 1 ]]; then
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm64' ]] || [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_ARM64}"     "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_ARM64}" "${CI_PIPELINE_ID}"
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm' ]] || [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_ARM}"       "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_ARM}" "${CI_PIPELINE_ID}"
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'x86_64' ]] || [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_X86_64}"    "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_X86_64}" "${CI_PIPELINE_ID}"
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
     push_and_add_sha512sum "${IRONFOX_OUTPUTS_UNIVERSAL}" "${CI_PIPELINE_ID}"
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_BUNDLE}"    "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_BUNDLE}" "${CI_PIPELINE_ID}"
   fi
 fi
 
 if [[ "${IRONFOX_AR_UP_GECKOVIEW}" == 1 ]]; then
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm64' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}"   "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${CI_PIPELINE_ID}"
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"     "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${CI_PIPELINE_ID}"
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'x86_64' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}"  "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${CI_PIPELINE_ID}"
   fi
 fi

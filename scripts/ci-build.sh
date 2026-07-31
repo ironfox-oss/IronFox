@@ -31,9 +31,9 @@ fi
 # Function to compress our archives
 function compress_archives() {
   if [[ "${ci_project}" == 'geckoview' ]]; then
-    local readonly ci_job_artifact="build-geckoview-${ci_target}"
+    local -r ci_job_artifact="build-geckoview-${ci_target}"
   elif [[ "${ci_project}" == 'fenix' ]]; then
-    local readonly ci_job_artifact="build-fenix-${ci_target}"
+    local -r ci_job_artifact="build-fenix-${ci_target}"
   fi
   /bin/bash "${IRONFOX_SCRIPTS}/ci-compress.sh" "${ci_job_artifact}"
 }

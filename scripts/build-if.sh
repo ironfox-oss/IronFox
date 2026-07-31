@@ -50,40 +50,42 @@ readonly build_arch="$1"
 readonly build_project="$2"
 
 case "${build_arch}" in
-arm64)
-  # arm64-v8a
-  readonly IRONFOX_TARGET_ARCH='arm64'
-  readonly IRONFOX_TARGET_ABI='arm64-v8a'
-  readonly IRONFOX_TARGET_PRETTY='ARM64'
-  readonly IRONFOX_TARGET_RUST='arm64'
-  ;;
-arm)
-  # armeabi-v7a
-  readonly IRONFOX_TARGET_ARCH='arm'
-  readonly IRONFOX_TARGET_ABI='armeabi-v7a'
-  readonly IRONFOX_TARGET_PRETTY='ARM'
-  readonly IRONFOX_TARGET_RUST='arm'
-  ;;
-x86_64)
-  # x86_64
-  readonly IRONFOX_TARGET_ARCH='x86_64'
-  readonly IRONFOX_TARGET_ABI='x86_64'
-  readonly IRONFOX_TARGET_PRETTY='x86_64'
-  readonly IRONFOX_TARGET_RUST='x86_64'
-  ;;
-bundle)
-  # arm64-v8a, armeabi-v7a, and x86_64
-  readonly IRONFOX_TARGET_ARCH='bundle'
-  readonly IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
-  readonly IRONFOX_TARGET_PRETTY='Bundle'
-  readonly IRONFOX_TARGET_RUST='arm64,arm,x86_64'
-  ;;
-*)
-  echo_red_text "Unknown build variant: '$1'" >&2
-  exit 1
-  ;;
+  arm64)
+    # arm64-v8a
+    readonly IRONFOX_TARGET_ARCH='arm64'
+    readonly IRONFOX_TARGET_ABI='arm64-v8a'
+    readonly IRONFOX_TARGET_PRETTY='ARM64'
+    readonly IRONFOX_TARGET_RUST='arm64'
+    ;;
+  arm)
+    # armeabi-v7a
+    readonly IRONFOX_TARGET_ARCH='arm'
+    readonly IRONFOX_TARGET_ABI='armeabi-v7a'
+    readonly IRONFOX_TARGET_PRETTY='ARM'
+    readonly IRONFOX_TARGET_RUST='arm'
+    ;;
+  x86_64)
+    # x86_64
+    readonly IRONFOX_TARGET_ARCH='x86_64'
+    readonly IRONFOX_TARGET_ABI='x86_64'
+    readonly IRONFOX_TARGET_PRETTY='x86_64'
+    readonly IRONFOX_TARGET_RUST='x86_64'
+    ;;
+  bundle)
+    # arm64-v8a, armeabi-v7a, and x86_64
+    readonly IRONFOX_TARGET_ARCH='bundle'
+    # shellcheck disable=SC2089
+    readonly IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
+    readonly IRONFOX_TARGET_PRETTY='Bundle'
+    readonly IRONFOX_TARGET_RUST='arm64,arm,x86_64'
+    ;;
+  *)
+    echo_red_text "Unknown build variant: '$1'" >&2
+    exit 1
+    ;;
 esac
 export IRONFOX_TARGET_ARCH
+# shellcheck disable=SC2090
 export IRONFOX_TARGET_ABI
 export IRONFOX_TARGET_PRETTY
 
@@ -281,7 +283,7 @@ fi
 
 # Build projects that consume LLVM, microG, Phoenix, or WASI SDK directly
 if [[ "${IRONFOX_BUILD_LLVM_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_MICROG_CONSUMERS}" == 1 ]] ||
- [[ "${IRONFOX_BUILD_PHOENIX_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_WASI_CONSUMERS}" == 1 ]]; then
+  [[ "${IRONFOX_BUILD_PHOENIX_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_WASI_CONSUMERS}" == 1 ]]; then
   # Build Gecko and its consumers
   IRONFOX_BUILD_GECKO=1
   IRONFOX_BUILD_GECKO_CONSUMERS=1
@@ -314,7 +316,7 @@ fi
 
 # Build projects that consume Application Services, GeckoView, nimbus-fml, or UnifiedPush-AC directly
 if [[ "${IRONFOX_BUILD_AS_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW_CONSUMERS}" == 1 ]] ||
- [[ "${IRONFOX_BUILD_NIMBUS_FML_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_UP_AC_CONSUMERS}" == 1 ]]; then
+  [[ "${IRONFOX_BUILD_NIMBUS_FML_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_UP_AC_CONSUMERS}" == 1 ]]; then
   # Build Android Components and its consumers
   IRONFOX_BUILD_AC=1
   IRONFOX_BUILD_AC_CONSUMERS=1
@@ -329,8 +331,8 @@ fi
 
 # Build projects that consume Android Components, Glean, IronFox Core, nimbus-fml, or UnifiedPush-AC directly
 if [[ "${IRONFOX_BUILD_AC_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_GLEAN_CONSUMERS}" == 1 ]] ||
- [[ "${IRONFOX_BUILD_IF_CORE_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_NIMBUS_FML_CONSUMERS}" == 1 ]] ||
- [[ "${IRONFOX_BUILD_UP_AC_CONSUMERS}" == 1 ]]; then
+  [[ "${IRONFOX_BUILD_IF_CORE_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_NIMBUS_FML_CONSUMERS}" == 1 ]] ||
+  [[ "${IRONFOX_BUILD_UP_AC_CONSUMERS}" == 1 ]]; then
   # Build Fenix
   IRONFOX_BUILD_FENIX=1
 fi
@@ -526,7 +528,7 @@ verify_dir_with_env "${IRONFOX_TEMPLATES}" 'IRONFOX_TEMPLATES' || exit 1
 
 # mozilla-central
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
- [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
+  [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
   verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO' || exit 1
   verify_dir_with_env "${IRONFOX_MOZCONFIGS}" 'IRONFOX_MOZCONFIGS' || exit 1
 fi
@@ -670,7 +672,7 @@ verify_exec "${IRONFOX_CARGO}" 'IRONFOX_CARGO' || exit 1
 
 # mach
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
- [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
+  [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
   verify_exec "${IRONFOX_MACH}" 'IRONFOX_MACH' || exit 1
 fi
 
@@ -759,17 +761,17 @@ function set_build_env() {
   # Create our directory
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/env"
 
-  local readonly IF_BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
-  local readonly IF_LOCAL_VERSION_STAMP="$("${IRONFOX_DATE}" "+%s%N")"
+  local -r IF_BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
+  local -r IF_LOCAL_VERSION_STAMP="$("${IRONFOX_DATE}" "+%s%N")"
 
   # Override Gecko(View)'s build ID
-  local readonly moz_build_id_file="${IRONFOX_TEMP}/env/moz-build-id.txt"
+  local -r moz_build_id_file="${IRONFOX_TEMP}/env/moz-build-id.txt"
   if [[ "${IRONFOX_BUILD_ID_OVERRIDE}" != 'null' ]]; then
-    local readonly IF_BUILD_ID="${IRONFOX_BUILD_ID_OVERRIDE}"
+    local -r IF_BUILD_ID="${IRONFOX_BUILD_ID_OVERRIDE}"
   elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
-    local readonly IF_BUILD_ID="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
+    local -r IF_BUILD_ID="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
   else
-    local readonly IF_BUILD_ID='null'
+    local -r IF_BUILD_ID='null'
   fi
 
   if [[ "${IF_BUILD_ID}" != 'null' ]]; then
@@ -781,16 +783,16 @@ function set_build_env() {
   # Override our version for local Android Components substitution
   local IF_LOCAL_AC_VERSION_STAMP='undefined'
   local IF_LOCAL_AC_VERSION_STAMP_TEMP='undefined'
-  local readonly ac_version_file="${IRONFOX_TEMP}/env/ac-version.txt"
+  local -r ac_version_file="${IRONFOX_TEMP}/env/ac-version.txt"
 
   # To support rebuilds, if we're *not* currently building Android Components, use the previously set version (if it exists)
   # (If we are building Android Components, we always override the version for substitution)
   if [[ "${IRONFOX_BUILD_AC}" != 1 ]]; then
     if [[ -f "${ac_version_file}" ]] && [[ -s "${ac_version_file}" ]]; then
-      local readonly current_ac_version=$("${IRONFOX_CAT}" "${ac_version_file}" | "${IRONFOX_XARGS}")
+      local -r current_ac_version=$("${IRONFOX_CAT}" "${ac_version_file}" | "${IRONFOX_XARGS}")
       # Ensure the specified Android Components version has actually been built before re-using it...
       if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/components/browser-engine-gecko/0.0.1-local-${IRONFOX_GECKO_VERSION}-${current_ac_version}" ]]; then
-        local readonly IF_LOCAL_AC_VERSION_STAMP="${current_ac_version}"
+        local -r IF_LOCAL_AC_VERSION_STAMP="${current_ac_version}"
       fi
     fi
   fi
@@ -798,10 +800,10 @@ function set_build_env() {
   if [[ "${IF_LOCAL_AC_VERSION_STAMP}" == 'undefined' ]]; then
     # Next, try to use `IRONFOX_LOCAL_AC_VERSION_OVERRIDE` if it's set
     if [[ "${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}" != 'null' ]]; then
-      local readonly IF_LOCAL_AC_VERSION_STAMP_TEMP="${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}"
+      local -r IF_LOCAL_AC_VERSION_STAMP_TEMP="${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}"
     # Otherwise, set our own version override
     else
-      local readonly IF_LOCAL_AC_VERSION_STAMP_TEMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
+      local -r IF_LOCAL_AC_VERSION_STAMP_TEMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
     fi
     "${IRONFOX_RM}" -f "${ac_version_file}"
     "${IRONFOX_TOUCH}" "${ac_version_file}"
@@ -811,16 +813,16 @@ function set_build_env() {
   # Override our version for local Application Services substitution
   local IF_LOCAL_AS_VERSION_STAMP='undefined'
   local IF_LOCAL_AS_VERSION_STAMP_TEMP='undefined'
-  local readonly as_version_file="${IRONFOX_TEMP}/env/as-version.txt"
+  local -r as_version_file="${IRONFOX_TEMP}/env/as-version.txt"
 
   # To support rebuilds, if we're *not* currently building Application Services, use the previously set version (if it exists)
   # (If we are building Application Services, we always override the version for substitution)
   if [[ "${IRONFOX_BUILD_AS}" != 1 ]]; then
     if [[ -f "${as_version_file}" ]] && [[ -s "${as_version_file}" ]]; then
-      local readonly current_as_version=$("${IRONFOX_CAT}" "${as_version_file}" | "${IRONFOX_XARGS}")
+      local -r current_as_version=$("${IRONFOX_CAT}" "${as_version_file}" | "${IRONFOX_XARGS}")
       # Ensure the specified Application Services version has actually been built before re-using it...
       if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/appservices/full-megazord/0.0.1-SNAPSHOT-${IRONFOX_AS_VERSION}-${current_as_version}" ]]; then
-        local readonly IF_LOCAL_AS_VERSION_STAMP="${current_as_version}"
+        local -r IF_LOCAL_AS_VERSION_STAMP="${current_as_version}"
       fi
     fi
   fi
@@ -828,10 +830,10 @@ function set_build_env() {
   if [[ "${IF_LOCAL_AS_VERSION_STAMP}" == 'undefined' ]]; then
     # Next, try to use `IRONFOX_LOCAL_AS_VERSION_OVERRIDE` if it's set
     if [[ "${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}" != 'null' ]]; then
-      local readonly IF_LOCAL_AS_VERSION_STAMP_TEMP="${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}"
+      local -r IF_LOCAL_AS_VERSION_STAMP_TEMP="${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}"
     # Otherwise, set our own version override
     else
-      local readonly IF_LOCAL_AS_VERSION_STAMP_TEMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
+      local -r IF_LOCAL_AS_VERSION_STAMP_TEMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
     fi
     "${IRONFOX_RM}" -f "${as_version_file}"
     "${IRONFOX_TOUCH}" "${as_version_file}"
@@ -841,18 +843,18 @@ function set_build_env() {
   # Override our version for local Glean substitution
   local IF_LOCAL_GLEAN_VERSION_STAMP='undefined'
   local IF_LOCAL_GLEAN_VERSION_STAMP_TEMP='undefined'
-  local readonly glean_version_file="${IRONFOX_TEMP}/env/glean-version.txt"
+  local -r glean_version_file="${IRONFOX_TEMP}/env/glean-version.txt"
 
   # To support rebuilds, if we're *not* currently building Glean, use the previously set version (if it exists)
   # (If we are building Glean, we always override the version for substitution)
   if [[ "${IRONFOX_BUILD_GLEAN}" != 1 ]]; then
     if [[ -f "${glean_version_file}" ]] && [[ -s "${glean_version_file}" ]]; then
-      local readonly current_glean_version=$("${IRONFOX_CAT}" "${glean_version_file}" | "${IRONFOX_XARGS}")
+      local -r current_glean_version=$("${IRONFOX_CAT}" "${glean_version_file}" | "${IRONFOX_XARGS}")
       # Ensure the specified Glean version has actually been built before re-using it...
       if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean/0.0.1-SNAPSHOT-${IRONFOX_GLEAN_VERSION}-${current_glean_version}" ]] &&
-       [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean-gradle-plugin/0.0.1-SNAPSHOT-${IRONFOX_GLEAN_VERSION}-${current_glean_version}" ]] &&
-       [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean-native/0.0.1-SNAPSHOT-${IRONFOX_GLEAN_VERSION}-${current_glean_version}" ]]; then
-        local readonly IF_LOCAL_GLEAN_VERSION_STAMP="${current_glean_version}"
+        [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean-gradle-plugin/0.0.1-SNAPSHOT-${IRONFOX_GLEAN_VERSION}-${current_glean_version}" ]] &&
+        [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean-native/0.0.1-SNAPSHOT-${IRONFOX_GLEAN_VERSION}-${current_glean_version}" ]]; then
+        local -r IF_LOCAL_GLEAN_VERSION_STAMP="${current_glean_version}"
       fi
     fi
   fi
@@ -860,10 +862,10 @@ function set_build_env() {
   if [[ "${IF_LOCAL_GLEAN_VERSION_STAMP}" == 'undefined' ]]; then
     # Next, try to use `IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE` if it's set
     if [[ "${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}" != 'null' ]]; then
-      local readonly IF_LOCAL_GLEAN_VERSION_STAMP_TEMP="${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}"
+      local -r IF_LOCAL_GLEAN_VERSION_STAMP_TEMP="${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}"
     # Otherwise, set our own version override
     else
-      local readonly IF_LOCAL_GLEAN_VERSION_STAMP_TEMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
+      local -r IF_LOCAL_GLEAN_VERSION_STAMP_TEMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
     fi
     "${IRONFOX_RM}" -f "${glean_version_file}"
     "${IRONFOX_TOUCH}" "${glean_version_file}"
@@ -884,13 +886,13 @@ function set_build_env() {
     export MOZ_BUILD_DATE
   fi
   if [[ "${IF_LOCAL_AC_VERSION_STAMP_TEMP}" != 'undefined' ]]; then
-    local readonly IF_LOCAL_AC_VERSION_STAMP=$("${IRONFOX_CAT}" "${ac_version_file}" | "${IRONFOX_XARGS}")
+    local -r IF_LOCAL_AC_VERSION_STAMP=$("${IRONFOX_CAT}" "${ac_version_file}" | "${IRONFOX_XARGS}")
   fi
   if [[ "${IF_LOCAL_AS_VERSION_STAMP_TEMP}" != 'undefined' ]]; then
-    local readonly IF_LOCAL_AS_VERSION_STAMP=$("${IRONFOX_CAT}" "${as_version_file}" | "${IRONFOX_XARGS}")
+    local -r IF_LOCAL_AS_VERSION_STAMP=$("${IRONFOX_CAT}" "${as_version_file}" | "${IRONFOX_XARGS}")
   fi
   if [[ "${IF_LOCAL_GLEAN_VERSION_STAMP_TEMP}" != 'undefined' ]]; then
-    local readonly IF_LOCAL_GLEAN_VERSION_STAMP=$("${IRONFOX_CAT}" "${glean_version_file}" | "${IRONFOX_XARGS}")
+    local -r IF_LOCAL_GLEAN_VERSION_STAMP=$("${IRONFOX_CAT}" "${glean_version_file}" | "${IRONFOX_XARGS}")
   fi
   readonly IF_LOCAL_AC_VERSION="0.0.1-local-${IRONFOX_GECKO_VERSION}-${IF_LOCAL_AC_VERSION_STAMP}"
   readonly IF_LOCAL_AC_VERSION_GRADLE="-${IRONFOX_GECKO_VERSION}-${IF_LOCAL_AC_VERSION_STAMP}"
@@ -1074,7 +1076,7 @@ function build_llvm() {
   echo_red_text 'Building LLVM...'
 
   pushd "${llvm}"
-  local readonly llvmtarget=$("${IRONFOX_CAT}" "${IRONFOX_BUILD}/targets_to_build")
+  local -r llvmtarget=$("${IRONFOX_CAT}" "${IRONFOX_BUILD}/targets_to_build")
   echo_green_text "building llvm for ${llvmtarget}"
   "${IRONFOX_CMAKE}" -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ -DLLVM_ENABLE_PROJECTS="clang" -DLLVM_TARGETS_TO_BUILD="$llvmtarget" \
@@ -1192,26 +1194,26 @@ function _build_geckoview() {
     exit 1
   fi
 
-  local readonly target_arch="$1"
+  local -r target_arch="$1"
 
   # Ensure we have a valid architecture (+ set pretty architecture...)
   case "${target_arch}" in
-  arm64)
-    local readonly pretty_arch='ARM64'
-    ;;
-  arm)
-    local readonly pretty_arch='ARM'
-    ;;
-  x86_64)
-    local readonly pretty_arch='x86_64'
-    ;;
-  bundle)
-    local readonly pretty_arch='Universal'
-    ;;
-  *)
-    echo_red_text "ERROR: Invalid target architecture: ${target_arch}"
-    exit 1
-    ;;
+    arm64)
+      local -r pretty_arch='ARM64'
+      ;;
+    arm)
+      local -r pretty_arch='ARM'
+      ;;
+    x86_64)
+      local -r pretty_arch='x86_64'
+      ;;
+    bundle)
+      local -r pretty_arch='Universal'
+      ;;
+    *)
+      echo_red_text "ERROR: Invalid target architecture: ${target_arch}"
+      exit 1
+      ;;
   esac
 
   # First, clean our environment
@@ -1236,7 +1238,7 @@ function _build_geckoview() {
   elif [[ "${IRONFOX_CI}" == 1 ]] && [[ "${target_arch}" != 'bundle' ]]; then
     local publish_gv_to_maven_local=0
   fi
-  local readonly publish_gv_to_maven_local
+  local -r publish_gv_to_maven_local
 
   # Tell Mach whether we need to create an AAR archive
   if [[ "${publish_gv_to_maven_local}" == 0 ]]; then
@@ -1271,11 +1273,11 @@ function _build_geckoview() {
     unset MOZ_AUTOMATION
 
     if [[ "${target_arch}" == 'arm64' ]]; then
-      local readonly aar_output="${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}"
+      local -r aar_output="${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}"
     elif [[ "${target_arch}" == 'arm' ]]; then
-      local readonly aar_output="${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"
+      local -r aar_output="${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"
     elif [[ "${target_arch}" == 'x86_64' ]]; then
-      local readonly aar_output="${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}"
+      local -r aar_output="${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}"
     fi
 
     # Create our AAR output directory
@@ -1296,7 +1298,7 @@ function build_geckoview() {
   elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
     local if_build_geckoview_arm64=1
   fi
-  local readonly if_build_geckoview_arm64
+  local -r if_build_geckoview_arm64
 
   # Determine if we should build ARM
   local if_build_geckoview_arm=0
@@ -1305,7 +1307,7 @@ function build_geckoview() {
   elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
     local if_build_geckoview_arm=1
   fi
-  local readonly if_build_geckoview_arm
+  local -r if_build_geckoview_arm
 
   # Determine if we should build x86_64
   local if_build_geckoview_x86_64=0
@@ -1314,16 +1316,16 @@ function build_geckoview() {
   elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
     local if_build_geckoview_x86_64=1
   fi
-  local readonly if_build_geckoview_x86_64
+  local -r if_build_geckoview_x86_64
 
   # ARM64
   if [[ "${if_build_geckoview_arm64}" == 1 ]]; then
-     _build_geckoview 'arm64'
+    _build_geckoview 'arm64'
   fi
 
   # ARM
   if [[ "${if_build_geckoview_arm}" == 1 ]]; then
-     _build_geckoview 'arm'
+    _build_geckoview 'arm'
   fi
 
   # x86_64
@@ -1348,26 +1350,26 @@ function _build_gecko() {
     exit 1
   fi
 
-  local readonly target_arch="$1"
+  local -r target_arch="$1"
 
   # Ensure we have a valid architecture (+ set pretty architecture...)
   case "${target_arch}" in
-  arm64)
-    local readonly pretty_arch='ARM64'
-    ;;
-  arm)
-    local readonly pretty_arch='ARM'
-    ;;
-  x86_64)
-    local readonly pretty_arch='x86_64'
-    ;;
-  bundle)
-    local readonly pretty_arch='Universal'
-    ;;
-  *)
-    echo_red_text "ERROR: Invalid target architecture: ${target_arch}"
-    exit 1
-    ;;
+    arm64)
+      local -r pretty_arch='ARM64'
+      ;;
+    arm)
+      local -r pretty_arch='ARM'
+      ;;
+    x86_64)
+      local -r pretty_arch='x86_64'
+      ;;
+    bundle)
+      local -r pretty_arch='Universal'
+      ;;
+    *)
+      echo_red_text "ERROR: Invalid target architecture: ${target_arch}"
+      exit 1
+      ;;
   esac
 
   # First, clean our environment
@@ -1420,7 +1422,7 @@ function _build_gecko() {
   elif [[ "${IRONFOX_CI}" == 1 ]] && [[ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]]; then
     local package_gecko=0
   fi
-  local readonly package_gecko
+  local -r package_gecko
 
   # Ensure we remove any existing Mach environment cache
   ## (To ensure our configurations are properly updated/reflected...)
@@ -1462,7 +1464,7 @@ function build_gecko() {
   elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
     local if_build_gecko_arm64=1
   fi
-  local readonly if_build_gecko_arm64
+  local -r if_build_gecko_arm64
 
   # Determine if we should build ARM
   local if_build_gecko_arm=0
@@ -1471,7 +1473,7 @@ function build_gecko() {
   elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
     local if_build_gecko_arm=1
   fi
-  local readonly if_build_gecko_arm
+  local -r if_build_gecko_arm
 
   # Determine if we should build x86_64
   local if_build_gecko_x86_64=0
@@ -1480,7 +1482,7 @@ function build_gecko() {
   elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
     local if_build_gecko_x86_64=1
   fi
-  local readonly if_build_gecko_x86_64
+  local -r if_build_gecko_x86_64
 
   # ARM64
   if [[ "${if_build_gecko_arm64}" == 1 ]]; then
@@ -1723,7 +1725,7 @@ set_build_env
 
 # Prepare mozilla-central
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
- [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
+  [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
   prep_gecko
 fi
 

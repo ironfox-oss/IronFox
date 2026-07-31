@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # IronFox common environment variables
 
 ## CAUTION: Do NOT source this directly!
@@ -397,7 +398,7 @@ readonly IRONFOX_FENIX_OVERLAY="${IRONFOX_PATCHES}/fenix-overlay"
 export IRONFOX_FENIX_OVERLAY
 
 ## Gecko locales
-readonly IRONFOX_LOCALES_DEFAULT=$(<"${IRONFOX_CONFIGS}/locales")
+readonly IRONFOX_LOCALES_DEFAULT=$(< "${IRONFOX_CONFIGS}/locales")
 if [[ -z "${IRONFOX_LOCALES+x}" ]]; then
   IRONFOX_LOCALES="${IRONFOX_LOCALES_DEFAULT}"
 fi
@@ -1690,6 +1691,7 @@ readonly IRONFOX_CURL_FLAGS_OVERRIDE
 export IRONFOX_CURL_FLAGS_OVERRIDE
 
 # curl flags
+# shellcheck disable=SC2089
 readonly IRONFOX_CURL_FLAGS_DEFAULT="--disable --no-netrc --ciphers ${IRONFOX_NONTLS13_CIPHERS} --clobber --create-dirs --delegation none --disallow-username-in-url --doh-cert-status --fail --fail-early --junk-session-cookies --no-basic --no-ca-native --no-digest --no-doh-insecure --no-http0.9 --no-insecure --no-negotiate --no-ntlm --no-proxy-basic --no-proxy-ca-native --no-proxy-digest --no-proxy-insecure --no-proxy-ssl-auto-client-cert --no-sessionid --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --no-xattr --parallel --post301 --post302 --post303 --progress-meter --proto -all,https --proto-default https --proto-redir -all,https --proxy-ciphers ${IRONFOX_NONTLS13_CIPHERS} --proxy-tls13-ciphers ${IRONFOX_TLS13_CIPHERS} --referer '' --remove-on-error --retry 5 --retry-all-errors --retry-connrefused --show-error --tls13-ciphers ${IRONFOX_TLS13_CIPHERS} --tlsv1.2 --trace-time --user-agent '' --verbose"
 if [[ -z "${IRONFOX_CURL_FLAGS+x}" ]]; then
   IRONFOX_CURL_FLAGS="${IRONFOX_CURL_FLAGS_DEFAULT}"
@@ -1699,6 +1701,7 @@ else
   IRONFOX_CURL_FLAGS="${IRONFOX_CURL_FLAGS_DEFAULT} ${IRONFOX_CURL_FLAGS}"
 fi
 readonly IRONFOX_CURL_FLAGS
+# shellcheck disable=SC2090
 export IRONFOX_CURL_FLAGS
 
 # If Gradle flags are added, this determines whether they should be appended to our default flags (default),
@@ -1925,7 +1928,7 @@ export IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE
 # Should we automatically sign our output APK(S) files?
 readonly IRONFOX_SIGN_DEFAULT=0
 if [[ "${IRONFOX_ANDROID_KEYSTORE}" != 'null' ]] && [[ "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" != 'null' ]] &&
- [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_ALIAS}" != 'null' ]] && [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" != 'null' ]]; then
+  [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_ALIAS}" != 'null' ]] && [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" != 'null' ]]; then
   IRONFOX_SIGN=1
 else
   IRONFOX_SIGN="${IRONFOX_SIGN_DEFAULT}"

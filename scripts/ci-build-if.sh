@@ -29,24 +29,22 @@ fi
 readonly ci_build_arch="$1"
 
 case "${ci_build_arch}" in
-arm64|arm|x86_64|bundle)
-  ;;
-*)
-  echo_red_text "Unknown build variant: '${ci_build_arch}'." >&2
-  exit 1
-  ;;
+  arm64 | arm | x86_64 | bundle) ;;
+  *)
+    echo_red_text "Unknown build variant: '${ci_build_arch}'." >&2
+    exit 1
+    ;;
 esac
 
 readonly ci_build_project="$2"
 
 # (For now, we only want to build Fenix and GeckoView directly from CI)
 case "${ci_build_project}" in
-fenix|geckoview)
-  ;;
-*)
-  echo_red_text "Unknown build project: '${ci_build_project}'." >&2
-  exit 1
-  ;;
+  fenix | geckoview) ;;
+  *)
+    echo_red_text "Unknown build project: '${ci_build_project}'." >&2
+    exit 1
+    ;;
 esac
 
 if [[ "${ci_build_project}" == 'fenix' ]]; then

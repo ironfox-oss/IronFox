@@ -1,0 +1,18 @@
+# ShellCheck configuration for IronFox
+# See: https://github.com/koalaman/shellcheck/wiki
+
+# Follow `source`d files when the path is statically resolvable.
+external-sources=true
+
+disable=SC2034   # unused variable, expected in sourced env libraries (used elsewhere)
+disable=SC1090   # can't follow a dynamically-computed `source` path
+disable=SC1091   # sourced file not present at lint time
+disable=SC2155   # declare-and-assign masks the command's return value (style)
+disable=SC2086   # unquoted expansion / word splitting, triage before re-enabling
+disable=SC2046   # word splitting on $(...)
+disable=SC2016   # single quotes prevent expansion (intentional in awk/sed strings)
+disable=SC2153   # possible variable misspelling (false positives on sourced vars)
+disable=SC2154   # referenced but not assigned (sourced vars)
+disable=SC2269   # `x=$x` self-assignment (environment passthrough)
+disable=SC2129   # individual >> redirects vs a grouped block (style)
+disable=SC2002   # useless use of cat (stylistic; off by default in shellcheck >= 0.11, on in older CI versions)
