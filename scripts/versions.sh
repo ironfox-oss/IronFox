@@ -181,10 +181,10 @@ readonly IRONFOX_JDK_17_SHA512SUM_OSX_X86_64='c871deedc3ccf0663aa584610c1390d1ae
 readonly IRONFOX_JDK_17_VERSION='17.0.19'
 
 # Node.js
-# Version: 26.5.0
+# Version: 26.5.1
 # https://nodejs.org/about/previous-releases
 # (Used by nvm)
-readonly IRONFOX_NODE_VERSION='26.5.0'
+readonly IRONFOX_NODE_VERSION='26.5.1'
 
 # npm
 # Version: 12.0.1
