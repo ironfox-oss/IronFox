@@ -63,22 +63,22 @@ stages:
 
 # Fast, lightweight gate: shellcheck + shfmt over the shell scripts.
 # Runs first so a lint failure stops the pipeline before the multi-hour builds.
-# Uses a minimal Alpine image (both tools are in Alpine's community repo) and is
-# NOT namespace-gated, so it also runs for forks / contributor pipelines.
+# Uses a minimal image and is NOT namespace-gated, so it also runs for forks / contributor pipelines.
 lint-scripts:
-  image: alpine:3.21
+  image: fedora:43
   stage: lint
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
   before_script:
-    - apk add --no-cache bash git shellcheck shfmt
-    # Print tool versions so any local-vs-CI skew (e.g. default-check changes
-    # between shellcheck releases) is visible in the logs.
-    - shellcheck --version
-    - shfmt --version
+    - set -euo pipefail
+    - /bin/sudo /bin/dnf update -y --refresh
+    - /bin/sudo /bin/dnf install -y bash curl
+    - /bin/bash scripts/get_sources.sh shellcheck
+    - /bin/bash scripts/get_sources.sh shfmt
   script:
-    - bash scripts/lint.sh
+    - set -euo pipefail
+    - /bin/bash scripts/lint.sh
 
 update-fdroid-repo:
   image: fedora:43
@@ -98,6 +98,7 @@ update-fdroid-repo:
     REPO_DIR_PATH: "./fdroid/repo"
     <<: *build_variables
   before_script:
+    - set -euo pipefail
     - sudo dnf update -y --refresh
     - sudo dnf install -y bash curl git git-lfs jq make
     - git config --global user.email "${IF_CI_EMAIL}"
@@ -134,6 +135,7 @@ update-site-repo:
     TARGET_REPO_BRANCH: dev
     <<: *build_variables
   before_script:
+    - set -euo pipefail
     - sudo dnf update -y --refresh
     - sudo dnf install -y bash curl git make yq
     - git config --global user.email "${IF_CI_EMAIL}"
@@ -298,6 +300,7 @@ prepare-release:
   variables:
     <<: *build_variables
   before_script:
+    - set -euo pipefail
     - sudo dnf update -y --refresh
     - sudo dnf install -y curl jq
   script:

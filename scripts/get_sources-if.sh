@@ -54,6 +54,8 @@ IRONFOX_GET_SOURCE_PYTHON=0
 IRONFOX_GET_SOURCE_PYYAML=0
 IRONFOX_GET_SOURCE_RUST=0
 IRONFOX_GET_SOURCE_S3CMD=0
+IRONFOX_GET_SOURCE_SHELLCHECK=0
+IRONFOX_GET_SOURCE_SHFMT=0
 IRONFOX_GET_SOURCE_UNIFFI=0
 IRONFOX_GET_SOURCE_UP_AC=0
 IRONFOX_GET_SOURCE_UV=0
@@ -152,6 +154,12 @@ elif [[ "${target}" == 's3cmd' ]]; then
   # Get s3cmd
   ## NOTE: This isn't installed if "all" is used below, as it's only used in CI and targeted specifically when it's needed
   IRONFOX_GET_SOURCE_S3CMD=1
+elif [[ "${target}" == 'shellcheck' ]]; then
+  # Get shellcheck
+  IRONFOX_GET_SOURCE_SHELLCHECK=1
+elif [[ "${target}" == 'shfmt' ]]; then
+  # Get shfmt
+  IRONFOX_GET_SOURCE_SHFMT=1
 elif [[ "${target}" == 'uniffi' ]]; then
   # Get uniffi
   IRONFOX_GET_SOURCE_UNIFFI=1
@@ -195,6 +203,14 @@ elif [[ "${target}" == 'all' ]]; then
   IRONFOX_GET_SOURCE_UP_AC=1
   IRONFOX_GET_SOURCE_UV=1
 
+  # CI only uses shellcheck and shfmt in the `lint` stage (where they're retrieved directly)
+  # If git is missing, we know the user isn't contributing (at least from this repo directly), so we don't need to download them in
+  # those cases either
+  if [[ -x "${IRONFOX_GIT}" ]] && [[ "${IRONFOX_CI}" != 1 ]]; then
+    IRONFOX_GET_SOURCE_SHELLCHECK=1
+    IRONFOX_GET_SOURCE_SHFMT=1
+  fi
+
   if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
     # If IRONFOX_NO_PREBUILDS is true, we need to get the Prebuilds repo (so that they can be built from source)
     IRONFOX_GET_SOURCE_PREBUILDS=1
@@ -236,6 +252,8 @@ else
   echo 'PyYAML:                           pyyaml'
   echo 'Rust:                             rust'
   echo 's3cmd:                            s3cmd'
+  echo 'shellcheck:                       shellcheck'
+  echo 'shfmt:                            shfmt'
   echo 'UnifiedPush-AC:                   up-ac'
   echo 'uniffi-bindgen:                   uniffi'
   echo 'uv:                               uv'
@@ -273,6 +291,8 @@ readonly IRONFOX_GET_SOURCE_PYTHON
 readonly IRONFOX_GET_SOURCE_PYYAML
 readonly IRONFOX_GET_SOURCE_RUST
 readonly IRONFOX_GET_SOURCE_S3CMD
+readonly IRONFOX_GET_SOURCE_SHELLCHECK
+readonly IRONFOX_GET_SOURCE_SHFMT
 readonly IRONFOX_GET_SOURCE_UNIFFI
 readonly IRONFOX_GET_SOURCE_UP_AC
 readonly IRONFOX_GET_SOURCE_UV
@@ -1703,6 +1723,124 @@ function get_s3cmd() {
   fi
 }
 
+# Get shellcheck
+function get_shellcheck() {
+  if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
+    echo_red_text 'Downloading shellcheck (Linux - ARM64)...'
+    download "https://github.com/koalaman/shellcheck/releases/download/${IRONFOX_SHELLCHECK_VERSION}/shellcheck-${IRONFOX_SHELLCHECK_VERSION}.linux.aarch64.tar.xz" "${IRONFOX_SHELLCHECK_DIR}" "${IRONFOX_SHELLCHECK_SHA512SUM_LINUX_ARM64}"
+
+    echo_red_text 'Downloading shellcheck (Linux - x86_64)...'
+    download "https://github.com/koalaman/shellcheck/releases/download/${IRONFOX_SHELLCHECK_VERSION}/shellcheck-${IRONFOX_SHELLCHECK_VERSION}.linux.x86_64.tar.xz" "${IRONFOX_SHELLCHECK_DIR}" "${IRONFOX_SHELLCHECK_SHA512SUM_LINUX_X86_64}"
+
+    echo_red_text 'Downloading shellcheck (OS X - ARM64)...'
+    download "https://github.com/koalaman/shellcheck/releases/download/${IRONFOX_SHELLCHECK_VERSION}/shellcheck-${IRONFOX_SHELLCHECK_VERSION}.darwin.aarch64.tar.xz" "${IRONFOX_SHELLCHECK_DIR}" "${IRONFOX_SHELLCHECK_SHA512SUM_OSX_ARM64}"
+
+    echo_red_text 'Downloading shellcheck (OS X - x86_64)...'
+    download "https://github.com/koalaman/shellcheck/releases/download/${IRONFOX_SHELLCHECK_VERSION}/shellcheck-${IRONFOX_SHELLCHECK_VERSION}.darwin.x86_64.tar.xz" "${IRONFOX_SHELLCHECK_DIR}" "${IRONFOX_SHELLCHECK_SHA512SUM_OSX_X86_64}"
+  else
+    # Set our platform
+    if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
+      local -r IRONFOX_SHELLCHECK_PLATFORM='darwin'
+    else
+      local -r IRONFOX_SHELLCHECK_PLATFORM='linux'
+    fi
+
+    # Set our platform architecture
+    if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
+      local -r IRONFOX_SHELLCHECK_ARCH='aarch64'
+    else
+      local -r IRONFOX_SHELLCHECK_ARCH='x86_64'
+    fi
+
+    # Set our checksum to verify
+    if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
+      if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
+        local -r IRONFOX_SHELLCHECK_SHA512SUM="${IRONFOX_SHELLCHECK_SHA512SUM_OSX_ARM64}"
+      else
+        local -r IRONFOX_SHELLCHECK_SHA512SUM="${IRONFOX_SHELLCHECK_SHA512SUM_LINUX_ARM64}"
+      fi
+    else
+      if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
+        local -r IRONFOX_SHELLCHECK_SHA512SUM="${IRONFOX_SHELLCHECK_SHA512SUM_OSX_X86_64}"
+      else
+        local -r IRONFOX_SHELLCHECK_SHA512SUM="${IRONFOX_SHELLCHECK_SHA512SUM_LINUX_X86_64}"
+      fi
+    fi
+
+    echo_red_text 'Downloading shellcheck...'
+    download_and_extract 'shellcheck' "https://github.com/koalaman/shellcheck/releases/download/${IRONFOX_SHELLCHECK_VERSION}/shellcheck-${IRONFOX_SHELLCHECK_VERSION}.${IRONFOX_SHELLCHECK_PLATFORM}.${IRONFOX_SHELLCHECK_ARCH}.tar.xz" "${IRONFOX_SHELLCHECK_DIR}" "${IRONFOX_SHELLCHECK_SHA512SUM}"
+
+    if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
+      # Set-up the linting pre-commit hook
+      if [[ "${IRONFOX_CI}" != 1 ]] && [[ -x "${IRONFOX_GIT}" ]] && [[ ! -f "${IRONFOX_BUILD}/set-hook" ]]; then
+        /bin/bash "${IRONFOX_SCRIPTS}/lint-hook.sh"
+      fi
+
+      echo_green_text "SUCCESS: Set-up shellcheck at ${IRONFOX_SHELLCHECK}"
+    fi
+  fi
+}
+
+# Get shfmt
+function get_shfmt() {
+  if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
+    echo_red_text 'Downloading shfmt (Linux - ARM64)...'
+    download "https://github.com/mvdan/sh/releases/download/${IRONFOX_SHFMT_VERSION}/shfmt_${IRONFOX_SHFMT_VERSION}_linux_arm64" "${IRONFOX_SHFMT}" "${IRONFOX_SHFMT_SHA512SUM_LINUX_ARM64}"
+
+    echo_red_text 'Downloading shfmt (Linux - x86_64)...'
+    download "https://github.com/mvdan/sh/releases/download/${IRONFOX_SHFMT_VERSION}/shfmt_${IRONFOX_SHFMT_VERSION}_linux_amd64" "${IRONFOX_SHFMT}" "${IRONFOX_SHFMT_SHA512SUM_LINUX_X86_64}"
+
+    echo_red_text 'Downloading shfmt (OS X - ARM64)...'
+    download "https://github.com/mvdan/sh/releases/download/${IRONFOX_SHFMT_VERSION}/shfmt_${IRONFOX_SHFMT_VERSION}_darwin_arm64" "${IRONFOX_SHFMT}" "${IRONFOX_SHFMT_SHA512SUM_OSX_ARM64}"
+
+    echo_red_text 'Downloading shfmt (OS X - x86_64)...'
+    download "https://github.com/mvdan/sh/releases/download/${IRONFOX_SHFMT_VERSION}/shfmt_${IRONFOX_SHFMT_VERSION}_darwin_amd64" "${IRONFOX_SHFMT}" "${IRONFOX_SHFMT_SHA512SUM_OSX_X86_64}"
+  else
+    # Set our platform
+    if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
+      local -r IRONFOX_SHFMT_PLATFORM='darwin'
+    else
+      local -r IRONFOX_SHFMT_PLATFORM='linux'
+    fi
+
+    # Set our platform architecture
+    if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
+      local -r IRONFOX_SHFMT_ARCH='arm64'
+    else
+      local -r IRONFOX_SHFMT_ARCH='amd64'
+    fi
+
+    # Set our checksum to verify
+    if [[ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]]; then
+      if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
+        local -r IRONFOX_SHFMT_SHA512SUM="${IRONFOX_SHFMT_SHA512SUM_OSX_ARM64}"
+      else
+        local -r IRONFOX_SHFMT_SHA512SUM="${IRONFOX_SHFMT_SHA512SUM_LINUX_ARM64}"
+      fi
+    else
+      if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
+        local -r IRONFOX_SHFMT_SHA512SUM="${IRONFOX_SHFMT_SHA512SUM_OSX_X86_64}"
+      else
+        local -r IRONFOX_SHFMT_SHA512SUM="${IRONFOX_SHFMT_SHA512SUM_LINUX_X86_64}"
+      fi
+    fi
+
+    echo_red_text 'Downloading shfmt...'
+    download "https://github.com/mvdan/sh/releases/download/${IRONFOX_SHFMT_VERSION}/shfmt_${IRONFOX_SHFMT_VERSION}_${IRONFOX_SHFMT_PLATFORM}_${IRONFOX_SHFMT_ARCH}" "${IRONFOX_SHFMT}" "${IRONFOX_SHFMT_SHA512SUM}"
+
+    if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
+      "${IRONFOX_CHMOD}" +x "${IRONFOX_SHFMT}"
+
+      # Set-up the linting pre-commit hook
+      if [[ "${IRONFOX_CI}" != 1 ]] && [[ -x "${IRONFOX_GIT}" ]] && [[ ! -f "${IRONFOX_BUILD}/set-hook" ]]; then
+        /bin/bash "${IRONFOX_SCRIPTS}/lint-hook.sh"
+      fi
+
+      echo_green_text "SUCCESS: Set-up shfmt at ${IRONFOX_SHFMT}"
+    fi
+  fi
+}
+
 # Get Tor's no-op UniFFi binding generator
 function get_uniffi() {
   # Get uniffi-bindgen for Linux
@@ -1961,6 +2099,14 @@ fi
 
 if [[ "${IRONFOX_GET_SOURCE_S3CMD}" == 1 ]]; then
   get_s3cmd
+fi
+
+if [[ "${IRONFOX_GET_SOURCE_SHELLCHECK}" == 1 ]]; then
+  get_shellcheck
+fi
+
+if [[ "${IRONFOX_GET_SOURCE_SHFMT}" == 1 ]]; then
+  get_shfmt
 fi
 
 if [[ "${IRONFOX_GET_SOURCE_UNIFFI}" == 1 ]]; then

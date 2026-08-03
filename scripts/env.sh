@@ -100,6 +100,8 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   "${IRONFOX_LN}" -sf "${IRONFOX_SED}" "${IRONFOX_PATH}/gsed"
   "${IRONFOX_LN}" -sf "${IRONFOX_SED}" "${IRONFOX_PATH}/sed"
   "${IRONFOX_LN}" -sf "${IRONFOX_SH}" "${IRONFOX_PATH}/sh"
+  "${IRONFOX_LN}" -sf "${IRONFOX_SHELLCHECK}" "${IRONFOX_PATH}/shellcheck"
+  "${IRONFOX_LN}" -sf "${IRONFOX_SHFMT}" "${IRONFOX_PATH}/shfmt"
   "${IRONFOX_LN}" -sf "${IRONFOX_SHASUM}" "${IRONFOX_PATH}/shasum"
   "${IRONFOX_LN}" -sf "${IRONFOX_SHA1SUM}" "${IRONFOX_PATH}/sha1sum"
   "${IRONFOX_LN}" -sf "${IRONFOX_SHA256SUM}" "${IRONFOX_PATH}/sha256sum"

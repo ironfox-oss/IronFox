@@ -181,9 +181,15 @@ In addition to the `AAB`, the `bundle` target also produces APKs for each archit
 
 IronFox is largely driven by shell scripts, which are checked with [`shellcheck`](https://www.shellcheck.net/) *(static analysis)* and [`shfmt`](https://github.com/mvdan/sh) *(formatting)*. These run automatically in CI *(the `lint-scripts` job)* and are enforced there — a lint failure stops the pipeline before any build starts.
 
-`./scripts/bootstrap.sh` installs both tools and enables a git pre-commit hook *(via `core.hooksPath`)* that lints your staged scripts before each commit. The hook is a convenience and can be bypassed with `git commit --no-verify`; CI remains the source of truth.
+`./scripts/get_sources.sh` installs both tools and enables a git pre-commit hook *(via `core.hooksPath`)* that lints your staged scripts before each commit. The hook is a convenience and can be bypassed with `git commit --no-verify`; CI remains the source of truth.
 
-To run the checks manually:
+If you are providing your own copies of `shellcheck` and `shfmt` *(instead of getting them from `./scripts/get_sources.sh`)*, after setting `IRONFOX_SHELLCHECK_DIR` and `IRONFOX_SHFMT_DIR` to the appropriate directories, you can set-up the pre-commit hook directly by running:
+
+```sh
+./scripts/lint-hook.sh
+```
+
+To run the linting checks manually:
 
 ```sh
 ./scripts/lint.sh

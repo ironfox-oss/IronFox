@@ -4,8 +4,7 @@
 # (formatting). This is the single source of truth used by CI, the pre-commit
 # hook, and manual runs.
 #
-# It is intentionally SELF-CONTAINED: it does NOT source env.sh (which performs
-# full OS/path bootstrap), so it runs unchanged in a minimal CI container.
+# It is intended to run in a minimal CI container.
 #
 # Usage:
 #   scripts/lint.sh            Lint all tracked shell scripts (CI + manual)
@@ -16,10 +15,25 @@
 
 set -euo pipefail
 
+# Set-up our environment
+if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
+  /bin/bash $(dirname $0)/env.sh
+fi
+source $(dirname $0)/env.sh
+
+# Include utilities
+source "${IRONFOX_UTILS}"
+
+# Set verbosity
+if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
+  set -x
+else
+  set +x
+fi
+
 # Resolve and move to the repo root so relative paths and config discovery
 # (.shellcheckrc, .editorconfig) work regardless of the caller's cwd.
-REPO_ROOT="$(git rev-parse --show-toplevel)"
-cd "${REPO_ROOT}"
+pushd "${IRONFOX_ROOT}"
 
 mode='all'
 if [[ "${1:-}" == '--staged' ]]; then
@@ -32,11 +46,11 @@ declare -a targets=()
 if [[ "${mode}" == 'staged' ]]; then
   while IFS= read -r file; do
     [[ -n "${file}" ]] && targets+=("${file}")
-  done < <(git diff --cached --name-only --diff-filter=ACM -- 'scripts/*.sh')
+  done < <("${IRONFOX_GIT}" diff --cached --name-only --diff-filter=ACM -- 'scripts/*.sh')
 else
   while IFS= read -r file; do
     targets+=("${file}")
-  done < <(git ls-files 'scripts/*.sh')
+  done < <("${IRONFOX_GIT}" ls-files 'scripts/*.sh')
 fi
 
 if [[ ${#targets[@]} -eq 0 ]]; then
@@ -53,19 +67,19 @@ for tool in shellcheck shfmt; do
   fi
 done
 if [[ "${missing}" -ne 0 ]]; then
-  echo 'lint: install the missing tool(s) (e.g. run scripts/bootstrap.sh) and retry.' >&2
+  echo 'lint: install the missing tool(s) (e.g. run scripts/get_sources.sh shellcheck and scripts/get_sources.sh shfmt) and retry.' >&2
   exit 127
 fi
 
 status=0
 
 echo "lint: shellcheck (${#targets[@]} file(s))..."
-if ! shellcheck -x "${targets[@]}"; then
+if ! "${IRONFOX_SHELLCHECK}" -x "${targets[@]}"; then
   status=1
 fi
 
 echo 'lint: shfmt formatting check...'
-if ! shfmt -d "${targets[@]}"; then
+if ! "${IRONFOX_SHFMT}" -d "${targets[@]}"; then
   echo >&2
   echo "lint: formatting issues found above. Fix with:" >&2
   echo "        git ls-files 'scripts/*.sh' | xargs shfmt -w" >&2
@@ -77,4 +91,7 @@ if [[ "${status}" -eq 0 ]]; then
 else
   echo 'lint: FAILED' >&2
 fi
+
+popd
+
 exit "${status}"

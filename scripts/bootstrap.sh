@@ -86,8 +86,6 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
     ninja \
     perl \
     shasum \
-    shellcheck \
-    shfmt \
     yq || error_fn
   echo
 
@@ -134,8 +132,6 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
     patch \
     perl \
     shasum \
-    ShellCheck \
-    shfmt \
     xz \
     yq \
     zlib-devel || error_fn
@@ -161,26 +157,12 @@ elif [[ "${IRONFOX_OS}" == 'ubuntu' ]]; then
     ninja-build \
     patch \
     perl \
-    shellcheck \
     tar \
     unzip \
     xz-utils \
     yq \
     zlib1g-dev || error_fn
   echo
-
-  # shfmt isn't reliably packaged on all Ubuntu releases; fetch the static
-  # binary if apt didn't provide it.
-  if ! command -v shfmt > /dev/null 2>&1; then
-    echo_green_text "Installing shfmt..."
-    readonly SHFMT_VERSION='v3.13.1'
-    SHFMT_ARCH="$(dpkg --print-architecture)"
-    readonly SHFMT_ARCH
-    sudo curl -fsSL -o /usr/local/bin/shfmt \
-      "https://github.com/mvdan/sh/releases/download/${SHFMT_VERSION}/shfmt_${SHFMT_VERSION}_linux_${SHFMT_ARCH}" || error_fn
-    sudo chmod +x /usr/local/bin/shfmt || error_fn
-    echo
-  fi
 else
   echo_red_text "Apologies, your operating system is currently not supported."
   echo_red_text "If you think this is a mistake, please let us know!"
@@ -188,11 +170,3 @@ else
   echo_red_text "Otherwise, please try again on a system running the latest version of Fedora, macOS, secureblue, or Ubuntu."
   exit 1
 fi
-
-# Enable the pre-commit hook so shell scripts are linted (shellcheck + shfmt)
-# before each commit. CI enforces the same checks, so this is just a fast local
-# safeguard (and is bypassable with `git commit --no-verify`).
-echo_green_text "Configuring git pre-commit hook..."
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-git -C "${REPO_ROOT}" config core.hooksPath scripts/git-hooks || error_fn
-echo

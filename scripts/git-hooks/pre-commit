@@ -3,7 +3,7 @@
 # IronFox pre-commit hook: lints staged shell scripts with shellcheck + shfmt.
 #
 # Enabled by pointing git at this directory (done automatically by
-# scripts/bootstrap.sh):
+# scripts/lint-hook.sh):
 #   git config core.hooksPath scripts/git-hooks
 #
 # This is a convenience only. It can be bypassed with `git commit --no-verify`,
