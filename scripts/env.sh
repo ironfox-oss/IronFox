@@ -139,7 +139,7 @@ function setup_path() {
   export PATH
 }
 
-# Set-up a minimal path for linting
+# Set-up a minimal PATH for linting
 function setup_lint_path() {
   "${IRONFOX_RM}" -rf "${IRONFOX_LINT_PATH}"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_LINT_PATH}"
