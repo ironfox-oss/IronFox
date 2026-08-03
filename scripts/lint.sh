@@ -52,7 +52,7 @@ if [[ "${mode}" == 'staged' ]]; then
 else
   while IFS= read -r file; do
     targets+=("${file}")
-  done < <("${IRONFOX_GIT}" ls-files 'scripts/*.sh' 'configs/mozconfigs/*.mozconfig' 'configs/mozconfigs/**/*.mozconfig')
+  done < <("${IRONFOX_LS}" scripts/*.sh configs/mozconfigs/*.mozconfig configs/mozconfigs/**/*.mozconfig)
 fi
 
 if [[ ${#targets[@]} -eq 0 ]]; then
@@ -84,7 +84,7 @@ echo 'lint: shfmt formatting check...'
 if ! "${IRONFOX_SHFMT}" -d "${targets[@]}"; then
   echo >&2
   echo "lint: formatting issues found above. Fix with:" >&2
-  echo "        git ls-files 'scripts/*.sh' 'configs/mozconfigs/*.mozconfig' 'configs/mozconfigs/**/*.mozconfig' | xargs shfmt -w" >&2
+  echo "        ls scripts/*.sh configs/mozconfigs/*.mozconfig configs/mozconfigs/**/*.mozconfig | xargs shfmt -w" >&2
   status=1
 fi
 

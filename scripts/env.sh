@@ -11,6 +11,7 @@ if [[ ! -f "$(dirname $0)/env_local.sh" ]]; then
   # Write env_local.sh
   echo "Writing ${ENV_LOCAL}..."
   cat > "${ENV_LOCAL}" << EOF
+# shellcheck shell=bash
 readonly IRONFOX_ROOT="${ROOT}"
 export IRONFOX_ROOT
 
