@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # IronFox build mozconfig
 
 set -euo pipefail

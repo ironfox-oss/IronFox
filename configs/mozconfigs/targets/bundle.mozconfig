@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Bundle
 
 set -euo pipefail

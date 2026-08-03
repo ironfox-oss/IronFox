@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Environment cleaner...
 
 set -euo pipefail

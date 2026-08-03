@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # ARM64
 
 set -euo pipefail

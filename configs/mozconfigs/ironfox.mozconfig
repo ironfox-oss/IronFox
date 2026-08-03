@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # IronFox mozconfig...
 
 set -euo pipefail
@@ -20,7 +21,7 @@ if [[ -z "${IRONFOX_MACH_TARGET_ARCH+x}" ]]; then
 fi
 
 if [[ "${IRONFOX_MACH_TARGET_ARCH}" != 'arm64' ]] && [[ "${IRONFOX_MACH_TARGET_ARCH}" != 'arm' ]] &&
- [[ "${IRONFOX_MACH_TARGET_ARCH}" != 'x86_64' ]] && [[ "${IRONFOX_MACH_TARGET_ARCH}" != 'bundle' ]]; then
+  [[ "${IRONFOX_MACH_TARGET_ARCH}" != 'x86_64' ]] && [[ "${IRONFOX_MACH_TARGET_ARCH}" != 'bundle' ]]; then
   echo "ERROR: Invalid Mach target architecture: ${IRONFOX_MACH_TARGET_ARCH}"
   exit 1
 fi
@@ -31,8 +32,8 @@ if [[ -z "${IRONFOX_MACH_TARGET_PROJECT+x}" ]]; then
 fi
 
 if [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'gecko' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'geckoview' ]] &&
- [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'ac-core' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'android-components' ]] &&
- [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'ironfox-core' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'fenix' ]]; then
+  [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'ac-core' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'android-components' ]] &&
+  [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'ironfox-core' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'fenix' ]]; then
   echo "ERROR: Invalid Mach target project: ${IRONFOX_MACH_TARGET_PROJECT}"
   exit 1
 fi

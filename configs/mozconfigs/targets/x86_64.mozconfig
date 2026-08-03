@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # x86_64
 
 set -euo pipefail

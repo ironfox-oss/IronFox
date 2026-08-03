@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # IronFox core mozconfig
 
 set -euo pipefail
@@ -14,6 +15,7 @@ mk_add_options AUTOCLOBBER=1
 export AUTOCLOBBER=1
 
 ## Configure allowed Gradle maven repositories
+# shellcheck disable=SC2140
 export GRADLE_MAVEN_REPOSITORIES="file://${IRONFOX_MAVEN_LOCAL}/","https://plugins.gradle.org/m2/","https://maven.google.com/"
 
 ## Disable android:debuggable
