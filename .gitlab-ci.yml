@@ -73,7 +73,7 @@ lint-scripts:
   before_script:
     - set -euo pipefail
     - /bin/sudo /bin/dnf update -y --refresh
-    - /bin/sudo /bin/dnf install -y bash curl
+    - /bin/sudo /bin/dnf install -y bash curl git tar
     - /bin/bash scripts/get_sources.sh shellcheck
     - /bin/bash scripts/get_sources.sh shfmt
   script:
