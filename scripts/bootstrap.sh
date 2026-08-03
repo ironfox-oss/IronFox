@@ -26,7 +26,7 @@ fi
 function error_fn() {
   echo
   echo -e "\033[31mSomething went wrong! The script failed.\033[0m"
-  echo -e "\033[31mPlease report this (with the output message) to https://gitlab.com/ironfox-oss/IronFox/-/issues\033[0m"
+  echo -e "\033[31mPlease report this (with the output message) to https://codeberg.org/ironfox-oss/bugs/issues\033[0m"
   echo
   exit 1
 }
@@ -184,7 +184,7 @@ elif [[ "${IRONFOX_OS}" == 'ubuntu' ]]; then
 else
   echo_red_text "Apologies, your operating system is currently not supported."
   echo_red_text "If you think this is a mistake, please let us know!"
-  echo_green_text "https://gitlab.com/ironfox-oss/IronFox/-/issues"
+  echo_green_text "https://codeberg.org/ironfox-oss/bugs/issues"
   echo_red_text "Otherwise, please try again on a system running the latest version of Fedora, macOS, secureblue, or Ubuntu."
   exit 1
 fi
