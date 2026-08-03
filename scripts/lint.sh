@@ -16,6 +16,8 @@
 set -euo pipefail
 
 # Set-up our environment
+readonly IRONFOX_LINTING=1
+export IRONFOX_LINTING
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   /bin/bash $(dirname $0)/env.sh
 fi

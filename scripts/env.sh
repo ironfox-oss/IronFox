@@ -18,10 +18,8 @@ source "\${IRONFOX_ROOT}/scripts/env_common.sh"
 EOF
 fi
 
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  source "$(dirname $0)/env_local.sh"
-
-  # Set-up our PATH
+# Set-up the full IronFox PATH
+function setup_path() {
   "${IRONFOX_RM}" -rf "${IRONFOX_PATH}"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_PATH}"
 
@@ -100,8 +98,6 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   "${IRONFOX_LN}" -sf "${IRONFOX_SED}" "${IRONFOX_PATH}/gsed"
   "${IRONFOX_LN}" -sf "${IRONFOX_SED}" "${IRONFOX_PATH}/sed"
   "${IRONFOX_LN}" -sf "${IRONFOX_SH}" "${IRONFOX_PATH}/sh"
-  "${IRONFOX_LN}" -sf "${IRONFOX_SHELLCHECK}" "${IRONFOX_PATH}/shellcheck"
-  "${IRONFOX_LN}" -sf "${IRONFOX_SHFMT}" "${IRONFOX_PATH}/shfmt"
   "${IRONFOX_LN}" -sf "${IRONFOX_SHASUM}" "${IRONFOX_PATH}/shasum"
   "${IRONFOX_LN}" -sf "${IRONFOX_SHA1SUM}" "${IRONFOX_PATH}/sha1sum"
   "${IRONFOX_LN}" -sf "${IRONFOX_SHA256SUM}" "${IRONFOX_PATH}/sha256sum"
@@ -141,4 +137,28 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
 
   PATH="${IRONFOX_PATH}"
   export PATH
+}
+
+# Set-up a minimal path for linting
+function setup_lint_path() {
+  "${IRONFOX_RM}" -rf "${IRONFOX_LINT_PATH}"
+  "${IRONFOX_MKDIR}" -p "${IRONFOX_LINT_PATH}"
+
+  "${IRONFOX_LN}" -sf "${IRONFOX_GIT}" "${IRONFOX_LINT_PATH}/git"
+  "${IRONFOX_LN}" -sf "${IRONFOX_SHELLCHECK}" "${IRONFOX_LINT_PATH}/shellcheck"
+  "${IRONFOX_LN}" -sf "${IRONFOX_SHFMT}" "${IRONFOX_LINT_PATH}/shfmt"
+
+  readonly PATH="${IRONFOX_LINT_PATH}"
+  export PATH
+}
+
+if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
+  source "$(dirname $0)/env_local.sh"
+
+  # Set-up our PATH
+  if [[ -z "${IRONFOX_LINTING+x}" ]]; then
+    setup_path
+  else
+    setup_lint_path
+  fi
 fi

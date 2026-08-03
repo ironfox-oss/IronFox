@@ -86,6 +86,10 @@ export IRONFOX_TEMP
 readonly IRONFOX_PATH="${IRONFOX_BUILD}/path"
 export IRONFOX_PATH
 
+# Minimal IronFox PATH for linting
+readonly IRONFOX_LINT_PATH="${IRONFOX_BUILD}/lint-path"
+export IRONFOX_LINT_PATH
+
 # Patches directory
 readonly IRONFOX_PATCHES="${IRONFOX_ROOT}/patches"
 export IRONFOX_PATCHES
