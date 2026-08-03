@@ -13,9 +13,6 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
-# Get our platform, OS, and architecture
-source "${IRONFOX_ENV_HELPERS}"
-
 # Set verbosity
 if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
   set -x
