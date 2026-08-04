@@ -162,7 +162,7 @@ function add_sha512sum() {
     "${IRONFOX_RM}" -f "${sha512sum_file_out}"
   fi
 
-  local -r local_sha512sum=$("${IRONFOX_SHA512SUM}" "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
+  local -r local_sha512sum=$("${IRONFOX_SHASUM}" -a 512 "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
   echo -n "${local_sha512sum}" > "${sha512sum_file_out}"
 
   push_file "${sha512sum_file_out}" "${sha512sum_s3path}"

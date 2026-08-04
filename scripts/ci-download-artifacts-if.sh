@@ -110,7 +110,7 @@ function download_artifact() {
   echo_red_text "Validating SHA512sum for ${target_file}.."
   "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${target_expected_sha512sum_url}" --output "${output_expected_sha512sum}"
   local -r expected_sha512sum=$("${IRONFOX_CAT}" "${output_expected_sha512sum}" | "${IRONFOX_XARGS}")
-  local -r local_sha512sum=$("${IRONFOX_SHA512SUM}" "${output_file}" | "${IRONFOX_AWK}" '{print $1}')
+  local -r local_sha512sum=$("${IRONFOX_SHASUM}" -a 512 "${output_file}" | "${IRONFOX_AWK}" '{print $1}')
   if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
     echo_red_text 'ERROR: Checksum validation failed.'
     echo "Expected SHA512sum: ${expected_sha512sum}"

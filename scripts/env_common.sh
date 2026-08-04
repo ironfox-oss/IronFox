@@ -1155,42 +1155,6 @@ fi
 readonly IRONFOX_SHASUM
 export IRONFOX_SHASUM
 
-# sha1sum
-if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-  readonly IRONFOX_SHA1SUM_DEFAULT='/sbin/sha1sum'
-else
-  readonly IRONFOX_SHA1SUM_DEFAULT='/bin/sha1sum'
-fi
-if [[ -z "${IRONFOX_SHA1SUM+x}" ]]; then
-  IRONFOX_SHA1SUM="${IRONFOX_SHA1SUM_DEFAULT}"
-fi
-readonly IRONFOX_SHA1SUM
-export IRONFOX_SHA1SUM
-
-# sha256sum
-if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-  readonly IRONFOX_SHA256SUM_DEFAULT='/sbin/sha256sum'
-else
-  readonly IRONFOX_SHA256SUM_DEFAULT='/bin/sha256sum'
-fi
-if [[ -z "${IRONFOX_SHA256SUM+x}" ]]; then
-  IRONFOX_SHA256SUM="${IRONFOX_SHA256SUM_DEFAULT}"
-fi
-readonly IRONFOX_SHA256SUM
-export IRONFOX_SHA256SUM
-
-# sha512sum
-if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-  readonly IRONFOX_SHA512SUM_DEFAULT='/sbin/sha512sum'
-else
-  readonly IRONFOX_SHA512SUM_DEFAULT='/bin/sha512sum'
-fi
-if [[ -z "${IRONFOX_SHA512SUM+x}" ]]; then
-  IRONFOX_SHA512SUM="${IRONFOX_SHA512SUM_DEFAULT}"
-fi
-readonly IRONFOX_SHA512SUM
-export IRONFOX_SHA512SUM
-
 # -shellcheck
 readonly IRONFOX_SHELLCHECK_DIR_DEFAULT="${IRONFOX_EXTERNAL}/shellcheck"
 if [[ -z "${IRONFOX_SHELLCHECK_DIR+x}" ]]; then

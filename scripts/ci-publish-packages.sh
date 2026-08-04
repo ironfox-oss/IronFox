@@ -121,7 +121,7 @@ function add_sha512sum() {
     "${IRONFOX_RM}" -f "${sha512sum_file_out}"
   fi
 
-  local -r local_sha512sum=$("${IRONFOX_SHA512SUM}" "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
+  local -r local_sha512sum=$("${IRONFOX_SHASUM}" -a 512 "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
   echo -n "${local_sha512sum}" > "${sha512sum_file_out}"
 
   push_to_s3 "${sha512sum_file_out}" "${sha512sum_s3path}"
@@ -153,7 +153,7 @@ function upload_asset() {
 
   echo "\`${asset_file_name}\`: " >> "${CHECKSUMS_FILE}"
   echo "\`\`\`text" >> "${CHECKSUMS_FILE}"
-  "${IRONFOX_SHA512SUM}" -b "${asset_file}" | "${IRONFOX_CUT}" -d ' ' -f 1 >> "${CHECKSUMS_FILE}"
+  "${IRONFOX_SHASUM}" -a 512 -b "${asset_file}" | "${IRONFOX_CUT}" -d ' ' -f 1 >> "${CHECKSUMS_FILE}"
   echo "\`\`\`" >> "${CHECKSUMS_FILE}"
   echo '' >> "${CHECKSUMS_FILE}"
   upload_to_package_registry "${asset_file}" "${asset_package_name}"
@@ -202,11 +202,11 @@ upload_apkset
 ## (ex. used by Obtainium)
 "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/updates.json" "${IRONFOX_ROOT}/updates.json"
 
-readonly IRONFOX_ARM64_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-arm64-v8a.apk" | "${IRONFOX_AWK}" '{print $1}')
-readonly IRONFOX_ARM_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk" | "${IRONFOX_AWK}" '{print $1}')
-readonly IRONFOX_X86_64_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-x86_64.apk" | "${IRONFOX_AWK}" '{print $1}')
-readonly IRONFOX_UNIVERSAL_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk" | "${IRONFOX_AWK}" '{print $1}')
-readonly IRONFOX_BUNDLE_SHA512SUM=$("${IRONFOX_SHA512SUM}" "${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_ARM64_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-arm64-v8a.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_ARM_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_X86_64_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-x86_64.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_UNIVERSAL_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_BUNDLE_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks" | "${IRONFOX_AWK}" '{print $1}')
 
 "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_ROOT}/updates.json"
 "${IRONFOX_SED}" -i "s|ironfox-{IRONFOX_VERSION}|ironfox-${IRONFOX_VERSION}|" "${IRONFOX_ROOT}/updates.json"
