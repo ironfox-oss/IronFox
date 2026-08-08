@@ -31,46 +31,48 @@ cd target-repo || {
 source "${IRONFOX_PYENV}"
 "${IRONFOX_PYTHON}" ./scripts/gen_patch_pages.py ../scripts/patches.yaml
 
-# Update version name
-"${IRONFOX_SED}" -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_VERSION}\";/g" \
-  ./src/version.ts
+if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
+  # Update version name
+  "${IRONFOX_SED}" -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_VERSION}\";/g" \
+    ./src/version.ts
 
-# Update release notes
-"${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "https://releases.ironfoxoss.org/ironfox/releases/${IRONFOX_VERSION}/ironfox-${IRONFOX_VERSION}-release-notes.md" --output "${IRONFOX_VERSION}-temp.md"
+  # Update release notes
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "https://releases.ironfoxoss.org/ironfox/releases/${IRONFOX_VERSION}/ironfox-${IRONFOX_VERSION}-release-notes.md" --output "${IRONFOX_VERSION}-temp.md"
 
-"${IRONFOX_CP}" -f ./release-notes.md ./release-notes-temp.md
-"${IRONFOX_RM}" -f ./release-notes.md
+  "${IRONFOX_CP}" -f ./release-notes.md ./release-notes-temp.md
+  "${IRONFOX_RM}" -f ./release-notes.md
 
-"${IRONFOX_SED}" -i "s|# IronFox ${IRONFOX_VERSION}||g" "${IRONFOX_VERSION}-temp.md"
-{
-  echo "<div id='${IRONFOX_VERSION}'>"
-  echo "  <h1>${IRONFOX_VERSION}</h1>"
-  echo "</div>"
-  "${IRONFOX_CAT}" "${IRONFOX_VERSION}-temp.md"
-  echo ''
-} >> "${IRONFOX_VERSION}.md"
-"${IRONFOX_RM}" -f "${IRONFOX_VERSION}-temp.md"
+  "${IRONFOX_SED}" -i "s|# IronFox ${IRONFOX_VERSION}||g" "${IRONFOX_VERSION}-temp.md"
+  {
+    echo "<div id='${IRONFOX_VERSION}'>"
+    echo "  <h1>${IRONFOX_VERSION}</h1>"
+    echo "</div>"
+    "${IRONFOX_CAT}" "${IRONFOX_VERSION}-temp.md"
+    echo ''
+  } >> "${IRONFOX_VERSION}.md"
+  "${IRONFOX_RM}" -f "${IRONFOX_VERSION}-temp.md"
 
-"${IRONFOX_CAT}" "${IRONFOX_VERSION}.md" ./release-notes-temp.md > ./release-notes.md
-"${IRONFOX_RM}" -f "${IRONFOX_VERSION}.md"
-"${IRONFOX_RM}" -f ./release-notes-temp.md
+  "${IRONFOX_CAT}" "${IRONFOX_VERSION}.md" ./release-notes-temp.md > ./release-notes.md
+  "${IRONFOX_RM}" -f "${IRONFOX_VERSION}.md"
+  "${IRONFOX_RM}" -f ./release-notes-temp.md
 
-"${IRONFOX_RM}" -f ./src/content/docs/releases.mdx
-{
-  echo '---'
-  echo 'title: IronFox releases'
-  echo '---'
-  echo ''
-  echo 'import { IRONFOX_VERSION } from "../../version.ts";'
-  echo 'import MarkdownLayout from "../../layouts/MarkdownLayout.astro";'
-  echo ''
-  echo '<MarkdownLayout>'
-  echo ''
-  echo '> Latest release: <a href={`https://ironfoxoss.org/releases/#${IRONFOX_VERSION}`} rel="noopener noreferrer me">{IRONFOX_VERSION}</a>'
-  echo ''
-  "${IRONFOX_CAT}" ./release-notes.md
-  echo '</MarkdownLayout>'
-} >> ./src/content/docs/releases.mdx
+  "${IRONFOX_RM}" -f ./src/content/docs/releases.mdx
+  {
+    echo '---'
+    echo 'title: IronFox releases'
+    echo '---'
+    echo ''
+    echo 'import { IRONFOX_VERSION } from "../../version.ts";'
+    echo 'import MarkdownLayout from "../../layouts/MarkdownLayout.astro";'
+    echo ''
+    echo '<MarkdownLayout>'
+    echo ''
+    echo '> Latest release: <a href={`https://ironfoxoss.org/releases/#${IRONFOX_VERSION}`} rel="noopener noreferrer me">{IRONFOX_VERSION}</a>'
+    echo ''
+    "${IRONFOX_CAT}" ./release-notes.md
+    echo '</MarkdownLayout>'
+  } >> ./src/content/docs/releases.mdx
+fi
 
 # Commit changes
 "${IRONFOX_GIT}" add src release-notes.md
