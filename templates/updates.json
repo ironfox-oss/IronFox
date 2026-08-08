@@ -1,7 +1,7 @@
 {
   "org.ironfoxoss.ironfox": {
     "version": "{IRONFOX_VERSION}",
-    "release-notes": "https://gitlab.com/ironfox-oss/IronFox/-/releases/v{IRONFOX_VERSION}",
+    "release-notes": "https://ironfoxoss.org/releases/#{IRONFOX_VERSION}",
     "arm64-v8a": {
       "sha512sum": "{IRONFOX_ARM64_SHA512SUM}",
       "url": "https://releases.ironfoxoss.org/ironfox/releases/{IRONFOX_VERSION}/arm64-v8a/ironfox-{IRONFOX_VERSION}-arm64-v8a.apk"
