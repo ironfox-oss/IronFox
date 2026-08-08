@@ -72,9 +72,61 @@ if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
     "${IRONFOX_CAT}" ./release-notes.md
     echo '</MarkdownLayout>'
   } >> ./src/content/docs/releases.mdx
+
+  # Update RSS
+  "${IRONFOX_RM}" -f ./public/releases/rss.xml
+
+  # The RSS feed only needs to include the last 3 releases
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' --output "${IRONFOX_ROOT}/previous_release.txt"
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location 'https://releases.ironfoxoss.org/ironfox/releases/previous_previous_release.txt' --output "${IRONFOX_ROOT}/previous_previous_release.txt"
+
+  readonly IRONFOX_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_release.txt" | "${IRONFOX_XARGS}")
+  readonly IRONFOX_PREVIOUS_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_previous_release.txt" | "${IRONFOX_XARGS}")
+
+  for xml in ./rss/releases/*.xml; do
+    xml_basename=$("${IRONFOX_BASENAME}" "${xml}")
+    if [[ "${xml_basename}" != "${IRONFOX_PREVIOUS_VERSION}.xml" ]] &&
+      [[ "${xml_basename}" != "${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml" ]]; then
+      "${IRONFOX_RM}" -vf "${xml}"
+    fi
+  done
+
+  # Set timezone to UTC for consistency
+  unset TZ
+  export TZ='UTC'
+
+  # Set RSS publication date/time
+  readonly RSS_DATE="$("${IRONFOX_DATE}" +"%a, %d %b %Y %T")"
+
+  {
+    echo '    <item>'
+    echo "      <title>IronFox ${IRONFOX_VERSION}</title>"
+    echo "      <link>https://ironfoxoss.org/releases/#${IRONFOX_VERSION}</link>"
+    echo "      <guid isPermaLink='true'>https://ironfoxoss.org/releases/#${IRONFOX_VERSION}</guid>"
+    echo "      <pubDate>${RSS_DATE} GMT</pubDate>"
+    echo "      <author>contact@ironfoxoss.org</author>"
+    echo "      <enclosure url='https://ironfoxoss.org/ironfox.png' width='604' height='599' length='24128' type='image/png'/>"
+    echo "    </item>"
+  } >> ./rss/releases/"${IRONFOX_VERSION}.xml"
+
+  {
+    "${IRONFOX_CAT}" ./templates/releases.rss.xml
+    "${IRONFOX_CAT}" ./rss/releases/"${IRONFOX_VERSION}.xml"
+
+    if [[ -f ./rss/releases/"${IRONFOX_PREVIOUS_VERSION}.xml" ]]; then
+      "${IRONFOX_CAT}" ./rss/releases/"${IRONFOX_PREVIOUS_VERSION}.xml"
+    fi
+
+    if [[ -f ./rss/releases/"${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml" ]]; then
+      "${IRONFOX_CAT}" ./rss/releases/"${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml"
+    fi
+
+    echo '  </channel>'
+    echo '</rss>'
+  } >> ./public/releases/rss.xml
 fi
 
 # Commit changes
-"${IRONFOX_GIT}" add src release-notes.md
+"${IRONFOX_GIT}" add rss src public release-notes.md
 "${IRONFOX_GIT}" commit -m "feat: update patch docs to reflect ironfox-oss/IronFox@${CI_COMMIT_SHA}"
 "${IRONFOX_GIT}" push origin "HEAD:${TARGET_REPO_BRANCH}"
