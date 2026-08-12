@@ -1,1 +1,1 @@
-- Updated to Firefox [`153.0.3`](https://firefox.com/firefox/android/153.0.3/releasenotes/).
+- Updated to Firefox [`153.0.4`](https://firefox.com/firefox/android/153.0.4/releasenotes/).
