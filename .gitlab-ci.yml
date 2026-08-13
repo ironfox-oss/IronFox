@@ -43,15 +43,13 @@ default:
       - unknown_failure
 
 variables: &common_variables
-  ARTIFACT_COMPRESSION_LEVEL: "slowest"
-  CACHE_COMPRESSION_LEVEL: "slowest"
-  FF_USE_FASTZIP: "1"
-  IF_CI_NAME: "IronFox CI"
-  IF_CI_USERNAME: "ironfox-ci"
-  IF_CI_EMAIL: "ci@ironfoxoss.org"
+  ARTIFACT_COMPRESSION_LEVEL: 'slowest'
+  CACHE_COMPRESSION_LEVEL: 'slowest'
+  FF_USE_FASTZIP: '1'
   IRONFOX_CI: 1
-  PRODUCTION_BRANCH: "main"
-  TRANSFER_METER_FREQUENCY: "2s"
+  IRONFOX_DEV_BRANCH: 'dev'
+  IRONFOX_PROD_BRANCH: 'main'
+  TRANSFER_METER_FREQUENCY: '2s'
 
 stages:
   - lint
@@ -88,34 +86,14 @@ update-fdroid-repo:
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
-    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+    - if: $CI_COMMIT_BRANCH == $IRONFOX_PROD_BRANCH
   tags:
     - saas-linux-2xlarge-amd64
   variables:
-    FDROID_REPO_PATH: ironfox-oss/fdroid
-    FDROID_REPO_BRANCH: dev
-    META_REPO_BRANCH: main
-    META_DIR_PATH: "./fdroid/metadata"
-    META_FILE_NAME: "org.ironfoxoss.ironfox.yml"
-    REPO_DIR_PATH: "./fdroid/repo"
     <<: *common_variables
-  before_script:
-    - set -euo pipefail
-    - /bin/sudo /bin/dnf update -y --refresh
-    - /bin/sudo /bin/dnf install -y bash curl git git-lfs jq make shasum
-    - /bin/git config --global user.email "${IF_CI_EMAIL}"
-    - /bin/git config --global user.name "${IF_CI_NAME}"
-    - /bin/git config --global url."https://${IF_CI_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - set -euo pipefail
-    - echo 'CI - Downloading dependencies...'
-    - /bin/bash scripts/get_sources.sh uv
-    - /bin/bash scripts/get_sources.sh python
-    - /bin/bash scripts/get_sources.sh androguard
-    - echo 'CI - Downloaded dependencies.'
-    - echo 'Updating F-Droid repo...'
-    - /bin/bash scripts/ci-update-fdroid.sh
-    - echo 'CI - Updated F-Droid repo.'
+    - /bin/bash scripts/ci-update-fdroid-repo.sh
 
 update-site-repo:
   image: fedora:43
@@ -133,23 +111,9 @@ update-site-repo:
     - saas-linux-2xlarge-amd64
   variables:
     <<: *common_variables
-  before_script:
-    - set -euo pipefail
-    - /bin/sudo /bin/dnf update -y --refresh
-    - /bin/sudo /bin/dnf install -y bash curl git make shasum yq
-    - /bin/git config --global user.email "${IF_CI_EMAIL}"
-    - /bin/git config --global user.name "${IF_CI_NAME}"
-    - /bin/git config --global url."https://${IF_CI_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - set -euo pipefail
-    - echo 'CI - Downloading dependencies...'
-    - /bin/bash scripts/get_sources.sh uv
-    - /bin/bash scripts/get_sources.sh python
-    - /bin/bash scripts/get_sources.sh pyyaml
-    - echo 'CI - Downloaded dependencies.'
-    - echo 'CI - Updating website repo...'
-    - /bin/bash scripts/ci-update-site.sh
-    - echo 'CI - Updated website repo.'
+    - /bin/bash scripts/ci-update-site-repo.sh
 
 build-docker:
   image: docker:cli
@@ -166,7 +130,7 @@ build-docker:
     - docker build --pull -t "${DOCKER_IMAGE_NAME}" .
     - docker push "${DOCKER_IMAGE_NAME}"
     - |
-      if [[ "${CI_COMMIT_BRANCH}" == "${CI_DEFAULT_BRANCH}" ]]; then
+      if [[ "${CI_COMMIT_BRANCH}" == "${IRONFOX_DEV_BRANCH}" ]]; then
         docker tag "${DOCKER_IMAGE_NAME}" "${CI_REGISTRY_IMAGE}:latest"
         docker push "${CI_REGISTRY_IMAGE}:latest"
       fi
@@ -179,7 +143,7 @@ build-docker:
       changes:
         - Dockerfile
         - .gitlab-ci.yml
-    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+    - if: $CI_COMMIT_BRANCH == $IRONFOX_PROD_BRANCH
   tags:
     - saas-linux-2xlarge-amd64
 
@@ -194,22 +158,13 @@ build-geckoview:
     - saas-linux-2xlarge-amd64
   parallel:
     matrix:
-      - BUILD_VARIANT: ["arm64", "arm", "x86_64"]
+      - IRONFOX_CI_TARGET_ARCH: ['arm64', 'arm', 'x86_64']
   variables:
     RUNNER_SCRIPT_TIMEOUT: 1h 50m
     <<: *common_variables
   script:
     - set -euo pipefail
-    - echo 'CI - Preparing secrets...'
-    - /bin/bash scripts/ci-prep.sh s3-artifacts
-    - /bin/bash scripts/ci-prep.sh sb
-    - echo 'CI - Prepared secrets.'
-    - echo "CI - Building GeckoView (${BUILD_VARIANT})..."
-    - /bin/bash scripts/ci-build.sh "${BUILD_VARIANT}" 'geckoview'
-    - echo "CI - Built GeckoView (${BUILD_VARIANT})."
-    - echo 'CI - Uploading artifact...'
-    - /bin/bash scripts/ci-upload-artifacts.sh geckoview "${BUILD_VARIANT}"
-    - echo 'CI - Uploaded artifact.'
+    - /bin/bash scripts/ci-build.sh "${IRONFOX_CI_TARGET_ARCH}" 'geckoview'
   artifacts:
     untracked: false
     when: always
@@ -241,23 +196,12 @@ build-fenix:
   tags:
     - saas-linux-2xlarge-amd64
   variables:
-    BUILD_VARIANT: "bundle"
-    BUILD_VARIANT_PRETTY: "Bundle"
+    IRONFOX_CI_TARGET_ARCH: 'bundle'
     RUNNER_SCRIPT_TIMEOUT: 2h 50m
     <<: *common_variables
   script:
     - set -euo pipefail
-    - echo 'CI - Preparing secrets...'
-    - /bin/bash scripts/ci-prep.sh android-ks
-    - /bin/bash scripts/ci-prep.sh s3-artifacts
-    - /bin/bash scripts/ci-prep.sh sb
-    - echo 'CI - Prepared secrets.'
-    - echo "CI - Building Fenix (${BUILD_VARIANT_PRETTY})..."
-    - /bin/bash scripts/ci-build.sh "${BUILD_VARIANT}" 'fenix'
-    - echo "CI - Built Fenix (${BUILD_VARIANT_PRETTY})."
-    - echo 'CI - Uploading artifact...'
-    - /bin/bash scripts/ci-upload-artifacts.sh fenix "${BUILD_VARIANT}"
-    - echo 'CI - Uploaded artifact.'
+    - /bin/bash scripts/ci-build.sh "${IRONFOX_CI_TARGET_ARCH}" 'fenix'
   artifacts:
     untracked: false
     when: always
@@ -292,36 +236,16 @@ prepare-release:
   rules:
     - if: $CI_COMMIT_TAG
       when: never
-    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH && $CI_COMMIT_MESSAGE =~ /\[skip-release\]/
+    - if: $CI_COMMIT_BRANCH == $IRONFOX_PROD_BRANCH && $CI_COMMIT_MESSAGE =~ /\[skip-release\]/
       when: never
-    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+    - if: $CI_COMMIT_BRANCH == $IRONFOX_PROD_BRANCH
   tags:
     - saas-linux-2xlarge-amd64
   variables:
     <<: *common_variables
-  before_script:
-    - set -euo pipefail
-    - sudo dnf update -y --refresh
-    - sudo dnf install -y curl jq shasum
   script:
     - set -euo pipefail
-    - echo 'CI - Preparing secrets...'
-    - /bin/bash scripts/ci-prep.sh s3-releases
-    - echo 'CI - Prepared secrets.'
-    - echo 'CI - Downloading dependencies...'
-    - /bin/bash scripts/get_sources.sh uv
-    - /bin/bash scripts/get_sources.sh python
-    - /bin/bash scripts/get_sources.sh s3cmd
-    - echo 'CI - Downloaded dependencies.'
-    - echo 'CI - Downloading artifacts...'
-    - /bin/bash scripts/ci-download-artifacts.sh fenix arm64
-    - /bin/bash scripts/ci-download-artifacts.sh fenix arm
-    - /bin/bash scripts/ci-download-artifacts.sh fenix x86_64
-    - /bin/bash scripts/ci-download-artifacts.sh fenix bundle
-    - echo 'CI - Downloaded artifacts.'
-    - echo 'CI - Publishing packages...'
-    - /bin/bash scripts/ci-publish-packages.sh
-    - echo 'CI - Published packages.'
+    - /bin/bash scripts/ci-prepare-release.sh
   artifacts:
     untracked: false
     when: on_success
@@ -341,15 +265,16 @@ publish-release:
   rules:
     - if: $CI_COMMIT_TAG
       when: never
-    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH && $CI_COMMIT_MESSAGE =~ /\[skip-release\]/
+    - if: $CI_COMMIT_BRANCH == $IRONFOX_PROD_BRANCH && $CI_COMMIT_MESSAGE =~ /\[skip-release\]/
       when: never
-    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+    - if: $CI_COMMIT_BRANCH == $IRONFOX_PROD_BRANCH
   tags:
     - saas-linux-2xlarge-amd64
   variables:
     <<: *common_variables
   script:
     - set -euo pipefail
+    - set +x
     - |
       release-cli \
         --server-url "${CI_SERVER_URL}" \

@@ -3,9 +3,6 @@
 set -euo pipefail
 
 # Set-up our environment
-if [[ -z "${IRONFOX_CI+x}" ]]; then
-  export IRONFOX_CI=1
-fi
 source $(dirname $0)/env.sh
 
 # Include utilities
@@ -24,6 +21,16 @@ if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
   set -x
 else
   set +x
+fi
+
+if [[ "${IRONFOX_CI}" != 1 ]]; then
+  echo_red_text "ERROR: $0 should only be called from CI!"
+  exit 1
+fi
+
+if [[ -z "${IRONFOX_CI_ID+x}" ]]; then
+  echo_red_text 'ERROR: Missing CI ID! Please set IRONFOX_CI_ID.'
+  exit 1
 fi
 
 readonly down_artifact="$1"
@@ -127,33 +134,33 @@ function download_artifact() {
 
 if [[ "${IRONFOX_AR_DOWN_FENIX}" == 1 ]]; then
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm64' ]]; then
-    download_artifact "${CI_PIPELINE_ID}" 'fenix' 'arm64' "${IRONFOX_APK_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' 'arm64' "${IRONFOX_APK_ARTIFACTS}"
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm' ]]; then
-    download_artifact "${CI_PIPELINE_ID}" 'fenix' 'arm' "${IRONFOX_APK_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' 'arm' "${IRONFOX_APK_ARTIFACTS}"
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'x86_64' ]]; then
-    download_artifact "${CI_PIPELINE_ID}" 'fenix' 'x86_64' "${IRONFOX_APK_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' 'x86_64' "${IRONFOX_APK_ARTIFACTS}"
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'bundle' ]]; then
-    download_artifact "${CI_PIPELINE_ID}" 'fenix' 'universal' "${IRONFOX_APK_ARTIFACTS}"
-    download_artifact "${CI_PIPELINE_ID}" 'fenix' 'bundle' "${IRONFOX_APKS_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' 'universal' "${IRONFOX_APK_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' 'bundle' "${IRONFOX_APKS_ARTIFACTS}"
   fi
 fi
 
 if [[ "${IRONFOX_AR_DOWN_GECKOVIEW}" == 1 ]]; then
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm64' ]]; then
-    download_artifact "${CI_PIPELINE_ID}" 'geckoview' 'arm64' "${IRONFOX_AAR_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'geckoview' 'arm64' "${IRONFOX_AAR_ARTIFACTS}"
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm' ]]; then
-    download_artifact "${CI_PIPELINE_ID}" 'geckoview' 'arm' "${IRONFOX_AAR_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'geckoview' 'arm' "${IRONFOX_AAR_ARTIFACTS}"
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'x86_64' ]]; then
-    download_artifact "${CI_PIPELINE_ID}" 'geckoview' 'x86_64' "${IRONFOX_AAR_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'geckoview' 'x86_64' "${IRONFOX_AAR_ARTIFACTS}"
   fi
 fi

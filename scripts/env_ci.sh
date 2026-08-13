@@ -3,7 +3,12 @@
 
 # Set timezone to UTC for consistency
 unset TZ
-export TZ="UTC"
+export TZ='UTC'
+
+if [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_PROD_BRANCH}" ]]; then
+  # Target release
+  export IRONFOX_RELEASE=1
+fi
 
 # Android keystore/app signing
 export IRONFOX_ANDROID_KEYSTORE='/opt/IronFox/ironfox-android-keystore.jks'

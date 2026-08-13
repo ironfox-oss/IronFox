@@ -6,9 +6,6 @@ set -euo pipefail
 set +x
 
 # Set-up our environment
-if [[ -z "${IRONFOX_CI+x}" ]]; then
-  export IRONFOX_CI=1
-fi
 source $(dirname $0)/env.sh
 
 # Include utilities
@@ -16,6 +13,16 @@ source "${IRONFOX_UTILS}"
 
 if [[ -z "${IRONFOX_FROM_AR_UP+x}" ]]; then
   echo_red_text 'ERROR: Do not call ci-upload-artifacts-if.sh directly. Instead, use ci-upload-artifacts.sh.' >&1
+  exit 1
+fi
+
+if [[ "${IRONFOX_CI}" != 1 ]]; then
+  echo_red_text "ERROR: $0 should only be called from CI!"
+  exit 1
+fi
+
+if [[ -z "${IRONFOX_CI_ID+x}" ]]; then
+  echo_red_text 'ERROR: Missing CI ID! Please set IRONFOX_CI_ID.'
   exit 1
 fi
 
@@ -201,33 +208,33 @@ function push_and_add_sha512sum() {
 
 if [[ "${IRONFOX_AR_UP_FENIX}" == 1 ]]; then
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm64' ]] || [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_ARM64}" "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_ARM64}" "${IRONFOX_CI_ID}"
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm' ]] || [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_ARM}" "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_ARM}" "${IRONFOX_CI_ID}"
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'x86_64' ]] || [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_X86_64}" "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_X86_64}" "${IRONFOX_CI_ID}"
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_UNIVERSAL}" "${CI_PIPELINE_ID}"
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_BUNDLE}" "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_UNIVERSAL}" "${IRONFOX_CI_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_BUNDLE}" "${IRONFOX_CI_ID}"
   fi
 fi
 
 if [[ "${IRONFOX_AR_UP_GECKOVIEW}" == 1 ]]; then
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm64' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${IRONFOX_CI_ID}"
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${IRONFOX_CI_ID}"
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'x86_64' ]]; then
-    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${CI_PIPELINE_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${IRONFOX_CI_ID}"
   fi
 fi

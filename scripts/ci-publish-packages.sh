@@ -20,6 +20,11 @@ source "$(realpath $(dirname "$0"))/env.sh"
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+if [[ "${IRONFOX_CI}" != 1 ]]; then
+  echo_red_text "ERROR: $0 should only be called from CI!"
+  exit 1
+fi
+
 # Verify secrets
 verify_file_with_env "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" 'IRONFOX_RELEASES_S3_ACCESS_KEY_FILE' || exit 1
 verify_file_with_env "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" 'IRONFOX_RELEASES_S3_BUCKET_NAME_FILE' || exit 1
@@ -46,6 +51,32 @@ readonly IRONFOX_APK_ARM="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-ar
 readonly IRONFOX_APK_X86_64="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-x86_64.apk"
 readonly IRONFOX_APK_UNIVERSAL="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk"
 readonly IRONFOX_APKSET="${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks"
+
+# Set our external CI environment variables
+
+## Commit SHA
+if [[ -z "${CI_COMMIT_SHA+x}" ]]; then
+  echo_red_text 'ERROR: Missing commit SHA! Please set CI_COMMIT_SHA.'
+  exit 1
+else
+  readonly IRONFOX_CI_COMMIT="${CI_COMMIT_SHA}"
+fi
+
+## Short commit SHA
+if [[ -z "${CI_COMMIT_SHORT_SHA+x}" ]]; then
+  echo_red_text 'ERROR: Missing short commit SHA! Please set CI_COMMIT_SHORT_SHA.'
+  exit 1
+else
+  readonly IRONFOX_CI_COMMIT_SHORT="${CI_COMMIT_SHORT_SHA}"
+fi
+
+## Job ID
+if [[ -z "${CI_JOB_ID+x}" ]]; then
+  echo_red_text 'ERROR: Missing job ID! Please set CI_JOB_ID.'
+  exit 1
+else
+  readonly IRONFOX_CI_JOB_ID="${CI_JOB_ID}"
+fi
 
 # Ensure we have our artifacts
 verify_file "${IRONFOX_APK_ARM64}" || exit 1
@@ -246,9 +277,9 @@ function create_release_notes() {
   "${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
 
   # Set CI commit + job ID
-  "${IRONFOX_SED}" -i "s|{CI_COMMIT_SHA}|${CI_COMMIT_SHA}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-  "${IRONFOX_SED}" -i "s|{CI_COMMIT_SHORT_SHA}|${CI_COMMIT_SHORT_SHA}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-  "${IRONFOX_SED}" -i "s|{CI_JOB_ID}|${CI_JOB_ID}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_CI_COMMIT}|${IRONFOX_CI_COMMIT}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_CI_COMMIT_SHORT}|${IRONFOX_CI_COMMIT_SHORT}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_CI_JOB_ID}|${IRONFOX_CI_JOB_ID}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
 
   # Add release-specific changes
   local -r IRONFOX_CHANGELOG=$("${IRONFOX_CAT}" "${IRONFOX_CHANGELOG_FILE}")

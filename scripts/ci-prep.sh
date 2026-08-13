@@ -9,9 +9,6 @@ set -euo pipefail
 set +x
 
 # Set-up our environment
-if [[ -z "${IRONFOX_CI+x}" ]]; then
-  export IRONFOX_CI=1
-fi
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   /bin/bash "$(realpath $(dirname "$0"))/env.sh"
 fi
@@ -19,6 +16,11 @@ source "$(realpath $(dirname "$0"))/env.sh"
 
 # Include utilities
 source "${IRONFOX_UTILS}"
+
+if [[ "${IRONFOX_CI}" != 1 ]]; then
+  echo_red_text "ERROR: $0 should only be called from CI!"
+  exit 1
+fi
 
 # Set-up target parameters
 if [[ -z "${1+x}" ]]; then
@@ -85,13 +87,14 @@ function prep_android_keystore() {
   fi
   readonly IRONFOX_ANDROID_KEYSTORE_URL
 
-  ## GitLab CI job token
+  ## Job token
   ### (We need this to download the Android Keystore)
   if [[ -z "${CI_JOB_TOKEN+x}" ]]; then
-    echo_red_text 'ERROR: The CI_JOB_TOKEN environment variable is missing! Aborting...'
+    echo_red_text 'ERROR: Missing job token! Please set CI_JOB_TOKEN.'
     exit 1
+  else
+    readonly IRONFOX_CI_JOB_TOKEN="${CI_JOB_TOKEN}"
   fi
-  readonly CI_JOB_TOKEN
 
   # Now, ensure that our keystore file variables (defined at `env_common.sh`, set at `env_ci.sh`) are properly set...
 
@@ -133,7 +136,7 @@ function prep_android_keystore() {
   # Download the Android keystore
   "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location \
     --request GET \
-    --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
+    --header "JOB-TOKEN: ${IRONFOX_CI_JOB_TOKEN}" \
     "${IRONFOX_ANDROID_KEYSTORE_URL}" \
     --output "${IRONFOX_ANDROID_KEYSTORE}"
 

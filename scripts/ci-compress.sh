@@ -21,6 +21,11 @@ else
   set +x
 fi
 
+if [[ "${IRONFOX_CI}" != 1 ]]; then
+  echo_red_text "ERROR: $0 should only be called from CI!"
+  exit 1
+fi
+
 readonly artifact_name="$1"
 readonly artifact_archive="${artifact_name}.tar.xz"
 readonly artifact_path="${IRONFOX_ARTIFACTS}/${artifact_archive}"

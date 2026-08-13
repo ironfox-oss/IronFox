@@ -150,13 +150,41 @@ function setup_lint_path() {
   export PATH
 }
 
+# For CI, ensure external environment variables are set
+function setup_ci() {
+  # Get our current branch
+  if [[ -z "${CI_COMMIT_REF_NAME+x}" ]]; then
+    echo_red_text 'ERROR: Missing current branch! Please set CI_COMMIT_REF_NAME.'
+    exit 1
+  else
+    readonly IRONFOX_CURRENT_BRANCH="${CI_COMMIT_REF_NAME}"
+    export IRONFOX_CURRENT_BRANCH
+  fi
+
+  # Ensure our branches are set
+  if [[ -z "${IRONFOX_DEV_BRANCH+x}" ]]; then
+    echo_red_text 'ERROR: Missing developer branch! Please set IRONFOX_DEV_BRANCH.'
+    exit 1
+  fi
+
+  if [[ -z "${IRONFOX_PROD_BRANCH+x}" ]]; then
+    echo_red_text 'ERROR: Missing production branch! Please set IRONFOX_PROD_BRANCH.'
+    exit 1
+  fi
+}
+
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
+  # Handle CI-specific logic
+  if [[ -n "${IRONFOX_CI+x}" ]]; then
+    setup_ci
+  fi
+
   source "$(dirname $0)/env_local.sh"
 
   # Set-up our PATH
-  if [[ -z "${IRONFOX_LINTING+x}" ]]; then
-    setup_path
-  else
+  if [[ -n "${IRONFOX_LINTING+x}" ]]; then
     setup_lint_path
+  else
+    setup_path
   fi
 fi
