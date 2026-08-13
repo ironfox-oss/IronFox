@@ -132,8 +132,8 @@ pushd "${META_DIR_PATH}" || {
 
 # Update metadata repository
 "${IRONFOX_GIT}" add "${META_FILE_NAME}"
-"${IRONFOX_GIT}" commit -m "feat: update for release ${CI_COMMIT_TAG}"
-"${IRONFOX_GIT}" push origin "HEAD:${META_REPO_BRANCH}"
+"${IRONFOX_GIT}" commit -m "feat: update for release ${CI_COMMIT_TAG}" || echo 'Metadata repo already up to date! Not committing anything...'
+"${IRONFOX_GIT}" push origin "HEAD:${META_REPO_BRANCH}" || echo 'Metadata repo already up to date! Not pushing anything...'
 
 popd || {
   echo "Unable to popd from '${META_DIR_PATH}'"

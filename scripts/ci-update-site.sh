@@ -33,7 +33,7 @@ pushd "${IRONFOX_TARGET_REPO}"
 source "${IRONFOX_PYENV}"
 "${IRONFOX_PYTHON}" ./scripts/gen_patch_pages.py "${IRONFOX_SCRIPTS}/patches.yaml"
 
-if true; then
+if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
   # Update version name
   "${IRONFOX_SED}" -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_VERSION}\";/g" \
     ./src/version.ts

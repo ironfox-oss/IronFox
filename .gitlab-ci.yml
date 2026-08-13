@@ -88,7 +88,12 @@ update-fdroid-repo:
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
-    - if: $CI_COMMIT_TAG
+    - changes:
+      - scripts/a-s-patches.yaml
+      - scripts/glean-patches.yaml
+      - scripts/patches.yaml
+      - scripts/ci-update-fdroid.sh
+      - .gitlab-ci.yml
   tags:
     - saas-linux-2xlarge-amd64
   variables:
@@ -101,11 +106,11 @@ update-fdroid-repo:
     <<: *build_variables
   before_script:
     - set -euo pipefail
-    - sudo dnf update -y --refresh
-    - sudo dnf install -y bash curl git git-lfs jq make shasum
-    - git config --global user.email "${IF_CI_EMAIL}"
-    - git config --global user.name "${IF_CI_NAME}"
-    - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
+    - /bin/sudo /bin/dnf update -y --refresh
+    - /bin/sudo /bin/dnf install -y bash curl git git-lfs jq make shasum
+    - /bin/git config --global user.email "${IF_CI_EMAIL}"
+    - /bin/git config --global user.name "${IF_CI_NAME}"
+    - /bin/git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - set -euo pipefail
     - echo 'CI - Downloading dependencies...'
