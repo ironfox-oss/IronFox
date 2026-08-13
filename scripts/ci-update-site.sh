@@ -130,7 +130,7 @@ fi
 
 # Commit changes
 "${IRONFOX_GIT}" add rss src public release-notes.md
-"${IRONFOX_GIT}" commit -m "feat: update patch docs to reflect ironfox-oss/IronFox@${CI_COMMIT_SHA}"
-"${IRONFOX_GIT}" push origin "HEAD:${IRONFOX_TARGET_REPO_BRANCH}"
+"${IRONFOX_GIT}" commit -m "feat: update patch docs to reflect ironfox-oss/IronFox@${CI_COMMIT_SHA}" || exit 0
+"${IRONFOX_GIT}" push origin "HEAD:${IRONFOX_TARGET_REPO_BRANCH}" || exit 0
 
 popd
