@@ -5,6 +5,9 @@
 
 set -euo pipefail
 
+# Ensure this is never ran with xtrace...
+set +x
+
 # Set-up our environment
 if [[ -z "${IRONFOX_CI+x}" ]]; then
   export IRONFOX_CI=1
@@ -14,18 +17,17 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
 fi
 source "$(realpath $(dirname "$0"))/env.sh"
 
-# Set verbosity
-if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
-  set -x
-else
-  set +x
-fi
+# Include utilities
+source "${IRONFOX_UTILS}"
 
-"${IRONFOX_GIT}" clone "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${TARGET_REPO_PATH}.git" target-repo
-cd target-repo || {
-  echo "Unable to cd into target-repo"
-  exit 1
-}
+# Constants
+readonly IRONFOX_TARGET_REPO="${IRONFOX_EXTERNAL}/ironfoxoss.org"
+readonly IRONFOX_TARGET_REPO_BRANCH='dev'
+readonly IRONFOX_TARGET_REPO_PATH='ironfox-oss/ironfoxoss.org'
+
+"${IRONFOX_GIT}" clone "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_TARGET_REPO_PATH}.git" "${IRONFOX_EXTERNAL}/ironfoxoss.org"
+
+pushd "${IRONFOX_TARGET_REPO}"
 
 # Generate documentation for patches
 source "${IRONFOX_PYENV}"
@@ -129,4 +131,6 @@ fi
 # Commit changes
 "${IRONFOX_GIT}" add rss src public release-notes.md
 "${IRONFOX_GIT}" commit -m "feat: update patch docs to reflect ironfox-oss/IronFox@${CI_COMMIT_SHA}"
-"${IRONFOX_GIT}" push origin "HEAD:${TARGET_REPO_BRANCH}"
+"${IRONFOX_GIT}" push origin "HEAD:${IRONFOX_TARGET_REPO_BRANCH}"
+
+popd

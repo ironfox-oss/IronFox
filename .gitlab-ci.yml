@@ -70,6 +70,8 @@ lint-scripts:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
+  variables:
+    <<: *build_variables
   before_script:
     - set -euo pipefail
     - /bin/sudo /bin/dnf update -y --refresh
@@ -121,8 +123,6 @@ update-site-repo:
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
-    - if: $CI_COMMIT_TAG
-    - if: $CI_COMMIT_BRANCH == "dev"
       changes:
       - scripts/a-s-patches.yaml
       - scripts/glean-patches.yaml
@@ -131,16 +131,14 @@ update-site-repo:
   tags:
     - saas-linux-2xlarge-amd64
   variables:
-    TARGET_REPO_PATH: ironfox-oss/ironfoxoss.org
-    TARGET_REPO_BRANCH: dev
     <<: *build_variables
   before_script:
     - set -euo pipefail
-    - sudo dnf update -y --refresh
-    - sudo dnf install -y bash curl git make shasum yq
-    - git config --global user.email "${IF_CI_EMAIL}"
-    - git config --global user.name "${IF_CI_NAME}"
-    - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
+    - /bin/sudo /bin/dnf update -y --refresh
+    - /bin/sudo /bin/dnf install -y bash curl git make shasum yq
+    - /bin/git config --global user.email "${IF_CI_EMAIL}"
+    - /bin/git config --global user.name "${IF_CI_NAME}"
+    - /bin/git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - set -euo pipefail
     - echo 'CI - Downloading dependencies...'
@@ -159,6 +157,7 @@ build-docker:
     - docker:dind
   variables:
     DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    <<: *build_variables
   before_script:
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
   script:
