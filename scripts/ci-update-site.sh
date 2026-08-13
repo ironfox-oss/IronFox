@@ -27,7 +27,7 @@ readonly IRONFOX_TARGET_REPO_PATH='ironfox-oss/ironfoxoss.org'
 
 "${IRONFOX_GIT}" clone "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_TARGET_REPO_PATH}.git" "${IRONFOX_TARGET_REPO}"
 
-pushd "${IRONFOX_TARGET_REPO}"
+cd "${IRONFOX_TARGET_REPO}"
 
 # Generate documentation for patches
 source "${IRONFOX_PYENV}"
@@ -132,5 +132,3 @@ fi
 "${IRONFOX_GIT}" add rss src public release-notes.md
 "${IRONFOX_GIT}" commit -m "feat: update patch docs to reflect ironfox-oss/IronFox@${CI_COMMIT_SHA}"
 "${IRONFOX_GIT}" push origin "HEAD:${IRONFOX_TARGET_REPO_BRANCH}"
-
-popd
