@@ -56,11 +56,6 @@ case "${IRONFOX_CI_BUILD_PROJECT}" in
     ;;
 esac
 
-if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'fenix' ]]; then
-  # Fail-fast in case the signing key is unavailable or an empty file
-  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE}" 'IRONFOX_ANDROID_KEYSTORE' || exit 1
-fi
-
 # Get dependencies
 echo_red_text 'CI - Downloading dependencies...'
 /bin/sudo /bin/dnf update -y --refresh
@@ -112,6 +107,11 @@ if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'fenix' ]]; then
   /bin/bash "${IRONFOX_SCRIPTS}/ci-prep.sh" 'android-ks'
 fi
 echo_green_text 'CI - SUCCESS: Prepared secrets.'
+
+if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'fenix' ]]; then
+  # Fail-fast in case the signing key is unavailable or an empty file
+  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE}" 'IRONFOX_ANDROID_KEYSTORE' || exit 1
+fi
 
 # Set verbosity
 if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
