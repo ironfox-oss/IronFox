@@ -123,11 +123,12 @@ update-site-repo:
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
-      changes:
+    - changes:
       - scripts/a-s-patches.yaml
       - scripts/glean-patches.yaml
       - scripts/patches.yaml
       - scripts/ci-update-site.sh
+      - .gitlab-ci.yml
   tags:
     - saas-linux-2xlarge-amd64
   variables:
