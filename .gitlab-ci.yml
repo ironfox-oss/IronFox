@@ -88,12 +88,7 @@ update-fdroid-repo:
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
-    - changes:
-      - scripts/a-s-patches.yaml
-      - scripts/glean-patches.yaml
-      - scripts/patches.yaml
-      - scripts/ci-update-fdroid.sh
-      - .gitlab-ci.yml
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
   tags:
     - saas-linux-2xlarge-amd64
   variables:
