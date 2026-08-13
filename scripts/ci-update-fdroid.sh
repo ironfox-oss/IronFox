@@ -132,7 +132,7 @@ pushd "${META_DIR_PATH}" || {
 
 # Update metadata repository
 "${IRONFOX_GIT}" add "${META_FILE_NAME}"
-"${IRONFOX_GIT}" commit -m "feat: update for release ${CI_COMMIT_TAG}" || echo 'Metadata repo already up to date! Not committing anything...'
+"${IRONFOX_GIT}" commit -m "feat: update for release ${IRONFOX_VERSION}" || echo 'Metadata repo already up to date! Not committing anything...'
 "${IRONFOX_GIT}" push origin "HEAD:${META_REPO_BRANCH}" || echo 'Metadata repo already up to date! Not pushing anything...'
 
 popd || {
@@ -142,7 +142,7 @@ popd || {
 
 # Update F-Droid repository
 "${IRONFOX_GIT}" add "${REPO_DIR_PATH}" "${META_DIR_PATH}"
-"${IRONFOX_GIT}" commit -m "feat: update for release ${CI_COMMIT_TAG}"
+"${IRONFOX_GIT}" commit -m "feat: update for release ${IRONFOX_VERSION}"
 "${IRONFOX_GIT}" push origin "HEAD:${FDROID_REPO_BRANCH}"
 
 popd # ignore error
