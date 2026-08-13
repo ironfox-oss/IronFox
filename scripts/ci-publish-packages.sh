@@ -65,7 +65,7 @@ function upload_to_package_registry() {
   local -r upload_file="$1"
   local -r upload_package_name="$2"
   local -r upload_file_name="$("${IRONFOX_BASENAME}" "${upload_file}")"
-  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --no-verbose --header "PRIVATE-TOKEN: ${GITLAB_CI_API_TOKEN}" \
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --no-verbose --header "PRIVATE-TOKEN: ${IRONFOX_GITLAB_CI_API_TOKEN}" \
     --upload-file "${upload_file}" \
     "${IRONFOX_GITLAB_GENERIC_PACKAGES_URL}/${upload_package_name}/${IRONFOX_VERSION}/${upload_file_name}"
 }

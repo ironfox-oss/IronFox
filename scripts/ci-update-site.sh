@@ -25,7 +25,7 @@ readonly IRONFOX_TARGET_REPO="${IRONFOX_EXTERNAL}/ironfoxoss.org"
 readonly IRONFOX_TARGET_REPO_BRANCH='dev'
 readonly IRONFOX_TARGET_REPO_PATH='ironfox-oss/ironfoxoss.org'
 
-"${IRONFOX_GIT}" clone "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_TARGET_REPO_PATH}.git" "${IRONFOX_TARGET_REPO}"
+"${IRONFOX_GIT}" clone "https://${IF_CI_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_TARGET_REPO_PATH}.git" "${IRONFOX_TARGET_REPO}"
 
 pushd "${IRONFOX_TARGET_REPO}"
 

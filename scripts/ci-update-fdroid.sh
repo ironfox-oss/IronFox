@@ -73,7 +73,7 @@ function download_releases() {
   download_release "${IRONFOX_VERSION}" 'x86_64' "${REPO_DIR_PATH}"
 }
 
-"${IRONFOX_GIT}" clone --recurse-submodules "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${FDROID_REPO_PATH}.git" fdroid
+"${IRONFOX_GIT}" clone --recurse-submodules "https://${IF_CI_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/${FDROID_REPO_PATH}.git" fdroid
 pushd fdroid || {
   echo "Unable to pushd into 'fdroid'"
   exit 1

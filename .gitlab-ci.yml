@@ -105,7 +105,7 @@ update-fdroid-repo:
     - /bin/sudo /bin/dnf install -y bash curl git git-lfs jq make shasum
     - /bin/git config --global user.email "${IF_CI_EMAIL}"
     - /bin/git config --global user.name "${IF_CI_NAME}"
-    - /bin/git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
+    - /bin/git config --global url."https://${IF_CI_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - set -euo pipefail
     - echo 'CI - Downloading dependencies...'
@@ -139,7 +139,7 @@ update-site-repo:
     - /bin/sudo /bin/dnf install -y bash curl git make shasum yq
     - /bin/git config --global user.email "${IF_CI_EMAIL}"
     - /bin/git config --global user.name "${IF_CI_NAME}"
-    - /bin/git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
+    - /bin/git config --global url."https://${IF_CI_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - set -euo pipefail
     - echo 'CI - Downloading dependencies...'
@@ -354,6 +354,6 @@ publish-release:
       release-cli \
         --server-url "${CI_SERVER_URL}" \
         --project-id "${CI_PROJECT_ID}" \
-        --private-token "${GITLAB_CI_API_TOKEN}" \
+        --private-token "${IRONFOX_GITLAB_CI_API_TOKEN}" \
         create-from-file \
         --file build/release.yml
