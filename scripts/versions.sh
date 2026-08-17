@@ -48,10 +48,10 @@ readonly IRONFOX_GMSCORE_COMMIT='9a206ae115d6f4d99300def2aea447332ac84260'
 readonly IRONFOX_GMSCORE_SHA512SUM='b826bd6693b55a4e7844ed773df0015f9f04f502dab50c49c44e5807721918650b0b6cf23a7db5d25312224b2f02e2bdb1edfa1bb8f12dd0023fcd91b71ab275'
 
 # Phoenix
-# Version: 2026.07.27.1
+# Version: 2026.08.17.1
 # https://gitlab.com/celenityy/Phoenix
-readonly IRONFOX_PHOENIX_COMMIT='b33d59609dd3a2fd7df9d77a94e782e074887a36'
-readonly IRONFOX_PHOENIX_SHA512SUM='0c871056b033b06be40ae561fa9839b0e6bd5daf2c7dc1031d2560ab42ec0dddca203541798bbb3e348fa24a7c9872fe6db470abe48cde8b8f9b2de032d8183b'
+readonly IRONFOX_PHOENIX_COMMIT='19735030b3ed9b2fae606f140322e299e71b92c6'
+readonly IRONFOX_PHOENIX_SHA512SUM='071460291da40332ca2572cdbd7222acbf6cf3f0c3f6b96eb735ca55d5c98d5bdc9f8e7faf90fdd161414775b73e07d175ff1c239faca90861dfccf4dfbaddf0'
 
 # uniffi-rs (Tor)
 # https://gitlab.torproject.org/tpo/applications/uniffi-rs
