@@ -1,1 +1,2 @@
-- Updated to Firefox [`153.0.4`](https://firefox.com/firefox/android/153.0.4/releasenotes/).
+- Updated to Firefox [`154.0`](https://firefox.com/firefox/android/154.0/releasenotes/).
+- Updated to Phoenix [`2026.08.17.1`](https://codeberg.org/celenity/Phoenix/releases/tag/2026.08.17.1).
