@@ -58,10 +58,10 @@ index c9e41120b3979..6064d053ef564 100644
          /**
           * Convenience initializer that creates a [SharedPreferences] to be used by [ClientUUID].
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 058a5b356250..5916d5eea081 100644
+index 4bca1242d025a..e919b86aee668 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -435,11 +435,11 @@ class Components(private val context: Context) {
+@@ -430,11 +430,11 @@ class Components(private val context: Context) {
      }
  
      val integrityClient by lazyMonitored {
@@ -75,7 +75,7 @@ index 058a5b356250..5916d5eea081 100644
      }
  
      val termsOfUsePromptRepository by lazyMonitored {
-@@ -560,7 +560,7 @@ class Components(private val context: Context) {
+@@ -539,7 +539,7 @@ class Components(private val context: Context) {
              client = core.client,
              storage = MlpaTokenStorage.sharedPrefs(context),
              fxaTokenProvider = backgroundServices.accountManager.accessTokenProvider,
@@ -84,6 +84,15 @@ index 058a5b356250..5916d5eea081 100644
              userIdProvider = clientUUID,
          )
      }
+@@ -553,7 +553,7 @@ class Components(private val context: Context) {
+             syncStore = backgroundServices.syncStore,
+             authSources = IPProtectionAuthSources(
+                 fxaAccountManager = lazy { backgroundServices.accountManager },
+-                integrityClient = lazy { integrityClient },
++//                integrityClient = lazy { integrityClient },
+             ),
+             lazyAppStore = lazy { appStore },
+             settings = settings,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
 index d7a410697ee9..d1f0ef666a51 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
@@ -133,6 +142,40 @@ index d7a410697ee9..d1f0ef666a51 100644
              ),
              storage = storage,
              mlpaService = fenixMlpaService,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt
+index 0faf716438be7..f842ac5acb7f3 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt
+@@ -10,9 +10,9 @@ import mozilla.components.browser.state.store.BrowserStore
+ import mozilla.components.concept.engine.Engine
+ import mozilla.components.feature.ipprotection.IPProtectionFeature
+ import mozilla.components.feature.ipprotection.IPProtectionStorageSynchronizer
+-import mozilla.components.feature.ipprotection.auth.gpi.IPProtectionGpiProvider
++// import mozilla.components.feature.ipprotection.auth.gpi.IPProtectionGpiProvider
+ import mozilla.components.feature.ipprotection.store.IPProtectionStore
+-import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient
++// import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient
+ import mozilla.components.service.fxa.manager.FxaAccountManager
+ import mozilla.components.service.fxa.store.SyncStore
+ import mozilla.components.support.base.log.logger.Logger
+@@ -28,7 +28,7 @@ import org.mozilla.fenix.utils.Settings
+  */
+ data class IPProtectionAuthSources(
+     val fxaAccountManager: Lazy<FxaAccountManager>,
+-    val integrityClient: Lazy<GooglePlayIntegrityClient>,
++//    val integrityClient: Lazy<GooglePlayIntegrityClient>,
+ )
+ 
+ /**
+@@ -75,7 +75,7 @@ class IPProtection(
+             store = store,
+             engine = engine,
+             accountManager = authSources.fxaAccountManager.value,
+-            extraAuthProvider = IPProtectionGpiProvider(authSources.integrityClient.value),
++            extraAuthProvider = null,
+         )
+     }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index 3c71fd5f01a1..f7ffe6549d50 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt

@@ -56,37 +56,34 @@ index 87a4f911c0cf..f92e2c53742e 100644
  
      val relayEligibilityStore by lazyMonitored {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 5e4c49f47ff8..fb23921d71f1 100644
+index 730300cb21b9..4ea76f77d765 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -88,14 +88,14 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
+@@ -85,11 +85,11 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
  import mozilla.components.service.digitalassetlinks.local.StatementRelationChecker
  import mozilla.components.service.location.LocationService
  import mozilla.components.service.location.MozillaLocationService
 -import mozilla.components.service.mars.MacTopSitesProvider
 +/* import mozilla.components.service.mars.MacTopSitesProvider
  import mozilla.components.service.mars.MacTopSitesRequestConfig
- import mozilla.components.service.mars.MarsTopSitesProvider
- import mozilla.components.service.mars.MarsTopSitesRequestConfig
  import mozilla.components.service.mars.NEW_TAB_TILE_1_PLACEMENT_KEY
  import mozilla.components.service.mars.NEW_TAB_TILE_2_PLACEMENT_KEY
- import mozilla.components.service.mars.Placement
 -import mozilla.components.service.mars.contile.ContileTopSitesUpdater
 +import mozilla.components.service.mars.contile.ContileTopSitesUpdater */
  import mozilla.components.service.merino.manifest.MerinoManifestProvider
  import mozilla.components.service.pocket.ContentRecommendationsRequestConfig
  import mozilla.components.service.pocket.PocketStoriesConfig
-@@ -648,7 +648,7 @@ class Core(
+@@ -629,7 +629,7 @@ class Core(
      }
      val pocketStoriesService by lazyMonitored { PocketStoriesService(context, pocketStoriesConfig) }
  
--    val marsTopSitesProvider by lazyMonitored {
-+/*    val marsTopSitesProvider by lazyMonitored {
-         MarsTopSitesProvider(
-             context = context,
-             client = client,
-@@ -694,17 +694,17 @@ class Core(
-             },
+-    val macTopSitesProvider by lazyMonitored {
++/*    val macTopSitesProvider by lazyMonitored {
+         MacTopSitesProvider(
+             adsClientProvider = context.components.ads.lazyAdsClientProvider,
+             requestConfig = MacTopSitesRequestConfig(
+@@ -649,13 +649,13 @@ class Core(
+             provider = macTopSitesProvider,
              frequency = Frequency(3, TimeUnit.HOURS),
          )
 -    }
@@ -96,14 +93,8 @@ index 5e4c49f47ff8..fb23921d71f1 100644
          DefaultTopSitesStorage(
              pinnedSitesStorage = pinnedSiteStorage,
              historyStorage = historyStorage,
--            topSitesProvider = if (context.components.settings.enableMozillaAdsClient) {
--                macTopSitesProvider
-+            topSitesProvider = null
-+/*                macTopSitesProvider
-             } else {
-                 marsTopSitesProvider
--            },
-+            }, */
+-            topSitesProvider = macTopSitesProvider,
++            topSitesProvider = null,
          )
      }
  
@@ -164,7 +155,7 @@ index 24554c7ab197..2bfaf905d77c 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt
-index a833bf5a0f25..eb7c002ca8c8 100644
+index 613112904628..cb367416eafc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt
 @@ -26,7 +26,7 @@ import mozilla.components.browser.state.store.BrowserStore
@@ -176,25 +167,25 @@ index a833bf5a0f25..eb7c002ca8c8 100644
  import mozilla.components.support.ktx.android.content.getColorFromAttr
  import mozilla.components.support.ktx.android.view.showKeyboard
  import mozilla.components.support.ktx.kotlin.isUrl
-@@ -39,7 +39,7 @@ import org.mozilla.fenix.GleanMetrics.TopSites
- import org.mozilla.fenix.R
- import org.mozilla.fenix.browser.browsingmode.BrowsingMode
+@@ -41,7 +41,7 @@ import org.mozilla.fenix.browser.browsingmode.BrowsingMode
+ import org.mozilla.fenix.components.AppStore
  import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.components.appstate.AppAction.ShortcutAction
 -import org.mozilla.fenix.components.metrics.MetricsUtils
 +// import org.mozilla.fenix.components.metrics.MetricsUtils
  import org.mozilla.fenix.components.usecases.FenixBrowserUseCases
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.nav
-@@ -122,7 +122,7 @@ class DefaultTopSiteController(
+@@ -144,7 +144,7 @@ class DefaultTopSiteController(
+     private val selectTabUseCase: TabsUseCases.SelectTabUseCase,
      private val fenixBrowserUseCases: FenixBrowserUseCases,
      private val topSitesUseCases: TopSitesUseCases,
-     private val marsUseCases: MARSUseCases,
 -    private val mozAdsUseCases: MozAdsUseCases,
 +    private val mozAdsUseCases: Any?,
      private val viewLifecycleScope: CoroutineScope,
+     private val source: TopSitesSource,
  ) : TopSiteController {
- 
-@@ -268,17 +268,17 @@ class DefaultTopSiteController(
+@@ -305,17 +305,17 @@ class DefaultTopSiteController(
          }
  
          val availableEngines: List<SearchEngine> = getAvailableSearchEngines()
@@ -215,7 +206,7 @@ index a833bf5a0f25..eb7c002ca8c8 100644
          }
  
          if (settings.enableHomepageAsNewTab) {
-@@ -358,15 +358,15 @@ class DefaultTopSiteController(
+@@ -387,15 +387,15 @@ class DefaultTopSiteController(
      }
  
      private fun sendMozAdsClickInteraction(clickUrl: String) {

@@ -8,26 +8,26 @@ Provides support for a UI setting to enable/disable the installation of add-ons.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/browser/components/enterprisepolicies/Policies.sys.mjs b/browser/components/enterprisepolicies/Policies.sys.mjs
-index e612b78173..f04524a16a 100644
+index c5559ce3f32a..7eae91691069 100644
 --- a/browser/components/enterprisepolicies/Policies.sys.mjs
 +++ b/browser/components/enterprisepolicies/Policies.sys.mjs
-@@ -31,6 +31,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+@@ -29,6 +29,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
    SearchService: "moz-src:///toolkit/components/search/SearchService.sys.mjs",
    QuickSuggest: "moz-src:///browser/components/urlbar/QuickSuggest.sys.mjs",
    WebsiteFilter: "resource:///modules/policies/WebsiteFilter.sys.mjs",
 +  IFPrefUtils:   "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
- });
  
- const PREF_LOGLEVEL = "browser.policies.loglevel";
-@@ -1954,8 +1955,8 @@ export var Policies = {
-         addAllowDenyPermissions("install", param.Allow, null);
+   PoliciesUtils: "resource://gre/modules/PoliciesHelpers.sys.mjs",
+   addAllowDenyPermissions: "resource://gre/modules/PoliciesHelpers.sys.mjs",
+@@ -2218,8 +2219,8 @@ export var Policies = {
+         lazy.addAllowDenyPermissions("install", param.Allow, null);
        }
        if ("Default" in param) {
--        setAndLockPref("xpinstall.enabled", param.Default);
+-        lazy.PoliciesUtils.setAndLockPref("xpinstall.enabled", param.Default);
 -        if (!param.Default) {
-+//        setAndLockPref("xpinstall.enabled", param.Default);
++//        lazy.PoliciesUtils.setAndLockPref("xpinstall.enabled", param.Default);
 +        if (!lazy.IFPrefUtils.getBoolPref("xpinstall.enabled")) {
            manager.disallowFeature("installTemporaryAddon");
-           setAndLockPref(
+           lazy.PoliciesUtils.setAndLockPref(
              "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
 -- 

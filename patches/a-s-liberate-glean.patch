@@ -8,7 +8,7 @@ Removes the Glean SDK.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 20e459dbb..0d6e16224 100644
+index 5a7aaab55..2b900c888 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 @@ -26,11 +26,11 @@ import kotlinx.coroutines.async
@@ -16,17 +16,18 @@ index 20e459dbb..0d6e16224 100644
  import kotlinx.coroutines.withContext
  import mozilla.appservices.remotesettings.RemoteSettingsService
 -import mozilla.telemetry.glean.Glean
-+// import mozilla.telemetry.glean.Glean
++// // import mozilla.telemetry.glean.Glean
  import org.json.JSONObject
 -import org.mozilla.experiments.nimbus.GleanMetrics.NimbusEvents
-+/* import org.mozilla.experiments.nimbus.GleanMetrics.NimbusEvents
- import org.mozilla.experiments.nimbus.GleanMetrics.NimbusHealth
+-import org.mozilla.experiments.nimbus.GleanMetrics.NimbusHealth
 -import org.mozilla.experiments.nimbus.GleanMetrics.Pings
-+import org.mozilla.experiments.nimbus.GleanMetrics.Pings */
++// /* import org.mozilla.experiments.nimbus.GleanMetrics.NimbusEvents
++// import org.mozilla.experiments.nimbus.GleanMetrics.NimbusHealth
++// import org.mozilla.experiments.nimbus.GleanMetrics.Pings */
  import org.mozilla.experiments.nimbus.internal.AppContext
  import org.mozilla.experiments.nimbus.internal.AvailableExperiment
  import org.mozilla.experiments.nimbus.internal.DatabaseLoadExtraDef
-@@ -92,7 +92,7 @@ open class Nimbus(
+@@ -95,7 +95,7 @@ open class Nimbus(
  
      private val metricsHandler = object : MetricsHandler {
          override fun recordDatabaseLoad(event: DatabaseLoadExtraDef) {
@@ -35,7 +36,7 @@ index 20e459dbb..0d6e16224 100644
                  NimbusEvents.DatabaseLoadExtra(
                      corrupt = event.corrupt,
                      initialVersion = event.initialVersion?.toInt(),
-@@ -100,20 +100,20 @@ open class Nimbus(
+@@ -103,20 +103,20 @@ open class Nimbus(
                      migratedVersion = event.migratedVersion?.toInt(),
                      migrationError = event.migrationError,
                  ),
@@ -60,7 +61,7 @@ index 20e459dbb..0d6e16224 100644
                  NimbusEvents.enrollmentStatus.record(
                      NimbusEvents.EnrollmentStatusExtra(
                          branch = extra.branch,
-@@ -124,42 +124,42 @@ open class Nimbus(
+@@ -127,42 +127,42 @@ open class Nimbus(
                          conflictSlug = extra.conflictSlug,
                      ),
                  )
@@ -107,11 +108,11 @@ index 20e459dbb..0d6e16224 100644
  
          override fun submitTargetingContext() {
 -            org.mozilla.experiments.nimbus.GleanMetrics.Pings.nimbusTargetingContext.submit()
-+//            org.mozilla.experiments.nimbus.GleanMetrics.Pings.nimbusTargetingContext.submit()
++// //            org.mozilla.experiments.nimbus.GleanMetrics.Pings.nimbusTargetingContext.submit()
          }
      }
  
-@@ -228,11 +228,11 @@ open class Nimbus(
+@@ -231,11 +231,11 @@ open class Nimbus(
          try {
              nimbusClient.getFeatureConfigVariables(featureId)?.let { JSONObject(it) }
          } catch (e: NimbusException.DatabaseNotReady) {
@@ -125,7 +126,7 @@ index 20e459dbb..0d6e16224 100644
              null
          } catch (e: Throwable) {
              reportError("getFeatureConfigVariablesJson", e)
-@@ -308,9 +308,9 @@ open class Nimbus(
+@@ -311,9 +311,9 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun fetchExperimentsOnThisThread() = withCatchAll("fetchExperiments") {
          try {
@@ -138,16 +139,32 @@ index 20e459dbb..0d6e16224 100644
              updateObserver {
                  it.onExperimentsFetched()
              }
-@@ -345,7 +345,7 @@ open class Nimbus(
-             val time = measureTimeMillis {
-                 events = nimbusClient.applyPendingExperiments()
-             }
--            NimbusHealth.applyPendingExperimentsTime.accumulateSingleSample(time)
-+//            NimbusHealth.applyPendingExperimentsTime.accumulateSingleSample(time)
+@@ -349,7 +349,7 @@ open class Nimbus(
+                 val time = measureTimeMillis {
+                     enrollmentChangeEvents = nimbusClient.applyPendingExperiments()
+                 }
+-                NimbusHealth.applyPendingExperimentsTime.accumulateSingleSample(time)
++//                NimbusHealth.applyPendingExperimentsTime.accumulateSingleSample(time)
  
-             // SAFETY: events is only null at declaration time and is
-             // immediately assigned a non-null value inside the
-@@ -620,19 +620,19 @@ open class Nimbus(
+                 // SAFETY: events is only null at declaration time and is
+                 // immediately assigned a non-null value inside the
+@@ -407,13 +407,13 @@ open class Nimbus(
+     ) {
+         val experiments = nimbusClient.getActiveExperiments()
+ 
+-        if (initial) {
++/*        if (initial) {
+             // During initialization we need to report the experiment status of
+             // all pre-existing experiments.
+             for (experiment in experiments) {
+                 Glean.setExperimentActive(experiment.slug, experiment.branchSlug)
+             }
+-        }
++        } */
+ 
+         if (initial || enrollmentChangeEvents.isNotEmpty()) {
+             // During initialization we need to inform the application when we've
+@@ -619,19 +619,19 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun recordExperimentTelemetry(experiments: List<EnrolledExperiment>) {
          // Call Glean.setExperimentActive() for each active experiment.
@@ -170,7 +187,7 @@ index 20e459dbb..0d6e16224 100644
              when (event.change) {
                  EnrollmentChangeEventType.ENROLLMENT -> {
                      NimbusEvents.enrollment.record(
-@@ -680,7 +680,7 @@ open class Nimbus(
+@@ -693,7 +693,7 @@ open class Nimbus(
                      )
                  }
              }
@@ -298,7 +315,7 @@ index fa4b5578a..6faab0f2e 100644
      }
  }
 diff --git a/components/places/Cargo.toml b/components/places/Cargo.toml
-index 0dde69a32..866b17a52 100644
+index 0f84c2f4e..7efe87254 100644
 --- a/components/places/Cargo.toml
 +++ b/components/places/Cargo.toml
 @@ -7,9 +7,9 @@ license = "MPL-2.0"
@@ -317,8 +334,8 @@ index 0dde69a32..866b17a52 100644
  thiserror = "2"
  anyhow = "1.0"
  uniffi = { version = "0.31" }
--glean-sym = { git = "https://github.com/mozilla/glean", rev = "a16cb6034dc2c37ba62eae85f6304c637e53b2ae", optional = true }
-+# glean-sym = { git = "https://github.com/mozilla/glean", rev = "a16cb6034dc2c37ba62eae85f6304c637e53b2ae", optional = true }
+-glean-sym = { git = "https://github.com/mozilla/glean", tag = "v68.0.0", optional = true }
++# glean-sym = { git = "https://github.com/mozilla/glean", tag = "v68.0.0", optional = true }
  
  [dev-dependencies]
  error-support = { path = "../support/error", features = ["testing"] }
@@ -326,8 +343,8 @@ index 0dde69a32..866b17a52 100644
  
  [build-dependencies]
  uniffi = { version = "0.31", features=["build"]}
--glean-build = { git = "https://github.com/mozilla/glean", rev = "0401cd87c365fd8356e5d3bb6d72a67c8940c934" }
-+# glean-build = { git = "https://github.com/mozilla/glean", rev = "0401cd87c365fd8356e5d3bb6d72a67c8940c934" }
+-glean-build = { git = "https://github.com/mozilla/glean", tag = "v68.0.0" }
++# glean-build = { git = "https://github.com/mozilla/glean", tag = "v68.0.0" }
 diff --git a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
 index 4dfc3178f..89816d107 100644
 --- a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt

@@ -8,10 +8,10 @@ Adds minor tweaks to the browser's user interface.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-index 547ba176cfd8..f6eec9b4adfd 100644
+index e485c45f1c28..dafb47829ca7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-@@ -154,6 +154,8 @@ fun MainMenu(
+@@ -150,6 +150,8 @@ fun MainMenu(
      webExtensionMenuCount: Int,
      showIPProtection: Boolean,
      ipProtectionMenuState: IPProtectionMenuState,
@@ -20,7 +20,7 @@ index 547ba176cfd8..f6eec9b4adfd 100644
      onMoreMenuClick: () -> Unit,
      onCustomizeReaderViewMenuClick: () -> Unit,
      onMozillaAccountButtonClick: () -> Unit,
-@@ -316,6 +318,7 @@ fun MainMenu(
+@@ -311,6 +313,7 @@ fun MainMenu(
  
          LibraryMenuGroup(
              isDownloadHighlighted = isDownloadHighlighted,
@@ -28,28 +28,26 @@ index 547ba176cfd8..f6eec9b4adfd 100644
              onBookmarksMenuClick = onBookmarksMenuClick,
              onHistoryMenuClick = onHistoryMenuClick,
              onDownloadsMenuClick = onDownloadsMenuClick,
-@@ -323,12 +326,14 @@ fun MainMenu(
+@@ -318,11 +321,13 @@ fun MainMenu(
          )
  
          MenuGroup {
 -            MozillaAccountMenuItem(
 -                account = account,
 -                accountState = accountState,
--                isPrivate = isPrivate,
 -                onClick = onMozillaAccountButtonClick,
 -            )
 +            if (isSyncActive) {
 +                MozillaAccountMenuItem(
 +                    account = account,
 +                    accountState = accountState,
-+                    isPrivate = isPrivate,
 +                    onClick = onMozillaAccountButtonClick,
 +                )
 +            }
  
-             MenuItem(
-                 label = stringResource(id = R.string.browser_menu_settings),
-@@ -511,6 +516,7 @@ private fun MoreMenuButtonGroup(
+             if (accessPoint == MenuAccessPoint.Home) {
+                 MenuItem(
+@@ -508,6 +513,7 @@ private fun MoreMenuButtonGroup(
  @Suppress("LongMethod")
  private fun LibraryMenuGroup(
      isDownloadHighlighted: Boolean = false,
@@ -57,7 +55,7 @@ index 547ba176cfd8..f6eec9b4adfd 100644
      onBookmarksMenuClick: () -> Unit,
      onHistoryMenuClick: () -> Unit,
      onDownloadsMenuClick: () -> Unit,
-@@ -587,16 +593,18 @@ private fun LibraryMenuGroup(
+@@ -578,16 +584,18 @@ private fun LibraryMenuGroup(
  
          Spacer(Modifier.width(spacerWidth))
  
@@ -86,7 +84,7 @@ index 547ba176cfd8..f6eec9b4adfd 100644
      }
  }
  
-@@ -765,6 +773,8 @@ private fun MenuDialogPreview(
+@@ -755,6 +763,8 @@ private fun MenuDialogPreview(
                  webExtensionMenuCount = 1,
                  showIPProtection = true,
                  ipProtectionMenuState = IPProtectionMenuState(),
@@ -95,7 +93,7 @@ index 547ba176cfd8..f6eec9b4adfd 100644
                  onMoreMenuClick = {},
                  onCustomizeReaderViewMenuClick = {},
                  onMozillaAccountButtonClick = {},
-@@ -831,6 +841,8 @@ private fun MenuDialogPrivatePreview(
+@@ -821,6 +831,8 @@ private fun MenuDialogPrivatePreview(
                  showBanner = true,
                  isDownloadHighlighted = true,
                  webExtensionMenuCount = 0,

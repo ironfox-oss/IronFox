@@ -26,14 +26,22 @@ index b951d45c0..f7106e898 100644
              collection_name,
              inner: Mutex::new(RemoteSettingsClientInner {
 diff --git a/components/remote_settings/src/service.rs b/components/remote_settings/src/service.rs
-index b19942604..f378f7897 100644
+index 7410a068b..32b9d9b2e 100644
 --- a/components/remote_settings/src/service.rs
 +++ b/components/remote_settings/src/service.rs
-@@ -64,17 +64,24 @@ impl RemoteSettingsService {
- 
-     pub fn make_client(&self, collection_name: String) -> Arc<RemoteSettingsClient> {
-         let mut inner = self.inner.lock();
-+
+@@ -143,7 +143,7 @@ impl RemoteSettingsService {
+                     }
+                 }
+             }
+-            if synced_collections.insert(collection_name.to_string()) {
++            if (collection_name == String::from("quicksuggest-other") || collection_name == String::from("translations-models") || collection_name == String::from("translations-wasm")) && synced_collections.insert(collection_name.to_string()) {
+                 trace!("syncing collection: {collection_name}");
+                 let start_time = std::time::Instant::now();
+                 let sync_result = client.sync();
+@@ -186,17 +186,23 @@ impl ClientState {
+         storage_dir: &Utf8Path,
+         collection_name: String,
+     ) -> Arc<RemoteSettingsClient> {
 +        let overridden_collection_name = if collection_name == String::from("quicksuggest-other") || collection_name == String::from("search-config-icons") || collection_name == String::from("search-config-v2") || collection_name == String::from("translations-models") || collection_name == String::from("translations-wasm") {
 +            collection_name
 +        } else {
@@ -41,28 +49,19 @@ index b19942604..f378f7897 100644
 +        };
 +
          // Allow using in-memory databases for testing of external crates.
-         let storage = if inner.storage_dir == ":memory:" {
-             Storage::new(inner.storage_dir.clone())
+         let storage = if storage_dir == ":memory:" {
+             Storage::new(storage_dir.to_path_buf())
          } else {
--            Storage::new(inner.storage_dir.join(format!("{collection_name}.sql")))
-+            Storage::new(inner.storage_dir.join(format!("{overridden_collection_name}.sql")))
+-            Storage::new(storage_dir.join(format!("{collection_name}.sql")))
++            Storage::new(storage_dir.join(format!("{overridden_collection_name}.sql")))
          };
  
          let client = Arc::new(RemoteSettingsClient::new(
-             inner.base_url.clone(),
-             inner.bucket_name.clone(),
+             self.config.base_url.clone(),
+             self.config.bucket_name.clone(),
 -            collection_name.clone(),
 +            overridden_collection_name.clone(),
-             inner.app_context.clone(),
+             self.config.app_context.clone(),
              storage,
          ));
-@@ -108,7 +115,7 @@ impl RemoteSettingsService {
-                     }
-                 }
-             }
--            if synced_collections.insert(collection_name.to_string()) {
-+            if (collection_name == String::from("quicksuggest-other") || collection_name == String::from("translations-models") || collection_name == String::from("translations-wasm")) && synced_collections.insert(collection_name.to_string()) {
-                 trace!("syncing collection: {collection_name}");
-                 client.sync()?;
-             }
 -- 

@@ -52,16 +52,16 @@ index 7ddcd8605aeb..66240a2307ec 100644
          }
      }
 diff --git a/mobile/android/android-components/components/feature/fxsuggest/build.gradle b/mobile/android/android-components/components/feature/fxsuggest/build.gradle
-index e599f220461a..f7abbcf484c3 100644
+index e4c4d98d9d0c..8a445a1e99b5 100644
 --- a/mobile/android/android-components/components/feature/fxsuggest/build.gradle
 +++ b/mobile/android/android-components/components/feature/fxsuggest/build.gradle
-@@ -41,7 +41,7 @@ dependencies {
+@@ -28,7 +28,7 @@ dependencies {
      implementation project(':components:support-remotesettings')
      implementation project(':components:support-ktx')
  
 -    implementation ComponentsDependencies.mozilla_appservices_errorsupport
 +//    implementation ComponentsDependencies.mozilla_appservices_errorsupport
-     implementation (ComponentsDependencies.mozilla_appservices_httpconfig) {
+     implementation (ComponentsDependencies.mozilla_appservices_viaduct) {
          // Override the version of concept-fetch that A-S depends on,
          // since we want to replace it with our own.
 diff --git a/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt b/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt

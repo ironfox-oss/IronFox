@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 18 Aug 2026 06:09:13 +0000
+Subject: [PATCH] Android Components - Remove Google Play Integrity
+
+Removes the Google Play Integrity library.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/android-components/components/feature/ipprotection/build.gradle b/mobile/android/android-components/components/feature/ipprotection/build.gradle
+index 8abb50dae288..ea8563488293 100644
+--- a/mobile/android/android-components/components/feature/ipprotection/build.gradle
++++ b/mobile/android/android-components/components/feature/ipprotection/build.gradle
+@@ -21,10 +21,10 @@ dependencies {
+     implementation project(':components:browser-state')
+     implementation project(':components:compose-base')
+     implementation project(':components:concept-engine')
+-    implementation project(':components:concept-integrity')
++//    implementation project(':components:concept-integrity')
+     implementation project(':components:concept-sync')
+     implementation project(':components:feature-tabs')
+-    implementation project(':components:lib-integrity-googleplay')
++//    implementation project(':components:lib-integrity-googleplay')
+     implementation project(':components:lib-state')
+     implementation project(':components:service-firefox-accounts')
+     implementation project(':components:support-base')
+-- 

@@ -34,4 +34,30 @@ index 7bb7ba269643..da28b1842c7a 100644
      }
  
      private fun convertActionIntoDeepLinkSchemeUri(action: String): Uri =
+diff --git a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsService.kt b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsService.kt
+index 64dd682969445..6e9ebe76a2a59 100644
+--- a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsService.kt
++++ b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsService.kt
+@@ -6,7 +6,7 @@ package mozilla.components.support.remotesettings
+ 
+ import android.content.Context
+ import android.os.Build
+-import mozilla.appservices.remotesettings.GleanTelemetry
++// import mozilla.appservices.remotesettings.GleanTelemetry
+ import mozilla.appservices.remotesettings.RemoteSettingsConfig
+ import mozilla.appservices.remotesettings.RemoteSettingsContext
+ import mozilla.appservices.remotesettings.RemoteSettingsServer
+@@ -33,9 +33,9 @@ class RemoteSettingsService(
+         AppServicesRemoteSettingsService(
+             databasePath,
+             RemoteSettingsConfig(server = server, appContext = appContext),
+-        ).also { service ->
+-            service.setTelemetry(GleanTelemetry())
+-        }
++        )
++//            service.setTelemetry(GleanTelemetry())
++//        }
+     }
+ }
+ 
 -- 

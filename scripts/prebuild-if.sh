@@ -206,9 +206,6 @@ function prepare_ac() {
   "${IRONFOX_SED}" -i -e 's/MARS_ENDPOINT_BASE_URL = ".*"/MARS_ENDPOINT_BASE_URL = ""/' "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt"
   "${IRONFOX_SED}" -i -e 's/MARS_ENDPOINT_STAGING_BASE_URL = ".*"/MARS_ENDPOINT_STAGING_BASE_URL = ""/' "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt"
 
-  # No-op Pocket
-  "${IRONFOX_SED}" -i -e 's/POCKET_ENDPOINT_URL = ".*"/POCKET_ENDPOINT_URL = ""/' "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/stories/api/PocketEndpointRaw.kt"
-
   # No-op telemetry (GeckoView)
   "${IRONFOX_SED}" -i -e 's|allowMetricsFromAAR = .*|allowMetricsFromAAR = false|g' "${IRONFOX_AC}/components/browser/engine-gecko/build.gradle"
 
@@ -236,13 +233,14 @@ function prepare_ac() {
   # Remove Nimbus
   "${IRONFOX_RM}" -v "${IRONFOX_AC}/components/browser/engine-gecko/geckoview.fml.yaml"
   "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/browser/engine-gecko/src/main/java/mozilla/components/experiment"
-  "${IRONFOX_SED}" -i -e 's|-keep class mozilla.components.service.nimbus|#-keep class mozilla.components.service.nimbus|' "${IRONFOX_AC}/components/service/nimbus/proguard-rules-consumer.pro"
+  "${IRONFOX_SED}" -i -e 's|-keep class mozilla.components.service.nimbus|#-keep class mozilla.components.service.nimbus|g' "${IRONFOX_AC}/components/service/nimbus/proguard-rules-consumer.pro"
   "${IRONFOX_SED}" -i -e '/buildConfig/s/true/false/' "${IRONFOX_AC}/components/service/nimbus/build.gradle"
 
   # Remove Firebase
   "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/lib/push-firebase"
 
   # Remove Google Play Integrity
+  "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/auth/gpi"
   "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/lib/integrity-googleplay"
 
   # Remove MARS
@@ -453,9 +451,9 @@ function prepare_fenix() {
   "${IRONFOX_SED}" -i -e 's|send_if_empty: .*|send_if_empty: false|g' "${IRONFOX_FENIX}/app/pings.yaml"
 
   # No-op Nimbus (Experimentation)
-  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt"
-  "${IRONFOX_SED}" -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt"
-  "${IRONFOX_SED}" -i -e 's|FxNimbus.features.junoOnboarding.recordExposure|// FxNimbus.features.junoOnboarding.recordExposure|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/utils/Settings.kt"
+  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt"
+  "${IRONFOX_SED}" -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt"
+  "${IRONFOX_SED}" -i -e 's|FxNimbus.features.junoOnboarding.recordExposure|// FxNimbus.features.junoOnboarding.recordExposure|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/utils/Settings.kt"
 
   # No-op search telemetry
   "${IRONFOX_SED}" -i 's|search-telemetry-v2||g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/Core.kt"
@@ -469,7 +467,6 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_launcher_monochrome.xml"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_onboarding_search_widget.xml"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_onboarding_sync.xml"
-  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_wordmark_logo.webp"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/microsurvey_success.xml"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable-hdpi/fenix_search_widget.webp"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable-hdpi/ic_logo_wordmark_normal.webp"
@@ -482,34 +479,35 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxhdpi/ic_logo_wordmark_private.webp"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_normal.webp"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_private.webp"
-  "${IRONFOX_SED}" -i -e 's|R.drawable.microsurvey_success|R.drawable.fox_alert_crash_dark|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt"
-  "${IRONFOX_SED}" -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt"
-  "${IRONFOX_SED}" -i -e 's|ic_onboarding_search_widget|fox_alert_crash_dark|' "${IRONFOX_FENIX}/app/onboarding.fml.yaml"
-  "${IRONFOX_SED}" -i -e 's|ic_onboarding_sync|fox_alert_crash_dark|' "${IRONFOX_FENIX}/app/onboarding.fml.yaml"
+  "${IRONFOX_SED}" -i -e 's|R.drawable.microsurvey_success|R.drawable.fox_alert_crash_dark|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt"
+  "${IRONFOX_SED}" -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt"
+  "${IRONFOX_SED}" -i -e 's|ic_onboarding_search_widget|fox_alert_crash_dark|g' "${IRONFOX_FENIX}/app/onboarding.fml.yaml"
+  "${IRONFOX_SED}" -i -e 's|ic_onboarding_sync|fox_alert_crash_dark|g' "${IRONFOX_FENIX}/app/onboarding.fml.yaml"
 
   # Remove unused telemetry and marketing services/components
-  "${IRONFOX_SED}" -i -e 's|import mozilla.appservices.syncmanager.SyncTelemetry|// import mozilla.appservices.syncmanager.SyncTelemetry|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt"
-  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|// import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt"
-  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.components.toolbar.BrowserToolbarTelemetryMiddleware|// import org.mozilla.fenix.components.toolbar.BrowserToolbarTelemetryMiddleware|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt"
-  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.home.toolbar.BrowserToolbarTelemetryMiddleware|// import org.mozilla.fenix.home.toolbar.BrowserToolbarTelemetryMiddleware|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt"
-  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.tabstray.TabsTrayTelemetryMiddleware|// import org.mozilla.fenix.tabstray.TabsTrayTelemetryMiddleware|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt"
-  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.webcompat.middleware.WebCompatReporterTelemetryMiddleware|// import org.mozilla.fenix.webcompat.middleware.WebCompatReporterTelemetryMiddleware|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt"
+  "${IRONFOX_SED}" -i -e 's|import mozilla.appservices.syncmanager.SyncTelemetry|// import mozilla.appservices.syncmanager.SyncTelemetry|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt"
+  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|// import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt"
+  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.components.toolbar.BrowserToolbarTelemetryMiddleware|// import org.mozilla.fenix.components.toolbar.BrowserToolbarTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt"
+  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.home.toolbar.BrowserToolbarTelemetryMiddleware|// import org.mozilla.fenix.home.toolbar.BrowserToolbarTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt"
+  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.tabstray.TabsTrayTelemetryMiddleware|// import org.mozilla.fenix.tabstray.TabsTrayTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt"
+  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.webcompat.middleware.WebCompatReporterTelemetryMiddleware|// import org.mozilla.fenix.webcompat.middleware.WebCompatReporterTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt"
 
-  "${IRONFOX_SED}" -i -e 's|BookmarksTelemetryMiddleware(|// BookmarksTelemetryMiddleware(|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarkFragment.kt"
-  "${IRONFOX_SED}" -i -e 's|BrowserToolbarTelemetryMiddleware(|// BrowserToolbarTelemetryMiddleware(|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt"
-  "${IRONFOX_SED}" -i -e 's|BrowserToolbarTelemetryMiddleware(|// BrowserToolbarTelemetryMiddleware(|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt"
-  "${IRONFOX_SED}" -i -e 's|CustomReviewPromptTelemetryMiddleware(|// CustomReviewPromptTelemetryMiddleware(|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt"
-  "${IRONFOX_SED}" -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt"
-  "${IRONFOX_SED}" -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt"
-  "${IRONFOX_SED}" -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt"
-  "${IRONFOX_SED}" -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt"
-  "${IRONFOX_SED}" -i -e 's|SyncTelemetry.|// SyncTelemetry.|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt"
-  "${IRONFOX_SED}" -i -e 's|TabsTrayTelemetryMiddleware(|// TabsTrayTelemetryMiddleware(|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt"
-  "${IRONFOX_SED}" -i -e 's|WebCompatReporterTelemetryMiddleware(|// WebCompatReporterTelemetryMiddleware(|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt"
+  "${IRONFOX_SED}" -i -e 's|BookmarksTelemetryMiddleware(|// BookmarksTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarkFragment.kt"
+  "${IRONFOX_SED}" -i -e 's|BrowserToolbarTelemetryMiddleware(|// BrowserToolbarTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt"
+  "${IRONFOX_SED}" -i -e 's|BrowserToolbarTelemetryMiddleware(|// BrowserToolbarTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt"
+  "${IRONFOX_SED}" -i -e 's|CustomReviewPromptTelemetryMiddleware(|// CustomReviewPromptTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt"
+  "${IRONFOX_SED}" -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt"
+  "${IRONFOX_SED}" -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt"
+  "${IRONFOX_SED}" -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt"
+  "${IRONFOX_SED}" -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt"
+  "${IRONFOX_SED}" -i -e 's|SyncTelemetry.|// SyncTelemetry.|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt"
+  "${IRONFOX_SED}" -i -e 's|TabsTrayTelemetryMiddleware(|// TabsTrayTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt"
+  "${IRONFOX_SED}" -i -e 's|WebCompatReporterTelemetryMiddleware(|// WebCompatReporterTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt"
 
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksTelemetryMiddleware.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/ActivationPing.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt"
+  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustSdkController.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustThirdPartySharingController.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/BreadcrumbsRecorder.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/ConversionEventRecorder.kt"
@@ -628,8 +626,8 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -vr "${IRONFOX_FENIX}/app/src/main/assets/searchplugins"/*
 
   # Display proper name and description for wallpaper collection
-  "${IRONFOX_SED}" -i -e 's|R.string.wallpaper_artist_series_title|R.string.wallpaper_collection_fennec|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt"
-  "${IRONFOX_SED}" -i -e 's|R.string.wallpaper_artist_series_description_with_learn_more|R.string.wallpaper_collection_fennec_description|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt"
+  "${IRONFOX_SED}" -i -e 's|R.string.wallpaper_artist_series_title|R.string.wallpaper_collection_fennec|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt"
+  "${IRONFOX_SED}" -i -e 's|R.string.wallpaper_artist_series_description_with_learn_more|R.string.wallpaper_collection_fennec_description|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt"
 
   # Apply Fenix overlay
   apply_overlay "${IRONFOX_FENIX_OVERLAY}/"
@@ -714,7 +712,7 @@ function prepare_firefox() {
 
   # Use `commit` instead of `rev` for source URL
   ## (ex. displayed at `about:buildconfig`)
-  "${IRONFOX_SED}" -i 's|/rev/|/commit/|' "${IRONFOX_GECKO}/build/variables.py"
+  "${IRONFOX_SED}" -i 's|/rev/|/commit/|g' "${IRONFOX_GECKO}/build/variables.py"
 
   # about:policies
   "${IRONFOX_MKDIR}" -vp "${IRONFOX_GECKO}/ironfox/locales/en-US/browser/policies"
@@ -732,13 +730,13 @@ function prepare_firefox() {
   "${IRONFOX_CP}" -vf browser/locales/en-US/browser/aboutRobots.ftl "${IRONFOX_GECKO}/ironfox/locales/en-US/browser/"
 
   # about:logo
-  "${IRONFOX_SED}" -i 's|chrome://branding/content/about.png|chrome://branding/content/about-if.png|' "${IRONFOX_GECKO}/docshell/base/nsAboutRedirector.cpp"
+  "${IRONFOX_SED}" -i 's|chrome://branding/content/about.png|chrome://branding/content/about-if.png|g' "${IRONFOX_GECKO}/docshell/base/nsAboutRedirector.cpp"
 
   # Ensure we're building for release
   "${IRONFOX_SED}" -i -e 's/variant=variant(.*)/variant=variant("release")/' "${IRONFOX_GECKO}/mobile/android/gradle.configure"
 
   # Fail on use of prebuilt nimbus-fml
-  "${IRONFOX_SED}" -i 's|https://|hxxps://|' "${IRONFOX_GECKO}/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt"
+  "${IRONFOX_SED}" -i 's|https://|hxxps://|g' "${IRONFOX_GECKO}/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt"
 
   # Break the dependency on older Rust
   "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GECKO}/Cargo.toml"
@@ -782,16 +780,16 @@ function prepare_firefox() {
   "${IRONFOX_RM}" -v "${IRONFOX_GECKO}/toolkit/content/aboutTelemetry.css"
 
   # Remove unused localizations
-  "${IRONFOX_SED}" -i 's|locale/@AB_CD@/global/aboutStudies|# locale/@AB_CD@/global/aboutStudies|' "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
-  "${IRONFOX_SED}" -i 's|crashreporter|# crashreporter|' "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
-  "${IRONFOX_SED}" -i 's|locales-preview/aboutRestricted|# locales-preview/aboutRestricted|' "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
+  "${IRONFOX_SED}" -i 's|locale/@AB_CD@/global/aboutStudies|# locale/@AB_CD@/global/aboutStudies|g' "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
+  "${IRONFOX_SED}" -i 's|crashreporter|# crashreporter|g' "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
+  "${IRONFOX_SED}" -i 's|locales-preview/aboutRestricted|# locales-preview/aboutRestricted|g' "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
   "${IRONFOX_RM}" -vr "${IRONFOX_GECKO}/toolkit/locales/en-US/crashreporter"
   "${IRONFOX_RM}" -v "${IRONFOX_GECKO}/toolkit/locales/en-US/toolkit/about/aboutGlean.ftl"
   "${IRONFOX_RM}" -v "${IRONFOX_GECKO}/toolkit/locales/en-US/toolkit/about/aboutTelemetry.ftl"
   "${IRONFOX_RM}" -v "${IRONFOX_GECKO}/toolkit/locales-preview/aboutRestricted.ftl"
 
   # Prevent registration of the Glean add-on ping scheduler
-  "${IRONFOX_SED}" -i 's|category update-timer amGleanDaily|# category update-timer amGleanDaily|' "${IRONFOX_GECKO}/toolkit/mozapps/extensions/extensions.manifest"
+  "${IRONFOX_SED}" -i 's|category update-timer amGleanDaily|# category update-timer amGleanDaily|g' "${IRONFOX_GECKO}/toolkit/mozapps/extensions/extensions.manifest"
 
   # Remove Claude integration
   ## (Necessary for those with IDEs that may try to parse/use this functionality)
@@ -864,6 +862,9 @@ function prepare_firefox() {
   # Remove Glean
   /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'firefox'
 
+  "${IRONFOX_SED}" -i 's/5bc8c9bbe8c0eabe408d9a7cd7a8e6e09eee0ead817607643882b38a36d07c91/bddacbe056ce7458663a39dc99d5bb3434099aa69cae793cf0c57d4e54f5a6a4/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
+  "${IRONFOX_SED}" -i 's/c20989b1aa336b0849e96ec1b2beea1eab825ffd192c2c3a636e20f830b811d0/0b43fbc5f86c6c247c5189af58be425a829c3b09018c6b26589661eec9a5ad24/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
+
   ## We also need to de-glean Android Components here, as not doing so appears to cause build failures for ex. GeckoView
   /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'ac'
 
@@ -871,7 +872,7 @@ function prepare_firefox() {
   /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'firefox'
 
   # Fail on use of prebuilt binary
-  "${IRONFOX_SED}" -i 's|https://github.com|hxxps://github.com|' "${IRONFOX_GECKO}/python/mozboot/mozboot/android.py"
+  "${IRONFOX_SED}" -i 's|https://github.com|hxxps://github.com|g' "${IRONFOX_GECKO}/python/mozboot/mozboot/android.py"
 
   # Make the build system think we installed the emulator and an AVD
   "${IRONFOX_MKDIR}" -vp "${IRONFOX_ANDROID_SDK}/emulator"
@@ -964,8 +965,8 @@ function prepare_glean() {
   "${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" "${IRONFOX_GLEAN}/Cargo.toml"
 
   # Ensure that the Glean gradle plug-in/glean_parser always runs offline
-  "${IRONFOX_SED}" -i "s|(isOffline)|(true)|" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
-  "${IRONFOX_SED}" -i "s|pypi.python.org|noop.invalid|" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
+  "${IRONFOX_SED}" -i "s|(isOffline)|(true)|g" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
+  "${IRONFOX_SED}" -i "s|pypi.python.org|noop.invalid|g" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
 
   # No-op Glean
   "${IRONFOX_SED}" -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
@@ -994,9 +995,9 @@ function prepare_glean() {
 
   # Set libxul location (for use with Tor's no-op UniFFi binding generator)
   if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    "${IRONFOX_SED}" -i "s|{libxul_dir}|aarch64-linux-android/release|" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
+    "${IRONFOX_SED}" -i "s|{libxul_dir}|aarch64-linux-android/release|g" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
   else
-    "${IRONFOX_SED}" -i "s|{libxul_dir}|release|" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
+    "${IRONFOX_SED}" -i "s|{libxul_dir}|release|g" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
   fi
 
   # Apply Glean overlay

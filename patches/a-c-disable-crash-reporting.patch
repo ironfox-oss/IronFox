@@ -228,34 +228,19 @@ index 8c4943f23067..7ef2293767a7 100644
      return DisplayableCrash.Report(name, url)
  }
 diff --git a/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt b/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
-index 93ec365f24be..1397755ffe22 100644
+index ae8c5002251e..fa7e3d50695a 100644
 --- a/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
 +++ b/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
-@@ -5,9 +5,9 @@
+@@ -5,7 +5,7 @@
  package mozilla.components.support
  
  import mozilla.appservices.RustComponentsInitializer
 -import mozilla.components.concept.base.crash.CrashReporting
 +// import mozilla.components.concept.base.crash.CrashReporting
  import mozilla.components.support.base.log.Log
--import mozilla.components.support.rusterrors.initializeRustErrors
-+// import mozilla.components.support.rusterrors.initializeRustErrors
  import mozilla.components.support.rustlog.RustLog
  
- /**
-@@ -27,9 +27,9 @@ object AppServicesInitializer {
-         // Rust components must be initialized at the very beginning, before any other Rust call, ...
-         RustComponentsInitializer.init()
- 
--        if (config.crashReporting != null) {
-+/*        if (config.crashReporting != null) {
-             initializeRustErrors(config.crashReporting)
--        }
-+        } */
- 
-         // ... but RustHttpConfig.setClient() and RustLog.enable() can be called later.
-         RustLog.apply {
-@@ -46,7 +46,7 @@ object AppServicesInitializer {
+@@ -41,7 +41,7 @@ object AppServicesInitializer {
       */
      data class Config(
          // Do not add a crash reporting default. We want to be explicit if we make this choice.

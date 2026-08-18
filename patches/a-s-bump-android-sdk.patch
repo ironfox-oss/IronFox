@@ -1,0 +1,18 @@
+diff --git a/settings.gradle b/settings.gradle
+index 5fedb0250..b2a7f3116 100644
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -182,10 +182,10 @@ gradle.projectsLoaded { ->
+             calcVersion(buildconfig), // version,
+             calcGroupId(buildconfig), // componentsGroupId
+             17, // jvmTargetCompatibility,
+-            36, // compileSdkMajorVersion,
+-            1,  // compileSdkMinorVersion,
++            37, // compileSdkMajorVersion,
++            0,  // compileSdkMinorVersion,
+             26, // minSdkVersion,
+-            36, // targetSdkVersion,
++            37, // targetSdkVersion,
+             "29.0.14206865", // ndkVersion - Keep it in sync in TC Dockerfile.
+         )
+     }

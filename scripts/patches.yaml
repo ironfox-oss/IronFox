@@ -194,6 +194,13 @@ patches:
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
 
+  - file: "a-c-liberate-play-integrity.patch"
+    name: "Android Components - Remove Google Play Integrity"
+    description: "Removes the Google Play Integrity library."
+    reason: "To remove unwanted libraries, and dependencies on related services."
+    effect: "Improves privacy and protects the freedom of users."
+    category: "Dependency"
+
   - file: "fenix-liberate-play-integrity.patch"
     name: "Fenix - Remove Google Play Integrity"
     description: "Removes the Google Play Integrity library."
@@ -786,13 +793,6 @@ patches:
     description: "Modifies branding elements to IronFox."
     reason: "Creates distinct brand identity for the fork."
     effect: "Users can identify the fork as IronFox instead of Firefox."
-    category: "User Interface"
-
-  - file: "fenix-display-cookie-banner-ui-in-standard-browsing.patch"
-    name: "Fenix - Display Cookie Banner Reduction UI in standard browsing windows"
-    description: "Enables UI to control Cookie Banner Reduction per-site in standard browsing windows."
-    reason: "The ability to control Cookie Banner Reduction per-site is typically only displayed in private browsing windows."
-    effect: "Users are provided with more control by allowing them to control Cookie Banner Reduction on a per-site basis."
     category: "User Interface"
 
   - file: "gecko-expose-hidden-aboutsupport-settings.patch"

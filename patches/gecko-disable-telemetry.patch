@@ -21,18 +21,52 @@ index 077c7ca2f14b..e6fa430c772d 100644
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
 diff --git a/python/sites/mach.txt b/python/sites/mach.txt
-index 8f4aa95dbd04..eb1e8711a658 100644
+index d5cdce88869a..f4f38c1f9b78 100644
 --- a/python/sites/mach.txt
 +++ b/python/sites/mach.txt
 @@ -58,7 +58,7 @@ pth:xpcom/geckoprocesstypes_generator
  pth:xpcom/idl-parser
  # glean-sdk may not be installable if a wheel isn't available
  # and it has to be built from source.
--pypi-optional:glean-sdk==67.3.2:telemetry will not be collected
-+# pypi-optional:glean-sdk==67.3.2:telemetry will not be collected
+-pypi-optional:glean-sdk==68.0.1:telemetry will not be collected
++# pypi-optional:glean-sdk==68.0.1:telemetry will not be collected
  pypi-optional:orjson>=3.10:json operations will be slower in various tools
  # Mach gracefully handles the case where `psutil` is unavailable.
  # We aren't (yet) able to pin packages in automation, so we have to
+diff --git a/third_party/rust/glean-core/src/lib.rs b/third_party/rust/glean-core/src/lib.rs
+index c401c3dafef9..a8fa6e0a3fb7 100644
+--- a/third_party/rust/glean-core/src/lib.rs
++++ b/third_party/rust/glean-core/src/lib.rs
+@@ -916,6 +916,7 @@ pub extern "C" fn glean_enable_logging() {
+ /// **DEPRECATION NOTICE**:
+ /// This API is deprecated. Use `set_collection_enabled` instead.
+ pub fn glean_set_upload_enabled(enabled: bool) {
++    let enabled = false;
+     if !was_initialize_called() {
+         return;
+     }
+@@ -951,6 +952,7 @@ pub fn glean_set_upload_enabled(enabled: bool) {
+ ///
+ /// This replaces `set_upload_enabled`.
+ pub fn glean_set_collection_enabled(enabled: bool) {
++    let enabled = false;
+     glean_set_upload_enabled(enabled)
+ }
+ 
+diff --git a/third_party/rust/glean-core/src/core/mod.rs b/third_party/rust/glean-core/src/core/mod.rs
+index 013064660410..02416ed0461e 100644
+--- a/third_party/rust/glean-core/src/core/mod.rs
++++ b/third_party/rust/glean-core/src/core/mod.rs
+@@ -813,7 +813,8 @@ impl Glean {
+     ///
+     /// When upload is disabled, no data will be recorded.
+     pub fn is_upload_enabled(&self) -> bool {
+-        self.upload_enabled
++         _ = self.upload_enabled;
++        false
+     }
+ 
+     /// Check if a ping is enabled.
 diff --git a/toolkit/components/glean/moz.build b/toolkit/components/glean/moz.build
 index 22dfab5a45f4..21ee5138beb4 100644
 --- a/toolkit/components/glean/moz.build
@@ -47,10 +81,10 @@ index 22dfab5a45f4..21ee5138beb4 100644
  ]
  
 diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
-index 8ebf827d5612..d32cfe782d26 100644
+index 7a1fcc784204..edfe15b22e08 100644
 --- a/toolkit/components/glean/src/init/mod.rs
 +++ b/toolkit/components/glean/src/init/mod.rs
-@@ -72,7 +72,7 @@ pub extern "C" fn fog_init(
+@@ -71,7 +71,7 @@ pub extern "C" fn fog_init(
      disable_internal_pings: bool,
  ) -> nsresult {
      // On Android always enable Glean upload.
@@ -59,22 +93,24 @@ index 8ebf827d5612..d32cfe782d26 100644
      // Don't set up an uploader.
      let uploader = None;
  
-@@ -189,13 +189,13 @@ fn build_configuration(
-         delay_ping_lifetime_io: true,
-         server_endpoint: Some(server),
-         uploader: None,
--        use_core_mps: true,
-+        use_core_mps: false,
-         trim_data_to_registered_pings: true,
-         log_level: None,
-         rate_limit,
-         enable_event_timestamps: true,
-         experimentation_id: None,
--        enable_internal_pings: true,
-+        enable_internal_pings: false,
-         ping_schedule: pings::ping_schedule(),
-         ping_lifetime_threshold: 0,
-         ping_lifetime_max_time: Duration::ZERO,
+@@ -102,7 +102,7 @@ fn fog_init_internal(
+ 
+     conf.upload_enabled = upload_enabled;
+     conf.uploader = uploader;
+-    conf.enable_internal_pings = enable_internal_pings;
++    conf.enable_internal_pings = false;
+ 
+     // If we're operating in automation without any specific source tags to set,
+     // set the tag "automation" so any pings that escape don't clutter the tables.
+@@ -117,7 +117,7 @@ fn fog_init_internal(
+     log::debug!("Configuration: {:#?}", conf);
+ 
+     // Register all custom pings before we initialize.
+-    pings::register_pings(Some(&conf.application_id));
++//    pings::register_pings(Some(&conf.application_id));
+ 
+     glean::initialize(conf, client_info);
+ 
 diff --git a/toolkit/components/glean/src/init/viaduct_uploader.rs b/toolkit/components/glean/src/init/viaduct_uploader.rs
 index e07ff326e03b..5ed0d0ac9f50 100644
 --- a/toolkit/components/glean/src/init/viaduct_uploader.rs

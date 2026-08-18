@@ -23,15 +23,15 @@ index 12492d606cc2..0fd90c1a8b19 100644
  
      auto useOop = IsWebglOutOfProcessEnabled();
 diff --git a/toolkit/components/resistfingerprinting/RFPTargets.inc b/toolkit/components/resistfingerprinting/RFPTargets.inc
-index b77c1fd1f9ac..b87224e93d7e 100644
+index 8be14ed3ba46..3395d760d7ff 100644
 --- a/toolkit/components/resistfingerprinting/RFPTargets.inc
 +++ b/toolkit/components/resistfingerprinting/RFPTargets.inc
-@@ -113,6 +113,7 @@ ITEM_VALUE(WebGLVendorSanitize,         77)
- ITEM_VALUE(WebGLVendorConstant,         78)
- ITEM_VALUE(WebGLVendorRandomize,        79)
+@@ -114,6 +114,7 @@ ITEM_VALUE(WebGLVendorRandomize,        79)
  ITEM_VALUE(WebGLRendererConstant,       80)
-+ITEM_VALUE(DisableWebGL,81)
+ // How IME software in use chooses to style composition (exposed via EditContext)
+ ITEM_VALUE(IMEStyle,                    81)
++ITEM_VALUE(DisableWebGL,                82)
  
- // !!! Adding a new target? Rename PointerId and repurpose it.
- 
+ /*
+  * In certain cases, we precompute the value of ShouldRFP for e.g. a Document.
 -- 

@@ -101,6 +101,10 @@ object IFPrefs {
 
     // Disable Google Lens integration
     prefs.setBoolPref(R.string.pref_key_google_lens_integration, false)
+    prefs.setBoolPref(R.string.pref_key_google_lens_integration_user_enabled, false)
+
+    // Disable hiding URLs with certain parameters from history
+    prefs.setDefaultStringPref(R.string.pref_key_frecency_filter_query, "")
 
     // Disable historical search suggestions by default
     prefs.setDefaultBoolPref(R.string.pref_key_search_browsing_history, false)
@@ -109,9 +113,10 @@ object IFPrefs {
     prefs.setBoolPref(R.string.default_top_sites_added, true)
 
     // Disable MARS (Mozilla Ad Routing Service)
-    prefs.setBoolPref(R.string.pref_key_enable_mozilla_ads_client, false)
+    prefs.setBoolPref(R.string.pref_key_enable_ads_client_for_stories, false)
 
     // Disable Mozilla feedback surveys
+    prefs.setBoolPref(R.string.pref_key_enable_uninstall_survey, false)
     prefs.setBoolPref(R.string.pref_key_microsurvey_feature_enabled, false)
     prefs.setBoolPref(R.string.pref_key_should_show_microsurvey_prompt, false)
 
@@ -122,9 +127,7 @@ object IFPrefs {
     // Disable Mozilla nags, CFRs, and promotions
     prefs.setBoolPref(R.string.pref_key_first_time_engage_with_signup, false)
     prefs.setBoolPref(R.string.pref_key_has_inactive_tabs_auto_close_dialog_dismissed, true)
-    prefs.setBoolPref(R.string.pref_key_menu_cfr, false)
     prefs.setBoolPref(R.string.pref_key_should_show_auto_close_tabs_banner, false)
-    prefs.setBoolPref(R.string.pref_key_should_show_cookie_banners_action_popup, false)
     prefs.setBoolPref(R.string.pref_key_should_show_email_mask_cfr, false)
     prefs.setBoolPref(R.string.pref_key_should_show_inactive_tabs_popup, false)
     prefs.setBoolPref(R.string.pref_key_should_show_lock_pbm_banner, false)
@@ -213,20 +216,19 @@ object IFPrefs {
     /// Ensure we don't enable third-party data sharing
     // We remove the Adjust Metrics Service entirely, so this is mainly for defense in depth/redundancy
     // https://searchfox.org/firefox-main/rev/d5171e9e/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt#233
-    prefs.setBoolPref(R.string.pref_key_is_user_meta_attributed, false)
-    prefs.setBoolPref(R.string.pref_key_is_user_reddit_attributed, false)
-    prefs.setBoolPref(R.string.pref_key_is_user_tiktok_attributed, false)
-    prefs.setBoolPref(R.string.pref_key_is_user_x_twitter_attributed, false)
+    prefs.setBoolPref(R.string.pref_key_is_user_meta_attributed, false) // [DEFAULT]
+    prefs.setBoolPref(R.string.pref_key_is_user_moloco_attributed, false) // [DEFAULT]
+    prefs.setBoolPref(R.string.pref_key_is_user_rakuten_attributed, false) // [DEFAULT]
+    prefs.setBoolPref(R.string.pref_key_is_user_reddit_attributed, false) // [DEFAULT]
+    prefs.setBoolPref(R.string.pref_key_is_user_skyflag_attributed, false) // [DEFAULT]
+    prefs.setBoolPref(R.string.pref_key_is_user_tiktok_attributed, false) // [DEFAULT]
+    prefs.setBoolPref(R.string.pref_key_is_user_x_twitter_attributed, false) // [DEFAULT]
 
     // Disable third-party/OS-level root certificates by default
     prefs.setDefaultBoolPref(R.string.pref_key_allow_third_party_root_certs, false) // [DEFAULT]
 
     // Disable trending search suggestions by default
     prefs.setDefaultBoolPref(R.string.pref_key_show_trending_search_suggestions, false)
-
-    // Disable the new 'Unified Trust Panel' by default
-    // This prevents setting per-site exceptions for the built-in cookie banner blocker
-    prefs.setDefaultBoolPref(R.string.pref_key_enable_unified_trust_panel, false)
 
     // Disable URL autocomplete by default
     prefs.setDefaultBoolPref(R.string.pref_key_enable_autocomplete_urls, false)

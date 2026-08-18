@@ -2,44 +2,44 @@
 # Sources
 
 # Firefox
-# Version: 153.0.4 (RELEASE)
+# Version: 154.0 (BUILD2)
 # https://github.com/mozilla-firefox/firefox
-readonly IRONFOX_GECKO_COMMIT='c178247e1dfea52241a6b18b18cf3a00f8da935c'
-readonly IRONFOX_GECKO_SHA512SUM='89d815999e2fc410fb3c7f60bb53ecd001416c438e219fa7ec64b9b0c9f6b5ea4a0b13000154ea5d2b1f2fe1a804509733ad7b2d2c4b4006ba51d7827eb577b2'
-readonly IRONFOX_GECKO_VERSION='153.0.4'
+readonly IRONFOX_GECKO_COMMIT='8f8652c14a965821e863e1b1b9152d77f3bf96cc'
+readonly IRONFOX_GECKO_SHA512SUM='a72f271814cc22b6e415f578fd415962fc15651eb1fbf8dc4bbc0398e6c8e6af780389a485b8c3435dc3122f1e8ef0c0be2d80396b8f04932d26dbc5aa7f9aea'
+readonly IRONFOX_GECKO_VERSION='154.0'
 
 # IronFox
 readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}"
 
 # Application Services
-# Version: v153.0
+# Version: v154.0
 # https://github.com/mozilla/application-services
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt)
-readonly IRONFOX_AS_COMMIT='d05bd0f98d77e4c0ca2a11e5bae4f7299212c44b'
-readonly IRONFOX_AS_SHA512SUM='d91df2f2b68b18cbb4188d295e3f23f60564b0799d06db6fc1c3bd0baafc2d9dc13bdad7bcf7e9289b90220a4702a3f9864458c9af5c40a84f7e747f2d1333fc'
-readonly IRONFOX_AS_VERSION='153.0'
+readonly IRONFOX_AS_COMMIT='07fcb4a84bb5ef4030d4803922d58a80c5d3060f'
+readonly IRONFOX_AS_SHA512SUM='c1f9f511cbd05f4b74a9cba249897ca48a488b097a53d6f8014525d419f26aa7f232d5cd135889ec6993afa48e071c71053bafa63f5ac29ed305405de9597dde'
+readonly IRONFOX_AS_VERSION='154.0'
 
 # firefox-l10n
 # https://github.com/mozilla-l10n/firefox-l10n
 # NOTE: This repo is updated several times a day...
 # so I think best approach here will be for us to just update it alongside new releases
-readonly IRONFOX_L10N_CENTRAL_COMMIT='d15437d969bcf52de24d2d3dd365506ace016796'
-readonly IRONFOX_L10N_CENTRAL_SHA512SUM='53df9ca2e783e5fb2e72a70e3489655f0627510d6cc5c1ddbcd813d7af89ad1b573efde01a0d10457d8b51b93ddce0ea7d6506ac0481d87b9a97ef4d0ae48108'
+readonly IRONFOX_L10N_CENTRAL_COMMIT='376431cd87f22c07c124858e58c7074f9629ec48'
+readonly IRONFOX_L10N_CENTRAL_SHA512SUM='daf15e28d6617763febaa524421916dc462f2b043298064b9ebbcf1be776ae5635327c02ea61be8a20a8bb04c3cc647a87a66a45dfc600d5784f1faffdeffd5d'
 
 # Glean
-# Version: 67.3.2
+# Version: 68.0.1
 # https://github.com/mozilla/glean
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/gradle/libs.versions.toml)
-readonly IRONFOX_GLEAN_COMMIT='24c647f24faedfe6839c99d18e58df0e288132a8'
-readonly IRONFOX_GLEAN_SHA512SUM='a80e30355c8b2ef86e999908e01cc510bd9d018c9a9d774714c90468d07ac4b14c8aa919df9093707cede5ed51c29afdbe2e76c4903e7868ce767cf34afe5435'
-readonly IRONFOX_GLEAN_VERSION='67.3.2'
+readonly IRONFOX_GLEAN_COMMIT='92ecd18105fd2936e11936da749183369a491580'
+readonly IRONFOX_GLEAN_SHA512SUM='b63a6af1fb973f425529fa81c43cd67d18cc94406cb47b82940807a0d018ac5581d14672f20d18dd9f291313b16e2b2a0642377032ef770f169a3c7d1a00d565'
+readonly IRONFOX_GLEAN_VERSION='68.0.1'
 
 # Glean Parser
-# Version: v19.0.0
+# Version: v20.2.0
 # https://github.com/mozilla/glean_parser
-readonly IRONFOX_GLEAN_PARSER_COMMIT='d87316dd8ce2fa0122d8634660bb71397c2d5820'
-readonly IRONFOX_GLEAN_PARSER_SHA512SUM='acb6ba017549fe26b0b9af77fea98421509580d8c734adaf6de700e6abd24c7bb3c8a708ec2f8b5793c294dc74d0af09ce53d6042d1814baf4c50afd30bc7cef'
-readonly IRONFOX_GLEAN_PARSER_VERSION='19.0.0'
+readonly IRONFOX_GLEAN_PARSER_COMMIT='f6c1d64b2cb1d3955deda980809dafe56da500c9'
+readonly IRONFOX_GLEAN_PARSER_SHA512SUM='37138d5cc1d69e2ca0946299d65ff4d25df9498e3dee1b603c6ae610c5b7f3e2632f9f6116d62c0bf657a4fac86ac5c14bc1efcc3d313938d3cc88e51ec36b95'
+readonly IRONFOX_GLEAN_PARSER_VERSION='20.2.0'
 
 # microG
 # Version: v0.3.16.252432
@@ -58,10 +58,10 @@ readonly IRONFOX_PHOENIX_SHA512SUM='071460291da40332ca2572cdbd7222acbf6cf3f0c3f6
 readonly IRONFOX_UNIFFI_VERSION='0.31.0'
 
 # UnifiedPush-AC
-# Version: 1.0.5
+# Version: 1.0.6
 # https://gitlab.com/ironfox-oss/unifiedpush-ac
-readonly IRONFOX_UP_AC_COMMIT='a925c7dee0d97335a856ba0800a810d9fae8156f'
-readonly IRONFOX_UP_AC_SHA512SUM='56c200efbcdc6f0c0609e8b55a8defe43be313538f79eba8e9b8031d4ceab27d251745795ef09032454a662ee4287d3979954b217fc411dcb652e87fddab0b89'
+readonly IRONFOX_UP_AC_COMMIT='9a1a56603bd8a67f793382e8797192263d2afb79'
+readonly IRONFOX_UP_AC_SHA512SUM='a7e28e05f61e9141b83d143bcaaa67c804ceed9c29df28b811c5c9efa68824d0ceda2860dd099f676fe187ff57afde4fdeb50c12f21572fe8a9b5afef361ce12'
 
 # WASI SDK
 # https://github.com/WebAssembly/wasi-sdk
@@ -85,14 +85,14 @@ readonly IRONFOX_ANDROID_NDK_SHA512SUM_OSX='4091bc97a03266b869380874cb2d67a35dc7
 readonly IRONFOX_ANDROID_NDK_VERSION='r29'
 
 # Android SDK (Command-Line Tools)
-# Version: 20.0 (14742923)
+# Version: 21.0 (15641748)
 # https://developer.android.com/tools/releases/cmdline-tools
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android.py
 # + https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
-readonly IRONFOX_ANDROID_SDK_REVISION='14742923'
-readonly IRONFOX_ANDROID_SDK_VERSION='20.0'
-readonly IRONFOX_ANDROID_SDK_SHA512SUM_LINUX='b65e830d7655fb39cc9eee669806977f462c49375807ef2c6487fabcc9afdbc210465ce6a1e2429ff95c74ca519d1239daf9a403c30b8d0bdb7a0962af656c8e'
-readonly IRONFOX_ANDROID_SDK_SHA512SUM_OSX='20fc87470d1850ecbaf254509caca1b45055d72d3d78c9079adbe97ff7754018979a548f0cf145e52f03afd65357a5653f556db15ba569bffd4a143202cca0f8'
+readonly IRONFOX_ANDROID_SDK_REVISION='15641748'
+readonly IRONFOX_ANDROID_SDK_VERSION='21.0'
+readonly IRONFOX_ANDROID_SDK_SHA512SUM_LINUX='82d136f1ceb8c00cb0b1eb1745884a0561c80fbfc1830ddf37f362654383d776085e04550b787cbc4b7d9bee22d91643c778132c5f3d9f6f84217fd7475b0a1b'
+readonly IRONFOX_ANDROID_SDK_SHA512SUM_OSX='44a22c026ed8b7a5de48c5e5f79ef6783044838d6b03f862681fe26f10200a92fd33565aa9d56bc59c8f7877b7cef34695aff2344b25c89139af0c0ede1c011d'
 
 # Android SDK Build Tools
 # Version: 37.0.0
@@ -106,10 +106,10 @@ readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_LINUX='b45dc6b7298567f3b45
 readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='991db0bbf23acd212b6be57033cdb3ecd5c8c8da79781a6e4326c046c2079b2827892084ee5f77b1fc5d5ef91fc62a4820d43218d3943f0c43e5c093c58c4999'
 
 # Android SDK Platform
-# Version: 37.0
+# Version: 37.1
 # https://developer.android.com/tools/releases/platforms
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
-readonly IRONFOX_ANDROID_SDK_PLATFORM_VERSION='37.0'
+readonly IRONFOX_ANDROID_SDK_PLATFORM_VERSION='37.1'
 
 # Android SDK Platform Tools
 # Version: 37.0.1

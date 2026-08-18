@@ -8,7 +8,7 @@ Removes the `ACCCESS_NETWORK_STATE` permission and prevents the browser from mon
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/geckoview/src/main/AndroidManifest.xml b/mobile/android/geckoview/src/main/AndroidManifest.xml
-index f3ac290795d1a..358b29dfe8160 100644
+index 83bfdf85e628..24469c93760f 100644
 --- a/mobile/android/geckoview/src/main/AndroidManifest.xml
 +++ b/mobile/android/geckoview/src/main/AndroidManifest.xml
 @@ -6,7 +6,7 @@
@@ -17,9 +17,9 @@ index f3ac290795d1a..358b29dfe8160 100644
  
 -    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 +    <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> -->
-     <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS"
-             tools:ignore="HighSamplingRate" />
      <uses-permission android:name="android.permission.INTERNET"/>
+     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 index 20e44673a3348..d5c68c139a707 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java

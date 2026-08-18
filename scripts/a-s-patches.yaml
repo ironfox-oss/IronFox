@@ -25,6 +25,13 @@ categories:
 
 patches:
   # Build System
+  - file: "a-s-bump-android-sdk.patch"
+    name: "Application Services - Bump Android SDK"
+    description: "Bump Android SDK."
+    reason: "Updates the version of the Android SDK."
+    effect: "Resolves build issues."
+    category: "Build System"
+
   - file: "a-s-localize-maven.patch"
     name: "Application Services - Localize Maven"
     description: "Replaces Mozilla Maven repositories with local maven repositories."

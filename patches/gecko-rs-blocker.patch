@@ -9,6 +9,29 @@ Adapted from LibreWolf: https://codeberg.org/librewolf/source/src/branch/main/pa
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
+diff --git a/services/settings/remote-settings.sys.mjs b/services/settings/remote-settings.sys.mjs
+index b180cfc850ee..41e7f9c43f45 100644
+--- a/services/settings/remote-settings.sys.mjs
++++ b/services/settings/remote-settings.sys.mjs
+@@ -19,6 +19,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   SyncHistory: "resource://services-settings/SyncHistory.sys.mjs",
+   UptakeTelemetry: "resource://services-settings/UptakeTelemetry.sys.mjs",
+   Utils: "resource://services-settings/Utils.sys.mjs",
++  SharedUtils: "resource://services-settings/SharedUtils.sys.mjs",
+ });
+ 
+ const PREF_SETTINGS_BRANCH = "services.settings.";
+@@ -286,6 +287,10 @@ function remoteSettingsFunction() {
+         const collection = changeset.metadata.id;
+         const identifier = `${bucket}/${collection}`;
+ 
++        if (!lazy.SharedUtils.isCollectionAllowed(bucket, collection, lazy.Utils.allowedCollections)) {
++          continue;
++        }
++
+         if (pulled.includes(identifier)) {
+           // The startup bundles contain both main and preview changesets.
+           // Importing both increases complexity down the line, and brings no value.
 diff --git a/services/settings/RemoteSettings.worker.mjs b/services/settings/RemoteSettings.worker.mjs
 index 3e4e915..a927685 100644
 --- a/services/settings/RemoteSettings.worker.mjs
@@ -33,10 +56,20 @@ index 3e4e915..a927685 100644
      if (records === null) {
        // Return -1 if file is missing.
 diff --git a/services/settings/RemoteSettingsClient.sys.mjs b/services/settings/RemoteSettingsClient.sys.mjs
-index 3ee4ae6..12165e1 100644
+index f4f9b1c0bce9..fc3c6bb2b1ba 100644
 --- a/services/settings/RemoteSettingsClient.sys.mjs
 +++ b/services/settings/RemoteSettingsClient.sys.mjs
-@@ -215,6 +215,11 @@ class AttachmentDownloader extends Downloader {
+@@ -209,12 +209,21 @@ class AttachmentDownloader extends Downloader {
+     return cacheImpl;
+   }
+ 
++  get identifier() {
++    return this._client.identifier;
++  }
++
+   /**
+    * Download attachment and report Telemetry on failure.
+    *
     * @see Downloader.download
     */
    async download(record, options) {
@@ -48,7 +81,7 @@ index 3ee4ae6..12165e1 100644
      await lazy.UptakeTelemetry.report(
        lazy.UptakeTelemetry.STATUS.DOWNLOAD_START,
        {
-@@ -586,7 +591,9 @@ export class RemoteSettingsClient extends EventEmitter {
+@@ -586,7 +595,9 @@ export class RemoteSettingsClient extends EventEmitter {
        }
        ({ data } = await lazy.SharedUtils.loadJSONDump(
          this.bucketName,
@@ -59,7 +92,7 @@ index 3ee4ae6..12165e1 100644
        ));
        if (data !== null) {
          lazy.console.info(`${this.identifier} falling back to JSON dump`);
-@@ -656,6 +663,10 @@ export class RemoteSettingsClient extends EventEmitter {
+@@ -656,6 +667,10 @@ export class RemoteSettingsClient extends EventEmitter {
        return;
      }
  
@@ -70,7 +103,7 @@ index 3ee4ae6..12165e1 100644
      // We want to know which timestamp we are expected to obtain in order to leverage
      // cache busting. We don't provide ETag because we don't want a 304.
      const { changes } = await lazy.Utils.fetchLatestChanges(
-@@ -1040,7 +1051,9 @@ export class RemoteSettingsClient extends EventEmitter {
+@@ -1040,7 +1055,9 @@ export class RemoteSettingsClient extends EventEmitter {
      lazy.console.info(`${this.identifier} try to restore dump`);
      const result = await lazy.RemoteSettingsWorker.importJSONDump(
        this.bucketName,
@@ -259,4 +292,25 @@ index 76f69ab74e..27a566241e 100644
        timestamp,
        serverTimeMillis,
        backoffSeconds,
+diff --git a/toolkit/components/search/SearchEngineSelector.sys.mjs b/toolkit/components/search/SearchEngineSelector.sys.mjs
+index 3a42b383af19..e375db546bcd 100644
+--- a/toolkit/components/search/SearchEngineSelector.sys.mjs
++++ b/toolkit/components/search/SearchEngineSelector.sys.mjs
+@@ -409,13 +409,13 @@ export class SearchEngineSelector {
+    *   could be obtained.
+    */
+   async #getConfigurationOverrides() {
+-    let result = [];
++/*    let result = [];
+     try {
+       result = await this.#remoteConfigOverrides.get();
+     } catch (ex) {
+       // This data is remote only, so we just return an empty array if it fails.
+-    }
+-    return result;
++    } */
++    return [];
+   }
+ 
+   /**
 -- 

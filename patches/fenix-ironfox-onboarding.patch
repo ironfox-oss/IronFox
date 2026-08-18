@@ -132,7 +132,7 @@ index 3c71fd5f01a1..dcd975a24095 100644
                  logger = logger,
                  analytics = components.analytics,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 5b173db95928..d2f4d0467ab3 100644
+index a390a9599f85..05c066691154 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 @@ -4,6 +4,7 @@
@@ -143,13 +143,14 @@ index 5b173db95928..d2f4d0467ab3 100644
  import android.annotation.SuppressLint
  import android.appwidget.AppWidgetManager
  import android.content.Context
-@@ -372,16 +373,18 @@ class OnboardingFragment : Fragment() {
+@@ -374,17 +375,19 @@ class OnboardingFragment : Fragment() {
          requireComponents.fenixOnboarding.finish()
  
          val settings = requireComponents.settings
 +        settings.ironfox.ironFoxOnboardingCompleted = true
 +        GeckoSettingsBridge.setIronFoxPrefs(requireContext(), requireComponents.core.engine)
          settings.onboardingCompletedTimestamp = System.currentTimeMillis()
+         settings.onboardingCurrentPageIndex = 0
  
          // Telemetry and daily usage ping get enabled after ToU acceptance.
 -        startMetricsIfEnabled(

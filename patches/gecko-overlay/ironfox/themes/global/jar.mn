@@ -35,7 +35,6 @@ toolkit.jar:
   skin/classic/global/icons/link.svg                            (../../../toolkit/themes/shared/icons/link.svg)
   skin/classic/global/icons/performance.svg                     (../../../toolkit/themes/shared/icons/performance.svg)
   skin/classic/global/icons/settings.svg                        (../../../toolkit/themes/shared/icons/settings.svg)
-  skin/classic/global/icons/warning.svg                         (../../../toolkit/themes/shared/icons/warning.svg)
   skin/classic/global/illustrations/about-license.svg           (../../../toolkit/themes/shared/illustrations/about-license.svg)
   skin/classic/global/illustrations/no-connection.svg           (../../../toolkit/themes/shared/illustrations/no-connection.svg)
   skin/classic/global/illustrations/security-error.svg          (../../../toolkit/themes/shared/illustrations/security-error.svg)
