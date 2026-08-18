@@ -862,8 +862,8 @@ function prepare_firefox() {
   # Remove Glean
   /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'firefox'
 
-  "${IRONFOX_SED}" -i 's/5bc8c9bbe8c0eabe408d9a7cd7a8e6e09eee0ead817607643882b38a36d07c91/bddacbe056ce7458663a39dc99d5bb3434099aa69cae793cf0c57d4e54f5a6a4/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
-  "${IRONFOX_SED}" -i 's/c20989b1aa336b0849e96ec1b2beea1eab825ffd192c2c3a636e20f830b811d0/0b43fbc5f86c6c247c5189af58be425a829c3b09018c6b26589661eec9a5ad24/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
+  "${IRONFOX_SED}" -i 's/5bc8c9bbe8c0eabe408d9a7cd7a8e6e09eee0ead817607643882b38a36d07c91/421348ae534a24692c35bd49dbc6dc70103b43772a531868283265d6f6e246e9/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
+  "${IRONFOX_SED}" -i 's/c20989b1aa336b0849e96ec1b2beea1eab825ffd192c2c3a636e20f830b811d0/fa3887e2a0e1efdb355f61c8e801922dc6f5decfa6cccd4a6b7ad247c5918c81/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
 
   ## We also need to de-glean Android Components here, as not doing so appears to cause build failures for ex. GeckoView
   /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'ac'
