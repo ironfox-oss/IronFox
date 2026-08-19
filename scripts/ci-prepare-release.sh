@@ -32,6 +32,19 @@ echo_red_text 'CI - Downloading dependencies...'
 /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 's3cmd'
 echo_green_text 'CI - SUCCESS: Downloaded dependencies.'
 
+# Get secrets
+echo_red_text 'CI - Preparing secrets...'
+set +x
+/bin/bash "${IRONFOX_SCRIPTS}/ci-prep.sh" 's3-releases'
+echo_green_text 'CI - SUCCESS: Prepared secrets.'
+
+# Set verbosity
+if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
+  set -x
+else
+  set +x
+fi
+
 # Get artifacts
 echo_red_text 'CI - Downloading artifacts...'
 /bin/bash "${IRONFOX_SCRIPTS}/ci-download-artifacts.sh" 'fenix' 'arm64'
