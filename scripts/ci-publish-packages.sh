@@ -9,9 +9,6 @@ set -euo pipefail
 set +x
 
 # Set-up our environment
-if [[ -z "${IRONFOX_CI+x}" ]]; then
-  export IRONFOX_CI=1
-fi
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   /bin/bash "$(realpath $(dirname "$0"))/env.sh"
 fi
