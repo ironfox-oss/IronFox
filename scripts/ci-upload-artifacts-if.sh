@@ -222,6 +222,7 @@ if [[ "${IRONFOX_AR_UP_FENIX}" == 1 ]]; then
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
     push_and_add_sha512sum "${IRONFOX_OUTPUTS_UNIVERSAL}" "${IRONFOX_CI_ID}"
     push_and_add_sha512sum "${IRONFOX_OUTPUTS_BUNDLE}" "${IRONFOX_CI_ID}"
+    push_and_add_sha512sum "${IRONFOX_OUTPUTS_BUNDLE_AAB}" "${IRONFOX_CI_ID}"
   fi
 fi
 
