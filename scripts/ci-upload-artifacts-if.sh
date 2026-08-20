@@ -92,6 +92,9 @@ function push_file() {
 
   # Set our MIME type
   case "${push_file}" in
+    *.aab)
+      local -r mime_type='application/vnd.android.package-archive'
+      ;;
     *.apk)
       local -r mime_type='application/vnd.android.package-archive'
       ;;
