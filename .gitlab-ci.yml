@@ -63,7 +63,7 @@ stages:
 # Runs first so a lint failure stops the pipeline before the multi-hour builds.
 # Uses a minimal image and is NOT namespace-gated, so it also runs for forks / contributor pipelines.
 lint-scripts:
-  image: fedora:43
+  image: fedora:44
   stage: lint
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -81,7 +81,7 @@ lint-scripts:
     - /bin/bash scripts/lint.sh
 
 update-fdroid-repo:
-  image: fedora:43
+  image: fedora:44
   stage: build_fdroid
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -96,7 +96,7 @@ update-fdroid-repo:
     - /bin/bash scripts/ci-update-fdroid-repo.sh
 
 update-site-repo:
-  image: fedora:43
+  image: fedora:44
   stage: build_site
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -221,7 +221,7 @@ build-fenix:
       when: never
 
 prepare-release:
-  image: fedora:43
+  image: fedora:44
   stage: release
   interruptible: true
   needs:

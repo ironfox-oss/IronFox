@@ -1,4 +1,4 @@
-FROM fedora:43
+FROM fedora:44
 
 # Cosmetic, bump to re-build container image
 ENV IRONFOX_IMAGE_VERSION=1
