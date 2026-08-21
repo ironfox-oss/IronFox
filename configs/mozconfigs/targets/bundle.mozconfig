@@ -4,8 +4,3 @@
 set -euo pipefail
 
 ac_add_options --enable-android-bundle
-
-# Set for multi-locale packaging
-if [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'gecko' ]]; then
-  export BUILD_BACKENDS=FasterMake,RecursiveMake
-fi
