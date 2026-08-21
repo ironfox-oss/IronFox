@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Fri, 21 Aug 2026 04:09:06 +0000
+Subject: [PATCH] Fenix - Enable legacy packaging
+
+Enables legacy Android packaging unconditionally to reduce the size of our APKsets.
+
+(Reduces the size from ~2 GB to ~1 GB).
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index 62514ba0b341..083e6a0e0099 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -256,7 +256,7 @@ android {
+     packaging {
+         jniLibs {
+             excludes += ["**/armeabi/*.so", "**/mips/*.so", "**/mips64/*.so", "**/x86/*.so"]
+-            if (!isAppBundle) {
++            if (true) {
+                 useLegacyPackaging = true
+             }
+         }
+-- 
