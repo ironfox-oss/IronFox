@@ -1,2 +1,2 @@
-- Updated to Firefox [`154.0`](https://firefox.com/firefox/android/154.0/releasenotes/).
-- Updated to Phoenix [`2026.08.17.1`](https://codeberg.org/celenity/Phoenix/releases/tag/2026.08.17.1).
+- [Re-enabled legacy packaging for bundle builds](https://gitlab.com/ironfox-oss/IronFox/-/commit/bdfb1811baed7874bcf1d650c00d951fbb392b36) to significantly reduce the output size of APKsets.
+- Minor tweaks and adjustments.
