@@ -36,6 +36,7 @@ readonly IRONFOX_RELEASES_BASE_URL="${IRONFOX_RELEASES_URL}/ironfox/releases/${I
 
 # GitLab
 readonly IRONFOX_GITLAB_API_URL='https://gitlab.com/api/v4'
+readonly IRONFOX_GITLAB_BRANCH='main'
 readonly IRONFOX_GITLAB_PROJECT_ID='65779408'
 readonly IRONFOX_GITLAB_GENERIC_PACKAGES_URL="${IRONFOX_GITLAB_API_URL}/projects/${IRONFOX_GITLAB_PROJECT_ID}/packages/generic"
 
@@ -89,19 +90,251 @@ readonly IRONFOX_X86_64_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_X8
 readonly IRONFOX_UNIVERSAL_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_UNIVERSAL}" | "${IRONFOX_AWK}" '{print $1}')
 readonly IRONFOX_BUNDLE_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APKSET}" | "${IRONFOX_AWK}" '{print $1}')
 
-function upload_to_package_registry() {
+# Create release notes
+function create_release_notes() {
+  # Ensure our changelog (for release-specific changes) exists
+  local -r IRONFOX_CHANGELOG_FILE="${IRONFOX_ROOT}/CHANGELOG.md"
+  verify_file "${IRONFOX_CHANGELOG_FILE}" || exit 1
+
+  # Ensure our release template exists
+  local -r IRONFOX_RELEASE_TEMPLATE="${IRONFOX_TEMPLATES}/release-notes.md"
+  verify_file "${IRONFOX_RELEASE_TEMPLATE}" || exit 1
+
+  local -r IRONFOX_RELEASE_NOTES_TEMP="${IRONFOX_TEMP}/ironfox-${IRONFOX_VERSION}-release-notes-temp.md"
+  "${IRONFOX_RM}" -f "${IRONFOX_RELEASE_NOTES}" "${IRONFOX_RELEASE_NOTES_TEMP}"
+
+  "${IRONFOX_MKDIR}" -p "${IRONFOX_ARTIFACTS}" "${IRONFOX_TEMP}"
+  "${IRONFOX_CP}" -f "${IRONFOX_RELEASE_TEMPLATE}" "${IRONFOX_RELEASE_NOTES_TEMP}"
+
+  # Set our version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+
+  # Set the previous (current) version
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_URL}/ironfox/releases/latest_release.txt" --output "${IRONFOX_TEMP}/previous_release.txt"
+  local -r IRONFOX_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/previous_release.txt" | "${IRONFOX_XARGS}")
+  "${IRONFOX_SED}" -i "s|{IRONFOX_PREVIOUS_VERSION}|${IRONFOX_PREVIOUS_VERSION}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+
+  # Set our SHA512sums
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+
+  # Set CI commit + job ID
+  "${IRONFOX_SED}" -i "s|{IRONFOX_CI_COMMIT}|${IRONFOX_CI_COMMIT}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_CI_COMMIT_SHORT}|${IRONFOX_CI_COMMIT_SHORT}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_CI_JOB_ID}|${IRONFOX_CI_JOB_ID}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
+
+  # Add release-specific changes
+  local -r IRONFOX_CHANGELOG=$("${IRONFOX_CAT}" "${IRONFOX_CHANGELOG_FILE}")
+  {
+    echo "# IronFox ${IRONFOX_VERSION}"
+    echo '____'
+    echo ''
+    echo '## Changes'
+    echo ''
+    "${IRONFOX_CAT}" "${IRONFOX_ROOT}/CHANGELOG.md"
+    echo ''
+    "${IRONFOX_CAT}" "${IRONFOX_RELEASE_NOTES_TEMP}"
+  } >> "${IRONFOX_RELEASE_NOTES}"
+
+  "${IRONFOX_RM}" -f "${IRONFOX_RELEASE_NOTES_TEMP}"
+
+  echo_green_text "SUCCESS: Created release notes for IronFox: ${IRONFOX_VERSION}"
+}
+
+# Upload a release to GitLab's package registry
+function upload_to_gitlab_package_registry() {
+  function print_usage() {
+    echo "Usage: upload_to_gitlab_package_registry '/path/to/release' 'package-name'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file that should be uploaded to the GitLab package registry!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${2+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the desired package name!'
+    print_usage
+    exit 1
+  fi
+
+  # Ensure we have an API token...
+  if [[ -z "${IRONFOX_GITLAB_CI_API_TOKEN+x}" ]]; then
+    echo_red_text 'ERROR: Missing GitLab CI API Token! Please set IRONFOX_GITLAB_CI_API_TOKEN.'
+    exit 1
+  fi
+
   local -r upload_file="$1"
   local -r upload_package_name="$2"
   local -r upload_file_name="$("${IRONFOX_BASENAME}" "${upload_file}")"
+
+  # Ensure our file to upload is valid
+  verify_file "${upload_file}" || exit 1
+
   "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --no-verbose --header "PRIVATE-TOKEN: ${IRONFOX_GITLAB_CI_API_TOKEN}" \
     --upload-file "${upload_file}" \
     "${IRONFOX_GITLAB_GENERIC_PACKAGES_URL}/${upload_package_name}/${IRONFOX_VERSION}/${upload_file_name}"
 }
 
+# Publish a release to GitLab
+function publish_to_gitlab() {
+  if [[ ! -f "${IRONFOX_RELEASE_NOTES}" ]]; then
+    echo_red_text "ERROR: Missing release notes! (${IRONFOX_RELEASE_NOTES})"
+    exit 1
+  fi
+
+  # Ensure we have an API token...
+  if [[ -z "${IRONFOX_GITLAB_CI_API_TOKEN+x}" ]]; then
+    echo_red_text 'ERROR: Missing GitLab CI API Token! Please set IRONFOX_GITLAB_CI_API_TOKEN.'
+    exit 1
+  fi
+
+  local -r ironfox_release_desc=$("${IRONFOX_CAT}" "${IRONFOX_RELEASE_NOTES}")
+
+  # Attach our assets
+
+  # ironfox-{IRONFOX_VERSION}-arm64-v8a.apk
+  local -r IRONFOX_ARM64_APK_NAME="ironfox-${IRONFOX_VERSION}-arm64-v8a.apk"
+  local -r IRONFOX_ARM64_APK_URL="${IRONFOX_RELEASES_BASE_URL}/arm64-v8a/${IRONFOX_ARM64_APK_NAME}"
+  local -r IRONFOX_ARM64_APK_SHA512SUM_NAME="${IRONFOX_ARM64_APK_NAME}-sha512sum.txt"
+  local -r IRONFOX_ARM64_APK_SHA512SUM_URL="${IRONFOX_ARM64_APK_URL}-sha512sum.txt"
+  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_ARM64_APK_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_ARM64_APK_SHA512SUM_NAME}" 'apk'
+
+  # ironfox-{IRONFOX_VERSION}-armeabi-v7a.apk
+  local -r IRONFOX_ARM_APK_NAME="ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk"
+  local -r IRONFOX_ARM_APK_URL="${IRONFOX_RELEASES_BASE_URL}/armeabi-v7a/${IRONFOX_ARM_APK_NAME}"
+  local -r IRONFOX_ARM_APK_SHA512SUM_NAME="${IRONFOX_ARM_APK_NAME}-sha512sum.txt"
+  local -r IRONFOX_ARM_APK_SHA512SUM_URL="${IRONFOX_ARM_APK_URL}-sha512sum.txt"
+  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_ARM_APK_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_ARM_APK_SHA512SUM_NAME}" 'apk'
+
+  # ironfox-{IRONFOX_VERSION}-x86_64.apk
+  local -r IRONFOX_X86_64_APK_NAME="ironfox-${IRONFOX_VERSION}-x86_64.apk"
+  local -r IRONFOX_X86_64_APK_URL="${IRONFOX_RELEASES_BASE_URL}/x86_64/${IRONFOX_X86_64_APK_NAME}"
+  local -r IRONFOX_X86_64_APK_SHA512SUM_NAME="${IRONFOX_X86_64_APK_NAME}-sha512sum.txt"
+  local -r IRONFOX_X86_64_APK_SHA512SUM_URL="${IRONFOX_X86_64_APK_URL}-sha512sum.txt"
+  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_X86_64_APK_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_X86_64_APK_SHA512SUM_NAME}" 'apk'
+
+  # ironfox-{IRONFOX_VERSION}-universal.apk
+  local -r IRONFOX_UNIVERSAL_APK_NAME="ironfox-${IRONFOX_VERSION}-universal.apk"
+  local -r IRONFOX_UNIVERSAL_APK_URL="${IRONFOX_RELEASES_BASE_URL}/universal/${IRONFOX_UNIVERSAL_APK_NAME}"
+  local -r IRONFOX_UNIVERSAL_APK_SHA512SUM_NAME="${IRONFOX_UNIVERSAL_APK_NAME}-sha512sum.txt"
+  local -r IRONFOX_UNIVERSAL_APK_SHA512SUM_URL="${IRONFOX_UNIVERSAL_APK_URL}-sha512sum.txt"
+  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_UNIVERSAL_APK_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_UNIVERSAL_APK_SHA512SUM_NAME}" 'apk'
+
+  # ironfox-{IRONFOX_VERSION}.apks
+  local -r IRONFOX_APKSET_NAME="ironfox-${IRONFOX_VERSION}.apks"
+  local -r IRONFOX_APKSET_URL="${IRONFOX_RELEASES_BASE_URL}/bundle/${IRONFOX_APKSET_NAME}"
+  local -r IRONFOX_APKSET_SHA512SUM_NAME="${IRONFOX_APKSET_NAME}-sha512sum.txt"
+  local -r IRONFOX_APKSET_SHA512SUM_URL="${IRONFOX_APKSET_URL}-sha512sum.txt"
+  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_APKSET_NAME}" 'apkset'
+  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_APKSET_SHA512SUM_NAME}" 'apkset'
+
+  local -r ironfox_gitlab_release_data="$(
+    "${IRONFOX_JQ}" -Rs --arg name "v${IRONFOX_VERSION}" --arg ref "${IRONFOX_GITLAB_BRANCH}" --arg tag "v${IRONFOX_VERSION}" --arg version "${IRONFOX_VERSION}" \
+      --arg arm64_apk_name "${IRONFOX_ARM64_APK_NAME}" \
+      --arg arm64_apk_url "${IRONFOX_ARM64_APK_URL}" \
+      --arg arm64_apk_sha512sum_name "${IRONFOX_ARM64_APK_SHA512SUM_NAME}" \
+      --arg arm64_apk_sha512sum_url "${IRONFOX_ARM64_APK_SHA512SUM_URL}" \
+      --arg arm_apk_name "${IRONFOX_ARM_APK_NAME}" \
+      --arg arm_apk_url "${IRONFOX_ARM_APK_URL}" \
+      --arg arm_apk_sha512sum_name "${IRONFOX_ARM_APK_SHA512SUM_NAME}" \
+      --arg arm_apk_sha512sum_url "${IRONFOX_ARM_APK_SHA512SUM_URL}" \
+      --arg x86_64_apk_name "${IRONFOX_X86_64_APK_NAME}" \
+      --arg x86_64_apk_url "${IRONFOX_X86_64_APK_URL}" \
+      --arg x86_64_apk_sha512sum_name "${IRONFOX_X86_64_APK_SHA512SUM_NAME}" \
+      --arg x86_64_apk_sha512sum_url "${IRONFOX_X86_64_APK_SHA512SUM_URL}" \
+      --arg universal_apk_name "${IRONFOX_UNIVERSAL_APK_NAME}" \
+      --arg universal_apk_url "${IRONFOX_UNIVERSAL_APK_URL}" \
+      --arg universal_apk_sha512sum_name "${IRONFOX_UNIVERSAL_APK_SHA512SUM_NAME}" \
+      --arg universal_apk_sha512sum_url "${IRONFOX_UNIVERSAL_APK_SHA512SUM_URL}" \
+      --arg apkset_name "${IRONFOX_APKSET_NAME}" \
+      --arg apkset_url "${IRONFOX_APKSET_URL}" \
+      --arg apkset_sha512sum_name "${IRONFOX_APKSET_SHA512SUM_NAME}" \
+      --arg apkset_sha512sum_url "${IRONFOX_APKSET_SHA512SUM_URL}" \
+      '{
+      name: $name,
+      ref: $ref,
+      tag_name: $tag,
+      assets: {
+        links: [
+          {
+            name: $arm64_apk_name,
+            url: $arm64_apk_url,
+            link_type: "package"
+          },
+          {
+            name: $arm64_apk_sha512sum_name,
+            url: $arm64_apk_sha512sum_url,
+            link_type: "package"
+          },
+          {
+            name: $arm_apk_name,
+            url: $arm_apk_url,
+            link_type: "package"
+          },
+          {
+            name: $arm_apk_sha512sum_name,
+            url: $arm_apk_sha512sum_url,
+            link_type: "package"
+          },
+          {
+            name: $x86_64_apk_name,
+            url: $x86_64_apk_url,
+            link_type: "package"
+          },
+          {
+            name: $x86_64_apk_sha512sum_name,
+            url: $x86_64_apk_sha512sum_url,
+            link_type: "package"
+          },
+          {
+            name: $universal_apk_name,
+            url: $universal_apk_url,
+            link_type: "package"
+          },
+          {
+            name: $universal_apk_sha512sum_name,
+            url: $universal_apk_sha512sum_url,
+            link_type: "package"
+          },
+          {
+            name: $apkset_name,
+            url: $apkset_url,
+            link_type: "package"
+          },
+          {
+            name: $apkset_sha512sum_name,
+            url: $apkset_sha512sum_url,
+            link_type: "package"
+          }
+        ]
+      },
+      description: .
+      }' <<< "${ironfox_release_desc}"
+  )"
+
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --no-verbose --header 'Content-Type: application/json' \
+    --header "PRIVATE-TOKEN: ${IRONFOX_GITLAB_CI_API_TOKEN}" \
+    --data "${ironfox_gitlab_release_data}" \
+    --request POST \
+    "${IRONFOX_GITLAB_API_URL}/projects/${IRONFOX_GITLAB_PROJECT_ID}/releases"
+
+  # We're done! :)
+  echo_green_text "SUCCESS: Published IronFox: ${IRONFOX_VERSION} to GitLab"
+}
+
 # Pushes a file to S3
-function push_to_s3() {
+function push_file() {
   function print_usage() {
-    echo "Usage: push_to_s3 '/path/to/file' 'path/on/s3'"
+    echo "Usage: push_file '/path/to/file' 'path/on/s3'"
   }
 
   if [[ -z "${1+x}" ]]; then
@@ -167,7 +400,18 @@ function push_to_s3() {
   echo_green_text "SUCCESS: Pushed ${push_file} to S3"
 }
 
+# Creates and pushes a SHA512sum for a file to S3
 function add_sha512sum() {
+  function print_usage() {
+    echo "Usage: add_sha512sum '/path/to/file'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file that a SHA512sum should be created for'
+    print_usage
+    exit 1
+  fi
+
   local -r sha512sum_file_in="$1"
   local -r sha512sum_file_name=$("${IRONFOX_BASENAME}" "${sha512sum_file_in}")
   local -r sha512sum_file_path=$("${IRONFOX_DIRNAME}" "${sha512sum_file_in}")
@@ -177,6 +421,9 @@ function add_sha512sum() {
   else
     local -r sha512sum_s3path="$2"
   fi
+
+  # Ensure our file to create a SHA512sum for is valid
+  verify_file "${sha512sum_file_in}" || exit 1
 
   local -r sha512sum_file_out="${sha512sum_file_path}/${sha512sum_file_name}-sha512sum.txt"
 
@@ -188,112 +435,38 @@ function add_sha512sum() {
   local -r local_sha512sum=$("${IRONFOX_SHASUM}" -a 512 "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
   echo -n "${local_sha512sum}" > "${sha512sum_file_out}"
 
-  push_to_s3 "${sha512sum_file_out}" "${sha512sum_s3path}"
+  push_file "${sha512sum_file_out}" "${sha512sum_s3path}"
 }
 
-# Extract compressed artifacts
-#"${IRONFOX_MKDIR}" -p "${IRONFOX_ARTIFACTS}"
-#for archive in "${IRONFOX_ARTIFACTS}"/*.tar.xz; do
-#  [[ -f "${archive}" ]] || continue
-#  echo "Extracting ${archive}"
-#  "${IRONFOX_TAR}" xvJf "${archive}" -C "${IRONFOX_ARTIFACTS}"
-#done
+# Creates a SHA512sum for and pushes a file to S3
+function push_and_add_sha512sum() {
+  function print_usage() {
+    echo "Usage: push_and_add_sha512sum '/path/to/file' 'path/on/s3'"
+  }
 
-"${IRONFOX_MKDIR}" -vp "${IRONFOX_BUILD}"
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file that should be uploaded to S3 storage'
+    print_usage
+    exit 1
+  fi
 
-declare -a assets
-function upload_asset() {
-  local -r asset_package_name="$1"
-  local -r asset_s3_path="$2"
-  local -r asset_file="$3"
-  local -r asset_file_name="$("${IRONFOX_BASENAME}" "${asset_file}")"
+  if [[ -z "${2+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the target path on S3 storage for where the file should be uploaded'
+    print_usage
+    exit 1
+  fi
 
-  upload_to_package_registry "${asset_file}" "${asset_package_name}"
-  push_to_s3 "${asset_file}" "${asset_s3_path}"
-  add_sha512sum "${asset_file}" "${asset_s3_path}"
-}
+  local -r file_in="$1"
+  local -r s3_path_out="$2"
 
-function upload_apk_arm64() {
-  upload_asset 'apk' "ironfox/releases/${IRONFOX_VERSION}/arm64-v8a" "${IRONFOX_APK_ARM64}"
-  local -r arm64_file_name="$("${IRONFOX_BASENAME}" "${IRONFOX_APK_ARM64}")"
-  assets+=("{\"name\": \"${arm64_file_name}\",\"url\": \"${IRONFOX_RELEASES_BASE_URL}/arm64-v8a/${arm64_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${arm64_file_name}\"}")
-}
+  # Ensure our file to create a SHA512sum for and push is valid
+  verify_file "${file_in}" || exit 1
 
-function upload_apk_arm() {
-  upload_asset 'apk' "ironfox/releases/${IRONFOX_VERSION}/armeabi-v7a" "${IRONFOX_APK_ARM}"
-  local -r arm_file_name="$("${IRONFOX_BASENAME}" "${IRONFOX_APK_ARM}")"
-  assets+=("{\"name\": \"${arm_file_name}\",\"url\": \"${IRONFOX_RELEASES_BASE_URL}/armeabi-v7a/${arm_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${arm_file_name}\"}")
-}
+  # Push our file to S3
+  push_file "${file_in}" "${s3_path_out}"
 
-function upload_apk_x86_64() {
-  upload_asset 'apk' "ironfox/releases/${IRONFOX_VERSION}/x86_64" "${IRONFOX_APK_X86_64}"
-  local -r x86_64_file_name="$("${IRONFOX_BASENAME}" "${IRONFOX_APK_X86_64}")"
-  assets+=("{\"name\": \"${x86_64_file_name}\",\"url\": \"${IRONFOX_RELEASES_BASE_URL}/x86_64/${x86_64_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${x86_64_file_name}\"}")
-}
-
-function upload_apk_universal() {
-  upload_asset 'apk' "ironfox/releases/${IRONFOX_VERSION}/universal" "${IRONFOX_APK_UNIVERSAL}"
-  local -r universal_file_name="$("${IRONFOX_BASENAME}" "${IRONFOX_APK_UNIVERSAL}")"
-  assets+=("{\"name\": \"${universal_file_name}\",\"url\": \"${IRONFOX_RELEASES_BASE_URL}/universal/${universal_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${universal_file_name}\"}")
-}
-
-function upload_apkset() {
-  upload_asset 'apkset' "ironfox/releases/${IRONFOX_VERSION}/bundle" "${IRONFOX_APKSET}"
-  local -r bundle_file_name="$("${IRONFOX_BASENAME}" "${IRONFOX_APKSET}")"
-  assets+=("{\"name\": \"${bundle_file_name}\",\"url\": \"${IRONFOX_RELEASES_BASE_URL}/bundle/${bundle_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${bundle_file_name}\"}")
-}
-
-# Create release notes
-function create_release_notes() {
-  # Ensure our changelog (for release-specific changes) exists
-  local -r IRONFOX_CHANGELOG_FILE="${IRONFOX_ROOT}/CHANGELOG.md"
-  verify_file "${IRONFOX_CHANGELOG_FILE}" || exit 1
-
-  # Ensure our release template exists
-  local -r IRONFOX_RELEASE_TEMPLATE="${IRONFOX_TEMPLATES}/release-notes.md"
-  verify_file "${IRONFOX_RELEASE_TEMPLATE}" || exit 1
-
-  local -r IRONFOX_RELEASE_NOTES_TEMP="${IRONFOX_TEMP}/ironfox-${IRONFOX_VERSION}-release-notes-temp.md"
-  "${IRONFOX_RM}" -f "${IRONFOX_RELEASE_NOTES}" "${IRONFOX_RELEASE_NOTES_TEMP}"
-
-  "${IRONFOX_MKDIR}" -p "${IRONFOX_ARTIFACTS}" "${IRONFOX_TEMP}"
-  "${IRONFOX_CP}" -f "${IRONFOX_RELEASE_TEMPLATE}" "${IRONFOX_RELEASE_NOTES_TEMP}"
-
-  # Set our version
-  "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-
-  # Set the previous (current) version
-  local -r IRONFOX_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_release.txt" | "${IRONFOX_XARGS}")
-  "${IRONFOX_SED}" -i "s|{IRONFOX_PREVIOUS_VERSION}|${IRONFOX_PREVIOUS_VERSION}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-
-  # Set our SHA512sums
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-
-  # Set CI commit + job ID
-  "${IRONFOX_SED}" -i "s|{IRONFOX_CI_COMMIT}|${IRONFOX_CI_COMMIT}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_CI_COMMIT_SHORT}|${IRONFOX_CI_COMMIT_SHORT}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_CI_JOB_ID}|${IRONFOX_CI_JOB_ID}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
-
-  # Add release-specific changes
-  local -r IRONFOX_CHANGELOG=$("${IRONFOX_CAT}" "${IRONFOX_CHANGELOG_FILE}")
-  {
-    echo "# IronFox ${IRONFOX_VERSION}"
-    echo '____'
-    echo ''
-    echo '## Changes'
-    echo ''
-    "${IRONFOX_CAT}" "${IRONFOX_ROOT}/CHANGELOG.md"
-    echo ''
-    "${IRONFOX_CAT}" "${IRONFOX_RELEASE_NOTES_TEMP}"
-  } >> "${IRONFOX_RELEASE_NOTES}"
-
-  "${IRONFOX_RM}" -f "${IRONFOX_RELEASE_NOTES_TEMP}"
-
-  echo_green_text "SUCCESS: Created release notes for IronFox: ${IRONFOX_VERSION}"
+  # Create and push a SHA512sum for our file to S3
+  add_sha512sum "${file_in}" "${s3_path_out}"
 }
 
 # Create our universal updates.json
@@ -301,64 +474,89 @@ function create_release_notes() {
 function create_universal_json() {
   "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/updates.json" "${IRONFOX_ROOT}/updates.json"
 
-  "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|ironfox-{IRONFOX_VERSION}|ironfox-${IRONFOX_VERSION}|" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|g" "${IRONFOX_ROOT}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
 
-  push_to_s3 "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
-  add_sha512sum "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
+  push_and_add_sha512sum "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
 }
 
-# Upload packages to package registry
-upload_apk_arm64
-upload_apk_arm
-upload_apk_x86_64
-upload_apk_universal
-upload_apkset
+# Push IronFox for a desired architecture to S3 storage
+function _push_ironfox() {
+  function print_usage() {
+    echo "Usage: _push_ironfox 'architecture'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the architecture you wou would like to push IronFox for'
+    print_usage
+    exit 1
+  fi
+
+  local -r ironfox_arch="$1"
+
+  # Set our build
+  if [[ "${ironfox_arch}" == 'bundle' ]]; then
+    local -r ironfox_file="${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks"
+  else
+    local -r ironfox_file="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-${ironfox_arch}.apk"
+  fi
+
+  push_and_add_sha512sum "${ironfox_file}" "ironfox/releases/${IRONFOX_VERSION}/${ironfox_arch}"
+}
+
+# Push IronFox to S3 storage
+function push_ironfox() {
+  # ARM64
+  _push_ironfox 'arm64-v8a'
+
+  # ARM
+  _push_ironfox 'armeabi-v7a'
+
+  # x86_64
+  _push_ironfox 'x86_64'
+
+  # Universal
+  _push_ironfox 'universal'
+
+  # Bundle
+  _push_ironfox 'bundle'
+
+  # Get the 2 previous IronFox versions
+  if [[ ! -f "${IRONFOX_TEMP}/previous_release.txt" ]]; then
+    # (`previous_release.txt` should already be downloaded from `create_release_notes`, but if it is missing for some reason, download it)
+    "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_URL}/ironfox/releases/latest_release.txt" --output "${IRONFOX_TEMP}/previous_release.txt"
+  fi
+  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_URL}/ironfox/releases/previous_release.txt" --output "${IRONFOX_TEMP}/previous_previous_release.txt"
+
+  # Update the current IronFox version
+  "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
+  "${IRONFOX_TOUCH}" "${IRONFOX_TEMP}/latest_release.txt"
+  echo -n "${IRONFOX_VERSION}" > "${IRONFOX_TEMP}/latest_release.txt"
+  push_and_add_sha512sum "${IRONFOX_TEMP}/latest_release.txt" 'ironfox/releases'
+
+  # Update the 2 previous versions
+  push_and_add_sha512sum "${IRONFOX_TEMP}/previous_release.txt" 'ironfox/releases'
+  push_and_add_sha512sum "${IRONFOX_TEMP}/previous_previous_release.txt" 'ironfox/releases'
+
+  # Add release notes
+  push_and_add_sha512sum "${IRONFOX_RELEASE_NOTES}" "ironfox/releases/${IRONFOX_VERSION}"
+
+  echo_green_text "SUCCESS: Pushed IronFox: ${IRONFOX_VERSION} to ${IRONFOX_RELEASES_URL}"
+}
+
+# First, create our release notes
+create_release_notes
+
+# Push IronFox to S3
+push_ironfox
+
+# Create a GitLab release
+publish_to_gitlab
 
 # Update our universal updates.json file
 ## (ex. used by Obtainium)
 create_universal_json
-
-# Because we now upload all releases to releases.ironfoxoss.org, we only want to keep the last 3 releases in ex. F-Droid
-## In order to do so, we need to store/upload the current and prior 2 versions of IronFox as text files
-"${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_URL}/ironfox/releases/latest_release.txt" --output "${IRONFOX_ROOT}/current-latest_release.txt"
-"${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_URL}/ironfox/releases/previous_release.txt" --output "${IRONFOX_ROOT}/current-previous_release.txt"
-
-echo -n "${IRONFOX_VERSION}" > "${IRONFOX_ROOT}/latest_release.txt"
-"${IRONFOX_CP}" "${IRONFOX_ROOT}/current-latest_release.txt" "${IRONFOX_ROOT}/previous_release.txt"
-"${IRONFOX_CP}" "${IRONFOX_ROOT}/current-previous_release.txt" "${IRONFOX_ROOT}/previous_previous_release.txt"
-
-push_to_s3 "${IRONFOX_ROOT}/latest_release.txt" 'ironfox/releases'
-add_sha512sum "${IRONFOX_ROOT}/latest_release.txt" 'ironfox/releases'
-
-push_to_s3 "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
-add_sha512sum "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
-
-push_to_s3 "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
-add_sha512sum "${IRONFOX_ROOT}/previous_previous_release.txt" 'ironfox/releases'
-
-# Create release notes
-## (NOTE: This needs to run after we have previous_release.txt above, so that we can properly set the previous version)
-create_release_notes
-
-# Push release notes
-push_to_s3 "${IRONFOX_RELEASE_NOTES}" "ironfox/releases/${IRONFOX_VERSION}"
-add_sha512sum "${IRONFOX_RELEASE_NOTES}" "ironfox/releases/${IRONFOX_VERSION}"
-
-# Add assets to GitLab release
-{
-  echo "---"
-  echo "name: IronFox ${IRONFOX_VERSION}"
-  echo "tag-name: v${IRONFOX_VERSION}"
-  echo "description: |"
-  "${IRONFOX_AWK}" '{print "  " $0}' < "${IRONFOX_RELEASE_NOTES}"
-  echo "assets-link:"
-  for asset in "${assets[@]}"; do
-    echo "  - '${asset}'"
-  done
-} > "${IRONFOX_BUILD}/release.yml"
