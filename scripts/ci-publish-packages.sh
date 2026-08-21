@@ -202,40 +202,40 @@ function publish_to_gitlab() {
   local -r IRONFOX_ARM64_APK_URL="${IRONFOX_RELEASES_BASE_URL}/arm64-v8a/${IRONFOX_ARM64_APK_NAME}"
   local -r IRONFOX_ARM64_APK_SHA512SUM_NAME="${IRONFOX_ARM64_APK_NAME}-sha512sum.txt"
   local -r IRONFOX_ARM64_APK_SHA512SUM_URL="${IRONFOX_ARM64_APK_URL}-sha512sum.txt"
-  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_ARM64_APK_NAME}" 'apk'
-  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_ARM64_APK_SHA512SUM_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_APK_ARTIFACTS}/${IRONFOX_ARM64_APK_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_APK_ARTIFACTS}/${IRONFOX_ARM64_APK_SHA512SUM_NAME}" 'apk'
 
   # ironfox-{IRONFOX_VERSION}-armeabi-v7a.apk
   local -r IRONFOX_ARM_APK_NAME="ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk"
   local -r IRONFOX_ARM_APK_URL="${IRONFOX_RELEASES_BASE_URL}/armeabi-v7a/${IRONFOX_ARM_APK_NAME}"
   local -r IRONFOX_ARM_APK_SHA512SUM_NAME="${IRONFOX_ARM_APK_NAME}-sha512sum.txt"
   local -r IRONFOX_ARM_APK_SHA512SUM_URL="${IRONFOX_ARM_APK_URL}-sha512sum.txt"
-  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_ARM_APK_NAME}" 'apk'
-  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_ARM_APK_SHA512SUM_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_APK_ARTIFACTS}/${IRONFOX_ARM_APK_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_APK_ARTIFACTS}/${IRONFOX_ARM_APK_SHA512SUM_NAME}" 'apk'
 
   # ironfox-{IRONFOX_VERSION}-x86_64.apk
   local -r IRONFOX_X86_64_APK_NAME="ironfox-${IRONFOX_VERSION}-x86_64.apk"
   local -r IRONFOX_X86_64_APK_URL="${IRONFOX_RELEASES_BASE_URL}/x86_64/${IRONFOX_X86_64_APK_NAME}"
   local -r IRONFOX_X86_64_APK_SHA512SUM_NAME="${IRONFOX_X86_64_APK_NAME}-sha512sum.txt"
   local -r IRONFOX_X86_64_APK_SHA512SUM_URL="${IRONFOX_X86_64_APK_URL}-sha512sum.txt"
-  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_X86_64_APK_NAME}" 'apk'
-  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_X86_64_APK_SHA512SUM_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_APK_ARTIFACTS}/${IRONFOX_X86_64_APK_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_APK_ARTIFACTS}/${IRONFOX_X86_64_APK_SHA512SUM_NAME}" 'apk'
 
   # ironfox-{IRONFOX_VERSION}-universal.apk
   local -r IRONFOX_UNIVERSAL_APK_NAME="ironfox-${IRONFOX_VERSION}-universal.apk"
   local -r IRONFOX_UNIVERSAL_APK_URL="${IRONFOX_RELEASES_BASE_URL}/universal/${IRONFOX_UNIVERSAL_APK_NAME}"
   local -r IRONFOX_UNIVERSAL_APK_SHA512SUM_NAME="${IRONFOX_UNIVERSAL_APK_NAME}-sha512sum.txt"
   local -r IRONFOX_UNIVERSAL_APK_SHA512SUM_URL="${IRONFOX_UNIVERSAL_APK_URL}-sha512sum.txt"
-  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_UNIVERSAL_APK_NAME}" 'apk'
-  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_UNIVERSAL_APK_SHA512SUM_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_APK_ARTIFACTS}/${IRONFOX_UNIVERSAL_APK_NAME}" 'apk'
+  upload_to_gitlab_package_registry "${IRONFOX_APK_ARTIFACTS}/${IRONFOX_UNIVERSAL_APK_SHA512SUM_NAME}" 'apk'
 
   # ironfox-{IRONFOX_VERSION}.apks
   local -r IRONFOX_APKSET_NAME="ironfox-${IRONFOX_VERSION}.apks"
   local -r IRONFOX_APKSET_URL="${IRONFOX_RELEASES_BASE_URL}/bundle/${IRONFOX_APKSET_NAME}"
   local -r IRONFOX_APKSET_SHA512SUM_NAME="${IRONFOX_APKSET_NAME}-sha512sum.txt"
   local -r IRONFOX_APKSET_SHA512SUM_URL="${IRONFOX_APKSET_URL}-sha512sum.txt"
-  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_APKSET_NAME}" 'apkset'
-  upload_to_gitlab_package_registry "${IRONFOX_ARTIFACTS}/${IRONFOX_APKSET_SHA512SUM_NAME}" 'apkset'
+  upload_to_gitlab_package_registry "${IRONFOX_APKS_ARTIFACTS}/${IRONFOX_APKSET_NAME}" 'apkset'
+  upload_to_gitlab_package_registry "${IRONFOX_APKS_ARTIFACTS}/${IRONFOX_APKSET_SHA512SUM_NAME}" 'apkset'
 
   local -r ironfox_gitlab_release_data="$(
     "${IRONFOX_JQ}" -Rs --arg name "v${IRONFOX_VERSION}" --arg ref "${IRONFOX_GITLAB_BRANCH}" --arg tag "v${IRONFOX_VERSION}" --arg version "${IRONFOX_VERSION}" \
