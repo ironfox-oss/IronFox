@@ -14,11 +14,7 @@ source $(dirname $0)/env.sh
 source "${IRONFOX_UTILS}"
 
 # Set verbosity
-if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
-  set -x
-else
-  set +x
-fi
+set_verbosity
 
 # Check if the hook has already been set-up
 if [[ -f "${IRONFOX_BUILD}/set-hook" ]]; then
