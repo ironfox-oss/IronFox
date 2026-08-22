@@ -53,11 +53,11 @@ variables: &common_variables
 
 stages:
   - lint
-  - build_site
   - build_docker
   - build_ironfox
   - release
   - build_fdroid
+  - build_site
 
 # Fast, lightweight gate: shellcheck + shfmt over the shell scripts.
 # Runs first so a lint failure stops the pipeline before the multi-hour builds.
@@ -107,6 +107,7 @@ update-site-repo:
       - scripts/patches.yaml
       - scripts/ci-update-site.sh
       - .gitlab-ci.yml
+      - CHANGELOG.md
   tags:
     - saas-linux-2xlarge-amd64
   variables:
