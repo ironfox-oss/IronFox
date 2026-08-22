@@ -8,16 +8,12 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Set verbosity
+set_verbosity
+
 if [[ -z "${IRONFOX_FROM_SOURCES+x}" ]]; then
   echo_red_text "ERROR: Do not call get_sources-if.sh directly. Instead, use get_sources.sh." >&1
   exit 1
-fi
-
-# Set verbosity
-if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
-  set -x
-else
-  set +x
 fi
 
 readonly target="$1"

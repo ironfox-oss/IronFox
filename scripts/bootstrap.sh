@@ -13,15 +13,11 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Set verbosity
+set_verbosity
+
 # Get our platform, OS, and architecture
 source "${IRONFOX_ENV_HELPERS}"
-
-# Set verbosity
-if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
-  set -x
-else
-  set +x
-fi
 
 function error_fn() {
   echo

@@ -32,19 +32,15 @@ fi
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Set verbosity
+set_verbosity
+
 # Include patch utilities
 source "${IRONFOX_SCRIPTS}/patches.sh"
 
 if [[ -z "${IRONFOX_FROM_PREBUILD+x}" ]]; then
   echo_red_text "ERROR: Do not call prebuild-if.sh directly. Instead, use prebuild.sh." >&1
   exit 1
-fi
-
-# Set verbosity
-if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
-  set -x
-else
-  set +x
 fi
 
 if [[ -f "${IRONFOX_BUILD}/finished-prebuild" ]]; then

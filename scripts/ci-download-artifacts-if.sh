@@ -8,19 +8,15 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Set verbosity
+set_verbosity
+
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
 if [[ -z "${IRONFOX_FROM_AR_DOWN+x}" ]]; then
   echo_red_text 'ERROR: Do not call ci-download-artifacts-if.sh directly. Instead, use ci-download-artifacts.sh.' >&1
   exit 1
-fi
-
-# Set verbosity
-if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
-  set -x
-else
-  set +x
 fi
 
 if [[ "${IRONFOX_CI}" != 1 ]]; then

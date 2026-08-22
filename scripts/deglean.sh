@@ -12,11 +12,7 @@ source $(dirname $0)/env.sh
 source "${IRONFOX_UTILS}"
 
 # Set verbosity
-if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
-  set -x
-else
-  set +x
-fi
+set_verbosity
 
 # Set-up target parameters
 if [[ -z "${1+x}" ]]; then

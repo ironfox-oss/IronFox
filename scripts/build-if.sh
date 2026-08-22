@@ -28,6 +28,9 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Set verbosity
+set_verbosity
+
 if [[ -z "${IRONFOX_FROM_BUILD+x}" ]]; then
   echo_red_text 'ERROR: Do not call build-if.sh directly. Instead, use build.sh.' >&1
   exit 1
@@ -36,13 +39,6 @@ fi
 if [[ ! -f "${IRONFOX_BUILD}/finished-prebuild" ]]; then
   echo_red_text 'ERROR: Do not run build.sh until after you have ran prebuild.sh.'
   exit 1
-fi
-
-# Set verbosity
-if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
-  set -x
-else
-  set +x
 fi
 
 # Set-up target parameters
