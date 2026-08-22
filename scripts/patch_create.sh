@@ -15,15 +15,11 @@ source "${IRONFOX_UTILS}"
 source "${IRONFOX_VERSIONS}"
 
 # Set verbosity
-if [[ "${IRONFOX_VERBOSE}" == 1 ]]; then
-  set -x
-else
-  set +x
-fi
+set_verbosity
 
 # Set timezone to UTC for consistency
 unset TZ
-export TZ="UTC"
+export TZ='UTC'
 
 echo -e ""
 echo_red_text "Welcome to the IronFox patch creation script!"
