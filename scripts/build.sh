@@ -75,3 +75,41 @@ if [[ "${IRONFOX_SIGN}" == 1 ]] && [[ "${IRONFOX_BUILT_FENIX}" == 1 ]]; then
     /bin/bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}"
   fi
 fi
+
+# Offer to install IronFox via ADB
+if [[ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]]; then
+  echo_red_text 'Would you like to install IronFox to a connected device?'
+  read -p "If you'd like to install IronFox, please ensure your device is connected before proceeding. [y/N] " -n 1 -r
+  echo
+  if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+    # Ensure we have ADB
+    verify_exec "${IRONFOX_ADB}" 'IRONFOX_ADB' || exit 1
+    "${IRONFOX_ADB}" devices
+    if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+      # On OS X, the user may need to accept a prompt to allow their device to connect,
+      ## so wait to ensure we allow them to accept it
+      "${IRONFOX_SLEEP}" 6
+    fi
+    if [[ "${target}" == 'bundle' ]]; then
+      # If we built a bundle, install the universal APK
+      verify_file_with_env "${IRONFOX_OUTPUTS_UNIVERSAL}" 'IRONFOX_OUTPUTS_UNIVERSAL' || exit 1
+      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_UNIVERSAL}"
+    elif [[ "${target}" == 'arm64' ]]; then
+      # Install the ARM64 APK
+      verify_file_with_env "${IRONFOX_OUTPUTS_ARM64}" 'IRONFOX_OUTPUTS_ARM64' || exit 1
+      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM64}"
+    elif [[ "${target}" == 'arm' ]]; then
+      # Install the ARM APK
+      verify_file_with_env "${IRONFOX_OUTPUTS_ARM}" 'IRONFOX_OUTPUTS_ARM' || exit 1
+      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM}"
+    elif [[ "${target}" == 'x86_64' ]]; then
+      # Install the x86_64 APK
+      verify_file_with_env "${IRONFOX_OUTPUTS_X86_64}" 'IRONFOX_OUTPUTS_X86_64' || exit 1
+      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_X86_64}"
+    fi
+    # Now that the app is installed, we can kill the server
+    "${IRONFOX_ADB}" kill-server
+  else
+    exit 0
+  fi
+fi
