@@ -11,6 +11,9 @@ __pycache__/
 # Build directory - stuff we download/generate goes here
 /build/
 
+# Outputs
+/outputs/
+
 # External repositories
 /external/
 

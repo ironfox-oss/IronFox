@@ -118,7 +118,7 @@ readonly IRONFOX_VERSIONS="${IRONFOX_SCRIPTS}/versions.sh"
 export IRONFOX_VERSIONS
 
 # IronFox outputs directory
-readonly IRONFOX_OUTPUTS_DEFAULT="${IRONFOX_BUILD}/outputs"
+readonly IRONFOX_OUTPUTS_DEFAULT="${IRONFOX_ROOT}/outputs"
 if [[ -z "${IRONFOX_OUTPUTS+x}" ]]; then
   IRONFOX_OUTPUTS="${IRONFOX_OUTPUTS_DEFAULT}"
 fi
