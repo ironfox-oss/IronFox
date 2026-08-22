@@ -4,9 +4,6 @@ set -euo pipefail
 
 # S3 utility functions
 
-# Ensure this is never ran with xtrace...
-set +x
-
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   /bin/bash $(dirname $0)/env.sh
@@ -15,6 +12,9 @@ source $(dirname $0)/env.sh
 
 # Include utilities
 source "${IRONFOX_UTILS}"
+
+# Set verbosity
+set_verbosity
 
 # Push a file to S3 storage
 function push_file() {
@@ -135,6 +135,9 @@ function push_file() {
       ;;
   esac
 
+  # Ensure we're not running with xtrace at this point...
+  set +x
+
   local -r s3_access_key=$("${IRONFOX_CAT}" "${s3_access_key_file}" | "${IRONFOX_XARGS}")
   local -r s3_bucket_name=$("${IRONFOX_CAT}" "${s3_bucket_name_file}" | "${IRONFOX_XARGS}")
   local -r s3_endpoint=$("${IRONFOX_CAT}" "${s3_endpoint_file}" | "${IRONFOX_XARGS}")
@@ -154,6 +157,9 @@ function push_file() {
     --host="${s3_endpoint}" \
     --host-bucket="${s3_endpoint}"
   echo_green_text "SUCCESS: Pushed ${push_file} to S3"
+
+  # Set verbosity
+  set_verbosity
 }
 
 # Create and push a SHA512sum for a file to S3 storage
