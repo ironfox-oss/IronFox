@@ -6,9 +6,6 @@
 set -euo pipefail
 
 # Set-up our environment
-if [[ -z "${IRONFOX_CI+x}" ]]; then
-  export IRONFOX_CI=1
-fi
 source $(dirname $0)/env.sh
 
 # Include utilities
