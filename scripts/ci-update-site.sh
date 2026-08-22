@@ -82,7 +82,7 @@ pushd "${IRONFOX_SITE_REPO}"
 source "${IRONFOX_PYENV}"
 "${IRONFOX_PYTHON}" ./scripts/gen_patch_pages.py "${IRONFOX_SCRIPTS}/patches.yaml"
 
-if [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_PROD_BRANCH}" ]]; then
+if true; then
   # Update version name
   "${IRONFOX_SED}" -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_VERSION}\";/g" \
     ./src/version.ts
