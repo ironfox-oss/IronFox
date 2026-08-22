@@ -17,6 +17,9 @@ source "$(realpath $(dirname "$0"))/env.sh"
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Include S3 utilities
+source "${IRONFOX_S3_UTILS}"
+
 if [[ "${IRONFOX_CI}" != 1 ]]; then
   echo_red_text "ERROR: $0 should only be called from CI!"
   exit 1
@@ -89,6 +92,39 @@ readonly IRONFOX_ARM_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_ARM}"
 readonly IRONFOX_X86_64_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_X86_64}" | "${IRONFOX_AWK}" '{print $1}')
 readonly IRONFOX_UNIVERSAL_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_UNIVERSAL}" | "${IRONFOX_AWK}" '{print $1}')
 readonly IRONFOX_BUNDLE_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APKSET}" | "${IRONFOX_AWK}" '{print $1}')
+
+# Push a file with a SHA512sum to S3 storage
+function push_to_s3() {
+  function print_usage() {
+    echo "Usage: push_to_s3 '/path/to/file' 'path/on/s3'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file that should be uploaded to S3 storage!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${2+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the target path on S3 storage for where the file should be uploaded!'
+    print_usage
+    exit 1
+  fi
+
+  local -r push_file="$1"
+  local -r s3_path="$2"
+
+  local -r s3_access_key_file="${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}"
+  local -r s3_bucket_name_file="${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}"
+  local -r s3_endpoint_file="${IRONFOX_RELEASES_S3_ENDPOINT_FILE}"
+  local -r s3_secret_key_file="${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
+
+  # Ensure our file to push is valid
+  verify_file "${push_file}" || exit 1
+
+  # Create and push a SHA512sum for our file to S3 storage
+  push_and_add_sha512sum "${push_file}" "${s3_path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
+}
 
 # Create release notes
 function create_release_notes() {
@@ -331,144 +367,6 @@ function publish_to_gitlab() {
   echo_green_text "SUCCESS: Published IronFox: ${IRONFOX_VERSION} to GitLab"
 }
 
-# Pushes a file to S3
-function push_file() {
-  function print_usage() {
-    echo "Usage: push_file '/path/to/file' 'path/on/s3'"
-  }
-
-  if [[ -z "${1+x}" ]]; then
-    echo_red_text 'ERROR: Please specify the path to a file that should be uploaded to S3 storage'
-    print_usage
-    exit 1
-  fi
-
-  if [[ -z "${2+x}" ]]; then
-    echo_red_text 'ERROR: Please specify the target path on S3 storage for where the file should be uploaded'
-    print_usage
-    exit 1
-  fi
-
-  local -r push_file="$1"
-  local -r s3_path="$2"
-  local -r s3_full_path="${s3_path}/$("${IRONFOX_BASENAME}" "${push_file}")"
-
-  # Ensure our file to push is valid
-  verify_file "${push_file}" || exit 1
-
-  # Set our MIME type
-  case "${push_file}" in
-    *.apk)
-      local -r mime_type='application/vnd.android.package-archive'
-      ;;
-    *.apks)
-      local -r mime_type='application/vnd.android.package-archive'
-      ;;
-    *.json)
-      local -r mime_type='application/json'
-      ;;
-    *.md)
-      local -r mime_type='text/markdown'
-      ;;
-    *.txt)
-      local -r mime_type='text/plain'
-      ;;
-    *)
-      echo_red_text "ERROR: Unsupported file type: ${push_file}"
-      exit 1
-      ;;
-  esac
-
-  local -r s3_access_key=$("${IRONFOX_CAT}" "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" | "${IRONFOX_XARGS}")
-  local -r s3_bucket_name=$("${IRONFOX_CAT}" "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" | "${IRONFOX_XARGS}")
-  local -r s3_endpoint=$("${IRONFOX_CAT}" "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" | "${IRONFOX_XARGS}")
-  local -r s3_secret_key=$("${IRONFOX_CAT}" "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" | "${IRONFOX_XARGS}")
-
-  if [[ "${s3_path}" == 'root' ]]; then
-    local -r s3_target_path="s3://${s3_bucket_name}"
-  else
-    local -r s3_target_path="s3://${s3_bucket_name}/${s3_full_path}"
-  fi
-
-  echo_red_text "Pushing ${push_file} to S3..."
-  source "${IRONFOX_PYENV}"
-  "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} --mime-type="${mime_type}" put "${push_file}" "${s3_target_path}" \
-    --access_key="${s3_access_key}" \
-    --secret_key="${s3_secret_key}" \
-    --host="${s3_endpoint}" \
-    --host-bucket="${s3_endpoint}"
-  echo_green_text "SUCCESS: Pushed ${push_file} to S3"
-}
-
-# Creates and pushes a SHA512sum for a file to S3
-function add_sha512sum() {
-  function print_usage() {
-    echo "Usage: add_sha512sum '/path/to/file'"
-  }
-
-  if [[ -z "${1+x}" ]]; then
-    echo_red_text 'ERROR: Please specify the path to a file that a SHA512sum should be created for'
-    print_usage
-    exit 1
-  fi
-
-  local -r sha512sum_file_in="$1"
-  local -r sha512sum_file_name=$("${IRONFOX_BASENAME}" "${sha512sum_file_in}")
-  local -r sha512sum_file_path=$("${IRONFOX_DIRNAME}" "${sha512sum_file_in}")
-
-  if [[ -z "${2+x}" ]]; then
-    local -r sha512sum_s3path=$("${IRONFOX_BASENAME}" "${sha512sum_file_path}" | "${IRONFOX_AWK}" '{print tolower($0)}')
-  else
-    local -r sha512sum_s3path="$2"
-  fi
-
-  # Ensure our file to create a SHA512sum for is valid
-  verify_file "${sha512sum_file_in}" || exit 1
-
-  local -r sha512sum_file_out="${sha512sum_file_path}/${sha512sum_file_name}-sha512sum.txt"
-
-  # If there's already a SHA512sum file, remove it
-  if [[ -f "${sha512sum_file_out}" ]]; then
-    "${IRONFOX_RM}" -f "${sha512sum_file_out}"
-  fi
-
-  local -r local_sha512sum=$("${IRONFOX_SHASUM}" -a 512 "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
-  echo -n "${local_sha512sum}" > "${sha512sum_file_out}"
-
-  push_file "${sha512sum_file_out}" "${sha512sum_s3path}"
-}
-
-# Creates a SHA512sum for and pushes a file to S3
-function push_and_add_sha512sum() {
-  function print_usage() {
-    echo "Usage: push_and_add_sha512sum '/path/to/file' 'path/on/s3'"
-  }
-
-  if [[ -z "${1+x}" ]]; then
-    echo_red_text 'ERROR: Please specify the path to a file that should be uploaded to S3 storage'
-    print_usage
-    exit 1
-  fi
-
-  if [[ -z "${2+x}" ]]; then
-    echo_red_text 'ERROR: Please specify the target path on S3 storage for where the file should be uploaded'
-    print_usage
-    exit 1
-  fi
-
-  local -r file_in="$1"
-  local -r s3_path_out="$2"
-
-  # Ensure our file to create a SHA512sum for and push is valid
-  verify_file "${file_in}" || exit 1
-
-  # Push our file to S3
-  push_file "${file_in}" "${s3_path_out}"
-
-  # Create and push a SHA512sum for our file to S3
-  add_sha512sum "${file_in}" "${s3_path_out}"
-}
-
 # Create our universal updates.json
 ## (ex. used by Obtainium)
 function create_universal_json() {
@@ -481,7 +379,7 @@ function create_universal_json() {
   "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
   "${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
 
-  push_and_add_sha512sum "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
+  push_to_s3 "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
 }
 
 # Push IronFox for a desired architecture to S3 storage
@@ -505,7 +403,7 @@ function _push_ironfox() {
     local -r ironfox_file="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-${ironfox_arch}.apk"
   fi
 
-  push_and_add_sha512sum "${ironfox_file}" "ironfox/releases/${IRONFOX_VERSION}/${ironfox_arch}"
+  push_to_s3 "${ironfox_file}" "ironfox/releases/${IRONFOX_VERSION}/${ironfox_arch}"
 }
 
 # Push IronFox to S3 storage
@@ -536,14 +434,14 @@ function push_ironfox() {
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
   "${IRONFOX_TOUCH}" "${IRONFOX_TEMP}/latest_release.txt"
   echo -n "${IRONFOX_VERSION}" > "${IRONFOX_TEMP}/latest_release.txt"
-  push_and_add_sha512sum "${IRONFOX_TEMP}/latest_release.txt" 'ironfox/releases'
+  push_to_s3 "${IRONFOX_TEMP}/latest_release.txt" 'ironfox/releases'
 
   # Update the 2 previous versions
-  push_and_add_sha512sum "${IRONFOX_TEMP}/previous_release.txt" 'ironfox/releases'
-  push_and_add_sha512sum "${IRONFOX_TEMP}/previous_previous_release.txt" 'ironfox/releases'
+  push_to_s3 "${IRONFOX_TEMP}/previous_release.txt" 'ironfox/releases'
+  push_to_s3 "${IRONFOX_TEMP}/previous_previous_release.txt" 'ironfox/releases'
 
   # Add release notes
-  push_and_add_sha512sum "${IRONFOX_RELEASE_NOTES}" "ironfox/releases/${IRONFOX_VERSION}"
+  push_to_s3 "${IRONFOX_RELEASE_NOTES}" "ironfox/releases/${IRONFOX_VERSION}"
 
   echo_green_text "SUCCESS: Pushed IronFox: ${IRONFOX_VERSION} to ${IRONFOX_RELEASES_URL}"
 }

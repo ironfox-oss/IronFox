@@ -32,6 +32,11 @@ fi
 readonly IRONFOX_UTILS="${IRONFOX_SCRIPTS}/utilities.sh"
 export IRONFOX_UTILS
 
+# IronFox S3 utilities
+# (For CI)
+readonly IRONFOX_S3_UTILS="${IRONFOX_SCRIPTS}/s3-utilities.sh"
+export IRONFOX_S3_UTILS
+
 # Tools
 readonly IRONFOX_TOOLS="${IRONFOX_ROOT}/tools"
 export IRONFOX_TOOLS
