@@ -50,6 +50,7 @@ function sign_bundle() {
     --ks-pass="file:/${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" \
     --ks-key-alias="${IRONFOX_ANDROID_KEYSTORE_KEY_ALIAS}" \
     --key-pass="file:/${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" \
+    --mode='universal' \
     --overwrite
 
   echo_green_text 'SUCCESS: Created signed bundleset'
