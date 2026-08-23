@@ -11,7 +11,6 @@ pref("browser.ironfox.const.IRONFOX_APP_NAME_PRETTY",           "@IRONFOX_APP_NA
 pref("browser.ironfox.const.IRONFOX_BUGS_URL",                  "@IRONFOX_BUGS_URL@", locked);
 pref("browser.ironfox.const.IRONFOX_CHANNEL",                   "@IRONFOX_CHANNEL@", locked);
 pref("browser.ironfox.const.IRONFOX_DEFAULT_DOH_URL",           "@IRONFOX_DEFAULT_DOH_URL@", locked);
-pref("browser.ironfox.const.IRONFOX_DEFAULT_UBO_ASSETS_URL",    "@IRONFOX_DEFAULT_UBO_ASSETS_URL@", locked);
 pref("browser.ironfox.const.IRONFOX_FAQ_URL",                   "@IRONFOX_FAQ_URL@", locked);
 pref("browser.ironfox.const.IRONFOX_RELEASES_URL",              "@IRONFOX_RELEASES_URL@", locked);
 pref("browser.ironfox.const.IRONFOX_REPO_GIT_URL",              "@IRONFOX_REPO_GIT_URL@", locked);

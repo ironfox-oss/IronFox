@@ -22,7 +22,6 @@ android {
     buildConfigField 'String', "IRONFOX_BUGS_URL",                  "\"${gradle.mozconfig.defines.IRONFOX_BUGS_URL}\"";
     buildConfigField 'String', "IRONFOX_CHANNEL",                   "\"${gradle.mozconfig.defines.IRONFOX_CHANNEL}\"";
     buildConfigField 'String', "IRONFOX_DEFAULT_DOH_URL",           "\"${gradle.mozconfig.defines.IRONFOX_DEFAULT_DOH_URL}\"";
-    buildConfigField 'String', "IRONFOX_DEFAULT_UBO_ASSETS_URL",    "\"${gradle.mozconfig.defines.IRONFOX_DEFAULT_UBO_ASSETS_URL}\"";
     buildConfigField 'String', "IRONFOX_FAQ_URL",                   "\"${gradle.mozconfig.defines.IRONFOX_FAQ_URL}\"";
     buildConfigField 'boolean', "IRONFOX_NIGHTLY",                  gradle.mozconfig.defines.IRONFOX_NIGHTLY ? 'true' : 'false';
     buildConfigField 'boolean', "IRONFOX_RELEASE",                  gradle.mozconfig.defines.IRONFOX_RELEASE ? 'true' : 'false';
