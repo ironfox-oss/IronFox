@@ -12,7 +12,6 @@ object IFConstants {
   const val IRONFOX_BUGS_URL =                BuildConfig.IRONFOX_BUGS_URL
   const val IRONFOX_CHANNEL =                 BuildConfig.IRONFOX_CHANNEL
   const val IRONFOX_DEFAULT_DOH_URL =         BuildConfig.IRONFOX_DEFAULT_DOH_URL
-  const val IRONFOX_DEFAULT_UBO_ASSETS_URL =  BuildConfig.IRONFOX_DEFAULT_UBO_ASSETS_URL
   const val IRONFOX_FAQ_URL =                 BuildConfig.IRONFOX_FAQ_URL
   const val IRONFOX_NIGHTLY =                 BuildConfig.IRONFOX_NIGHTLY
   const val IRONFOX_RELEASE =                 BuildConfig.IRONFOX_RELEASE
