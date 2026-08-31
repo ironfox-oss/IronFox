@@ -7,19 +7,22 @@
 set -euo pipefail
 
 # Ensure this is never ran with xtrace...
-set +x
+set +x || exit 1
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash "$(realpath $(dirname "$0"))/env.sh"
+  /bin/bash "$(realpath $(dirname "$0"))/env.sh" || exit 1
 fi
-source "$(realpath $(dirname "$0"))/env.sh"
+source "$(realpath $(dirname "$0"))/env.sh" || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
+
+# Include download utilities
+source "${IRONFOX_DOWNLOAD_UTILS}" || exit 1
 
 if [[ "${IRONFOX_CI}" != 1 ]]; then
-  echo_red_text "ERROR: $0 should only be called from CI!"
+  echo_red_text "ERROR: '$0' should only be called from CI!"
   exit 1
 fi
 
@@ -74,26 +77,26 @@ function download_release() {
 
   # Download the APK
   echo_red_text "Downloading ${target_apk} from ${target_apk_url}..."
-  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${target_apk_url}" --output "${output_apk}"
+  download "${target_apk_url}" "${output_apk}"
   echo_green_text "SUCCESS: Downloaded ${target_apk}"
 
   # Check the SHA512sum
-  echo_red_text "Validating SHA512sum for ${target_apk}.."
-  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${target_expected_sha512sum_url}" --output "${output_expected_sha512sum}"
+  echo_red_text "Validating SHA512sum for file: '${target_apk}'..."
+  download "${target_expected_sha512sum_url}" "${output_expected_sha512sum}"
   local -r expected_sha512sum=$("${IRONFOX_CAT}" "${output_expected_sha512sum}" | "${IRONFOX_XARGS}")
   local -r local_sha512sum=$("${IRONFOX_SHASUM}" -a 512 "${output_apk}" | "${IRONFOX_AWK}" '{print $1}')
   if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
-    echo_red_text 'ERROR: Checksum validation failed.'
-    echo "Expected SHA512sum: ${expected_sha512sum}"
-    echo "Actual SHA512sum:   ${local_sha512sum}"
+    echo_red_text "ERROR: Checksum validation for file failed: '${target_apk}'!"
+    echo "Expected SHA512sum: '${expected_sha512sum}'"
+    echo "Actual SHA512sum:   '${local_sha512sum}'"
 
     # If checksum validation fails, also just clean-up the files
     "${IRONFOX_RM}" -f "${output_apk}"
     "${IRONFOX_RM}" -f "${output_expected_sha512sum}"
     exit 1
   fi
-  echo_green_text "SUCCESS: Checksum validated for ${target_apk}"
-  echo "SHA512sum: ${local_sha512sum}"
+  echo_green_text "SUCCESS: Validated checksum for file: '${target_apk}'!"
+  echo "SHA512sum: '${local_sha512sum}'"
 }
 
 # Function to download all APKs for a desired release
@@ -112,7 +115,7 @@ function download_releases() {
 configure_git
 
 # Clone the repo
-"${IRONFOX_GIT}" clone --recurse-submodules "https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_FDROID_REPO_PATH}.git" "${IRONFOX_FDROID_REPO_ROOT}"
+clone_git_repo "https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_FDROID_REPO_PATH}.git" "${IRONFOX_FDROID_REPO_ROOT}" 'no-revision' --silent --submodules
 pushd "${IRONFOX_FDROID_REPO_ROOT}" || {
   echo_red_text "ERROR: Unable to pushd into '${IRONFOX_FDROID_REPO_ROOT}'"
   exit 1
@@ -126,8 +129,8 @@ download_releases
 # Because we now upload releases to releases.ironfoxoss.org, the F-Droid repo doesn't need to store them all anymore
 # So to improve performance and reduce size, we can keep only the last 3 releases
 
-"${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" --output "${IRONFOX_ROOT}/previous_release.txt"
-"${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" --output "${IRONFOX_ROOT}/previous_previous_release.txt"
+download "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" "${IRONFOX_ROOT}/previous_release.txt"
+download "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" "${IRONFOX_ROOT}/previous_previous_release.txt"
 
 readonly previous_version=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_release.txt" | "${IRONFOX_XARGS}")
 readonly previous_previous_version=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_previous_release.txt" | "${IRONFOX_XARGS}")

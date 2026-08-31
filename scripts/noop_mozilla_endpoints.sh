@@ -4,15 +4,18 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh
+  /bin/bash $(dirname $0)/env.sh || exit 1
 fi
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
 
 # Set verbosity
 set_verbosity
+
+# Ensure we have GNU awk
+verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || exit 1
 
 # Set-up target parameters
 if [[ -z "${1+x}" ]]; then
@@ -65,7 +68,33 @@ readonly IRONFOX_NOOP_FENIX
 readonly IRONFOX_NOOP_GECKO
 readonly IRONFOX_NOOP_GLEAN
 
+# No-op (remove) unwanted Mozilla endpoints
 function noop_mozilla_endpoints() {
+  function print_usage() {
+    echo "Usage: noop_mozilla_endpoints 'unwanted.endpoint.org' '/path/to/directory_or_file'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please provide the endpoint to remove!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${2+x}" ]]; then
+    echo_red_text 'ERROR: Please provide the directory or file path!'
+    print_usage
+    exit 1
+  fi
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+
+  # Ensure we have grep
+  verify_exec "${IRONFOX_GREP}" 'IRONFOX_GREP' || exit 1
+
+  # Ensure we have xargs
+  verify_exec "${IRONFOX_XARGS}" 'IRONFOX_XARGS' || exit 1
+
   local -r endpoint="$1"
   local -r dir="$2"
 
@@ -127,6 +156,7 @@ function noop_mozilla_endpoints() {
   fi
 }
 
+# No-op (remove) unwanted Mozilla endpoints from Android Components
 function noop_ac() {
   echo_red_text 'No-oping endpoints from Android Components...'
 
@@ -149,6 +179,7 @@ function noop_ac() {
   echo_green_text 'SUCCESS: No-oped endpoints from Android Components'
 }
 
+# No-op (remove) unwanted Mozilla endpoints from Application Services
 function noop_as() {
   echo_red_text 'No-oping endpoints from Application Services...'
 
@@ -158,6 +189,7 @@ function noop_as() {
   echo_green_text 'SUCCESS: No-oped endpoints from Application Services'
 }
 
+# No-op (remove) unwanted Mozilla endpoints from Fenix
 function noop_fenix() {
   echo_red_text 'No-oping endpoints from Fenix...'
 
@@ -170,6 +202,7 @@ function noop_fenix() {
   echo_green_text 'SUCCESS: No-oped endpoints from Fenix'
 }
 
+# No-op (remove) unwanted Mozilla endpoints from Firefox (Gecko/mozilla-central)
 function noop_firefox() {
   echo_red_text 'No-oping endpoints from Firefox...'
 
@@ -205,6 +238,7 @@ function noop_firefox() {
   echo_green_text 'SUCCESS: No-oped endpoints from Firefox'
 }
 
+# No-op (remove) unwanted Mozilla endpoints from Glean
 function noop_glean() {
   echo_red_text 'No-oping endpoints from Glean...'
 
@@ -216,22 +250,27 @@ function noop_glean() {
   echo_green_text 'SUCCESS: No-oped endpoints from Glean'
 }
 
+# No-op (remove) unwanted Mozilla endpoints from Android Components
 if [[ "${IRONFOX_NOOP_AC}" == 1 ]]; then
   noop_ac
 fi
 
+# No-op (remove) unwanted Mozilla endpoints from Application Services
 if [[ "${IRONFOX_NOOP_AS}" == 1 ]]; then
   noop_as
 fi
 
+# No-op (remove) unwanted Mozilla endpoints from Fenix
 if [[ "${IRONFOX_NOOP_FENIX}" == 1 ]]; then
   noop_fenix
 fi
 
+# No-op (remove) unwanted Mozilla endpoints from Firefox (Gecko/mozilla-central)
 if [[ "${IRONFOX_NOOP_GECKO}" == 1 ]]; then
   noop_firefox
 fi
 
+# No-op (remove) unwanted Mozilla endpoints from Glean
 if [[ "${IRONFOX_NOOP_GLEAN}" == 1 ]]; then
   noop_glean
 fi

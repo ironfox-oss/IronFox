@@ -7,18 +7,18 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash "$(realpath $(dirname "$0"))/env.sh"
+  /bin/bash "$(realpath $(dirname "$0"))/env.sh" || exit 1
 fi
-source "$(realpath $(dirname "$0"))/env.sh"
+source "$(realpath $(dirname "$0"))/env.sh" || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
 
 # Set verbosity
 set_verbosity
 
 if [[ "${IRONFOX_CI}" != 1 ]]; then
-  echo_red_text "ERROR: $0 should only be called from CI!"
+  echo_red_text "ERROR: '$0' should only be called from CI!"
   exit 1
 fi
 
@@ -54,53 +54,53 @@ esac
 
 # Get dependencies
 echo_red_text 'CI - Downloading dependencies...'
-/bin/sudo /bin/dnf update -y --refresh
-/bin/sudo /bin/dnf install -y bash curl shasum tar
+/bin/sudo /bin/dnf update -y --refresh || exit 1
+/bin/sudo /bin/dnf install -y bash curl shasum tar || exit 1
 if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'geckoview' ]]; then
   # If we're only building GeckoView, we don't need to download all sources
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'uv'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'python'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-ndk'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-25'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-build-tools'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform-36'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform-tools'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'rust'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'cbindgen'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'bundletool'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'firefox'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-17'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-21'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'gradle'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'gyp'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'microg'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'node'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'npm'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'phoenix'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 's3cmd'
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'wasi'
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'uv' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'python' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-ndk' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-25' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-build-tools' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform-36' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform-tools' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'rust' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'cbindgen' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'bundletool' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'firefox' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-17' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-21' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'gradle' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'gyp' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'microg' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'node' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'npm' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'phoenix' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 's3cmd' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 'wasi' || exit 1
 else
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh"
-  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 's3cmd'
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/get_sources.sh" 's3cmd' || exit 1
 
   # If we're building a Fenix bundle, we also need to download our GeckoView artifacts
   if [[ "${IRONFOX_CI_BUILD_ARCH}" == 'bundle' ]]; then
-    /bin/bash "${IRONFOX_SCRIPTS}/ci-download-artifacts.sh" 'geckoview' 'arm64'
-    /bin/bash "${IRONFOX_SCRIPTS}/ci-download-artifacts.sh" 'geckoview' 'arm'
-    /bin/bash "${IRONFOX_SCRIPTS}/ci-download-artifacts.sh" 'geckoview' 'x86_64'
+    /bin/bash "${IRONFOX_SCRIPTS}/ci-download-artifacts.sh" 'geckoview' 'arm64' || exit 1
+    /bin/bash "${IRONFOX_SCRIPTS}/ci-download-artifacts.sh" 'geckoview' 'arm' || exit 1
+    /bin/bash "${IRONFOX_SCRIPTS}/ci-download-artifacts.sh" 'geckoview' 'x86_64' || exit 1
   fi
 fi
 echo_green_text 'CI - SUCCESS: Downloaded dependencies.'
 
 # Get secrets
 echo_red_text 'CI - Preparing secrets...'
-set +x
-/bin/bash "${IRONFOX_SCRIPTS}/ci-prep.sh" 's3-artifacts'
-/bin/bash "${IRONFOX_SCRIPTS}/ci-prep.sh" 'sb'
+set +x || exit 1
+/bin/bash "${IRONFOX_SCRIPTS}/ci-prep.sh" 's3-artifacts' || exit 1
+/bin/bash "${IRONFOX_SCRIPTS}/ci-prep.sh" 'sb' || exit 1
 if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'fenix' ]]; then
-  /bin/bash "${IRONFOX_SCRIPTS}/ci-prep.sh" 'android-ks'
+  /bin/bash "${IRONFOX_SCRIPTS}/ci-prep.sh" 'android-ks' || exit 1
 fi
 echo_green_text 'CI - SUCCESS: Prepared secrets.'
 
@@ -116,22 +116,22 @@ set_verbosity
 echo_red_text 'CI - Preparing sources...'
 if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'geckoview' ]]; then
   # If we're only building GeckoView, we don't need to prepare all sources
-  /bin/bash "${IRONFOX_SCRIPTS}/prebuild.sh" 'firefox'
-  /bin/bash "${IRONFOX_SCRIPTS}/prebuild.sh" 'android-sdk'
-  /bin/bash "${IRONFOX_SCRIPTS}/prebuild.sh" 'microg'
-  /bin/bash "${IRONFOX_SCRIPTS}/prebuild.sh" 'rust'
+  /bin/bash "${IRONFOX_SCRIPTS}/prebuild.sh" 'firefox' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/prebuild.sh" 'android-sdk' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/prebuild.sh" 'microg' || exit 1
+  /bin/bash "${IRONFOX_SCRIPTS}/prebuild.sh" 'rust' || exit 1
 else
-  /bin/bash "${IRONFOX_SCRIPTS}/prebuild.sh"
+  /bin/bash "${IRONFOX_SCRIPTS}/prebuild.sh" || exit 1
 fi
 echo_green_text 'CI - SUCCESS: Prepared sources.'
 
 # Build
 echo_red_text "CI - Building ${IRONFOX_CI_BUILD_PROJECT} (${IRONFOX_CI_BUILD_ARCH}..."
-/bin/bash "${IRONFOX_SCRIPTS}/build.sh" "${IRONFOX_CI_BUILD_ARCH}" "${IRONFOX_CI_BUILD_PROJECT}"
+/bin/bash "${IRONFOX_SCRIPTS}/build.sh" "${IRONFOX_CI_BUILD_ARCH}" "${IRONFOX_CI_BUILD_PROJECT}" || exit 1
 echo_green_text "CI - SUCCESS: Built ${IRONFOX_CI_BUILD_PROJECT} (${IRONFOX_CI_BUILD_ARCH}"
 
 # Upload artifacts
 echo_red_text 'CI - Uploading artifacts...'
-set +x
-/bin/bash "${IRONFOX_SCRIPTS}/ci-upload-artifacts.sh" "${IRONFOX_CI_BUILD_PROJECT}" "${IRONFOX_CI_BUILD_ARCH}"
+set +x || exit 1
+/bin/bash "${IRONFOX_SCRIPTS}/ci-upload-artifacts.sh" "${IRONFOX_CI_BUILD_PROJECT}" "${IRONFOX_CI_BUILD_ARCH}" || exit 1
 echo_green_text 'CI - SUCCESS: Uploaded artifacts.'

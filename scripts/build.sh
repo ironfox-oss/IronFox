@@ -4,12 +4,12 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh
+  /bin/bash $(dirname $0)/env.sh || exit 1
 fi
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
 
 # Set-up target parameters
 if [[ -z "${1+x}" ]]; then
@@ -39,9 +39,9 @@ if [[ "${IRONFOX_LOG_BUILD}" == 1 ]]; then
   # Ensure our log directory exists
   "${IRONFOX_MKDIR}" -vp "${IRONFOX_LOG_DIR}"
 
-  /bin/bash "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}" > >("${IRONFOX_TEE}" -a "${BUILD_LOG_FILE}") 2>&1
+  /bin/bash "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}" > >("${IRONFOX_TEE}" -a "${BUILD_LOG_FILE}") 2>&1 || exit 1
 else
-  /bin/bash "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}"
+  /bin/bash "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}" || exit 1
 fi
 
 # We should only try to sign IronFox if we actually built Fenix, so check that first
@@ -70,9 +70,9 @@ if [[ "${IRONFOX_SIGN}" == 1 ]] && [[ "${IRONFOX_BUILT_FENIX}" == 1 ]]; then
     # Ensure our log directory exists
     "${IRONFOX_MKDIR}" -vp "${IRONFOX_LOG_DIR}"
 
-    /bin/bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >("${IRONFOX_TEE}" -a "${SIGN_LOG_FILE}") 2>&1
+    /bin/bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >("${IRONFOX_TEE}" -a "${SIGN_LOG_FILE}") 2>&1 || exit 1
   else
-    /bin/bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}"
+    /bin/bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" || exit 1
   fi
 fi
 

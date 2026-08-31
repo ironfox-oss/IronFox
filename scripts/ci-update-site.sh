@@ -6,19 +6,22 @@
 set -euo pipefail
 
 # Ensure this is never ran with xtrace...
-set +x
+set +x || exit 1
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash "$(realpath $(dirname "$0"))/env.sh"
+  /bin/bash "$(realpath $(dirname "$0"))/env.sh" || exit 1
 fi
-source "$(realpath $(dirname "$0"))/env.sh"
+source "$(realpath $(dirname "$0"))/env.sh" || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
+
+# Include download utilities
+source "${IRONFOX_DOWNLOAD_UTILS}" || exit 1
 
 if [[ "${IRONFOX_CI}" != 1 ]]; then
-  echo_red_text "ERROR: $0 should only be called from CI!"
+  echo_red_text "ERROR: '$0' should only be called from CI!"
   exit 1
 fi
 
@@ -74,12 +77,12 @@ function configure_git() {
 configure_git
 
 # Clone the repo
-"${IRONFOX_GIT}" clone "https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_SITE_REPO_PATH}.git" "${IRONFOX_SITE_REPO}"
+clone_git_repo "https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_SITE_REPO_PATH}.git" "${IRONFOX_SITE_REPO}" 'no-revision' --silent
 
 pushd "${IRONFOX_SITE_REPO}"
 
 # Generate documentation for patches
-source "${IRONFOX_PYENV}"
+source "${IRONFOX_PYENV}" || exit 1
 "${IRONFOX_PYTHON}" ./scripts/gen_patch_pages.py "${IRONFOX_SCRIPTS}/patches.yaml"
 
 if [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_PROD_BRANCH}" ]]; then
@@ -88,7 +91,7 @@ if [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_PROD_BRANCH}" ]]; then
     ./src/version.ts
 
   # Update release notes
-  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_BASE_URL}/${IRONFOX_VERSION}/ironfox-${IRONFOX_VERSION}-release-notes.md" --output "${IRONFOX_VERSION}-temp.md"
+  download "${IRONFOX_RELEASES_BASE_URL}/${IRONFOX_VERSION}/ironfox-${IRONFOX_VERSION}-release-notes.md" "${IRONFOX_VERSION}-temp.md"
 
   "${IRONFOX_CP}" -f ./release-notes.md ./release-notes-temp.md
   "${IRONFOX_RM}" -f ./release-notes.md
@@ -128,8 +131,8 @@ if [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_PROD_BRANCH}" ]]; then
   "${IRONFOX_RM}" -f ./public/releases/rss.xml
 
   # The RSS feed only needs to include the last 3 releases
-  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" --output "${IRONFOX_ROOT}/previous_release.txt"
-  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" --output "${IRONFOX_ROOT}/previous_previous_release.txt"
+  download "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" "${IRONFOX_ROOT}/previous_release.txt"
+  download "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" "${IRONFOX_ROOT}/previous_previous_release.txt"
 
   readonly IRONFOX_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_release.txt" | "${IRONFOX_XARGS}")
   readonly IRONFOX_PREVIOUS_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_previous_release.txt" | "${IRONFOX_XARGS}")

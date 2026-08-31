@@ -6,22 +6,25 @@
 set -euo pipefail
 
 # Ensure this is never ran with xtrace...
-set +x
+set +x || exit 1
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash "$(realpath $(dirname "$0"))/env.sh"
+  /bin/bash "$(realpath $(dirname "$0"))/env.sh" || exit 1
 fi
-source "$(realpath $(dirname "$0"))/env.sh"
+source "$(realpath $(dirname "$0"))/env.sh" || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
+
+# Include download utilities
+source "${IRONFOX_DOWNLOAD_UTILS}" || exit 1
 
 # Include S3 utilities
-source "${IRONFOX_S3_UTILS}"
+source "${IRONFOX_S3_UTILS}" || exit 1
 
 if [[ "${IRONFOX_CI}" != 1 ]]; then
-  echo_red_text "ERROR: $0 should only be called from CI!"
+  echo_red_text "ERROR: '$0' should only be called from CI!"
   exit 1
 fi
 
@@ -146,7 +149,7 @@ function create_release_notes() {
   "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
 
   # Set the previous (current) version
-  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_URL}/ironfox/releases/latest_release.txt" --output "${IRONFOX_TEMP}/previous_release.txt"
+  download "${IRONFOX_RELEASES_URL}/ironfox/releases/latest_release.txt" "${IRONFOX_TEMP}/previous_release.txt"
   local -r IRONFOX_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/previous_release.txt" | "${IRONFOX_XARGS}")
   "${IRONFOX_SED}" -i "s|{IRONFOX_PREVIOUS_VERSION}|${IRONFOX_PREVIOUS_VERSION}|g" "${IRONFOX_RELEASE_NOTES_TEMP}"
 
@@ -426,9 +429,9 @@ function push_ironfox() {
   # Get the 2 previous IronFox versions
   if [[ ! -f "${IRONFOX_TEMP}/previous_release.txt" ]]; then
     # (`previous_release.txt` should already be downloaded from `create_release_notes`, but if it is missing for some reason, download it)
-    "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_URL}/ironfox/releases/latest_release.txt" --output "${IRONFOX_TEMP}/previous_release.txt"
+    download "${IRONFOX_RELEASES_URL}/ironfox/releases/latest_release.txt" "${IRONFOX_TEMP}/previous_release.txt"
   fi
-  "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location "${IRONFOX_RELEASES_URL}/ironfox/releases/previous_release.txt" --output "${IRONFOX_TEMP}/previous_previous_release.txt"
+  download "${IRONFOX_RELEASES_URL}/ironfox/releases/previous_release.txt" "${IRONFOX_TEMP}/previous_previous_release.txt"
 
   # Update the current IronFox version
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"

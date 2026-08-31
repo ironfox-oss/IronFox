@@ -4,15 +4,18 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh
+  /bin/bash $(dirname $0)/env.sh || exit 1
 fi
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
+
+# Ensure we have git
+verify_exec "${IRONFOX_GIT}" 'IRONFOX_GIT' || exit 1
 
 # Include version info
-source "${IRONFOX_VERSIONS}"
+source "${IRONFOX_VERSIONS}" || exit 1
 
 # Set verbosity
 set_verbosity
@@ -84,7 +87,7 @@ if [[ -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch" ]]; then
   esac
 fi
 
-echo_red_text "Creating patch..."
+echo_red_text "Creating patch: '${IRONFOX_PATCHES}/${PATCH_NAME}.patch'..."
 
 # Create temporary branch, named after our patch
 "${IRONFOX_GIT}" checkout -b "${PATCH_NAME}"
@@ -108,4 +111,4 @@ read -rp 'Please enter your desired patch message: ' PATCH_MSG
 "${IRONFOX_GIT}" checkout main
 "${IRONFOX_GIT}" branch -D "${PATCH_NAME}"
 
-echo_green_text "SUCCESS: Created patch: ${IRONFOX_PATCHES}/${PATCH_NAME}.patch :)"
+echo_green_text "SUCCESS: Created patch: '${IRONFOX_PATCHES}/${PATCH_NAME}.patch'! :)"

@@ -28,11 +28,19 @@ if [[ -f "${IRONFOX_ENV_OVERRIDE}" ]]; then
   source "${IRONFOX_ENV_OVERRIDE}"
 fi
 
-# IronFox utilities
+# Utilities
 readonly IRONFOX_UTILS="${IRONFOX_SCRIPTS}/utilities.sh"
 export IRONFOX_UTILS
 
-# IronFox S3 utilities
+# Download utilities
+readonly IRONFOX_DOWNLOAD_UTILS="${IRONFOX_SCRIPTS}/download-utilities.sh"
+export IRONFOX_DOWNLOAD_UTILS
+
+# File utilities
+readonly IRONFOX_FILE_UTILS="${IRONFOX_SCRIPTS}/file-utilities.sh"
+export IRONFOX_FILE_UTILS
+
+# S3 utilities
 # (For CI)
 readonly IRONFOX_S3_UTILS="${IRONFOX_SCRIPTS}/s3-utilities.sh"
 export IRONFOX_S3_UTILS

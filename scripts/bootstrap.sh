@@ -6,18 +6,18 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh
+  /bin/bash $(dirname $0)/env.sh || exit 1
 fi
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
 
 # Set verbosity
 set_verbosity
 
 # Get our platform, OS, and architecture
-source "${IRONFOX_ENV_HELPERS}"
+source "${IRONFOX_ENV_HELPERS}" || exit 1
 
 function error_fn() {
   echo

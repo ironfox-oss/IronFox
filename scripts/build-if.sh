@@ -23,21 +23,21 @@
 set -euo pipefail
 
 # Set-up our environment
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
 
 # Set verbosity
 set_verbosity
 
 if [[ -z "${IRONFOX_FROM_BUILD+x}" ]]; then
-  echo_red_text 'ERROR: Do not call build-if.sh directly. Instead, use build.sh.' >&1
+  echo_red_text "ERROR: Do not call 'build-if.sh' directly! Instead, use 'build.sh'." >&1
   exit 1
 fi
 
 if [[ ! -f "${IRONFOX_BUILD}/finished-prebuild" ]]; then
-  echo_red_text 'ERROR: Do not run build.sh until after you have ran prebuild.sh.'
+  echo_red_text "ERROR: Do not run 'build.sh' until after you have ran 'prebuild.sh'!"
   exit 1
 fi
 
@@ -76,7 +76,7 @@ case "${build_arch}" in
     readonly IRONFOX_TARGET_RUST='arm64,arm,x86_64'
     ;;
   *)
-    echo_red_text "Unknown build variant: '$1'" >&2
+    echo_red_text "ERROR: Unknown build variant: '$1'!" >&2
     exit 1
     ;;
 esac
@@ -699,15 +699,15 @@ if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
 fi
 
 if [[ -n "${FDROID_BUILD+x}" ]]; then
-  source "${IRONFOX_ENV_FDROID}"
+  source "${IRONFOX_ENV_FDROID}" || exit 1
 fi
 
-source "${IRONFOX_CARGO_ENV}"
-source "${IRONFOX_NVM_ENV}"
-source "${IRONFOX_PYENV}"
+source "${IRONFOX_CARGO_ENV}" || exit 1
+source "${IRONFOX_NVM_ENV}" || exit 1
+source "${IRONFOX_PYENV}" || exit 1
 
 # Include version info
-source "${IRONFOX_VERSIONS}"
+source "${IRONFOX_VERSIONS}" || exit 1
 
 if [[ -z "${IRONFOX_GECKO_VERSION+x}" ]]; then
   echo_red_text 'ERROR: IRONFOX_GECKO_VERSION is missing!'

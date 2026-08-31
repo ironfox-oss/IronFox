@@ -4,12 +4,18 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh
+  /bin/bash $(dirname $0)/env.sh || exit 1
 fi
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
+
+# Ensure we have dirname
+verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || exit 1
+
+# Ensure we have yq
+verify_exec "${IRONFOX_YQ}" 'IRONFOX_YQ' || exit 1
 
 # Set verbosity
 set_verbosity
@@ -36,31 +42,37 @@ readonly GLEAN_PATCH_FILES=($("${IRONFOX_YQ}" '.patches[].file' "$("${IRONFOX_DI
 readonly UP_AC_PATCH_FILES=($("${IRONFOX_YQ}" '.patches[].file' "${IRONFOX_UP_AC}"/patches/patches.yaml))
 
 function check_patch() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   local -r patch="${IRONFOX_PATCHES}/$1"
   if [[ ! -f "${patch}" ]]; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
-    echo "'${patch}' does not exist or is not a file"
+    echo "'${patch}' does not exist or is not a file!"
     return 1
   fi
 
   if ! "${PATCH_CMD[@]}" --dry-run < "${patch}"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
-    echo "Incompatible patch: '${patch}'"
+    echo "Incompatible patch: '${patch}'!"
     return 1
   fi
 }
 
 function up_ac_check_patch() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   local -r patch="${IRONFOX_UP_AC}/patches/$1"
   if [[ ! -f "${patch}" ]]; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
-    echo "'${patch}' does not exist or is not a file"
+    echo "'${patch}' does not exist or is not a file!"
     return 1
   fi
 
   if ! "${PATCH_CMD[@]}" --dry-run < "${patch}"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
-    echo "Incompatible patch: '${patch}'"
+    echo "Incompatible patch: '${patch}'!"
     return 1
   fi
 }
@@ -98,6 +110,9 @@ function up_ac_check_patches() {
 }
 
 function test_patches() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   for patch in "${PATCH_FILES[@]}"; do
     if ! check_patch "${patch}" > /dev/null 2>&1; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
@@ -108,6 +123,9 @@ function test_patches() {
 }
 
 function a-s_test_patches() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   for patch in "${AS_PATCH_FILES[@]}"; do
     if ! check_patch "${patch}" > /dev/null 2>&1; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
@@ -118,16 +136,22 @@ function a-s_test_patches() {
 }
 
 function glean_test_patches() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   for patch in "${GLEAN_PATCH_FILES[@]}"; do
     if ! check_patch "${patch}" > /dev/null 2>&1; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     else
-      printf "${GREEN}✓ %-45s: OK${NC}\n" "$("${IRONFOX_BASENAME}"e "${patch}")"
+      printf "${GREEN}✓ %-45s: OK${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     fi
   done
 }
 
 function up_ac_test_patches() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   for patch in "${UP_AC_PATCH_FILES[@]}"; do
     if ! up_ac_check_patch "${patch}" > /dev/null 2>&1; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
@@ -139,7 +163,7 @@ function up_ac_test_patches() {
 
 function apply_patch() {
   local -r name="$1"
-  echo "Applying patch: ${name}"
+  echo_red_text "Applying patch: '${name}'..."
   check_patch "${name}" || return 1
   "${PATCH_CMD[@]}" < "${IRONFOX_PATCHES}/${name}"
   return $?
@@ -147,47 +171,59 @@ function apply_patch() {
 
 function up_ac_apply_patch() {
   local -r name="$1"
-  echo "Applying patch: ${name}"
+  echo_red_text "Applying patch: '${name}'..."
   up_ac_check_patch "${name}" || return 1
   "${PATCH_CMD[@]}" < "${IRONFOX_UP_AC}/patches/${name}"
   return $?
 }
 
 function apply_patches() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   for patch in "${PATCH_FILES[@]}"; do
     if ! apply_patch "${patch}"; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
-      echo "Failed to apply ${patch}"
+      echo "Failed to apply patch: '${patch}'!"
       return 1
     fi
   done
 }
 
 function a-s_apply_patches() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   for patch in "${AS_PATCH_FILES[@]}"; do
     if ! apply_patch "${patch}"; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
-      echo "Failed to apply ${patch}"
+      echo "Failed to apply patch: '${patch}'!"
       return 1
     fi
   done
 }
 
 function glean_apply_patches() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   for patch in "${GLEAN_PATCH_FILES[@]}"; do
     if ! apply_patch "${patch}"; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
-      echo "Failed to apply ${patch}"
+      echo "Failed to apply patch: '${patch}'!"
       return 1
     fi
   done
 }
 
 function up_ac_apply_patches() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   for patch in "${UP_AC_PATCH_FILES[@]}"; do
     if ! up_ac_apply_patch "${patch}"; then
       printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
-      echo "Failed to apply ${patch}"
+      echo "Failed to apply patch: '${patch}'!"
       return 1
     fi
   done
@@ -218,9 +254,15 @@ function up_ac_list_patches() {
 }
 
 function slugify() {
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+
+  # Ensure we have tr
+  verify_exec "${IRONFOX_TR}" 'IRONFOX_TR' || exit 1
+
   local -r input="$1"
   echo "${input}" |
-    tr '[:upper:]' '[:lower:]' |
+    "${IRONFOX_TR}" '[:upper:]' '[:lower:]' |
     "${IRONFOX_SED}" -E 's/[^a-z0-9]+/-/g' |
     "${IRONFOX_SED}" -E 's/^-+|-+$//g'
 }
@@ -228,6 +270,27 @@ function slugify() {
 # Function to rebase a single patch file atomically
 # Usage: rebase_patch <compatible_tag> <target_tag> <patch_file_path>
 function rebase_patch() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
+  # Ensure we have git
+  verify_exec "${IRONFOX_GIT}" 'IRONFOX_GIT' || exit 1
+
+  # Ensure we have grep
+  verify_exec "${IRONFOX_GREP}" 'IRONFOX_GREP' || exit 1
+
+  # Ensure we have mktemp
+  verify_exec "${IRONFOX_MKTEMP}" 'IRONFOX_MKTEMP' || exit 1
+
+  # Ensure we have mv
+  verify_exec "${IRONFOX_MV}" 'IRONFOX_MV' || exit 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+
+  # Ensure we have wc
+  verify_exec "${IRONFOX_WC}" 'IRONFOX_WC' || exit 1
+
   local -r compatible_tag="$1"
   local -r target_tag="$2"
   local -r patch_file="$3"
@@ -235,14 +298,14 @@ function rebase_patch() {
   # Validate inputs
   if [[ -z "${compatible_tag}" || -z "${target_tag}" || -z "${patch_file}" ]]; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
-    echo "Missing required parameters" >&2
+    echo "Missing required parameters!" >&2
     echo "Usage: rebase_patch <compatible_tag> <target_tag> <patch_file_path>" >&2
     return 1
   fi
 
   if [[ ! -f "${patch_file}" ]]; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
-    echo "Patch file '${patch_file}' does not exist" >&2
+    echo "Patch file does not exist: '${patch_file}'!" >&2
     return 1
   fi
 
@@ -366,7 +429,7 @@ function rebase_patch() {
   echo "Updating patch file..."
   local -r temp_patch=$("${IRONFOX_MKTEMP}")
   if ! "${IRONFOX_GIT}" format-patch -1 --stdout > "${temp_patch}"; then
-    printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patc}h")"
+    printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Failed to generate new patch" >&2
     "${IRONFOX_RM}" -f "${temp_patch}"
     cleanup_and_rollback
@@ -406,6 +469,9 @@ function rebase_patch() {
 # Function to rebase multiple patch files
 # Usage: rebase_patches <compatible_tag> <target_tag> <patch_file1> [patch_file2] [...]
 function rebase_patches() {
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
   local -r compatible_tag="$1"
   local -r target_tag="$2"
 

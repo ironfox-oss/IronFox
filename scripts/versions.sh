@@ -11,6 +11,9 @@ readonly IRONFOX_GECKO_VERSION='154.0.1'
 # IronFox
 readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}"
 
+# This value is used for ex. producing reproducable archives, and its value should be bumped upon new releases
+readonly IRONFOX_VERSION_DATE='2026.08.30'
+
 # Application Services
 # Version: v154.0
 # https://github.com/mozilla/application-services

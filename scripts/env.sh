@@ -176,15 +176,15 @@ function setup_ci() {
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
   # Handle CI-specific logic
   if [[ -n "${IRONFOX_CI+x}" ]]; then
-    setup_ci
+    setup_ci || exit 1
   fi
 
-  source "$(dirname $0)/env_local.sh"
+  source "$(dirname $0)/env_local.sh" || exit 1
 
   # Set-up our PATH
   if [[ -n "${IRONFOX_LINTING+x}" ]]; then
-    setup_lint_path
+    setup_lint_path || exit 1
   else
-    setup_path
+    setup_path || exit 1
   fi
 fi

@@ -3,29 +3,29 @@
 set -euo pipefail
 
 # Ensure this is never ran with xtrace...
-set +x
+set +x || exit 1
 
 # Set-up our environment
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
 
 # Include S3 utilities
-source "${IRONFOX_S3_UTILS}"
+source "${IRONFOX_S3_UTILS}" || exit 1
 
 if [[ -z "${IRONFOX_FROM_AR_UP+x}" ]]; then
-  echo_red_text 'ERROR: Do not call ci-upload-artifacts-if.sh directly. Instead, use ci-upload-artifacts.sh.' >&1
+  echo_red_text "ERROR: Do not call 'ci-upload-artifacts-if.sh' directly! Instead, use 'ci-upload-artifacts.sh'." >&1
   exit 1
 fi
 
 if [[ "${IRONFOX_CI}" != 1 ]]; then
-  echo_red_text "ERROR: $0 should only be called from CI!"
+  echo_red_text "ERROR: '$0' should only be called from CI!"
   exit 1
 fi
 
 if [[ -z "${IRONFOX_CI_ID+x}" ]]; then
-  echo_red_text 'ERROR: Missing CI ID! Please set IRONFOX_CI_ID.'
+  echo_red_text "ERROR: Missing CI ID! Please set 'IRONFOX_CI_ID'."
   exit 1
 fi
 

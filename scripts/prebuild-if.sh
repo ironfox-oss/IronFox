@@ -23,23 +23,35 @@
 set -euo pipefail
 
 # Set-up our environment
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 if [[ -n "${FDROID_BUILD+x}" ]]; then
-  source "${IRONFOX_ENV_FDROID}"
+  source "${IRONFOX_ENV_FDROID}" || exit 1
 fi
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
 
 # Set verbosity
 set_verbosity
 
 # Include patch utilities
-source "${IRONFOX_SCRIPTS}/patches.sh"
+source "${IRONFOX_SCRIPTS}/patches.sh" || exit 1
 
 if [[ -z "${IRONFOX_FROM_PREBUILD+x}" ]]; then
-  echo_red_text "ERROR: Do not call prebuild-if.sh directly. Instead, use prebuild.sh." >&1
+  echo_red_text "ERROR: Do not call 'prebuild-if.sh' directly! Instead, use 'prebuild.sh'." >&1
+  exit 1
+fi
+
+# Ensure we have rm
+verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+
+# Ensure we have touch
+verify_exec "${IRONFOX_TOUCH}" 'IRONFOX_TOUCH' || exit 1
+
+# Ensure we have `IRONFOX_VERSION`
+if [[ -z "${IRONFOX_VERSION+x}" ]] || [[ "${IRONFOX_VERSION}" == "" ]]; then
+  echo_red_text "ERROR: 'IRONFOX_VERSION' is missing!"
   exit 1
 fi
 
@@ -144,9 +156,15 @@ readonly IRONFOX_PREPARE_RUST
 readonly IRONFOX_PREPARE_PREBUILDS
 
 # Include version info
-source "${IRONFOX_VERSIONS}"
+source "${IRONFOX_VERSIONS}" || exit 1
 
 function localize_gradle() {
+  # Ensure we have chmod
+  verify_exec "${IRONFOX_CHMOD}" 'IRONFOX_CHMOD' || exit 1
+
+  # Ensure we have find
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || exit 1
+
   "${IRONFOX_FIND}" ./* -name gradlew -type f | while read -r gradlew; do
     echo -e "#!/bin/sh\n\""'${IRONFOX_GRADLE}'"\" \${IRONFOX_GRADLE_FLAGS} \""'$@'"\"" > "${gradlew}"
     "${IRONFOX_CHMOD}" 755 "${gradlew}"
@@ -154,6 +172,12 @@ function localize_gradle() {
 }
 
 function localize_maven() {
+  # Ensure we have find
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || exit 1
+
+  # Ensure we have Python
+  verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' || exit 1
+
   # Replace custom Maven repositories with mavenLocal()
   "${IRONFOX_FIND}" ./* -name '*.gradle' -type f -exec "${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
 }
@@ -161,6 +185,18 @@ function localize_maven() {
 # Applies the overlay files in the given directory
 # to the current directory
 function apply_overlay() {
+  # Ensure we have cp
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || exit 1
+
+  # Ensure we have dirname
+  verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || exit 1
+
+  # Ensure we have find
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || exit 1
+
+  # Ensure we have mkdir
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+
   local -r source_dir="$1"
   "${IRONFOX_FIND}" "${source_dir}" -type f | while read -r src; do
     local overlay_target="${src#"${source_dir}"}"
@@ -170,6 +206,12 @@ function apply_overlay() {
 }
 
 function prepare_ac() {
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+
   echo_red_text 'Preparing Android Components...'
 
   # Verify directories
@@ -257,10 +299,28 @@ function prepare_ac() {
 
   popd
 
-  echo_green_text 'SUCCESS: Prepared Android Components'
+  echo_green_text 'SUCCESS: Prepared Android Components!'
 }
 
 function prepare_android_sdk() {
+  # Ensure we have ln
+  verify_exec "${IRONFOX_LN}" 'IRONFOX_LN' || exit 1
+
+  # Ensure we have mkdir
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+
+  # Ensure we have `IRONFOX_ANDROID_NDK_REVISION`
+  if [[ -z "${IRONFOX_ANDROID_NDK_REVISION+x}" ]] || [[ "${IRONFOX_ANDROID_NDK_REVISION}" == "" ]]; then
+    echo_red_text "ERROR: 'IRONFOX_ANDROID_NDK_REVISION' is missing!"
+    exit 1
+  fi
+
+  # Ensure we have `IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING`
+  if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING+x}" ]] || [[ "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" == "" ]]; then
+    echo_red_text "ERROR: 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING' is missing!"
+    exit 1
+  fi
+
   echo_red_text 'Preparing Android SDK...'
 
   # Verify directories
@@ -291,10 +351,22 @@ function prepare_android_sdk() {
     "${IRONFOX_LN}" -s "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" "${IRONFOX_ANDROID_SDK}/platform-tools"
   fi
 
-  echo_green_text 'SUCCESS: Prepared Android SDK'
+  echo_green_text 'SUCCESS: Prepared Android SDK!'
 }
 
 function prepare_as() {
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+
+  # Ensure we have `IRONFOX_RUST_VERSION`
+  if [[ -z "${IRONFOX_RUST_VERSION+x}" ]] || [[ "${IRONFOX_RUST_VERSION}" == "" ]]; then
+    echo_red_text "ERROR: 'IRONFOX_RUST_VERSION' is missing!"
+    exit 1
+  fi
+
   echo_red_text 'Preparing Application Services...'
 
   # Verify directories
@@ -382,7 +454,7 @@ function prepare_as() {
 
   popd
 
-  echo_green_text 'SUCCESS: Prepared Application Services'
+  echo_green_text 'SUCCESS: Prepared Application Services!'
 }
 
 function prepare_bundletool() {
@@ -401,10 +473,22 @@ function prepare_bundletool() {
 
   popd
 
-  echo_green_text 'SUCCESS: Prepared Bundletool'
+  echo_green_text 'SUCCESS: Prepared Bundletool!'
 }
 
 function prepare_fenix() {
+  # Ensure we have cp
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || exit 1
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+
+  # Ensure we have mkdir
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+
   echo_red_text 'Preparing Fenix...'
 
   # Verify directories
@@ -655,10 +739,28 @@ function prepare_fenix() {
 
   popd
 
-  echo_green_text 'SUCCESS: Prepared Fenix'
+  echo_green_text 'SUCCESS: Prepared Fenix!'
 }
 
 function prepare_firefox() {
+  # Ensure we have cp
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || exit 1
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+
+  # Ensure we have mkdir
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+
+  # Ensure we have `IRONFOX_RUST_VERSION`
+  if [[ -z "${IRONFOX_RUST_VERSION+x}" ]] || [[ "${IRONFOX_RUST_VERSION}" == "" ]]; then
+    echo_red_text "ERROR: 'IRONFOX_RUST_VERSION' is missing!"
+    exit 1
+  fi
+
   echo_red_text 'Preparing Firefox...'
 
   # Verify directories
@@ -906,11 +1008,29 @@ function prepare_firefox() {
 
   popd
 
-  echo_green_text 'SUCCESS: Prepared Firefox'
+  echo_green_text 'SUCCESS: Prepared Firefox!'
 }
 
 function prepare_glean() {
   echo_red_text 'Preparing Glean...'
+
+  # Ensure we have cp
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || exit 1
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+
+  # Ensure we have ln
+  verify_exec "${IRONFOX_LN}" 'IRONFOX_LN' || exit 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+
+  # Ensure we have `IRONFOX_RUST_VERSION`
+  if [[ -z "${IRONFOX_RUST_VERSION+x}" ]] || [[ "${IRONFOX_RUST_VERSION}" == "" ]]; then
+    echo_red_text "ERROR: 'IRONFOX_RUST_VERSION' is missing!"
+    exit 1
+  fi
 
   # Verify directories
   verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN' || exit 1
@@ -1007,10 +1127,13 @@ function prepare_glean() {
 
   popd
 
-  echo_green_text 'SUCCESS: Prepared Glean'
+  echo_green_text 'SUCCESS: Prepared Glean!'
 }
 
 function prepare_llvm() {
+  # Ensure we have Python
+  verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' || exit 1
+
   echo_red_text 'Preparing LLVM...'
 
   if [[ -n "${FDROID_BUILD+x}" ]]; then
@@ -1023,10 +1146,31 @@ function prepare_llvm() {
       --src_path "${llvm}"
   fi
 
-  echo_green_text 'SUCCESS: Prepared LLVM'
+  echo_green_text 'SUCCESS: Prepared LLVM!'
 }
 
 function prepare_microg() {
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+
+  # Ensure we have `IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING`
+  if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING+x}" ]] || [[ "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" == "" ]]; then
+    echo_red_text "ERROR: 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING' is missing!"
+    exit 1
+  fi
+
+  # Ensure we have `IRONFOX_ANDROID_SDK_TARGET`
+  if [[ -z "${IRONFOX_ANDROID_SDK_TARGET+x}" ]] || [[ "${IRONFOX_ANDROID_SDK_TARGET}" == "" ]]; then
+    echo_red_text "ERROR: 'IRONFOX_ANDROID_SDK_TARGET' is missing!"
+    exit 1
+  fi
+
+  # Ensure we have `IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION`
+  if [[ -z "${IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION+x}" ]] || [[ "${IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION}" == "" ]]; then
+    echo_red_text "ERROR: 'IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION' is missing!"
+    exit 1
+  fi
+
   echo_red_text 'Preparing microG...'
 
   # Verify directories
@@ -1055,7 +1199,7 @@ function prepare_microg() {
 
   popd
 
-  echo_green_text 'SUCCESS: Prepared microG'
+  echo_green_text 'SUCCESS: Prepared microG!'
 }
 
 function prepare_prebuilds() {
@@ -1065,13 +1209,19 @@ function prepare_prebuilds() {
   verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS' || exit 1
 
   pushd "${IRONFOX_PREBUILDS}"
-  /bin/bash "${IRONFOX_PREBUILDS}/scripts/prebuild.sh"
+  /bin/bash "${IRONFOX_PREBUILDS}/scripts/prebuild.sh" || exit 1
   popd
 
-  echo_green_text 'SUCCESS: Prepared IronFox prebuilds'
+  echo_green_text 'SUCCESS: Prepared IronFox prebuilds!'
 }
 
 function prepare_rust() {
+  # Ensure we have ln
+  verify_exec "${IRONFOX_LN}" 'IRONFOX_LN' || exit 1
+
+  # Ensure we have mkdir
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+
   echo_red_text 'Preparing Rust...'
 
   # Verify directories
@@ -1089,7 +1239,7 @@ function prepare_rust() {
     "${IRONFOX_LN}" -s "${IRONFOX_CONFIGS}/cargo/config.toml" "${IRONFOX_CARGO_HOME}/config.toml"
   fi
 
-  echo_green_text 'SUCCESS: Prepared Rust'
+  echo_green_text 'SUCCESS: Prepared Rust!'
 }
 
 echo_red_text "Preparing to build IronFox ${IRONFOX_VERSION}..."
@@ -1139,5 +1289,5 @@ if [[ "${IRONFOX_PREPARE_RUST}" == 1 ]]; then
   prepare_rust
 fi
 
-echo_green_text "SUCCESS: Prepared to build IronFox ${IRONFOX_VERSION}"
+echo_green_text "SUCCESS: Prepared to build IronFox ${IRONFOX_VERSION}!"
 "${IRONFOX_TOUCH}" "${IRONFOX_BUILD}/finished-prebuild"
