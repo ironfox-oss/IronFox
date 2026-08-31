@@ -202,33 +202,33 @@ function download_artifact() {
 
 if [[ "${IRONFOX_AR_DOWN_FENIX}" == 1 ]]; then
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm64' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'fenix' 'arm64' "${IRONFOX_APK_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'arm64'
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'fenix' 'arm' "${IRONFOX_APK_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'arm'
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'x86_64' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'fenix' 'x86_64' "${IRONFOX_APK_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'x86_64'
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'bundle' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'fenix' 'universal' "${IRONFOX_APK_ARTIFACTS}"
-    download_artifact "${IRONFOX_CI_ID}" 'fenix' 'bundle' "${IRONFOX_APKS_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'universal'
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APKS_ARTIFACTS}" 'bundle'
   fi
 fi
 
 if [[ "${IRONFOX_AR_DOWN_GECKOVIEW}" == 1 ]]; then
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm64' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'geckoview' 'arm64' "${IRONFOX_AAR_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'geckoview' "${IRONFOX_AAR_ARTIFACTS}" 'arm64'
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'geckoview' 'arm' "${IRONFOX_AAR_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'geckoview' "${IRONFOX_AAR_ARTIFACTS}" 'arm'
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'x86_64' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'geckoview' 'x86_64' "${IRONFOX_AAR_ARTIFACTS}"
+    download_artifact "${IRONFOX_CI_ID}" 'geckoview' "${IRONFOX_AAR_ARTIFACTS}" 'x86_64'
   fi
 fi
