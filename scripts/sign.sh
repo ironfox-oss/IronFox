@@ -73,9 +73,9 @@ function sign_apk() {
   verify_file "${unsigned_apk}" || exit 1
 
   # Ensure our secrets are valid
-  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE}" || exit 1
-  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" || exit 1
-  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" || exit 1
+  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE}" 'IRONFOX_ANDROID_KEYSTORE' || exit 1
+  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" 'IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE' || exit 1
+  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" 'IRONFOX_ANDROID_KEYSTORE_PASS_FILE' || exit 1
 
   # If the directory for our output signed APK doesn't exist, create it
   local -r signed_apk_dir="$("${IRONFOX_DIRNAME}" "${signed_apk}")"
@@ -132,9 +132,9 @@ function sign_apkset() {
   verify_file "${aab}" || exit 1
 
   # Ensure our secrets are valid
-  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE}" || exit 1
-  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" || exit 1
-  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" || exit 1
+  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE}" 'IRONFOX_ANDROID_KEYSTORE' || exit 1
+  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" 'IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE' || exit 1
+  verify_file_with_env "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" 'IRONFOX_ANDROID_KEYSTORE_PASS_FILE' || exit 1
 
   # If the directory for our output signed APK doesn't exist, create it
   local -r apkset_dir="$("${IRONFOX_DIRNAME}" "${apkset}")"
