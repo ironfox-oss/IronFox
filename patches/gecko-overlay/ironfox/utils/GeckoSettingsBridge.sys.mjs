@@ -563,7 +563,6 @@ function boolPrefHasUISetting(pref) {
 function intPrefHasUISetting(pref) {
   const intPrefs = [
     // GeckoRuntimeSettings
-    "cookiebanners.service.mode.privateBrowsing",
     "font.size.inflation.minTwips",
     "network.trr.mode",
   ];
@@ -622,9 +621,6 @@ function canOverrideBoolPref(pref) {
     "browser.safebrowsing.provider.google5.enabled",
     "browser.safebrowsing.realTime.enabled",
     "browser.safebrowsing.realTime.simulation.enabled",
-    "cookiebanners.service.detectOnly",
-    "cookiebanners.service.enableGlobalRules",
-    "cookiebanners.service.enableGlobalRules.subFrames",
     "devtools.debugger.remote-enabled",
     "extensions.webapi.enabled",
     "fission.autostart",
@@ -675,7 +671,6 @@ function canOverrideIntPref(pref) {
   // This list should include preferences set/defined by us and/or Phoenix (at `ironfox.cfg`)
   // If a pref is NOT listed here, it can still be overriden by users, it just means it's default value will be set by ex. GeckoRuntimeSettings instead of us
   const forbiddenIntPrefs = [
-    "cookiebanners.service.mode",
     "dom.ipc.processCount",
     "extensions.webapi.enabled",
     "fission.webContentIsolationStrategy",
@@ -730,6 +725,7 @@ function canOverrideStringPref(pref) {
     "privacy.query_stripping.allow_list",
     "privacy.query_stripping.strip_list",
     "security.pki.crlite_channel",
+    "toolkit.ipProtection.android.authProvider",
     "urlclassifier.malwareTable",
     "urlclassifier.phishTable",
   ];

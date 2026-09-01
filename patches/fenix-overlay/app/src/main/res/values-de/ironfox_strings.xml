@@ -53,7 +53,6 @@
   <string name="onboarding_state_installing_ublock">Installieren von uBlock Origin…</string>
   <string name="onboarding_state_installing_ublock_error">Bei der Installation von uBlock Origin ist ein Fehler aufgetreten: %1$s</string>
   <string name="onboarding_action_retry">Wiederholen</string>
-  <string name="preference_collections_enabled">Sammlungen aktivieren</string>
   <string name="preference_translations_enabled">Firefox-Übersetzungen aktivieren</string>
   <string name="extension_failed_to_install_xpinstall_disabled_error">Die Installation von Add-ons ist derzeit deaktiviert. Falls gewünscht, können Sie die Installation auf Kosten der Sicherheit aktivieren, indem Sie zu Einstellungen -&gt; IronFox -&gt; IronFox-Einstellungen -&gt; Sicherheit -&gt; Installation von Add-ons zulassen navigieren.</string>
   <string name="preference_jit_trusted_principals_enabled">JavaScript Just-in-time-Kompilierung (JIT) für Erweiterungen aktivieren</string>

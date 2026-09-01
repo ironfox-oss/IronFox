@@ -178,90 +178,6 @@
     },
     {
       "schemaVersion": "1.12.0",
-      "slug": "ironfox-cookie-banners",
-      "id": "ironfox-cookie-banners",
-      "arguments": {},
-      "application": "org.mozilla.firefox",
-      "appName": "fenix",
-      "appId": "org.mozilla.firefox",
-      "channel": "release",
-      "userFacingName": "Cookie Banner Reduction",
-      "userFacingDescription": "Controls functionality related to Cookie Banner Reduction (Default: enabled)",
-      "isEnrollmentPaused": false,
-      "isRollout": false,
-      "bucketConfig": {
-        "count": 10000,
-        "start": 0,
-        "total": 10000,
-        "namespace": "fenix-cookie-banners-release-1",
-        "randomizationUnit": "nimbus_id"
-      },
-      "featureIds": [
-        "cookie-banners"
-      ],
-      "probeSets": [],
-      "outcomes": [],
-      "branches": [
-        {
-          "slug": "enabled",
-          "ratio": 100,
-          "features": [
-            {
-              "featureId": "cookie-banners",
-              "enabled": true,
-              "value": {
-                "sections-enabled": {
-                    "feature-setting-detect-only": 0,
-                    "feature-setting-global-rules": 1,
-                    "feature-setting-global-rules-sub-frames": 1,
-                    "feature-setting-value": 1,
-                    "feature-setting-value-pbm": 1,
-                    "feature-ui": 1
-                }
-              }
-            }
-          ]
-        },
-        {
-          "slug": "disabled",
-          "ratio": 0,
-          "features": [
-            {
-              "featureId": "cookie-banners",
-              "enabled": true,
-              "value": {
-                "sections-enabled": {
-                    "feature-setting-detect-only": 0,
-                    "feature-setting-global-rules": 0,
-                    "feature-setting-global-rules-sub-frames": 0,
-                    "feature-setting-value": 0,
-                    "feature-setting-value-pbm": 0,
-                    "feature-ui": 0
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "targeting": "true",
-      "startDate": "2024-12-13",
-      "enrollmentEndDate": null,
-      "endDate": null,
-      "proposedDuration": 100,
-      "proposedEnrollment": 100,
-      "referenceBranch": "enabled",
-      "featureValidationOptOut": false,
-      "localizations": null,
-      "locales": null,
-      "publishedDate": "2024-12-13T20:55:47.460708Z",
-      "isFirefoxLabsOptIn": false,
-      "firefoxLabsTitle": null,
-      "firefoxLabsDescription": null,
-      "firefoxLabsGroup": null,
-      "requiresRestart": true
-    },
-    {
-      "schemaVersion": "1.12.0",
       "slug": "ironfox-default-bottom-toolbar",
       "id": "ironfox-default-bottom-toolbar",
       "arguments": {},
@@ -1033,36 +949,49 @@
     },
     {
       "schemaVersion": "1.12.0",
-      "slug": "ironfox-homepage-sports-widget",
-      "id": "ironfox-homepage-sports-widget",
+      "slug": "ironfox-homepage-weather-widget",
+      "id": "ironfox-homepage-weather-widget",
       "arguments": {},
       "application": "org.mozilla.firefox",
       "appName": "fenix",
       "appId": "org.mozilla.firefox",
       "channel": "release",
-      "userFacingName": "Homepage Sports Widget",
-      "userFacingDescription": "Controls display of the homepage sports widget",
+      "userFacingName": "Homepage Weather Widget",
+      "userFacingDescription": "Controls display of the homepage weather widget (Default: enabled)",
       "isEnrollmentPaused": false,
       "isRollout": false,
       "bucketConfig": {
         "count": 10000,
         "start": 0,
         "total": 10000,
-        "namespace": "fenix-homepage-sports-widget-release-1",
+        "namespace": "fenix-homepage-weather-widget-release-1",
         "randomizationUnit": "nimbus_id"
       },
       "featureIds": [
-        "homepage-sports-widget"
+        "homepage-weather-widget"
       ],
       "probeSets": [],
       "outcomes": [],
       "branches": [
         {
-          "slug": "disabled",
+          "slug": "enabled",
           "ratio": 100,
           "features": [
             {
-              "featureId": "homepage-sports-widget",
+              "featureId": "homepage-weather-widget",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "homepage-weather-widget",
               "enabled": true,
               "value": {
                 "enabled": false
@@ -1077,7 +1006,7 @@
       "endDate": null,
       "proposedDuration": 100,
       "proposedEnrollment": 100,
-      "referenceBranch": "disabled",
+      "referenceBranch": "enabled",
       "featureValidationOptOut": false,
       "localizations": null,
       "locales": null,
@@ -1521,6 +1450,146 @@
       "proposedDuration": 100,
       "proposedEnrollment": 100,
       "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-oled-theme",
+      "id": "ironfox-oled-theme",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "OLED Theme",
+      "userFacingDescription": "Controls whether the OLED theme can be enabled (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-oled-theme-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "oled-theme"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "oled-theme",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "oled-theme",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-pdf-viewer",
+      "id": "ironfox-pdf-viewer",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "PDF UI Tools",
+      "userFacingDescription": "Controls the display of PDF UI tools (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-pdf-viewer-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "pdf-viewer"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "pdf-viewer",
+              "enabled": true,
+              "value": {
+                "android-ui-tools": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "pdf-viewer",
+              "enabled": true,
+              "value": {
+                "android-ui-tools": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
       "featureValidationOptOut": false,
       "localizations": null,
       "locales": null,

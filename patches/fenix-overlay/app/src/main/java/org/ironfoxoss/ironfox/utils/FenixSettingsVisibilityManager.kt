@@ -63,11 +63,12 @@ object FenixSettingsVisibilityManager {
 
     hidePreference(context, R.string.pref_key_crash_pull_never_show_again, prefFragment)
     hidePreference(context, R.string.pref_key_enable_ads_client_for_stories, prefFragment)
-    hidePreference(context, R.string.pref_key_enable_homepage_sports_widget, prefFragment)
+    hidePreference(context, R.string.pref_key_enable_firefox_labs, prefFragment)
     hidePreference(context, R.string.pref_key_enable_uninstall_survey, prefFragment)
     hidePreference(context, R.string.pref_key_microsurvey_feature_enabled, prefFragment)
     hidePreference(context, R.string.pref_key_nimbus_use_preview, prefFragment)
     hidePreference(context, R.string.pref_key_private_mode_and_stories_entry_point, prefFragment)
+    hidePreference(context, R.string.pref_key_use_new_crash_reporter, prefFragment)
     hidePreference(context, R.string.pref_key_use_remote_search_configuration, prefFragment)
   }
 

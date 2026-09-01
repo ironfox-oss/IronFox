@@ -53,7 +53,6 @@
   <string name="onboarding_state_installing_ublock">Instalando uBlock Origin…</string>
   <string name="onboarding_state_installing_ublock_error">Ocurrió un error al instalar uBlock Origin: %1$s</string>
   <string name="onboarding_action_retry">Reintentar</string>
-  <string name="preference_collections_enabled">Habilitar colecciones</string>
   <string name="preference_translations_enabled">Habilitar Traducciones de Firefox</string>
   <string name="extension_failed_to_install_xpinstall_disabled_error">Instalación de extensiones actualmente desactivada. Si lo deseas, a costa de seguridad, puedes habilitarla navegando a Ajustes -&gt; IronFox -&gt; Ajustes de IronFox -&gt; Seguridad -&gt; Permitir instalación de extensiones.</string>
   <string name="preference_jit_trusted_principals_enabled">Habilita la Compilación Just-in-Time (JIT) de JavaScript para extensiones</string>

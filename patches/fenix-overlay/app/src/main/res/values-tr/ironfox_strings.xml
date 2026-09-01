@@ -53,7 +53,6 @@
   <string name="preference_safe_browsing_enabled_description">IronFox\'un Güvenli Tarama işlevi şu anda Google tarafından sağlanmaktadır. IronFox, kullanıcıların en son tehditlere karşı korunmasını sağlamak için veritabanını düzenli olarak günceller ve olası bir eşleşmeyle karşılaştığında, IronFox şüpheli URL\'nin kısmi bir özetini Google\'a gönderebilir. IronFox\'un, genel IP adresinizin bu isteklerle ilişkilendirilmesini önlemek için bu bağlantıları proxy olarak kullandığını unutmayın.</string>
   <string name="onboarding_install_ublock_description">uBlock Origin, istenmeyen içerikleri engelleyerek gizliliğinizi ve güvenliğinizi artırır. IronFox, en iyi koruma ve performans için özenle seçilmiş filtre listelerine sahip özel bir uBlock Origin yapılandırması kullanır.</string>
   <string name="preferences_debug_settings_unifiedpush">UnifiedPush\'u etkinleştir</string>
-  <string name="preference_collections_enabled">Koleksiyonları etkinleştir</string>
   <string name="preference_translations_enabled">Firefox çevirilerini etkinleştir</string>
   <string name="extension_failed_to_install_xpinstall_disabled_error">Şu anda eklentilerin yüklenmesi devre dışı bırakılmıstır. Eğer istenirse, güvenlik pahasında Ayarlar -&gt; IronFox -&gt; IronFox ayarları -&gt; Güvenlik -&gt; Eklentilerin yüklenmesine izin ver\'e giderek etkinleştirilebilir.</string>
   <string name="preference_fpp_overrides_ironfox_enabled">IronFox\'tan parmak izi korumasını geçersiz kılmasını etkinleştir</string>

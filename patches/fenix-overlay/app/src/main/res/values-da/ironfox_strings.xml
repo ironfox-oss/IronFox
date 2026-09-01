@@ -62,5 +62,4 @@
   <string name="onboarding_state_installing_ublock">Installerer uBlock Origin…</string>
   <string name="onboarding_state_installing_ublock_error">Der opstod en fejl under installationen af uBlock Origin: %1$s</string>
   <string name="onboarding_action_retry">Prøv igen</string>
-  <string name="preference_collections_enabled">Aktivér indsamling</string>
 </resources>

@@ -77,6 +77,13 @@ patches:
     effect: "Reduces the size of APKsets to ensure they can be downloaded and properly uploaded to stores like Accrescent."
     category: "Build System"
 
+  - file: "gecko-fix-rfphelper-import.patch"
+    name: "Gecko - Fix RFPHelper Import"
+    description: "Prevents issues caused in certain cases from importing the RFPHelper component (which we do for ex. locale spoofing)."
+    reason: "To avoid bugs and ensure functionality works as expected."
+    effect: "Ensures that we can safely use/import the RFPHelper for certain functionality."
+    category: "Build System"
+
   - file: "gecko-ensure-builds-reflect-changes.patch"
     name: "Gecko - Ensure builds always reflect our (latest) changes"
     description: "Ensures that builds of GeckoView binaries always reflect our (latest) changes."
@@ -607,13 +614,6 @@ patches:
     effect: "Reduces network activity, provides users with more control, and provides a faster browser homepage."
     category: "Privacy"
 
-  - file: "a-c-do-not-unconditionally-allow-builtin-addons-to-access-private-browsing.patch"
-    name: "Android Components - Do not allow built-in add-ons to access private browsing windows unconditionally"
-    description: "Prevents built-in add-ons from always being able to access private browsing windows, even if they don't request or need access."
-    reason: "To improve privacy and security for users by limiting the amount of access built-in add-ons have to the browser."
-    effect: "Users are provided with a more private and secure browsing experience."
-    category: "Privacy"
-
   - file: "gecko-fix-canvas-randomization.patch"
     name: "Gecko - Fix canvas randomization"
     description: |
@@ -889,13 +889,6 @@ patches:
     description: "Provides support for a UI setting to enable/disable accessibility services."
     reason: "To disable accessibility services by default (due to privacy and security concerns), while still allowing users who need it to re-enable it if desired."
     effect: "Integration with accessibility services are disabled by default, but users can re-enable it from the UI."
-    category: "User Interface"
-
-  - file: "fenix-ironfox-settings-support-collections.patch"
-    name: "Fenix - IronFox Settings: Collections"
-    description: "Provides support for a UI setting to enable/disable collections."
-    reason: "To allow users to disable collections functionality if desired."
-    effect: "Users have more control over the new tab page."
     category: "User Interface"
 
   - file: "fenix-ironfox-settings-support-pb-always.patch"

@@ -10,7 +10,6 @@
     <string name="if_preferences_security">セキュリティ</string>
     <string name="preference_accessibility_enabled">アクセシビリティサービスを有効化</string>
     <string name="preference_always_use_private_browsing">常にプライベートブラウジングモードを利用</string>
-    <string name="preference_collections_enabled">コレクションを有効化</string>
     <string name="preference_referer_policy">クロスオリジンへのリファラー送信ポリシー</string>
     <string name="preference_referer_policy_summary">クロスオリジンに対するリファラーの挙動を設定します</string>
     <string name="preference_referer_policy_always">常にクロスオリジンにもリファラーを送信する (デフォルト)</string>

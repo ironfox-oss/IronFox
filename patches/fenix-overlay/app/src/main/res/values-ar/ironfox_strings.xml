@@ -11,7 +11,6 @@
   <string name="preference_referer_policy_hosts_match">عطّل محيلات المصادر عبر النطاقات</string>
   <string name="preference_accessibility_enabled">تفعيل خدمات الإتاحة</string>
   <string name="preference_always_use_private_browsing">استخدم دائمًا وضع التصفّح الخاص</string>
-  <string name="preference_collections_enabled">تفعيل التجميعات</string>
   <string name="preference_cache_enabled">تفعيل ذاكرة التخزين المؤقت</string>
   <string name="preference_translations_enabled">تفعيل ترجمات Firefox</string>
   <string name="preference_ipv6_enabled">تفعيل الاتصال بالشبكة عبر IPv6</string>

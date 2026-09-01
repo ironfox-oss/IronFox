@@ -352,16 +352,15 @@ index d8e4023d8790..cbbfdeacb501 100644
      override fun onConfigurationChanged(config: android.content.res.Configuration) {
          // Workaround for androidx appcompat issue where follow system day/night mode config changes
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index 34d74f1d51e7..d8ba7a695ccf 100644
+index 965e47791b02..9e7e875204e9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -86,14 +86,14 @@ import mozilla.components.support.utils.SafeIntent
+@@ -86,13 +86,13 @@ import mozilla.components.support.utils.SafeIntent
  import mozilla.components.support.utils.toSafeIntent
  import mozilla.components.support.webextensions.WebExtensionOptionsPageObserver
  import mozilla.components.support.webextensions.WebExtensionPopupObserver
 -import mozilla.telemetry.glean.private.NoExtras
 +/* import mozilla.telemetry.glean.private.NoExtras
- import org.mozilla.experiments.nimbus.initializeTooling
  import org.mozilla.fenix.GleanMetrics.AppIcon
  import org.mozilla.fenix.GleanMetrics.Events
  import org.mozilla.fenix.GleanMetrics.Metrics
@@ -372,7 +371,7 @@ index 34d74f1d51e7..d8ba7a695ccf 100644
  import org.mozilla.fenix.addons.ExtensionsProcessDisabledBackgroundController
  import org.mozilla.fenix.addons.ExtensionsProcessDisabledForegroundController
  import org.mozilla.fenix.bindings.ExternalAppLinkStatusBinding
-@@ -110,10 +110,10 @@ import org.mozilla.fenix.components.ipprotection.ErrorMessages
+@@ -112,10 +112,10 @@ import org.mozilla.fenix.components.ipprotection.ErrorMessages
  import org.mozilla.fenix.components.ipprotection.IPProtectionInfoPrompter
  import org.mozilla.fenix.components.menu.MenuAccessPoint
  import org.mozilla.fenix.components.menu.share.QRCodeDialogFragment
@@ -385,7 +384,7 @@ index 34d74f1d51e7..d8ba7a695ccf 100644
  import org.mozilla.fenix.components.share.QR_CODE_URI_KEY
  import org.mozilla.fenix.components.share.SEND_TO_DEVICES_ACTION
  import org.mozilla.fenix.components.share.SendToDevicesDialogFragment
-@@ -138,7 +138,7 @@ import org.mozilla.fenix.ext.hasTopDestination
+@@ -142,7 +142,7 @@ import org.mozilla.fenix.ext.hasTopDestination
  import org.mozilla.fenix.ext.isAllowedDuringOnboardingIntent
  import org.mozilla.fenix.ext.nav
  import org.mozilla.fenix.ext.openSetDefaultBrowserOption
@@ -394,10 +393,10 @@ index 34d74f1d51e7..d8ba7a695ccf 100644
  import org.mozilla.fenix.ext.setNavigationIcon
  import org.mozilla.fenix.extension.WebExtensionPromptFeature
  import org.mozilla.fenix.home.HomeFragment
-@@ -471,11 +471,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
-                 // Before the splashscreen ends the application has a different theme not supporting edge to edge.
-                 EdgeToEdgeFragmentLifecycleCallbacks.register(supportFragmentManager, window)
- 
+@@ -497,11 +497,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+             storage = DefaultSplashScreenStorage(components.settings),
+             showSplashScreen = { installSplashScreen().setKeepOnScreenCondition(it) },
+             onSplashScreenFinished = { result ->
 -                if (result.sendTelemetry) {
 +/*                if (result.sendTelemetry) {
                      SplashScreen.firstLaunchExtended.record(
@@ -408,7 +407,7 @@ index 34d74f1d51e7..d8ba7a695ccf 100644
  
                  if (savedInstanceState == null && shouldShowOnboarding) {
                      navHost.navController.navigate(NavGraphDirections.actionGlobalOnboarding())
-@@ -541,12 +541,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -567,12 +567,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                  }
                  maybeShowSetAsDefaultBrowserPrompt()
              } else {
@@ -423,7 +422,7 @@ index 34d74f1d51e7..d8ba7a695ccf 100644
          if (components.settings.isTelemetryEnabled) {
              lifecycle.addObserver(
                  BreadcrumbsRecorder(
-@@ -570,7 +570,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -596,7 +596,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                          AppIcon.newPrivateTabTapped.record(NoExtras())
                      }
                  }
@@ -432,7 +431,7 @@ index 34d74f1d51e7..d8ba7a695ccf 100644
          supportActionBar?.hide()
  
          lifecycle.addObservers(
-@@ -678,7 +678,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -719,7 +719,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              components.strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
                  components.appStore.dispatch(AppAction.UpdateWasNativeDefaultBrowserPromptShown(true))
                  showSetDefaultBrowserPrompt()
@@ -441,34 +440,37 @@ index 34d74f1d51e7..d8ba7a695ccf 100644
                  components.settings.setAsDefaultPromptCalled()
              }
          }
-@@ -745,7 +745,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -785,7 +785,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+             }
          }
  
-         lifecycleScope.launch(IO) {
--            if (components.settings.checkIfFenixIsDefaultBrowserOnAppResume()) {
-+/*            if (components.settings.checkIfFenixIsDefaultBrowserOnAppResume()) {
+-        lifecycleScope.launch(IO) {
++/*        lifecycleScope.launch(IO) {
+             if (components.settings.checkIfFenixIsDefaultBrowserOnAppResume()) {
                  if (components.appStore.state.wasNativeDefaultBrowserPromptShown) {
                      Metrics.defaultBrowserChangedViaNativeSystemPrompt.record(NoExtras())
-                 }
-@@ -755,7 +755,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -801,7 +801,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+             if (components.core.sentFromFirefoxManager.shouldShowSnackbar) {
+                 components.appStore.dispatch(ShareAction.ShareToWhatsApp)
              }
+-        }
++        } */
  
-             GrowthDataWorker.sendActivatedSignalIfNeeded(applicationContext)
--            FontEnumerationWorker.sendActivatedSignalIfNeeded(applicationContext)
-+            FontEnumerationWorker.sendActivatedSignalIfNeeded(applicationContext) */
- 
-             if (NotificationManagerCompat.from(applicationContext).areNotificationsEnabled()) {
-                 MessageNotificationWorker.setMessageNotificationWorker(applicationContext)
-@@ -986,7 +986,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+         lifecycleScope.launch(IO) {
+             // Register the [MARKETING_CHANNEL_ID] channel so that it appears in the Android Settings App.
+@@ -1024,9 +1024,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+         val qrCodeUri = intent.getStringExtra(QR_CODE_URI_KEY)
          if (qrCodeUri != null) {
              if (supportFragmentManager.findFragmentByTag(QRCodeDialogFragment.TAG) == null) {
-                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
--                    NativeShareSheet.qrCodeTapped.record(NoExtras())
-+//                    NativeShareSheet.qrCodeTapped.record(NoExtras())
-                 }
+-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
++/*                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                     NativeShareSheet.qrCodeTapped.record(NoExtras())
+-                }
++                } */
  
                  QRCodeDialogFragment.newInstance(qrCodeUri).showNow(
-@@ -1275,9 +1275,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+                     supportFragmentManager,
+@@ -1329,9 +1329,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              )
          }
  
@@ -480,7 +482,7 @@ index 34d74f1d51e7..d8ba7a695ccf 100644
  
          return nimbusOperation
      }
-@@ -1535,14 +1535,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -1599,14 +1599,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                  )
              }
              if (recentlyUsedPwaCount == 0) {
@@ -598,21 +600,25 @@ index 1b366c90eee6..9c4b7bcaba91 100644
      ) {
          GleanDebugToolsStore(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsStorage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsStorage.kt
-index a23df32558b2..32320d4715b5 100644
+index b8ce7d7adbcb..0138975174d3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsStorage.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsStorage.kt
-@@ -4,7 +4,7 @@
- 
+@@ -5,9 +5,9 @@
  package org.mozilla.fenix.debugsettings.gleandebugtools
  
+ import android.content.Intent
 -import mozilla.telemetry.glean.Glean
+-import mozilla.telemetry.glean.debug.GleanDebugActivity
+-import org.mozilla.fenix.Config
 +// import mozilla.telemetry.glean.Glean
++// import mozilla.telemetry.glean.debug.GleanDebugActivity
++// import org.mozilla.fenix.Config
+ import org.mozilla.fenix.utils.Settings
  
  /**
-  * A storage used to access the Glean APIs.
-@@ -30,12 +30,12 @@ interface GleanDebugToolsStorage {
-  */
- class DefaultGleanDebugToolsStorage : GleanDebugToolsStorage {
+@@ -43,12 +43,12 @@ class DefaultGleanDebugToolsStorage(
+     private val settings: Settings,
+ ) : GleanDebugToolsStorage {
      override fun setLogPings(enabled: Boolean) {
 -        Glean.setLogPings(enabled)
 +//        Glean.setLogPings(enabled)
@@ -625,13 +631,50 @@ index a23df32558b2..32320d4715b5 100644
 +//        Glean.submitPingByName(pingType)
      }
  
-     /**
-@@ -47,7 +47,7 @@ class DefaultGleanDebugToolsStorage : GleanDebugToolsStorage {
+     override fun clearPersistedDebugViewTag() {
+@@ -70,7 +70,7 @@ class DefaultGleanDebugToolsStorage(
           * Get all the types of pings that can be submitted.
           */
          fun getPingTypes(): Set<String> {
 -            return Glean.getRegisteredPingNames()
 +            return emptySet()
+         }
+ 
+         /**
+@@ -86,16 +86,16 @@ class DefaultGleanDebugToolsStorage(
+          * @param settings Where the debug view tag is persisted.
+          */
+         fun persistDebugViewTagIfRequested(intent: Intent, settings: Settings) {
+-            if (!Config.channel.isNightlyOrDebug) {
++            if (true) {
+                 return
+             }
+-            val debugViewTag = intent.getStringExtra(GleanDebugActivity.TAG_DEBUG_VIEW_EXTRA_KEY).orEmpty()
++/*            val debugViewTag = intent.getStringExtra(GleanDebugActivity.TAG_DEBUG_VIEW_EXTRA_KEY).orEmpty()
+             if (debugViewTag.isBlank()) {
+                 return
+             }
+-            val shouldPersist = intent.getBooleanExtra(PERSIST_DEBUG_VIEW_TAG_EXTRA, false)
++            val shouldPersist = intent.getBooleanExtra(PERSIST_DEBUG_VIEW_TAG_EXTRA, false) */
+             // Persist the tag when specifically requested, otherwise clear any previously persisted tag.
+-            settings.gleanDebugViewTag = if (shouldPersist) debugViewTag else ""
++//            settings.gleanDebugViewTag = if (shouldPersist) debugViewTag else ""
+         }
+ 
+         /**
+@@ -107,12 +107,12 @@ class DefaultGleanDebugToolsStorage(
+          * @param settings Where the debug view tag is persisted.
+          */
+         fun restorePersistedDebugViewTag(settings: Settings) {
+-            if (!Config.channel.isNightlyOrDebug) {
++            if (true) {
+                 return
+             }
+-            settings.gleanDebugViewTag
++/*            settings.gleanDebugViewTag
+                 .takeIf { it.isNotEmpty() }
+-                ?.let { Glean.setDebugViewTag(it) }
++                ?.let { Glean.setDebugViewTag(it) } */
          }
      }
  }

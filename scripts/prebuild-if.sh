@@ -513,8 +513,12 @@ function prepare_fenix() {
   # Prevent Gradle from incorrectly reporting that telemetry is enabled
   "${IRONFOX_SED}" -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' "${IRONFOX_FENIX}/app/build.gradle"
 
-  # Enable Firefox Labs
-  "${IRONFOX_SED}" -i -e 's|FIREFOX_LABS = .*|FIREFOX_LABS = true|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt"
+  # Disable Firefox Labs
+  ## (Depends on Nimbus)
+  "${IRONFOX_SED}" -i -e 's|FIREFOX_LABS = .*|FIREFOX_LABS = false|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt"
+
+  # Enable pull-to-refresh
+  "${IRONFOX_SED}" -i -e 's|PULL_TO_REFRESH_ENABLED = .*|PULL_TO_REFRESH_ENABLED = true|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt"
 
   # Ensure onboarding is always enabled
   "${IRONFOX_SED}" -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt"
@@ -609,6 +613,7 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsService.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt"
+  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/ReferralAttribution.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/RtamoAttributionHandler.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/crashes/CrashFactCollector.kt"
@@ -866,7 +871,6 @@ function prepare_firefox() {
   echo '' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
   echo 'FINAL_TARGET_FILES.defaults.settings.main += [' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
   echo '    "anti-tracking-url-decoration.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
-  echo '    "cookie-banner-rules-list.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
   echo '    "hijack-blocklists.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
   echo '    "translations-models.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
   echo '    "translations-wasm.json",' >> "${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"

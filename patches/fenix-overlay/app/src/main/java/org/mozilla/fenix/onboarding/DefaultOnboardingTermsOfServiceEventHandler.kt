@@ -14,5 +14,4 @@ class DefaultOnboardingTermsOfServiceEventHandler(
   override fun onTermsOfServiceLinkClicked(url: String) {}
   override fun onPrivacyNoticeLinkClicked(url: String) {}
   override fun onManagePrivacyPreferencesLinkClicked() {}
-  override fun onAcceptTermsButtonClicked(nowMillis: Long) {}
 }

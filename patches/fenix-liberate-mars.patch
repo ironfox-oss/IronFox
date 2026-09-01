@@ -56,7 +56,7 @@ index 87a4f911c0cf..f92e2c53742e 100644
  
      val relayEligibilityStore by lazyMonitored {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 730300cb21b9..4ea76f77d765 100644
+index a8f4af42231d..7782a3ff67de 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -85,11 +85,11 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
@@ -66,14 +66,14 @@ index 730300cb21b9..4ea76f77d765 100644
 -import mozilla.components.service.mars.MacTopSitesProvider
 +/* import mozilla.components.service.mars.MacTopSitesProvider
  import mozilla.components.service.mars.MacTopSitesRequestConfig
+ import mozilla.components.service.mars.MacTopSitesUpdater
  import mozilla.components.service.mars.NEW_TAB_TILE_1_PLACEMENT_KEY
- import mozilla.components.service.mars.NEW_TAB_TILE_2_PLACEMENT_KEY
--import mozilla.components.service.mars.contile.ContileTopSitesUpdater
-+import mozilla.components.service.mars.contile.ContileTopSitesUpdater */
+-import mozilla.components.service.mars.NEW_TAB_TILE_2_PLACEMENT_KEY
++import mozilla.components.service.mars.NEW_TAB_TILE_2_PLACEMENT_KEY */
  import mozilla.components.service.merino.manifest.MerinoManifestProvider
  import mozilla.components.service.pocket.ContentRecommendationsRequestConfig
  import mozilla.components.service.pocket.PocketStoriesConfig
-@@ -629,7 +629,7 @@ class Core(
+@@ -619,7 +619,7 @@ class Core(
      }
      val pocketStoriesService by lazyMonitored { PocketStoriesService(context, pocketStoriesConfig) }
  
@@ -82,7 +82,7 @@ index 730300cb21b9..4ea76f77d765 100644
          MacTopSitesProvider(
              adsClientProvider = context.components.ads.lazyAdsClientProvider,
              requestConfig = MacTopSitesRequestConfig(
-@@ -649,13 +649,13 @@ class Core(
+@@ -639,13 +639,13 @@ class Core(
              provider = macTopSitesProvider,
              frequency = Frequency(3, TimeUnit.HOURS),
          )
@@ -227,10 +227,10 @@ index 613112904628..cb367416eafc 100644
  
      override fun handleTopSiteSettingsClicked() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index 34d74f1d51e7..0526eacd64ba 100644
+index 965e47791b02..76791a0f32a3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -142,7 +142,7 @@ import org.mozilla.fenix.ext.recordEventInNimbus
+@@ -146,7 +146,7 @@ import org.mozilla.fenix.ext.recordEventInNimbus
  import org.mozilla.fenix.ext.setNavigationIcon
  import org.mozilla.fenix.extension.WebExtensionPromptFeature
  import org.mozilla.fenix.home.HomeFragment
@@ -239,17 +239,14 @@ index 34d74f1d51e7..0526eacd64ba 100644
  import org.mozilla.fenix.home.intent.AssistIntentProcessor
  import org.mozilla.fenix.home.intent.CrashReporterIntentProcessor
  import org.mozilla.fenix.home.intent.HomeDeepLinkIntentProcessor
-@@ -582,7 +582,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
-             aboutHomeBinding,
+@@ -607,12 +607,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+             serviceWorkerSupport,
              crashReporterBinding,
              defaultTopSitesBinding,
 -            TopSitesRefresher(
 +/*            TopSitesRefresher(
                  settings = components.settings,
-                 topSitesProvider = if (components.settings.enableMozillaAdsClient) {
-                     components.core.macTopSitesProvider
-@@ -591,7 +591,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
-                 },
+                 topSitesProvider = components.core.macTopSitesProvider,
                  startupPathProvider = startupPathProvider,
                  visualCompletenessQueue = components.performance.visualCompletenessQueue,
 -            ),
@@ -257,21 +254,21 @@ index 34d74f1d51e7..0526eacd64ba 100644
              downloadSnackbar,
              privateBrowsingLockFeature,
              externalAppLinkStatusBinding,
-@@ -626,7 +626,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -659,7 +659,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
          )
  
          if (components.settings.showContileFeature) {
--            components.core.contileTopSitesUpdater.startPeriodicWork()
-+//            components.core.contileTopSitesUpdater.startPeriodicWork()
+-            components.core.macTopSitesUpdater.startPeriodicWork()
++//            components.core.macTopSitesUpdater.startPeriodicWork()
          }
  
          if (!components.settings.hiddenEnginesRestored) {
-@@ -903,7 +903,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -950,7 +950,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              ),
          )
  
--        components.core.contileTopSitesUpdater.stopPeriodicWork()
-+//        components.core.contileTopSitesUpdater.stopPeriodicWork()
+-        components.core.macTopSitesUpdater.stopPeriodicWork()
++//        components.core.macTopSitesUpdater.stopPeriodicWork()
          components.core.pocketStoriesService.stopPeriodicContentRecommendationsRefresh()
          components.core.pocketStoriesService.stopPeriodicSponsoredContentsRefresh()
          privateNotificationObserver?.stop()

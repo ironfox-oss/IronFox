@@ -68,19 +68,6 @@ index 3c71fd5f01a1..34db4143fbc3 100644
          }
  
      @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index 06c3de1f7a5d..69c936fd3478 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -374,7 +374,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
-         val startTimeProfiler = components.core.engine.profiler?.getProfilerTime()
- 
-         // Setup nimbus-cli tooling. This is a NOOP when launching normally.
--        components.nimbus.sdk.initializeTooling(applicationContext, intent)
-+//        components.nimbus.sdk.initializeTooling(applicationContext, intent)
-         components.strictMode.attachListenerToDisablePenaltyDeath(supportFragmentManager)
-         MarkersFragmentLifecycleCallbacks.register(supportFragmentManager, components.core.engine)
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 index f448f7f0a79b..48b8b5e1ad30 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt

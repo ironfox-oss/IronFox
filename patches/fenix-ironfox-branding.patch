@@ -7,31 +7,6 @@ Modifies branding elements to IronFox.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
-index fbd12fc813a3..3d0e6f9f5753 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
-@@ -67,10 +67,20 @@ class MarketingPageRemovalSupport(
- 
- internal fun MutableList<OnboardingPageUiData>.removeIfPageNotReached(index: Int) {
-     val marketingIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.MARKETING_DATA }
-+    val searchWidgetIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.ADD_SEARCH_WIDGET }
-+    val syncIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.SYNC_SIGN_IN }
- 
-     if (index < marketingIndex) {
-         removeAt(marketingIndex)
-     }
-+
-+    if (index < syncIndex) {
-+        removeAt(syncIndex)
-+    }
-+
-+    if (index < searchWidgetIndex) {
-+        removeAt(searchWidgetIndex)
-+    }
- }
- 
- internal fun SharedPreferences.flowScopedBooleanPreference(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 index 63cee0ad25f3..d03e8d1c9d91 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt

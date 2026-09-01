@@ -51,10 +51,10 @@ index 70cf6e8802..451cc94e79 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 058a5b3562..3180a8da15 100644
+index 8f7a42c13672..e15ab30c7878 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -29,9 +29,9 @@ import mozilla.components.feature.summarize.settings.SummarizationSettings
+@@ -27,9 +27,9 @@ import mozilla.components.feature.summarize.settings.SummarizationSettings
  import mozilla.components.lib.ai.controls.AIFeatureBlockStorage
  import mozilla.components.lib.ai.controls.dataStore
  import mozilla.components.lib.ai.controls.default
@@ -66,8 +66,8 @@ index 058a5b3562..3180a8da15 100644
  import mozilla.components.lib.llm.mlpa.MlpaTokenStorage
  import mozilla.components.lib.publicsuffixlist.PublicSuffixList
  import mozilla.components.service.fxrelay.eligibility.RelayEligibilityStore
-@@ -67,9 +67,9 @@ import org.mozilla.fenix.components.ipprotection.IPProtection
- import org.mozilla.fenix.components.lens.GoogleLensAIControlFeature
+@@ -62,9 +62,9 @@ import org.mozilla.fenix.components.ipprotection.IPProtection
+ import org.mozilla.fenix.components.ipprotection.IPProtectionAuthSources
  import org.mozilla.fenix.components.llm.Llm
  import org.mozilla.fenix.components.llm.ext.accessTokenProvider
 -import org.mozilla.fenix.components.metrics.MetricsMiddleware
@@ -78,7 +78,7 @@ index 058a5b3562..3180a8da15 100644
  import org.mozilla.fenix.datastore.pocketStoriesSelectedCategoriesDataStore
  import org.mozilla.fenix.distributions.DefaultDistributionBrowserStoreProvider
  import org.mozilla.fenix.distributions.DefaultDistributionProviderChecker
-@@ -79,14 +79,14 @@ import org.mozilla.fenix.ext.asRecentTabs
+@@ -74,16 +74,16 @@ import org.mozilla.fenix.ext.asRecentTabs
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.filterState
  import org.mozilla.fenix.ext.sort
@@ -94,25 +94,20 @@ index 058a5b3562..3180a8da15 100644
  import org.mozilla.fenix.home.setup.store.SetupChecklistPreferencesMiddleware
 -import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
 +// import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
- import org.mozilla.fenix.home.sports.SportsWidgetMiddleware
- import org.mozilla.fenix.home.sports.WorldCupMatchesRepository
- import org.mozilla.fenix.home.sports.client.AppServicesWorldCupMatchesClient
-@@ -94,7 +94,7 @@ import org.mozilla.fenix.home.sports.client.mockWorldCupBaseHost
- import org.mozilla.fenix.home.sports.hasWorldCupEnded
- import org.mozilla.fenix.ipprotection.IPProtectionManager
  import org.mozilla.fenix.ipprotection.store.DefaultIPProtectionPromptRepository
 -import org.mozilla.fenix.messaging.state.MessagingMiddleware
 +// import org.mozilla.fenix.messaging.state.MessagingMiddleware
  import org.mozilla.fenix.nimbus.FxNimbus
  import org.mozilla.fenix.onboarding.FenixOnboarding
  import org.mozilla.fenix.perf.AppLinkIntentLaunchTypeProvider
-@@ -103,14 +103,14 @@ import org.mozilla.fenix.perf.StartupActivityLog
+@@ -92,15 +92,15 @@ import org.mozilla.fenix.perf.StartupActivityLog
  import org.mozilla.fenix.perf.StartupStateProvider
  import org.mozilla.fenix.perf.StrictModeManager
  import org.mozilla.fenix.perf.lazyMonitored
 -import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
 +// import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
  import org.mozilla.fenix.search.VoiceSearchAIControlFeature
+ import org.mozilla.fenix.settings.ToolbarShortcutSettingsSearchProvider
 -import org.mozilla.fenix.settings.ai.AIControlsSearchProvider
 -import org.mozilla.fenix.settings.datachoices.DataChoicesSearchProvider
 +// import org.mozilla.fenix.settings.ai.AIControlsSearchProvider
@@ -125,7 +120,7 @@ index 058a5b3562..3180a8da15 100644
  import org.mozilla.fenix.settings.settingssearch.DefaultFenixSettingsIndexer
  import org.mozilla.fenix.termsofuse.TermsOfUseManager
  import org.mozilla.fenix.termsofuse.store.DefaultTermsOfUsePromptRepository
-@@ -337,7 +337,7 @@ class Components(private val context: Context) {
+@@ -325,7 +325,7 @@ class Components(
                  ProfileMarkerMiddleware(markerName = "AppStore", profiler = core.engine.profiler),
                  LogMiddleware(tag = "AppStore", shouldIncludeDetailedData = { Config.channel.isDebug }),
                  BlocklistMiddleware(blocklistHandler),
@@ -134,8 +129,8 @@ index 058a5b3562..3180a8da15 100644
                      lazyMonitored { core.pocketStoriesService },
                      context.pocketStoriesSelectedCategoriesDataStore,
                      SettingsBackedPocketSettings(settings),
-@@ -358,9 +358,9 @@ class Components(private val context: Context) {
-                         currentTimeInMillis = { System.currentTimeMillis() },
+@@ -346,9 +346,9 @@ class Components(
+                         currentTimeInMillis = currentTimeMillis,
                      ),
                  ),
 -                HomeTelemetryMiddleware(),
@@ -146,18 +141,18 @@ index 058a5b3562..3180a8da15 100644
                  ReviewPromptMiddleware(
                      continuousOnboardingInProgress = {
                          val continuousOnboardingCompleted = settings.seventhDayOnboardingCompletedTimestamp != -1L
-@@ -373,7 +373,7 @@ class Components(private val context: Context) {
+@@ -360,7 +360,7 @@ class Components(
                      nimbusEventStore = nimbus.events,
                  ).also {
                      settings.migrateLastReviewPromptTimePrefIfNeeded(nimbus.events)
 -                },
 +                }, */
                  AppVisualCompletenessMiddleware(performance.visualCompletenessQueue),
-                 SportsWidgetMiddleware(
-                     sportsRepository = WorldCupMatchesRepository(
-@@ -461,11 +461,11 @@ class Components(private val context: Context) {
-                 }
-             },
+             ),
+         ).also {
+@@ -414,11 +414,11 @@ class Components(
+         DefaultFenixSettingsIndexer(
+             context = context,
              additionalProviders = listOf(
 -                DataChoicesSearchProvider,
 +/*                DataChoicesSearchProvider,
@@ -192,7 +187,7 @@ index 979e420aa7..36061cd0c1 100644
                  utmMedium: ${settings.utmMedium}
                  utmSource: ${settings.utmSource}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-index 8fc72b97d9..ec7ddf9d45 100644
+index 27bb97831498e..fe8c74cd349ef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 @@ -8,7 +8,7 @@ import androidx.annotation.StringRes
@@ -204,7 +199,7 @@ index 8fc72b97d9..ec7ddf9d45 100644
  import mozilla.components.concept.storage.CreditCardsAddressesStorage
  import mozilla.components.concept.storage.LoginsStorage
  import org.mozilla.fenix.R
-@@ -21,20 +21,20 @@ import org.mozilla.fenix.debugsettings.addresses.AddressesTools
+@@ -19,20 +19,20 @@ import org.mozilla.fenix.debugsettings.addresses.AddressesTools
  import org.mozilla.fenix.debugsettings.autofill.AutofillTools
  import org.mozilla.fenix.debugsettings.cfrs.CfrToolsState
  import org.mozilla.fenix.debugsettings.cfrs.CfrToolsStore
@@ -231,7 +226,7 @@ index 8fc72b97d9..ec7ddf9d45 100644
  import org.mozilla.fenix.debugsettings.tabs.TabTools as TabToolsScreen
  
  /**
-@@ -71,7 +71,7 @@ enum class DebugDrawerRoute(
+@@ -69,7 +69,7 @@ enum class DebugDrawerRoute(
          route = "autofill",
          title = R.string.debug_drawer_autofill_title,
      ),
@@ -240,7 +235,7 @@ index 8fc72b97d9..ec7ddf9d45 100644
          route = "cfr_tools",
          title = R.string.debug_drawer_cfr_tools_title,
      ),
-@@ -82,19 +82,19 @@ enum class DebugDrawerRoute(
+@@ -80,19 +80,19 @@ enum class DebugDrawerRoute(
      RegionDebugTools(
          route = "region_debug_tools",
          title = R.string.debug_drawer_region_tools_title,
@@ -263,16 +258,12 @@ index 8fc72b97d9..ec7ddf9d45 100644
      TabGroupTools(
          route = "tab_group_tools",
          title = R.string.debug_drawer_tab_group_tools_title,
-@@ -103,14 +103,14 @@ enum class DebugDrawerRoute(
+@@ -101,10 +101,10 @@ enum class DebugDrawerRoute(
          route = "tab_process_tools",
          title = R.string.debug_drawer_tab_process_tools_title,
      ),
--    SportsWidgetTool(
-+/*    SportsWidgetTool(
-         route = "sports_widget_tool",
-         title = R.string.debug_drawer_sports_widget_tool_title,
-     ),
-     DistributionTools(
+-    DistributionTools(
++/*    DistributionTools(
          route = "distribution_tools",
          title = R.string.debug_drawer_distribution_tools_title,
 -    ),
@@ -280,7 +271,7 @@ index 8fc72b97d9..ec7ddf9d45 100644
      ;
  
      companion object {
-@@ -141,7 +141,7 @@ enum class DebugDrawerRoute(
+@@ -133,7 +133,7 @@ enum class DebugDrawerRoute(
              addressesDebugRegionRepository: AddressesDebugRegionRepository,
              creditCardsAddressesStorage: CreditCardsAddressesStorage,
              clientUUID: ClientUUID,
@@ -289,7 +280,7 @@ index 8fc72b97d9..ec7ddf9d45 100644
              inactiveTabsEnabled: Boolean,
              tabGroupRepository: TabGroupRepository,
          ): List<DebugDrawerDestination> =
-@@ -210,7 +210,7 @@ enum class DebugDrawerRoute(
+@@ -202,7 +202,7 @@ enum class DebugDrawerRoute(
                          }
                      }
  
@@ -298,7 +289,7 @@ index 8fc72b97d9..ec7ddf9d45 100644
                          onClick = {
                              debugDrawerStore.dispatch(DebugDrawerAction.NavigateTo.CfrTools)
                          }
-@@ -237,7 +237,7 @@ enum class DebugDrawerRoute(
+@@ -229,7 +229,7 @@ enum class DebugDrawerRoute(
                                  browserStore = browserStore,
                              )
                          }
@@ -307,7 +298,7 @@ index 8fc72b97d9..ec7ddf9d45 100644
  
                      AddonsDebugTools -> {
                          onClick = {
-@@ -248,7 +248,7 @@ enum class DebugDrawerRoute(
+@@ -240,7 +240,7 @@ enum class DebugDrawerRoute(
                          }
                      }
  
@@ -316,7 +307,7 @@ index 8fc72b97d9..ec7ddf9d45 100644
                          onClick = {
                              debugDrawerStore.dispatch(DebugDrawerAction.NavigateTo.CrashDebugTools)
                          }
-@@ -263,7 +263,7 @@ enum class DebugDrawerRoute(
+@@ -255,7 +255,7 @@ enum class DebugDrawerRoute(
                          content = {
                              IntegrityTools(clientUUID, integrityClient)
                          }
@@ -325,16 +316,15 @@ index 8fc72b97d9..ec7ddf9d45 100644
  
                      TabGroupTools -> {
                          onClick = {
-@@ -286,7 +286,7 @@ enum class DebugDrawerRoute(
+@@ -278,14 +278,14 @@ enum class DebugDrawerRoute(
                          }
                      }
  
--                    SportsWidgetTool -> {
-+/*                    SportsWidgetTool -> {
+-                    DistributionTools -> {
++/*                    DistributionTools -> {
                          onClick = {
-                             appStore.dispatch(AppAction.SportsWidgetAction.DebugToolVisibilityChanged(visible = true))
-                             debugDrawerStore.dispatch(DebugDrawerAction.DrawerClosed)
-@@ -301,7 +301,7 @@ enum class DebugDrawerRoute(
+                             debugDrawerStore.dispatch(DebugDrawerAction.NavigateTo.DistributionTools)
+                         }
                          content = {
                              DistributionTools()
                          }

@@ -9,7 +9,6 @@
   <string name="if_preferences_secret">Impostazioni segrete</string>
   <string name="if_preferences_security">Sicurezza</string>
   <string name="preference_accessibility_enabled">Servizi di accessibilità</string>
-  <string name="preference_collections_enabled">Collezioni</string>
   <string name="preference_cache_enabled">Abilita la cache del disco</string>
   <string name="preference_translations_enabled">Abilita le traduzioni di Firefox</string>
   <string name="preference_fpp_overrides_ironfox_enabled">Abilita l\'override di Ironfox sulla protezione da fingerprinting</string>

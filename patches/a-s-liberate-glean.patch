@@ -315,7 +315,7 @@ index fa4b5578a..6faab0f2e 100644
      }
  }
 diff --git a/components/places/Cargo.toml b/components/places/Cargo.toml
-index 0f84c2f4e..7efe87254 100644
+index 76341ae2d..bb649a4fe 100644
 --- a/components/places/Cargo.toml
 +++ b/components/places/Cargo.toml
 @@ -7,9 +7,9 @@ license = "MPL-2.0"
@@ -330,16 +330,16 @@ index 0f84c2f4e..7efe87254 100644
  
  [dependencies]
  sync15 = { path = "../sync15" }
-@@ -34,7 +34,7 @@ sync-guid = { path = "../support/guid", features = ["rusqlite_support", "random"
- thiserror = "2"
- anyhow = "1.0"
- uniffi = { version = "0.31" }
+@@ -37,7 +37,7 @@ uniffi = { version = "0.31" }
+ 
+ # glean-sym is only used on Android and iOS.
+ [target.'cfg(any(target_os = "android", target_os = "ios"))'.dependencies]
 -glean-sym = { git = "https://github.com/mozilla/glean", tag = "v68.0.0", optional = true }
 +# glean-sym = { git = "https://github.com/mozilla/glean", tag = "v68.0.0", optional = true }
  
  [dev-dependencies]
  error-support = { path = "../support/error", features = ["testing"] }
-@@ -43,4 +43,4 @@ sql-support = { path = "../support/sql" }
+@@ -46,4 +46,4 @@ sql-support = { path = "../support/sql" }
  
  [build-dependencies]
  uniffi = { version = "0.31", features=["build"]}

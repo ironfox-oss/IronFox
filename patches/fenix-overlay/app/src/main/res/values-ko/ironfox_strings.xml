@@ -53,7 +53,6 @@
   <string name="preference_prefers_light_color_scheme">라이트 (기본값)</string>
   <string name="preference_pdfjs_disabled">외부에서 PDF 파일 열기</string>
   <string name="preferences_debug_settings_unifiedpush">UnifiedPush 활성화</string>
-  <string name="preference_collections_enabled">컬렉션 활성화</string>
   <string name="preference_jit_enabled_description">보안성을 희생하는 대신 JIT를 활성화하여 웹사이트 성능을 향상시킬 수 있습니다. 저사항 기기 사용자에게만 권장됩니다.</string>
   <string name="preference_jit_trusted_principals_enabled">확장 프로그램에 JavaScript Just-in-time Compilation (JIT) 사용</string>
   <string name="preference_webrtc_enabled">WebRTC 사용</string>

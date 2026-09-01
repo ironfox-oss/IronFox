@@ -17,6 +17,7 @@
 
   <!-- Collections -->
   <string name="pref_key_collections_enabled" translatable="false">pref_key_collections_enabled</string>
+  <string name="pref_key_ironfox_collections_migrated" translatable="false">pref_key_ironfox_collections_migrated</string>
 
   <!-- Cross-origin referer policy -->
   <string name="pref_key_referer_policy" translatable="false">pref_key_referer_policy</string>

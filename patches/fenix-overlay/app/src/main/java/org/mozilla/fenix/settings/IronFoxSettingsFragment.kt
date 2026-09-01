@@ -546,22 +546,6 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
     /*** Miscellaneous ***/
 
     /**
-     * Indicates whether or not we should enable collections
-     * Default: true
-     * Gecko preference(s) impacted: N/A
-     */
-    val collectionsPreference = requirePreference<SwitchPreference>(R.string.pref_key_collections_enabled)
-
-    collectionsPreference.isChecked = IronFoxPreferences.isCollectionsEnabled(requireContext())
-    collectionsPreference.setOnPreferenceChangeListener<Boolean> { preference, collectionsEnabled ->
-      val context = requireContext()
-
-      IronFoxPreferences.setCollectionsEnabled(context, collectionsEnabled)
-
-      true
-    }
-
-    /**
      * Indicates whether or not we should enable Firefox Translations
      * Default: true
      * Gecko preference(s) impacted:

@@ -22,9 +22,6 @@
   <!-- Always use private browsing mode -->
   <string name="preference_always_use_private_browsing">Always use private browsing mode</string>
 
-  <!-- Collections -->
-  <string name="preference_collections_enabled">Enable collections</string>
-
   <!-- Cross-origin referer policy -->
   <string name="preference_referer_policy">Cross-origin referer policy</string>
   <string name="preference_referer_policy_summary">Configure the behavior of cross-origin referers</string>

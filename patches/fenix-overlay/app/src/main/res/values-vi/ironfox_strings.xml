@@ -10,7 +10,6 @@
   <string name="if_preferences_security">Bảo mật</string>
   <string name="preference_accessibility_enabled">Bật các dịch vụ hỗ trợ</string>
   <string name="preference_always_use_private_browsing">Luôn sử dụng chế độ duyệt web riêng tư</string>
-  <string name="preference_collections_enabled">Bật tính năng bộ sưu tập</string>
   <string name="preference_referer_policy">Chính sách referrer đa nguồn</string>
   <string name="preference_referer_policy_summary">Cấu hình hành vi của referrer đa nguồn</string>
   <string name="preference_referer_policy_always">Luôn gửi referrer đa nguồn (Mặc định)</string>

@@ -138,18 +138,18 @@ index 20d433329de61..927ee950f854a 100644
          {
              'cid': '{7beb3ba8-6ec3-41b4-b67c-da89b8518922}',
 diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-index 256cb95fc1193..492f155ecac6b 100644
+index 41898178874c..91d5472c0684 100644
 --- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-@@ -29,6 +29,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
-   PermissionsUtils: "resource://gre/modules/PermissionsUtils.sys.mjs",
-   QuarantinedDomains: "resource://gre/modules/ExtensionPermissions.sys.mjs",
-   ExtensionPermissions: "resource://gre/modules/ExtensionPermissions.sys.mjs",
-+  IFPrefUtils:          "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+@@ -33,6 +33,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+     "resource://gre/modules/addons/ThemesBundledLocalization.sys.mjs",
+   hasThemeIdBundledLocalization:
+     "resource://gre/modules/addons/ThemesBundledLocalization.sys.mjs",
++  IFPrefUtils: "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
  });
  
  // A temporary hidden pref just meant to be used as a last resort, in case
-@@ -2283,10 +2284,14 @@ export const XPIDatabase = {
+@@ -2278,10 +2279,14 @@ export const XPIDatabase = {
     * manager for the user to change later.
     */
    importPermissions() {

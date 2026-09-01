@@ -54,7 +54,6 @@
   <string name="onboarding_state_installing_ublock_error">Ocorreu um erro ao instalar o uBlock Origin: %1$s</string>
   <string name="onboarding_action_retry">Tentar novamente</string>
   <string name="preference_always_use_private_browsing">Sempre usar o modo de navegação privativa</string>
-  <string name="preference_collections_enabled">Ativar coleções</string>
   <string name="preference_translations_enabled">Ativar Traduções do Firefox</string>
   <string name="preference_fpp_overrides_ironfox_enabled">Ativar sobreposições do IronFox para proteção contra fingerprinting</string>
   <string name="preference_fpp_overrides_ironfox_summary">Relaxa as proteções contra fingerprinting para certos sites com o fim de reduzir a sua quebra, usando uma lista do IronFox - Ao alterar esta configuração, o seu navegador será reiniciado</string>

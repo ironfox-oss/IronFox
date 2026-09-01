@@ -483,7 +483,7 @@ object IronFoxPreferences {
   ) {
     val settings = context.components.settings
 
-    settings.collections = isEnabled
+    settings.ironfox.collections = isEnabled
   }
 
   /**
@@ -493,7 +493,27 @@ object IronFoxPreferences {
    */
   fun isCollectionsEnabled(
     context: Context
-  ): Boolean = context.components.settings.collections
+  ): Boolean = context.components.settings.ironfox.collections
+
+  /**
+   * Check if we have migrated the collections preference
+   *
+   * @param context The application context
+   */
+  fun isCollectionsEnabledMigrated(context: Context): Boolean {
+    return context.components.settings.ironfox.collectionsMigrated
+  }
+
+  /**
+   * Set whether the collections preference has been migrated
+   *
+   * @param context The application context
+   * @param isEnabled Whether we have migrated the collections preferences
+   */
+  fun setCollectionsEnabledMigrated(context: Context, hasMigrated: Boolean) {
+    val settings = context.components.settings
+    settings.ironfox.collectionsMigrated = hasMigrated
+  }
 
   /**
    * Set whether to enable Firefox Translations

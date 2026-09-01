@@ -21,7 +21,6 @@
   <string name="preference_jit_enabled_description">За сметка на сигурността, можете да активирате JIT, за да подобрите производителността на уебсайтове. Препоръчва се само за потребители с устройства от по-нисък клас.</string>
   <string name="preference_jit_enabled_summary">Когато е деактивирана, производителността може да бъде намалена за сложни уеб страници - Промяната на тази настройка ще рестартира браузъра ви</string>
   <string name="preference_pdfjs_disabled">Отваряне на PDF файлове външно</string>
-  <string name="preference_collections_enabled">Активиране на колекции</string>
   <string name="preference_referer_policy">Политика за препращане от друг произход</string>
   <string name="preference_translations_enabled">Активиране на преводите на Firefox</string>
   <string name="preference_fpp_overrides_ironfox_enabled">Активиране на отменяния на защитата с пръстови отпечатъци от IronFox</string>

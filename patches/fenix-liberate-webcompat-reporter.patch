@@ -33,17 +33,21 @@ index ad28bfb8c8ff..a97427c7925c 100644
      implementation project(':components:feature-webnotifications')
      implementation project(':components:service-digitalassetlinks')
      implementation project(':components:service-firefox-accounts')
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt
-index 00728e2ba98b..edeb6b7e0b50 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt
-@@ -38,7 +38,7 @@ data class MenuState(
-             val url = browserMenuState?.selectedTab?.content?.url
-             val isAboutUrl = url?.isAboutUrl() ?: false
-             val isContentUrl = url?.isContentUrl() ?: false
--            return !isAboutUrl && !isContentUrl
-+            return false
-         }
- }
- 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
+index ed56bde6116b..cfb05bdd8c01 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
+@@ -68,10 +68,10 @@ internal fun MoreSettingsSubmenu(
+             isPrivate = isPrivate,
+             onMoveToNonPrivateTabMenuClick = onMoveToNonPrivateTabMenuClick,
+         )
+-        WebCompatReporterMenuItem(
++/*        WebCompatReporterMenuItem(
+             isWebCompatEnabled = isWebCompatEnabled,
+             onWebCompatReporterClick = onWebCompatReporterClick,
+-        )
++        ) */
+         ShortcutsSection(
+             showShortcuts = showShortcuts,
+             isPinned = isPinned,
 -- 

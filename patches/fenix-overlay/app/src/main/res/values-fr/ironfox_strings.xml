@@ -53,7 +53,6 @@
   <string name="onboarding_state_installing_ublock">Installation de uBlock Origin…</string>
   <string name="onboarding_state_installing_ublock_error">Une erreur s\'est produite lors de l\'installation de uBlock Origin : %1$s</string>
   <string name="onboarding_action_retry">Réessayer</string>
-  <string name="preference_collections_enabled">Activer les collections</string>
   <string name="preference_translations_enabled">Activer traductions de Firefox</string>
   <string name="extension_failed_to_install_xpinstall_disabled_error">L\'installations des modules complémentaires est actuellement désactivé. Si vous le voulez, vous pouvez l\'activer au détriment de la sécurité en navigant dans Paramètres -&gt; IronFox -&gt; paramètres d\'IronFox -&gt; Sécurité -&gt; Autoriser l\'installation des modules complémentaires.</string>
   <string name="preference_fpp_overrides_ironfox_enabled">Activer les remplacements de protection par empreinte digitale d\'IronFox</string>

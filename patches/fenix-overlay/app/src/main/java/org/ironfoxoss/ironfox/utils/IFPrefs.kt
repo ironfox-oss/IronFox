@@ -4,6 +4,7 @@ import android.content.Context
 import mozilla.components.lib.crash.store.CrashReportOption
 import org.ironfoxoss.core.IFConstants
 import org.ironfoxoss.ironfox.utils.IFPrefUtils
+import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.R
 import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_ALL
 import org.mozilla.fenix.termsofuse.TOU_TIME_IN_MILLIS
@@ -63,6 +64,10 @@ object IFPrefs {
     prefs.setDefaultBoolPref(R.string.pref_key_privacy_report, false) // Privacy Report
     prefs.setDefaultBoolPref(R.string.pref_key_show_top_sites, true) // [DEFAULT] Shortcuts
 
+    /// Disable AccuWeather by default, but allow users to enable it if desired
+    prefs.setDefaultBoolPref(R.string.pref_key_enable_homepage_weather_widget, true) // UI
+    prefs.setDefaultBoolPref(R.string.pref_key_show_homepage_weather_widget, false)
+
     // Disable AI Controls
     prefs.setBoolPref(R.string.pref_key_enable_ai_controls, false)
 
@@ -85,6 +90,10 @@ object IFPrefs {
     prefs.setDefaultBoolPref(R.string.pref_key_tracking_protection_custom_allow_list_convenience, false) // [DEFAULT]
     prefs.setDefaultBoolPref(R.string.pref_key_tracking_protection_strict_allow_list_convenience, false) // [DEFAULT]
 
+    // Disable Firefox Labs
+    /// (Depends on Nimbus)
+    prefs.setBoolPref(R.string.pref_key_enable_firefox_labs, false)
+
     // Disable Firefox Relay by default
     prefs.setDefaultBoolPref(R.string.pref_key_email_mask_suggestion, false)
     prefs.setDefaultBoolPref(R.string.pref_key_enable_email_masks, false)
@@ -102,6 +111,9 @@ object IFPrefs {
     // Disable Google Lens integration
     prefs.setBoolPref(R.string.pref_key_google_lens_integration, false)
     prefs.setBoolPref(R.string.pref_key_google_lens_integration_user_enabled, false)
+
+    // Disable Google Play Integrity
+    prefs.setBoolPref(R.string.pref_key_ip_protection_use_gpi, false) // [DEFAULT]
 
     // Disable hiding URLs with certain parameters from history
     prefs.setDefaultStringPref(R.string.pref_key_frecency_filter_query, "")
@@ -136,7 +148,6 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_show_menu_banner, false)
     prefs.setBoolPref(R.string.pref_key_summarize_toolbar_cfr_shown, true)
     prefs.setBoolPref(R.string.pref_key_toolbar_has_shown_tab_swipe_cfr, true)
-    prefs.setBoolPref(R.string.pref_key_user_knows_about_pwa, true)
     prefs.setBoolPref(R.string.pref_key_wallpapers_onboarding, false)
 
     // Disable Nimbus
@@ -203,6 +214,9 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_should_show_marketing_onboarding, false)
     prefs.setBoolPref(R.string.pref_key_telemetry, false)
 
+    /// Ensure we do not attach a debug tag/identifier to pings
+    prefs.setStringPref(R.string.pref_key_glean_debug_view_tag, "") // [DEFAULT]
+
     /// For redundancy/defense in depth, ensure we never try to submit various pings
     prefs.setBoolPref(R.string.pref_key_first_week_post_install_everyday_activity_and_set_to_default_sent, true)
     prefs.setBoolPref(R.string.pref_key_first_week_post_install_is_browser_set_to_default_during_first_four_days, true)
@@ -224,6 +238,9 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_is_user_tiktok_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_x_twitter_attributed, false) // [DEFAULT]
 
+    /// Ensure we don't submit the referral ping
+    prefs.setBoolPref(R.string.pref_key_referral_ping_submitted, true)
+
     // Disable third-party/OS-level root certificates by default
     prefs.setDefaultBoolPref(R.string.pref_key_allow_third_party_root_certs, false) // [DEFAULT]
 
@@ -233,10 +250,6 @@ object IFPrefs {
     // Disable URL autocomplete by default
     prefs.setDefaultBoolPref(R.string.pref_key_enable_autocomplete_urls, false)
 
-    // Disable the World Cup widget/promotion
-    prefs.setBoolPref(R.string.pref_key_enable_homepage_sports_widget, false)
-    prefs.setBoolPref(R.string.pref_key_show_homepage_sports_widget, false)
-
     // Disable Zygote preloading by default
     // https://grapheneos.org/usage#exec-spawning
     prefs.setDefaultBoolPref(R.string.pref_key_enable_app_zygote_process, false)
@@ -244,11 +257,11 @@ object IFPrefs {
     // Display extensions in the custom tabs menu by default
     prefs.setDefaultBoolPref(R.string.pref_key_should_show_custom_tab_extensions, true)
 
+    // Display the option to enable the OLED theme by default
+    prefs.setDefaultBoolPref(R.string.pref_key_enable_oled_theme, true)
+
     // Display the toolbar on the top by default
     prefs.setDefaultBoolPref(R.string.pref_key_toolbar_bottom, false)
-
-    // Enable Cookie Banner Reduction (in Private Browsing) by default
-    prefs.setDefaultBoolPref(R.string.pref_key_cookie_banner_private_mode, true)
 
     // Enable DoH UI settings
     prefs.setDefaultBoolPref(R.string.pref_key_doh_settings_enabled, true)
@@ -269,9 +282,6 @@ object IFPrefs {
     prefs.setDefaultBoolPref(R.string.pref_key_tracking_protection_custom_allow_list_baseline, true) // [DEFAULT]
     prefs.setDefaultBoolPref(R.string.pref_key_tracking_protection_strict_allow_list_baseline, true) // [DEFAULT]
 
-    // Enable Firefox Labs
-    prefs.setDefaultBoolPref(R.string.pref_key_enable_firefox_labs, true)
-
     // Enable Global Privacy Control by default
     /// We effectively no-op this anyways (in favor of using the Gecko pref directly)
     prefs.setDefaultBoolPref(R.string.pref_key_privacy_enable_global_privacy_control, true)
@@ -288,8 +298,11 @@ object IFPrefs {
     prefs.setDefaultBoolPref(R.string.pref_key_enable_lna_feature_enabled, true)
     prefs.setDefaultBoolPref(R.string.pref_key_enable_lna_tracker_blocking_enabled, true)
 
+    // Enable PDF UI tools
+    prefs.setDefaultBoolPref(R.string.pref_key_enable_pdf_tools, true)
+
     // Enable Private Browsing Lock
-    // Allows users to require authentication to access tabs in Private Browsing
+    /// Allows users to require authentication to access tabs in Private Browsing
     prefs.setDefaultBoolPref(R.string.pref_key_private_browsing_locked_enabled, true)
 
     // Enable Pull-to-refresh by default
@@ -302,5 +315,14 @@ object IFPrefs {
     prefs.setLongPref(R.string.pref_key_terms_accepted_date, tosTime)
     prefs.setBoolPref(R.string.pref_key_terms_prompt_drag_handle_enabled, true)
     prefs.setBoolPref(R.string.pref_key_terms_prompt_enabled, false)
+
+    // Migrate the collections preference if necessary
+    if (!IronFoxPreferences.isCollectionsEnabledMigrated(context)) {
+      if (!IronFoxPreferences.isCollectionsEnabled(context)) {
+        prefs.setDefaultBoolPref(R.string.pref_key_hide_collections, true)
+      }
+      IronFoxPreferences.setCollectionsEnabledMigrated(context, true)
+      prefs.clearPref(R.string.pref_key_collections_enabled)
+    }
   }
 }

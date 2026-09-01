@@ -55,7 +55,6 @@
   <string name="onboarding_action_retry">Yritä uudelleen</string>
   <string name="preference_translations_enabled">Laita Firefox käännökset päälle</string>
   <string name="preference_always_use_private_browsing">Käytä aina yksityinen-selaus tilaa</string>
-  <string name="preference_collections_enabled">Salli kokoelmat</string>
   <string name="preference_fpp_overrides_ironfox_enabled">Salli IronFoxin yliajaa sormenjälkitunnistuksen esto</string>
   <string name="preference_fpp_overrides_ironfox_summary">Keventää sormenjälkitunnistuksen estoja tietyiltä verkkosivuilta oletuksena vähentääkseen sivujen rikkoutumista, käyttäen IronFoxin listaa - Tämän asetuksen muuttaminen käynnistää selaimen uudelleen</string>
   <string name="preference_fpp_overrides_mozilla_enabled">Salli Mozillan yliajaa sormenjälkitunnistuksen esto</string>

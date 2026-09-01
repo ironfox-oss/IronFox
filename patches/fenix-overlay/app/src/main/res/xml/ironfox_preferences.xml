@@ -275,13 +275,6 @@
     android:title="@string/if_preferences_misc"
     app:iconSpaceReserved="false">
 
-    <!-- Whether we should enable collections -->
-    <androidx.preference.SwitchPreference
-      android:defaultValue="true"
-      android:key="@string/pref_key_collections_enabled"
-      android:title="@string/preference_collections_enabled"
-      app:iconSpaceReserved="false" />
-
     <!-- Whether we should enable Firefox Translations -->
     <androidx.preference.SwitchPreference
       android:defaultValue="true"

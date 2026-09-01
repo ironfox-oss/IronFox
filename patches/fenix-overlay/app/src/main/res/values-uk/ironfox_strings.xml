@@ -9,7 +9,6 @@
   <string name="if_preferences_secret">Приховані налаштування</string>
   <string name="if_preferences_security">Безпека</string>
   <string name="preference_accessibility_enabled">Увімкнути служби спеціальних можливостей</string>
-  <string name="preference_collections_enabled">Увімкнути колекції</string>
   <string name="preference_referer_policy">Політика реферера між джерелами</string>
   <string name="preference_referer_policy_summary">Налаштуйте поведінку реферерів між джерелами</string>
   <string name="preference_referer_policy_always">Завжди надсилати реферери між джерелами (типово)</string>

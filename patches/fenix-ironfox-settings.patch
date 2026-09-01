@@ -133,7 +133,7 @@ index 440da531952f..d4c4e78d2887 100644
          android:id="@+id/trackingProtectionFragment"
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 243eddddd9a3..5963a7073099 100644
+index 1b720c0285de..62c542f548a0 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 @@ -6,12 +6,12 @@
@@ -151,24 +151,27 @@ index 243eddddd9a3..5963a7073099 100644
  
      <androidx.preference.PreferenceCategory
          android:key="@string/pref_key_account_category"
-@@ -19,6 +19,10 @@
-         app:isPreferenceVisible="false"
+@@ -20,6 +20,10 @@
          android:layout="@layout/preference_category_no_icon_style">
  
-+        <org.mozilla.fenix.settings.account.AccountPreference
+         <org.mozilla.fenix.settings.account.AccountPreference
 +            android:icon="@drawable/mozac_ic_avatar_circle_24"
 +            android:key="@string/pref_key_sign_in" />
 +
-         <org.mozilla.fenix.settings.account.AccountPreference
++         <org.mozilla.fenix.settings.account.AccountPreference
              android:icon="@drawable/mozac_ic_avatar_circle_24"
              android:key="@string/pref_key_account" />
-@@ -209,10 +213,22 @@
-         <androidx.preference.SwitchPreference
+ 
+@@ -233,6 +237,7 @@
+         <androidx.preference.SwitchPreferenceCompat
              android:defaultValue="false"
              android:key="@string/pref_key_enable_gecko_logs"
 +            android:summary="@string/restart_required_summary"
              app:iconSpaceReserved="false"
              android:title="@string/preferences_enable_gecko_logs" />
+ 
+@@ -242,6 +247,17 @@
+             android:title="@string/preferences_local_network_access" />
      </PreferenceCategory>
  
 +    <androidx.preference.PreferenceCategory

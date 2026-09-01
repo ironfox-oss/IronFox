@@ -9,7 +9,6 @@
   <string name="if_preferences_secret">Tajná nastavení</string>
   <string name="if_preferences_security">Bezpečnost</string>
   <string name="preference_accessibility_enabled">Povolit služby přístupnosti</string>
-  <string name="preference_collections_enabled">Povolit sbírky</string>
   <string name="preference_referer_policy">Zásady refererů z jiných domén</string>
   <string name="preference_referer_policy_summary">Nastavení chování zásad refererů z jiných domén</string>
   <string name="preference_referer_policy_always">Vždy posílat referery z jiných domén (výchozí)</string>

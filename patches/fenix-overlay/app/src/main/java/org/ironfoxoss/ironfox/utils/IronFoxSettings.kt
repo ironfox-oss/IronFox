@@ -52,6 +52,17 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
     default = false,
   )
 
+  // This is for our legacy collection setting - to be removed!
+  var collections by booleanPreference(
+    key = context.getPreferenceKey(R.string.pref_key_collections_enabled),
+    default = true,
+  )
+
+  var collectionsMigrated by booleanPreference(
+    key = context.getPreferenceKey(R.string.pref_key_ironfox_collections_migrated),
+    default = false,
+  )
+
   var emeEnabled by booleanPreference(
     key = context.getPreferenceKey(R.string.pref_key_eme_enabled),
     default = false,

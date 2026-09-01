@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Mon, 31 Aug 2026 04:32:10 +0000
+Subject: [PATCH] Gecko - Fix RFPHelper Import
+
+Prevents issues caused in certain cases from importing the RFPHelper component (which we do for ex. locale spoofing).
+
+Adapted from LibreWolf: https://librewolf.dev/librewolf/source/src/branch/main/patches/canvas-permission.patch
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/toolkit/components/resistfingerprinting/RFPHelper.sys.mjs b/toolkit/components/resistfingerprinting/RFPHelper.sys.mjs
+index f82d7309e1..d11f8a011f 100644
+--- a/toolkit/components/resistfingerprinting/RFPHelper.sys.mjs
++++ b/toolkit/components/resistfingerprinting/RFPHelper.sys.mjs
+@@ -208,8 +208,14 @@ class _RFPHelper {
+       return;
+     }
+ 
+-    let loadContext = notificationCallbacks.getInterface(Ci.nsILoadContext);
+-    if (!loadContext || !loadContext.isContent) {
++    let loadContext;
++    try {
++      loadContext = notificationCallbacks.getInterface(Ci.nsILoadContext);
++    } catch (e) {
++      return;
++    }
++
++    if (!loadContext.isContent) {
+       return;
+     }
+ 
+-- 

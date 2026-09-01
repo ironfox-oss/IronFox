@@ -53,7 +53,6 @@
   <string name="onboarding_state_installing_ublock">Установка uBlock Origin…</string>
   <string name="onboarding_state_installing_ublock_error">При установке uBlock Origin произошла ошибка: %1$s</string>
   <string name="onboarding_action_retry">Попробовать снова</string>
-  <string name="preference_collections_enabled">Включить коллекции</string>
   <string name="preference_translations_enabled">Включить Firefox Translations</string>
   <string name="extension_failed_to_install_xpinstall_disabled_error">Установка расширений отключена. При желании, в ущерб безопасности, Вы можете включить её, перейдя в Настройки -&gt; IronFox -&gt; Настройки IronFox -&gt; Безопасность и выбрав пункт \"Разрешить установку расширений\".</string>
   <string name="preference_fpp_overrides_ironfox_enabled">Включить переопределения защиты от фингерпринтинга, созданные IronFox</string>
