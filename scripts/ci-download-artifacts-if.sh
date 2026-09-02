@@ -146,7 +146,7 @@ function download_artifact() {
     local -r arch_suffix='x86_64'
   elif [[ "${arch}" == 'universal' ]]; then
     local -r arch_suffix='universal'
-  else
+  elif [[ "${arch}" != 'bundle' ]]; then
     echo_red_text "ERROR: Unknown architecture: '${arch}'!"
     exit 1
   fi
