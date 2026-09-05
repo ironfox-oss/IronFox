@@ -1,4 +1,1 @@
-- Updated to Firefox [`155.0`](https://firefox.com/firefox/android/155.0/releasenotes/).
-- Updated to Phoenix [`2026.09.01.1`](https://codeberg.org/celenity/Phoenix/releases/tag/2026.09.01.1).
-- Updated to Rust [`1.98.0`](https://releases.rs/docs/1.98.0/).
-- Minor tweaks, adjustments and fixes/clean-up. 
+- Updated to Firefox [`155.0.1`](https://firefox.com/firefox/android/155.0.1/releasenotes/).
