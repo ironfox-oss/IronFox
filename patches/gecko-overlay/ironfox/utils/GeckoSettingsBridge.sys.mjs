@@ -493,6 +493,9 @@ function setDohBootstrap(address) {
   } else if (address === "https://unfiltered.joindns4.eu/dns-query" ||
    address === "https://unfiltered.joindns4.eu:443/dns-query") {
     bootstrapIP = '86.54.11.100';
+  } else if (address === "https://dnsbunker.org/dns-query" ||
+   address === "https://dnsbunker.org:443/dns-query") {
+    bootstrapIP = '185.250.250.61';
   };
 
   // Set our bootstrap IP
