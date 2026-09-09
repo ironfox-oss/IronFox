@@ -4,45 +4,26 @@
 
 test/ironfox-nightly.aab    lfs
 
+# GitHub/Forgejo (linguist-language): Exact canonical case (Shell, JSON, JavaScript). UPPER or lower only do not work.
+# GitLab (gitlab-language): lowercase only (shell, json).
+#
+# https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml
+# https://github.com/go-enry/go-enry/blob/master/data/languageInfo.go
+
 *.json                      linguist-detectable
 *.yaml                      linguist-detectable
 *.xml                       linguist-detectable
-
-# GitLab
-# (These language names must be lowercase)
-# For a list of supported languages, see:
-# https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml
-*.build                     gitlab-language=python
-*.cfg                       gitlab-language=javascript
-*.conf                      gitlab-language=python
-*.configure                 gitlab-language=python
-*.ftl                       gitlab-language=ini
-*.jsonc                     gitlab-language=json
-*.mn                        gitlab-language=makefile
-*.mozconfig                 gitlab-language=shell
-*.properties                gitlab-language=ini
-*.yml                       gitlab-language=yaml
-.git*                       gitlab-language=shell
-.gitlab-ci.yml              gitlab-language=yaml
-.npmrc*                     gitlab-language=ini
-machrc*                     gitlab-language=ini
-
-# Forgejo (Codeberg)/GitHub
-# (These language names must be uppercase)
-# For a list of supported languages, see:
-# Forgejo (Codeberg): https://github.com/go-enry/go-enry/blob/master/data/languageInfo.go
-# GitHub: https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml
-*.build                     linguist-language=PYTHON
-*.cfg                       linguist-language=JAVASCRIPT
-*.conf                      linguist-language=PYTHON
-*.configure                 linguist-language=PYTHON
-*.ftl                       linguist-language=INI
-*.jsonc                     linguist-language=JSON
-*.mn                        linguist-language=MAKEFILE
-*.mozconfig                 linguist-language=SHELL
-*.properties                linguist-language=INI
-*.yml                       linguist-language=YAML
-.git*                       linguist-language=SHELL
-.gitlab-ci.yml              linguist-language=YAML
-.npmrc*                     linguist-language=INI
-machrc*                     linguist-language=INI
+*.build                     linguist-language=PYTHON        gitlab-language=python
+*.cfg                       linguist-language=JavaScript    gitlab-language=javascript
+*.conf                      linguist-language=PYTHON        gitlab-language=python
+*.configure                 linguist-language=PYTHON        gitlab-language=python
+*.ftl                       linguist-language=INI           gitlab-language=ini
+*.jsonc                     linguist-language=JSON          gitlab-language=json
+*.mn                        linguist-language=MAKEFILE      gitlab-language=makefile
+*.mozconfig                 linguist-language=Shell         gitlab-language=shell
+*.properties                linguist-language=INI           gitlab-language=ini
+*.yml                       linguist-language=YAML          gitlab-language=yaml
+.git*                       linguist-language=Shell         gitlab-language=shell
+.gitlab-ci.yml              linguist-language=YAML          gitlab-language=yaml
+.npmrc*                     linguist-language=INI           gitlab-language=ini
+machrc*                     linguist-language=INI           gitlab-language=ini
