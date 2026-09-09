@@ -496,6 +496,27 @@ function setDohBootstrap(address) {
   } else if (address === "https://dnsbunker.org/dns-query" ||
    address === "https://dnsbunker.org:443/dns-query") {
     bootstrapIP = '185.250.250.61';
+  } else if (address === "https://dnsforge.de/dns-query" ||
+   address === "https://dnsforge.de:443/dns-query") {
+    if (useFallback) {
+      bootstrapIP = '91.99.154.175';
+    } else {
+      bootstrapIP = '49.12.67.122';
+    };
+  } else if (address === "https://hard.dnsforge.de/dns-query" ||
+   address === "https://hard.dnsforge.de:443/dns-query") {
+    if (useFallback) {
+      bootstrapIP = '88.198.122.154';
+    } else {
+      bootstrapIP = '49.12.222.213';
+    };
+  } else if (address === "https://blank.dnsforge.de/dns-query" ||
+   address === "https://blank.dnsforge.de:443/dns-query") {
+    if (useFallback) {
+      bootstrapIP = '78.47.71.194';
+    } else {
+      bootstrapIP = '138.199.149.249';
+    };
   };
 
   // Set our bootstrap IP

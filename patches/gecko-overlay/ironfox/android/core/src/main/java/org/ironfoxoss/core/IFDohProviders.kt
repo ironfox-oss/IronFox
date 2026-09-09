@@ -33,6 +33,18 @@ object IFDohProviders {
   const val dnsBunkerName = "DNSBunker 🇩🇪"
   const val dnsBunkerUri = "https://dnsbunker.org/dns-query"
 
+  // dnsforge.de (Blank)
+  const val dnsForgeBlankName = "dnsforge.de (Blank) 🇩🇪"
+  const val dnsForgeBlankUri = "https://blank.dnsforge.de/dns-query"
+
+  // dnsforge.de (Hard)
+  const val dnsForgeHardName = "dnsforge.de (Hard) 🇩🇪"
+  const val dnsForgeHardUri = "https://hard.dnsforge.de/dns-query"
+
+  // dnsforge.de (Normal)
+  const val dnsForgeNormalName = "dnsforge.de (Normal) 🇩🇪"
+  const val dnsForgeNormalUri = "https://dnsforge.de/dns-query"
+
   // Mullvad (Unfiltered)
   const val mullvadUnfilteredName = "Mullvad (Unfiltered) 🇸🇪"
   const val mullvadUnfilteredUri = "https://dns.mullvad.net/dns-query"

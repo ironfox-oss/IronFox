@@ -491,6 +491,9 @@ patches:
         - DNS4EU (Protective)
         - DNS4EU (Unfiltered)
         - DNSBunker
+        - dnsforge.de (Blank)
+        - dnsforge.de (Hard)
+        - dnsforge.de (Normal)
         - Mullvad (Unfiltered)
     reason: "To add support for multiple secure DNS providers in the UI settings."
     effect: "Adds a selection of carefully selected DoH providers for the users to choose from."
