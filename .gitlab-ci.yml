@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://gitlab.com/gitlab-org/gitlab-foss/-/raw/master/app/assets/javascripts/editor/schema/ci.json
 .build_cache: &build_cache
   - key: cache-cargo-$CI_COMMIT_REF_SLUG
     policy: pull-push
@@ -43,13 +44,14 @@ default:
       - unknown_failure
 
 variables: &common_variables
-  ARTIFACT_COMPRESSION_LEVEL: 'slowest'
-  CACHE_COMPRESSION_LEVEL: 'slowest'
-  FF_USE_FASTZIP: '1'
+  ARTIFACT_COMPRESSION_LEVEL: "slowest"
+  CACHE_COMPRESSION_LEVEL: "slowest"
+  FF_USE_FASTZIP: "1"
   IRONFOX_CI: 1
-  IRONFOX_DEV_BRANCH: 'dev'
-  IRONFOX_PROD_BRANCH: 'main'
-  TRANSFER_METER_FREQUENCY: '2s'
+  IRONFOX_DEV_BRANCH: "dev"
+  IRONFOX_FEDORA_VERSION: "44"
+  IRONFOX_PROD_BRANCH: "main"
+  TRANSFER_METER_FREQUENCY: "2s"
 
 stages:
   - lint
@@ -63,7 +65,7 @@ stages:
 # Runs first so a lint failure stops the pipeline before the multi-hour builds.
 # Uses a minimal image and is NOT namespace-gated, so it also runs for forks / contributor pipelines.
 lint-scripts:
-  image: fedora:44
+  image: fedora:$IRONFOX_FEDORA_VERSION
   stage: lint
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -81,7 +83,7 @@ lint-scripts:
     - /bin/bash scripts/lint.sh
 
 update-fdroid-repo:
-  image: fedora:44
+  image: fedora:$IRONFOX_FEDORA_VERSION
   stage: build_fdroid
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -96,7 +98,7 @@ update-fdroid-repo:
     - /bin/bash scripts/ci-update-fdroid-repo.sh
 
 update-site-repo:
-  image: fedora:44
+  image: fedora:$IRONFOX_FEDORA_VERSION
   stage: build_site
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -222,7 +224,7 @@ build-fenix:
       when: never
 
 publish-release:
-  image: fedora:44
+  image: fedora:$IRONFOX_FEDORA_VERSION
   stage: release
   interruptible: true
   needs:
