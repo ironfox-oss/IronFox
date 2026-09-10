@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_title">Přizpůsobit IronFox</string>
+    <string name="ironfox_onboarding_preferences_description">Přizpůsobte si IronFox podle svých představ</string>
+    <string name="ironfox_onboarding_doh_caption">Zabezpečte své prohlížení pomocí DNS přes HTTPS pro zvýšené soukromí a bezpečnost.</string>
+    <string name="ironfox_onboarding_install_ublock">Nainstalovat doplněk uBlock Origin</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Blokovat reklamy, sledovací prvky a malware pro bezpečnější a čistší zážitek z prohlížení.</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin zlepšuje vaše soukromí a bezpečnost blokováním nevyžádaného obsahu. Prohlížeč IronFox používá vlastní konfiguraci doplňku uBlock Origin s pečlivě vybranými seznamy filtrů pro optimální ochranu a výkon.</string>
+    <string name="ironfox_onboarding_jit_enabled">Povolit kompilaci JavaScriptu v reálném čase (JIT)</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">Zlepšete výkon JavaScriptu povolením JIT. (Nedoporučeno pro většinu uživatelů)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">Za cenu bezpečnosti můžete povolit JIT pro zlepšení výkonnosti webových stránek. Doporučeno pouze pro uživatele s méně výkonnými zařízeními.</string>
+    <string name="preference_safe_browsing_enabled">Povolit funkci Bezpečné prohlížení</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Získejte ochranu proti nebezpečným webovým stránkám, malwaru a pokusům o phishing v reálném čase.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">Funkce Bezpečné prohlížení v prohlížeči IronFox je v současné době poskytována společností Google. IronFox bude pravidelně aktualizovat databázi pro ujištění, že jsou uživatelé chráněni proti nejnovějším hrozbám, a v případě nalezení potenciální shody může IronFox odeslat částečný hash podezřelé adresy společnosti Google. IronFox odesílá tyto požadavky skrze síť proxy pro zabránění spojení vaší IP adresy s těmito požadavky.</string>
+    <string name="ironfox_onboarding_spoof_english">Zamaskovat jazyk jako en-US</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Zvyšte své soukromí zamaskováním nastavení jazyka vašeho zařízení.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Požadovat anglické (en-US) verze webových stránek. Díky tomu bude váš prohlížeč vypadat méně unikátně, což zvýší ochranu proti technikám vytváření otisku, které identifikují uživatele v závislosti na jejich předvolbách jazyka.</string>
+</resources>

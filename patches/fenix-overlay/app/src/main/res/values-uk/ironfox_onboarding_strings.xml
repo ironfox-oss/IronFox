@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_title">Налаштуйте IronFox</string>
+    <string name="ironfox_onboarding_preferences_description">Налаштуйте IronFox на свій смак</string>
+    <string name="ironfox_onboarding_doh_caption">Захистіть перегляд вебсторінок за допомогою DNS-over-HTTPS для покращення конфіденційності та безпеки.</string>
+    <string name="ironfox_onboarding_install_ublock">Установити uBlock Origin</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Блокуйте рекламу, відстеження та шкідливе програмне забезпечення для безпечнішого та чистішого перегляду вебсторінок.</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin покращує вашу конфіденційність і безпеку, блокуючи небажаний контент. IronFox використовує власну конфігурацію uBlock Origin із ретельно підібраними списками фільтрів для оптимального захисту та продуктивності.</string>
+    <string name="ironfox_onboarding_jit_enabled">Увімкнути JIT-компіляцію JavaScript</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">Покращити продуктивність JavaScript, увімкнувши JIT-компіляцію. (Не рекомендується для більшості користувачів)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">Ціною безпеки ви можете ввімкнути JIT-компіляцію для покращення продуктивності вебсайтів. Рекомендовано лише для користувачів із пристроями нижчого класу.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">Увімкнути безпечний перегляд</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Отримайте захист у режимі реального часу від небезпечних вебсайтів, шкідливого програмного забезпечення та спроб фішингу.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">Наразі функція безпечного перегляду в IronFox надається компанією Google. IronFox періодично оновлюватиме свою базу даних для захисту користувачів від новітніх загроз. У разі виявлення потенційно небезпечного вебсайту IronFox може надіслати частковий хеш підозрілої URL-адреси до Google. Зверніть увагу, що IronFox використовує проксі для захисту вашої публічної IP-адреси.</string>
+    <string name="ironfox_onboarding_spoof_english">Підміняти мову на англійську (США)</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Покращте конфіденційність, маскуючи мовні налаштування вашого пристрою.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Запитувати англомовні (en-US) версії вебсторінок. Це зробить ваш браузер менш унікальним, посилюючи захист від збору цифрових відбитків, які ідентифікують користувачів на основі їхніх мовних уподобань.</string>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+ xmlns:moz="http://mozac.org/tools">
+  <!-- Onboarding - Title and description -->
+  <string name="ironfox_onboarding_preferences_title">Customize IronFox</string>
+  <string name="ironfox_onboarding_preferences_description">Customize IronFox to suit your liking</string>
+
+  <!-- Onboarding - DoH -->
+  <string name="ironfox_onboarding_doh_caption">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
+
+  <!-- Onboarding - JavaScript JIT -->
+  <string name="ironfox_onboarding_jit_enabled">Enable JavaScript Just-in-time Compilation (JIT)</string>
+  <string name="ironfox_onboarding_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
+  <string name="ironfox_onboarding_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
+
+  <!-- Onboarding - Safe Browsing -->
+  <string name="ironfox_onboarding_safe_browsing_enabled">Enable Safe Browsing</string>
+  <string name="ironfox_onboarding_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
+  <string name="ironfox_onboarding_safe_browsing_enabled_description">IronFox’s Safe Browsing functionality is currently provided by Google. IronFox will periodically update the database to ensure users are protected against the latest threats, and upon encountering a potential match, IronFox might submit a partial hash of the suspected URL to Google. Note that IronFox proxies these connections, to prevent your public IP address from being associated with these requests.</string>
+
+  <!-- Onboarding - Spoof locale to English -->
+  <string name="ironfox_onboarding_spoof_english">Spoof language to en-US</string>
+  <string name="ironfox_onboarding_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
+  <string name="ironfox_onboarding_spoof_english_description">Request English (en-US) versions of webpages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
+
+  <!-- Onboarding - uBlock Origin -->
+  <string name="ironfox_onboarding_install_ublock">Install uBlock Origin</string>
+  <string name="ironfox_onboarding_install_ublock_caption">Block ads, trackers, and malware for a safer, cleaner browsing experience.</string>
+  <string name="ironfox_onboarding_install_ublock_description">uBlock Origin enhances your privacy and security by blocking unwanted content. IronFox uses a custom uBlock Origin configuration with curated filter lists for optimal protection and performance.</string>
+</resources>

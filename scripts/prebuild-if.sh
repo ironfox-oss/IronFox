@@ -538,6 +538,7 @@ function prepare_fenix() {
   "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt"
   "${IRONFOX_SED}" -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt"
   "${IRONFOX_SED}" -i -e 's|FxNimbus.features.junoOnboarding.recordExposure|// FxNimbus.features.junoOnboarding.recordExposure|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/utils/Settings.kt"
+  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/raw/initial_experiments.json"
 
   # No-op search telemetry
   "${IRONFOX_SED}" -i 's|search-telemetry-v2||g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/Core.kt"
@@ -709,10 +710,6 @@ function prepare_fenix() {
 
   # Remove default built-in search engines
   "${IRONFOX_RM}" -vr "${IRONFOX_FENIX}/app/src/main/assets/searchplugins"/*
-
-  # Display proper name and description for wallpaper collection
-  "${IRONFOX_SED}" -i -e 's|R.string.wallpaper_artist_series_title|R.string.wallpaper_collection_fennec|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt"
-  "${IRONFOX_SED}" -i -e 's|R.string.wallpaper_artist_series_description_with_learn_more|R.string.wallpaper_collection_fennec_description|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt"
 
   # Apply Fenix overlay
   apply_overlay "${IRONFOX_FENIX_OVERLAY}/"

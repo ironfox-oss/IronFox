@@ -8,18 +8,18 @@ Adds IronFox-specific onboarding screens.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/onboarding.fml.yaml b/mobile/android/fenix/app/onboarding.fml.yaml
-index a10cf2cb06df..49443042ac88 100644
+index 225777c824747..44146f85c133d 100644
 --- a/mobile/android/fenix/app/onboarding.fml.yaml
 +++ b/mobile/android/fenix/app/onboarding.fml.yaml
 @@ -58,6 +58,42 @@ features:
-                   body-line-one-text: nova_onboarding_marketing_body
+                   body-line-one-text: nova_onboarding_marketing_body_2
                    body-line-one-link-text: nova_onboarding_marketing_body_link_text
  
 +            if-preference-doh:
 +              card-type: if-preference-doh
 +              enabled: true
-+              title: onboarding_if_preferences_title
-+              body: onboarding_if_preference_doh_caption
++              title: ironfox_onboarding_preferences_title
++              body: ironfox_onboarding_doh_caption
 +              image-res: ic_launcher_foreground
 +              ordering: 10000
 +              primary-button-label: nova_onboarding_continue_button
@@ -27,29 +27,29 @@ index a10cf2cb06df..49443042ac88 100644
 +            if-preferences:
 +              card-type: if-preferences
 +              enabled: true
-+              title: onboarding_if_preferences_title
-+              body: onboarding_if_preferences_description
++              title: ironfox_onboarding_preferences_title
++              body: ironfox_onboarding_preferences_description
 +              image-res: ic_launcher_foreground
 +              ordering: 10005
 +              primary-button-label: nova_onboarding_continue_button
 +              extra-data:
 +                if-preferences-data:
 +                  - switch-type: js-jit
-+                    switch-label: preference_jit_enabled
-+                    switch-caption: preference_jit_enabled_caption
-+                    switch-description: preference_jit_enabled_description
++                    switch-label: ironfox_onboarding_jit_enabled
++                    switch-caption: ironfox_onboarding_jit_enabled_caption
++                    switch-description: ironfox_onboarding_jit_enabled_description
 +                  - switch-type: safe-browsing
-+                    switch-label: preference_safe_browsing_enabled
-+                    switch-caption: preference_safe_browsing_enabled_caption
-+                    switch-description: preference_safe_browsing_enabled_description
++                    switch-label: ironfox_onboarding_safe_browsing_enabled
++                    switch-caption: ironfox_onboarding_safe_browsing_enabled_caption
++                    switch-description: ironfox_onboarding_safe_browsing_enabled_description
 +                  - switch-type: spoof-english
-+                    switch-label: tor_spoof_english_title
-+                    switch-caption: tor_spoof_english_caption
-+                    switch-description: tor_spoof_english_description
++                    switch-label: ironfox_onboarding_spoof_english
++                    switch-caption: ironfox_onboarding_spoof_english_caption
++                    switch-description: ironfox_onboarding_spoof_english_description
 +                  - switch-type: install-ublock
-+                    switch-label: onboarding_install_ublock_title
-+                    switch-caption: onboarding_install_ublock_caption
-+                    switch-description: onboarding_install_ublock_description
++                    switch-label: ironfox_onboarding_install_ublock
++                    switch-caption: ironfox_onboarding_install_ublock_caption
++                    switch-description: ironfox_onboarding_install_ublock_description
 +
    continuous-onboarding:
      description: >
@@ -66,8 +66,8 @@ index a10cf2cb06df..49443042ac88 100644
  
    CustomizationToolbarData:
      description: An object to describe the placement of the toolbar.
-@@ -244,6 +285,26 @@ objects:
-         description: The text for line two of the body.
+@@ -248,6 +289,26 @@ objects:
+         description: The text for line three of the body.
          default: ""
  
 +  IfPreferencesData:
@@ -93,7 +93,7 @@ index a10cf2cb06df..49443042ac88 100644
  enums:
  
    OnboardingCardType:
-@@ -263,6 +324,24 @@ enums:
+@@ -267,6 +328,24 @@ enums:
          description: Page to display the terms of services.
        marketing-data:
          description: Allows user to opt out of marketing data collection.

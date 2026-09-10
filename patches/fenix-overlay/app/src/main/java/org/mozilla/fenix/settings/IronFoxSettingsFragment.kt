@@ -15,9 +15,10 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import kotlin.system.exitProcess
 import mozilla.components.ui.widgets.withCenterAlignedButtons
+import org.ironfoxoss.core.R as ironfoxR
 import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
-import org.mozilla.fenix.R
+import org.mozilla.fenix.R as fenixR
 import org.mozilla.fenix.components.Push
 import org.mozilla.fenix.e2e.SystemInsetsPaddedFragment
 import org.mozilla.fenix.ext.components
@@ -41,7 +42,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
   override fun onResume() {
     super.onResume()
-    showToolbar(getString(R.string.if_preferences))
+    showToolbar(getString(ironfoxR.string.if_preferences))
 
     /*** Privacy and Security ***/
 
@@ -50,7 +51,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: browser.ironfox.webgl.disabled
      */
-    val webglDisabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_webgl_disabled)
+    val webglDisabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_webgl_disabled)
 
     webglDisabledPreference.isChecked = IronFoxPreferences.isWebGLDisabled(requireContext())
     webglDisabledPreference.setOnPreferenceChangeListener<Boolean> { preference, webglDisabled ->
@@ -70,7 +71,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: false
      * Gecko preference(s) impacted: accessibility.force_disabled
      */
-    val accessibilityEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_accessibility_enabled)
+    val accessibilityEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_accessibility_enabled)
 
     accessibilityEnabledPreference.isChecked = IronFoxPreferences.isAccessibilityEnabled(requireContext())
     accessibilityEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, accessibilityEnabled ->
@@ -88,7 +89,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: javascript.enabled
      */
-    val javascriptEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_javascript_enabled)
+    val javascriptEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_javascript_enabled)
 
     javascriptEnabledPreference.isChecked = IronFoxPreferences.isJavaScriptEnabled(requireContext())
     javascriptEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, javascriptEnabled ->
@@ -108,7 +109,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled
      */
-    val fppOverridesIronFoxWebGLEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_fpp_overrides_ironfox_webgl_enabled)
+    val fppOverridesIronFoxWebGLEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_fpp_overrides_ironfox_webgl_enabled)
 
     fppOverridesIronFoxWebGLEnabledPreference.isChecked = IronFoxPreferences.isFPPOverridesIronFoxWebGLEnabled(requireContext())
     fppOverridesIronFoxWebGLEnabledPreference.setOnPreferenceChangeListener<Boolean> {
@@ -121,7 +122,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -140,7 +141,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: false
      * Gecko preference(s) impacted: browser.privatebrowsing.autostart
      */
-    val alwaysUsePrivateBrowsingPreference = requirePreference<SwitchPreference>(R.string.pref_key_always_use_private_browsing)
+    val alwaysUsePrivateBrowsingPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_always_use_private_browsing)
 
     alwaysUsePrivateBrowsingPreference.isChecked = IronFoxPreferences.isAlwaysUsePrivateBrowsing(requireContext())
     alwaysUsePrivateBrowsingPreference.setOnPreferenceChangeListener<Boolean> { preference, alwaysUsePrivateBrowsing ->
@@ -152,7 +153,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -169,7 +170,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: false
      * Gecko preference(s) impacted: browser.cache.disk.enable
      */
-    val cacheEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_cache_enabled)
+    val cacheEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_cache_enabled)
 
     cacheEnabledPreference.isChecked = IronFoxPreferences.isCacheEnabled(requireContext())
     cacheEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, cacheEnabled ->
@@ -188,7 +189,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled
      */
     val fppOverridesIronFoxEnabledPreference = requirePreference<SwitchPreference>(
-      R.string.pref_key_fpp_overrides_ironfox_enabled
+      fenixR.string.pref_key_fpp_overrides_ironfox_enabled
     )
 
     fppOverridesIronFoxEnabledPreference.isChecked = IronFoxPreferences.isFPPOverridesIronFoxEnabled(requireContext())
@@ -201,7 +202,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -219,7 +220,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.mozillaOverrides.enabled
      */
     val fppOverridesMozillaEnabledPreference = requirePreference<SwitchPreference>(
-      R.string.pref_key_fpp_overrides_mozilla_enabled
+      fenixR.string.pref_key_fpp_overrides_mozilla_enabled
     )
 
     fppOverridesMozillaEnabledPreference.isChecked = IronFoxPreferences.isFPPOverridesMozillaEnabled(requireContext())
@@ -232,7 +233,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -250,7 +251,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled
      */
     val fppOverridesIronFoxTimezoneEnabledPreference = requirePreference<SwitchPreference>(
-      R.string.pref_key_fpp_overrides_ironfox_timezone_enabled
+      fenixR.string.pref_key_fpp_overrides_ironfox_timezone_enabled
     )
 
     fppOverridesIronFoxTimezoneEnabledPreference.isChecked =
@@ -265,7 +266,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -282,7 +283,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: privacy.spoof_english
      */
-    val spoofEnglishPreference = requirePreference<SwitchPreference>(R.string.pref_key_spoof_english)
+    val spoofEnglishPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_spoof_english)
 
     spoofEnglishPreference.isChecked = IronFoxPreferences.isSpoofEnglishEnabled(requireContext())
     spoofEnglishPreference.setOnPreferenceChangeListener<Boolean> { preference, spoofEnglish ->
@@ -296,7 +297,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -313,7 +314,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: false
      * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled
      */
-    val spoofTimezonePreference = requirePreference<SwitchPreference>(R.string.pref_key_spoof_timezone)
+    val spoofTimezonePreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_spoof_timezone)
 
     spoofTimezonePreference.isChecked = IronFoxPreferences.isSpoofTimezoneEnabled(requireContext())
     spoofTimezonePreference.setOnPreferenceChangeListener<Boolean> { preference, spoofTimezone ->
@@ -336,7 +337,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Gecko preference(s) impacted: browser.ironfox.xpinstall.enabled
      * (This also sets the InstallAddonsPermission policy (https://mozilla.github.io/policy-templates/#installaddonspermission), which is why we need to restart)
      */
-    val xpinstallEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_xpinstall_enabled)
+    val xpinstallEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_xpinstall_enabled)
 
     xpinstallEnabledPreference.isChecked = IronFoxPreferences.isXPInstallEnabled(requireContext())
     xpinstallEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, xpinstallEnabled ->
@@ -348,7 +349,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -370,7 +371,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      *  javascript.options.native_regexp,
      *  javascript.options.wasm_optimizingjit
      */
-    val javascriptJitEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_jit_enabled)
+    val javascriptJitEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_jit_enabled)
 
     javascriptJitEnabledPreference.isChecked = IronFoxPreferences.isJITEnabled(requireContext())
     javascriptJitEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, javascriptJitEnabled ->
@@ -382,7 +383,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -401,7 +402,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Gecko preference(s) impacted: javascript.options.jit_trustedprincipals
      */
     val javascriptJitTrustedPrincipalsEnabledPreference = requirePreference<SwitchPreference>(
-      R.string.pref_key_jit_trusted_principals_enabled
+      fenixR.string.pref_key_jit_trusted_principals_enabled
     )
 
     javascriptJitTrustedPrincipalsEnabledPreference.isChecked = IronFoxPreferences.isJITTrustedPrincipalsEnabled(requireContext())
@@ -415,7 +416,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -432,7 +433,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: print.enabled
      */
-    val printEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_print_enabled)
+    val printEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_print_enabled)
 
     printEnabledPreference.isChecked = IronFoxPreferences.isPrintEnabled(requireContext())
     printEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, printEnabled ->
@@ -450,7 +451,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: browser.safebrowsing.malware.enabled, browser.safebrowsing.phishing.enabled
      */
-    val safeBrowsingEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_safe_browsing_enabled)
+    val safeBrowsingEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_safe_browsing_enabled)
 
     safeBrowsingEnabledPreference.isChecked = IronFoxPreferences.isSafeBrowsingEnabled(requireContext())
     safeBrowsingEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, safeBrowsingEnabled ->
@@ -462,7 +463,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -479,7 +480,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: svg.disabled
      */
-    val svgEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_svg_enabled)
+    val svgEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_svg_enabled)
 
     svgEnabledPreference.isChecked = IronFoxPreferences.isSVGEnabled(requireContext())
     svgEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, svgEnabled ->
@@ -491,7 +492,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -508,7 +509,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: javascript.options.wasm
      */
-    val wasmEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_wasm_enabled)
+    val wasmEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_wasm_enabled)
 
     wasmEnabledPreference.isChecked = IronFoxPreferences.isWASMEnabled(requireContext())
     wasmEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, wasmEnabled ->
@@ -528,7 +529,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: media.peerconnection.enabled
      */
-    val webrtcEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_webrtc_enabled)
+    val webrtcEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_webrtc_enabled)
 
     webrtcEnabledPreference.isChecked = IronFoxPreferences.isWebRTCEnabled(requireContext())
     webrtcEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, webrtcEnabled ->
@@ -553,7 +554,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      *  browser.translations.enable,
      *  browser.translations.simulateUnsupportedEngine
      */
-    val translationsEnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_translations_enabled)
+    val translationsEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_translations_enabled)
 
     translationsEnabledPreference.isChecked = IronFoxPreferences.isTranslationsEnabled(requireContext())
     translationsEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, translationsEnabled ->
@@ -565,7 +566,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       Toast.makeText(
         context,
-        getString(R.string.quit_application),
+        getString(fenixR.string.quit_application),
         Toast.LENGTH_LONG,
       ).show()
       Handler(Looper.getMainLooper()).postDelayed(
@@ -582,7 +583,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: network.dns.disableIPv6
      */
-    val ipv6EnabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_ipv6_enabled)
+    val ipv6EnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_ipv6_enabled)
 
     ipv6EnabledPreference.isChecked = IronFoxPreferences.isIPv6Enabled(requireContext())
     ipv6EnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, ipv6Enabled ->
@@ -602,7 +603,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: false
      * Gecko preference(s) impacted: pdfjs.disabled
      */
-    val pdfjsDisabledPreference = requirePreference<SwitchPreference>(R.string.pref_key_pdfjs_disabled)
+    val pdfjsDisabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_pdfjs_disabled)
 
     pdfjsDisabledPreference.isChecked = IronFoxPreferences.isPDFjsDisabled(requireContext())
     pdfjsDisabledPreference.setOnPreferenceChangeListener<Boolean> { preference, pdfjsDisabled ->
@@ -622,7 +623,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
      * Default: true
      * Gecko preference(s) impacted: N/A
      */
-    val enableUnifiedPushPreference = requirePreference<SwitchPreference>(R.string.pref_key_enable_unifiedpush)
+    val enableUnifiedPushPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_enable_unifiedpush)
 
     enableUnifiedPushPreference.isChecked = IronFoxPreferences.isUnifiedPushEnabled(requireContext())
     enableUnifiedPushPreference.setOnPreferenceChangeListener<Boolean> { preference, enableUnifiedPush ->
@@ -635,16 +636,16 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
   }
 
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-    setPreferencesFromResource(R.xml.ironfox_preferences, rootKey)
+    setPreferencesFromResource(fenixR.xml.ironfox_preferences, rootKey)
     with(requireContext().components.settings) {
       findPreference<SwitchPreference>(
-        getPreferenceKey(R.string.pref_key_enable_unifiedpush),
+        getPreferenceKey(fenixR.string.pref_key_enable_unifiedpush),
       )?.isVisible = showSecretDebugMenuThisSession
       findPreference<PreferenceCategory>(
-        getPreferenceKey(R.string.pref_key_if_secret),
+        getPreferenceKey(fenixR.string.pref_key_if_secret),
       )?.isVisible = showSecretDebugMenuThisSession
       findPreference<SwitchPreference>(
-        getPreferenceKey(R.string.pref_key_use_unifiedpush),
+        getPreferenceKey(fenixR.string.pref_key_use_unifiedpush),
       )?.apply {
         isVisible = IronFoxPreferences.isUnifiedPushEnabled(requireContext())
         isChecked = IronFoxPreferences.shouldUseUnifiedPush(requireContext())
@@ -700,7 +701,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
    * Gecko preference(s) impacted: media.autoplay.blocking_policy (0)
    */
   private fun bindAutoplayBlockingSticky() {
-    radioAutoplayBlockingSticky = requirePreference(R.string.pref_key_autoplay_policy_sticky)
+    radioAutoplayBlockingSticky = requirePreference(fenixR.string.pref_key_autoplay_policy_sticky)
     radioAutoplayBlockingSticky.onClickListener {
       updateGeckoAutoplayBlockingPolicy()
     }
@@ -712,7 +713,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
    * Gecko preference(s) impacted: media.autoplay.blocking_policy (1)
    */
   private fun bindAutoplayBlockingTransient() {
-    radioAutoplayBlockingTransient = requirePreference(R.string.pref_key_autoplay_policy_transient)
+    radioAutoplayBlockingTransient = requirePreference(fenixR.string.pref_key_autoplay_policy_transient)
     radioAutoplayBlockingTransient.onClickListener {
       updateGeckoAutoplayBlockingPolicy()
     }
@@ -724,7 +725,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
    * Gecko preference(s) impacted: media.autoplay.blocking_policy (2)
    */
   private fun bindAutoplayBlockingClickToPlay() {
-    radioAutoplayBlockingClickToPlay = requirePreference(R.string.pref_key_autoplay_policy_click_to_play)
+    radioAutoplayBlockingClickToPlay = requirePreference(fenixR.string.pref_key_autoplay_policy_click_to_play)
     radioAutoplayBlockingClickToPlay.onClickListener {
       updateGeckoAutoplayBlockingPolicy()
     }
@@ -736,7 +737,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
    * Gecko preference(s) impacted: network.http.referer.XOriginPolicy (0)
    */
   private fun bindRefererXOriginAlways() {
-    radioRefererXOriginAlways = requirePreference(R.string.pref_key_referer_policy_always)
+    radioRefererXOriginAlways = requirePreference(fenixR.string.pref_key_referer_policy_always)
     radioRefererXOriginAlways.onClickListener {
       updateGeckoRefererXOriginPolicy()
     }
@@ -748,7 +749,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
    * Gecko preference(s) impacted: network.http.referer.XOriginPolicy (1)
    */
   private fun bindRefererXOriginBaseDomainsMatch() {
-    radioRefererXOriginBaseDomainsMatch = requirePreference(R.string.pref_key_referer_policy_base_domains_match)
+    radioRefererXOriginBaseDomainsMatch = requirePreference(fenixR.string.pref_key_referer_policy_base_domains_match)
     radioRefererXOriginBaseDomainsMatch.onClickListener {
       updateGeckoRefererXOriginPolicy()
     }
@@ -760,7 +761,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
    * Gecko preference(s) impacted: network.http.referer.XOriginPolicy (2)
    */
   private fun bindRefererXOriginHostsMatch() {
-    radioRefererXOriginHostsMatch = requirePreference(R.string.pref_key_referer_policy_hosts_match)
+    radioRefererXOriginHostsMatch = requirePreference(fenixR.string.pref_key_referer_policy_hosts_match)
     radioRefererXOriginHostsMatch.onClickListener {
       updateGeckoRefererXOriginPolicy()
     }
@@ -772,7 +773,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
    * Gecko preference(s) impacted: layout.css.prefers-color-scheme.content-override (2)
    */
   private fun bindPrefersBrowserColorScheme() {
-    radioPrefersBrowserColorScheme = requirePreference(R.string.pref_key_prefers_browser_color_scheme)
+    radioPrefersBrowserColorScheme = requirePreference(fenixR.string.pref_key_prefers_browser_color_scheme)
     radioPrefersBrowserColorScheme.onClickListener {
       setNewColorScheme()
     }
@@ -784,7 +785,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
    * Gecko preference(s) impacted: layout.css.prefers-color-scheme.content-override (0)
    */
   private fun bindPrefersDarkColorScheme() {
-    radioPrefersDarkColorScheme = requirePreference(R.string.pref_key_prefers_dark_color_scheme)
+    radioPrefersDarkColorScheme = requirePreference(fenixR.string.pref_key_prefers_dark_color_scheme)
     radioPrefersDarkColorScheme.onClickListener {
       setNewColorScheme()
     }
@@ -796,7 +797,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
    * Gecko preference(s) impacted: layout.css.prefers-color-scheme.content-override (1)
    */
   private fun bindPrefersLightColorScheme() {
-    radioPrefersLightColorScheme = requirePreference(R.string.pref_key_prefers_light_color_scheme)
+    radioPrefersLightColorScheme = requirePreference(fenixR.string.pref_key_prefers_light_color_scheme)
     radioPrefersLightColorScheme.onClickListener {
       setNewColorScheme()
     }
@@ -835,12 +836,12 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
        * Default: false
        * Gecko preference(s) impacted: N/A
        */
-      resources.getString(R.string.pref_key_use_unifiedpush) -> {
+      resources.getString(fenixR.string.pref_key_use_unifiedpush) -> {
         val context = requireActivity()
         context.components.settings.apply { ironfox.useUnifiedPush = !ironfox.useUnifiedPush }
         val alert = AlertDialog.Builder(context).apply {
-          setTitle(context.getString(R.string.preferences_unifiedpush))
-          setMessage(context.getString(R.string.quit_application))
+          setTitle(context.getString(ironfoxR.string.preferences_unifiedpush))
+          setMessage(context.getString(fenixR.string.quit_application))
           setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _ ->
             dialog.cancel()
           }
@@ -848,7 +849,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
           setPositiveButton(android.R.string.ok) { _, _ ->
             Toast.makeText(
               context,
-              getString(R.string.toast_change_unifiedpush_done),
+              getString(ironfoxR.string.toast_change_unifiedpush_done),
               Toast.LENGTH_LONG,
             ).show()
 
@@ -884,7 +885,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
   private fun navigateFromIronFoxSettings(directions: NavDirections) {
     view?.findNavController()?.let { navController ->
-      if (navController.currentDestination?.id == R.id.ironFoxSettingsFragment) {
+      if (navController.currentDestination?.id == fenixR.id.ironFoxSettingsFragment) {
         navController.navigate(directions)
       }
     }

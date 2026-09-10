@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_description">Personalizza IronFox a tuo piacimento</string>
+    <string name="ironfox_onboarding_install_ublock">Installa uBlock Origin</string>
+    <string name="ironfox_onboarding_doh_caption">Aumenta la sicurezza del tuo browser con il DNS-over-HTTPS per una maggiore privacy e sicurezza.</string>
+    <string name="ironfox_onboarding_preferences_title">Personalizza IronFox</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin migliora la tua privacy e sicurezza bloccando i contenuti indesiderati. IronFox utilizza una configurazione personalizzata di uBlock Origin con elenchi di filtri selezionati per garantire protezione e prestazioni ottimali.</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Blocca annunci pubblicitari, tracker e malware per un\'esperienza di navigazione più sicura e pulita.</string>
+    <string name="ironfox_onboarding_jit_enabled">Abilita JavaScript Just-in-time Compilation (JIT)</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">Migliora le performance di Javascript abilitando JIT. (Non raccomandato per la maggior parte degli utenti)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">Al costo della sicurezza, puoi abilitare JIT per migliore le performance dei siti web. Raccomandato solo per utenti con dispositivi di fascia bassa.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">Abilita Navigazione Sicura</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Ottieni una protezione in tempo reale contro i siti web pericolosi, malware e tentativi di phishing.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">La funzionalità Safe Browsing di IronFox è attualmente fornita da Google. IronFox aggiornerà periodicamente il database per assicurarsi che gli utenti siano protetti dalle ultime minacce, e in caso di potenziale corrispondenza, IronFox può inviare un hash parziale dell\'URL sospetto a Google. Nota che IronFox fa da proxy a queste connessioni per prevenire che il tuo indirizzo IP pubblico sia associato a queste richieste.</string>
+    <string name="ironfox_onboarding_spoof_english">Camuffa la lingua in en-US</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Migliora la tua privacy mascherando le impostazioni della lingua del tuo dispositivo.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Richiedi la versione inglese (en-US) delle pagine web. Questo fa sì che il tuo browser appare meno unico rafforzando la protezione contro le tecniche di fingerprinting che identificano gli utenti sulla base delle preferenze di linguaggio.</string>
+</resources>

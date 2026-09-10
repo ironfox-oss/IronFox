@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_install_ublock">Zainstaluj uBlock Origin</string>
+    <string name="ironfox_onboarding_preferences_title">Dostosuj IronFox</string>
+    <string name="ironfox_onboarding_preferences_description">Dostosuj IronFox do swoich preferencji</string>
+    <string name="ironfox_onboarding_doh_caption">Zabezpiecz przeglądanie za pomocą protokołu DNS-over-HTTPS, aby zapewnić sobie większą prywatność i bezpieczeństwo.</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin zwiększa prywatność i bezpieczeństwo, blokując niechciane treści. IronFox korzysta z niestandardowej konfiguracji uBlock Origin z wyselekcjonowanymi listami filtrów, aby zapewnić optymalną ochronę i wydajność.</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Blokuj reklamy, elementy śledzące i złośliwe oprogramowanie, aby przeglądanie było bezpieczniejsze i wygodniejsze.</string>
+    <string name="ironfox_onboarding_jit_enabled">Włącz kompilację JavaScript Just-in-time (JIT)</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">Popraw wydajność JavaScript, poprzez włączenie JIT. (Niezalecane dla większości użytkowników)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">Kosztem bezpieczeństwa możesz włączyć JIT, aby poprawić wydajność stron internetowych. Zalecane tylko dla użytkowników z mniej wydajnymi urządzeniami.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">Włącz Bezpieczne przeglądanie</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Uzyskaj ochronę w czasie rzeczywistym przed niebezpiecznymi stronami, złośliwym oprogramowaniem i próbami phishingu.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">Funkcja Bezpiecznego przeglądania IronFox jest obecnie dostarczana przez Google. IronFox będzie okresowo aktualizować bazę danych, aby zapewnić użytkownikom ochronę przed najnowszymi zagrożeniami, a po napotkaniu potencjalnego dopasowania IronFox może przesłać częściowy skrót podejrzanego adresu URL do Google. Pamiętaj, że IronFox pośredniczy w tych połączeniach, aby zapobiec powiązaniu publicznego adresu IP użytkownika z tymi żądaniami.</string>
+    <string name="ironfox_onboarding_spoof_english">Zamień język na en-US</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Zwiększ prywatność, maskując ustawienia językowe swojego urządzenia.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Żądaj angielskiej (en-US) wersji stron internetowych. Dzięki temu przeglądarka będzie mniej unikatowa, co wzmocni ochronę przed technikami zbierania odcisków palców, które identyfikują użytkowników na podstawie ich preferencji językowych.</string>
+</resources>

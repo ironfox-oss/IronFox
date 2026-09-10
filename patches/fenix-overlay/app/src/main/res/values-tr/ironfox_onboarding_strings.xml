@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_title">IronFox\'u özelleştir</string>
+    <string name="ironfox_onboarding_preferences_description">IronFox\'u kendi zevkinize göre özelleştir</string>
+    <string name="ironfox_onboarding_doh_caption">Gelişmiş gizlilik ve güvenlik için HTTPS-üzerinden-DNS (DoH) ile tarama işlemlerinizi güvence altına al.</string>
+    <string name="ironfox_onboarding_install_ublock">uBlock Origin\'i kur</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Daha güvenli ve temiz bir tarama deneyimi için reklamları, izleyicileri ve kötü amaçlı yazılımları engelle.</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin, istenmeyen içerikleri engelleyerek gizliliğinizi ve güvenliğinizi artırır. IronFox, en iyi koruma ve performans için özenle seçilmiş filtre listelerine sahip özel bir uBlock Origin yapılandırması kullanır.</string>
+    <string name="ironfox_onboarding_jit_enabled">JavaScript Just-in-time Dermelesi\'ni (JIT) etkinleştir</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">JavaScript performansını artırmak için JIT\'i etkinleştir. (Çoğu kullanıcı için önerilmez)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">Güvenlik pahasında, JIT\'i web sayfalarının performansını artırmak için etkinleştirebilirsiniz. Yanlızca düşük donanımlı cihazlar için önerilir.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">Güvenli taramayı etkinleştir</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Tehlikeli web sayfaları, kötü amaçlı yazılımlar ve kimlik avı girişimlerine karşı gerçek zamanlı koruma elde edin.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">IronFox\'un Güvenli Tarama işlevi şu anda Google tarafından sağlanmaktadır. IronFox, kullanıcıların en son tehditlere karşı korunmasını sağlamak için veritabanını düzenli olarak günceller ve olası bir eşleşmeyle karşılaştığında, IronFox şüpheli URL\'nin kısmi bir özetini Google\'a gönderebilir. IronFox\'un, genel IP adresinizin bu isteklerle ilişkilendirilmesini önlemek için bu bağlantıları proxy olarak kullandığını unutmayın.</string>
+    <string name="ironfox_onboarding_spoof_english">Dili en-US\'e sahtele</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Cihazınızın dil ayarlarını saklayarak gizliliğinizi arttırın.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Web sayfalarının İngilizce (en-US) sürümlerini talep edin. Bu, tarayıcınızın daha az özel görünmesine yardımcı olur ve kullanıcıları dil tercihlerine göre tanımlayan parmak izi tekniklerine karşı korumayı güçlendirir.</string>
+</resources>

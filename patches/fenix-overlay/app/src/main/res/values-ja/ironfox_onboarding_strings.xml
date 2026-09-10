@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_title">IronFoxをカスタマイズ</string>
+    <string name="ironfox_onboarding_preferences_description">IronFox を自分好みにカスタマイズする</string>
+    <string name="ironfox_onboarding_doh_caption">DNS-over-HTTPS を使用してブラウジングを保護し、プライバシーとセキュリティを強化します。</string>
+    <string name="ironfox_onboarding_install_ublock">uBlock Originをインストール</string>
+    <string name="ironfox_onboarding_install_ublock_caption">広告、トラッカー、マルウェアをブロックし、より安全で快適なブラウジング環境を提供します。</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin は不要なコンテンツを遮断してプライバシーと安全性を高めます。IronFox は独自にカスタマイズした uBlock Origin を採用しており、厳選したフィルターリストによって保護性能と処理速度の最適なバランスを維持します。</string>
+    <string name="ironfox_onboarding_jit_enabled">JavaScriptのJITコンパイルを有効化</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">JIT を有効化してJavaScriptのパフォーマンスを向上させます。(通常は推奨されません)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">安全性を低下させる代わりに JIT を有効にして、サイトの表示速度を向上させます。ロースペック端末でのみ使用を推奨されます。</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">セーフブラウジングを有効化</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">危険なウェブサイト、マルウェア、フィッシング詐欺からリアルタイムで保護します。</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">IronFox のセーフブラウジング機能は現在 Google のデータを利用しています。IronFox は、データベースを定期的に更新して最新の脅威から保護し、危険なサイトと判定される候補が見つかった際は URL の一部ハッシュを Google に送信する場合があります。通信は IronFox 側でプロキシ処理されるため、ユーザーのパブリック IP アドレスが Google に紐付けられる心配はありません。</string>
+    <string name="ironfox_onboarding_spoof_english">言語を en-US に偽装する</string>
+    <string name="ironfox_onboarding_spoof_english_caption">端末の言語設定を隠すことで、プライバシーを強化します。</string>
+    <string name="ironfox_onboarding_spoof_english_description">ウェブサイトに英語版 (en-US) のページをリクエストします。ブラウザ固有の特徴を減らすことで、言語設定に基づくフィンガープリント採取への保護を強化します。</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_title">IronFoxin mukauttaminen</string>
+    <string name="ironfox_onboarding_preferences_description">Mukauta IronFox sinulle sopivaksi</string>
+    <string name="ironfox_onboarding_doh_caption">Suojaa selaamisesi DNS-over-HTTPS:llä, jotta voit parantaa yksityisyyttäsi ja turvallisuuttasi.</string>
+    <string name="ironfox_onboarding_install_ublock">Asenna uBlock Origin</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Estä mainokset, jäljittimet ja haittaohjelmat, saadaksesi turvallisemman ja puhtaamman selauskokemuksen.</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin parantaa yksityisyyttäsi ja turvallisuuttasi estämällä ei-toivotun sisällön. IronFox käyttää mukautettua uBlock Origin -konfiguraatiota valikoiduilla suodattimilla optimaalisen suojauksen ja suorituskyvyn varmistamiseksi.</string>
+    <string name="ironfox_onboarding_jit_enabled">Ota käyttöön JavaScript Just-in-time kääntäminen (JIT)</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">Parantaa JavaScriptin suorituskykyä ottamalla JIT kääntämisen käyttöön. (Ei suositella useimmille käyttäjille)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">Voit turvallisuuden kustannuksella ottaa käyttöön JIT kääntämisen parantaaksesi sivustojen suorituskykyä. Tätä suositellaan vain käyttäjille, joilla on heikomman suorituskyvyn laite.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">Ota käyttöön Selaussuoja</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Hanki reaaliaikainen suojaus vaarallisia verkkosivustoja, haittaohjelmia ja tietojenkalasteluyrityksiä vastaan.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">IronFoxin Selaussuoja-ominaisuuden tarjoaa tällä hetkellä Google. IronFox päivittää tietokannan säännöllisesti varmistaakseen, että käyttäjät ovat suojattuja viimeisimpiä uhkia vastaan. Potentiaalisen uhan kohdatessaan IronFox saattaa lähettää osittaisen tiivisteen sivuston URL-osoitteesta Googlelle. Huomioi, että IronFox käyttää näissä yhteyksissä välityspalvelimia estääkseen julkisen IP-osoitteesi yhdistämistä näihin kyselyihin.</string>
+    <string name="ironfox_onboarding_spoof_english">Jäljittele en-US kieltä</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Paranna yksityisyyttäsi naamioimalla laitteesi kieliasetukset.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Pyydä englanninkielisiä (en-US) versioita verkkosivuista. Tämä auttaa selaintasi näyttäytymään vähemmän ainutlaatuiselta, vahvistaen suojaa seurantatekniikoilta, jotka tunnistavat käyttäjät perustuen heidän kieliasetukseen.</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_title">IronFox personaliseren</string>
+    <string name="ironfox_onboarding_preferences_description">Pas IronFox aan naar eigen wens</string>
+    <string name="ironfox_onboarding_doh_caption">Gebruik DNS-over-HTTPS voor betere privacy en veiligheid.</string>
+    <string name="ironfox_onboarding_install_ublock">uBlock Origin installeren</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Blokkeer advertenties, trackers en malware voor een veiligere, schonere ervaring van het internet.</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin verbetert de privacy en veiligheid door ongewenste inhoud te blokkeren. IronFox maakt gebruik van een aangepaste configuratie met zorgvuldig samengestelde filterlijsten voor optimale bescherming en prestaties.</string>
+    <string name="ironfox_onboarding_jit_enabled">JavaScript Just-in-time Compilation (JIT) inschakelen</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">Verbeter de prestaties van JavaScript door JIT in te schakelen. (Niet aanbevolen voor de meeste gebruikers)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">Het inschakelen van JIT om de prestaties van websites te verbeteren gaat ten koste van de veiligheid. Alleen aanbevolen voor gebruikers met tragere apparaten.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">Safe Browsing inschakelen</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Real-time bescherming tegen gevaarlijke websites, malware en phishingpogingen.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">De Safe Browsing-functionaliteit van IronFox wordt momenteel geleverd door Google. IronFox werkt de database regelmatig bij om ervoor te zorgen dat gebruikers beschermd zijn tegen de nieuwste bedreigingen. Wanneer IronFox een mogelijke dreiging tegenkomt, kan het een gedeeltelijke hash van de verdachte URL naar Google sturen. Deze verbindingen verlopen via een proxy om te voorkomen dat het openbare IP-adres aan deze verzoeken wordt gekoppeld.</string>
+    <string name="ironfox_onboarding_spoof_english">Als taal en-US doorsturen</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Verbeter de privacy door de taalinstellingen van het apparaat te maskeren.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Vraag Engelse (en-US) versies van webpagina\'s op. Hierdoor lijkt de browser minder uniek, waardoor de bescherming tegen fingerprinting-technieken die gebruikers identificeren op basis van hun taalvoorkeuren, beter werkt.</string>
+</resources>

@@ -19,8 +19,38 @@ index 24554c7ab197..e238a030d3e1 100644
              context.components.settings,
              rootStorageDirectory,
              appStore.value,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt
+index ace40a777e07..e356264082aa 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt
+@@ -58,6 +58,7 @@ import org.mozilla.fenix.theme.FirefoxTheme
+ import org.mozilla.fenix.theme.PreviewThemeProvider
+ import org.mozilla.fenix.theme.Theme
+ import org.mozilla.fenix.wallpapers.Wallpaper
++import org.ironfoxoss.core.R as ironfoxR
+ 
+ /**
+  * The screen for controlling settings around Wallpapers. When a new wallpaper is selected,
+@@ -145,7 +146,7 @@ private fun WallpaperGroupHeading(
+             modifier = Modifier.semantics(mergeDescendants = true, properties = headingSemantics),
+         ) {
+             Text(
+-                text = stringResource(R.string.wallpaper_artist_series_title),
++                text = stringResource(ironfoxR.string.wallpaper_collection_fennec),
+                 color = MaterialTheme.colorScheme.onSurface,
+                 style = FirefoxTheme.typography.subtitle2,
+             )
+@@ -159,7 +160,7 @@ private fun WallpaperGroupHeading(
+                 )
+             } else {
+                 val link = stringResource(R.string.wallpaper_learn_more)
+-                val text = stringResource(R.string.wallpaper_artist_series_description_with_learn_more, link)
++                val text = stringResource(ironfoxR.string.wallpaper_collection_fennec_description, link)
+                 val linkStartIndex = text.indexOf(link)
+                 val linkEndIndex = linkStartIndex + link.length
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
-index ab7ba29ba34c..08b2a72aaca7 100644
+index ab7ba29ba34c..1abb54b8c61e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
 @@ -6,11 +6,11 @@ package org.mozilla.fenix.wallpapers
@@ -30,11 +60,11 @@ index ab7ba29ba34c..08b2a72aaca7 100644
 -import mozilla.components.concept.fetch.Client
 -import mozilla.components.concept.fetch.Request
 +import android.content.res.Resources
-+// import mozilla.components.concept.fetch.Request
++import org.ironfoxoss.core.R
  import org.json.JSONArray
  import org.json.JSONObject
 -import org.mozilla.fenix.BuildConfig
-+import org.mozilla.fenix.R
++// import org.mozilla.fenix.BuildConfig
  import org.mozilla.fenix.utils.toHexColor
  import java.text.SimpleDateFormat
  import java.util.Date

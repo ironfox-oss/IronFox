@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_title">आयरनफॉक्स को अनुकूलित करें</string>
+    <string name="ironfox_onboarding_preferences_description">आयरनफॉक्स को अपनी पसंद के अनुसार अनुकूलित करें</string>
+    <string name="ironfox_onboarding_doh_caption">बेहतर गोपनीयता और सुरक्षा के लिए DNS-over-HTTPS के साथ अपनी ब्राउज़िंग को सुरक्षित करें।</string>
+    <string name="ironfox_onboarding_install_ublock">uBlock Origin स्थापित करें</string>
+    <string name="ironfox_onboarding_install_ublock_caption">सुरक्षित एवं स्वच्छ ब्राउज़िंग अनुभव के लिए विज्ञापनों, ट्रैकर्स और मैलवेयर को ब्लॉक करें।</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin अवांछित सामग्री को ब्लॉक करके आपकी गोपनीयता और सुरक्षा को बढ़ाता है। IronFox, सर्वोत्तम सुरक्षा और प्रदर्शन के लिए क्यूरेटेड फ़िल्टर सूचियों के साथ एक कस्टम uBlock Origin कॉन्फ़िगरेशन का उपयोग करता है।</string>
+    <string name="ironfox_onboarding_jit_enabled">जावास्क्रिप्ट जस्ट-इन-टाइम संकलन (JIT) सक्षम करें</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">JIT को सक्षम करके जावास्क्रिप्ट प्रदर्शन में सुधार करें। (अधिकांश उपयोगकर्ताओं के लिए अनुशंसित नहीं)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">सुरक्षा की कीमत पर, आप वेबसाइटों के प्रदर्शन को बेहतर बनाने के लिए JIT को सक्षम कर सकते हैं। यह केवल निम्न-स्तरीय डिवाइस वाले उपयोगकर्ताओं के लिए अनुशंसित है।</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">सेफ ब्राउज़िंग सक्षम करें</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">खतरनाक वेबसाइटों, मैलवेयर और फ़िशिंग प्रयासों के विरुद्ध वास्तविक समय सुरक्षा प्राप्त करें।</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">IronFox की सेफ ब्राउज़िंग सुविधा वर्तमान में Google द्वारा प्रदान की जाती है। IronFox समय-समय पर डेटाबेस को अपडेट करता रहेगा ताकि उपयोगकर्ताओं को नवीनतम खतरों से सुरक्षित रखा जा सके, और संभावित मिलान मिलने पर, IronFox संदिग्ध URL का आंशिक हैश Google को सबमिट कर सकता है। ध्यान दें कि IronFox इन कनेक्शनों को प्रॉक्सी करता है, ताकि आपके सार्वजनिक IP पते को इन अनुरोधों से जुड़ने से रोका जा सके।</string>
+    <string name="ironfox_onboarding_spoof_english">en-US में भाषा का स्पूफ करें</string>
+    <string name="ironfox_onboarding_spoof_english_caption">अपने डिवाइस की भाषा सेटिंग को छिपाकर अपनी गोपनीयता बढ़ाएँ।</string>
+    <string name="ironfox_onboarding_spoof_english_description">वेबपेजों के अंग्रेज़ी (en-US) संस्करण का अनुरोध करें। इससे आपके ब्राउज़र की विशिष्टता कम दिखाई देती है, और फ़िंगरप्रिंटिंग तकनीकों के विरुद्ध सुरक्षा मज़बूत होती है जो उपयोगकर्ताओं की भाषा वरीयताओं के आधार पर उनकी पहचान करती हैं।</string>
+</resources>

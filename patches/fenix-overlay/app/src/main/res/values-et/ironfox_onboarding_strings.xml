@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_install_ublock">Paigalda uBlock Origin</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Blokeerib reklaame, jälitajaid ja pahavara ning tagab turvalisema ja müravabama kasutajakogemuse.</string>
+    <string name="ironfox_onboarding_install_ublock_description">Blokeerides mittesoovitud sisu parandab uBlock Origin sinu privaatsust ja turvalisust. IronFox kasutab oma uBlock Origini seadistusi optimaalset kaitset ja jõudlust arvestavate eelvalitud soovitustega.</string>
+    <string name="ironfox_onboarding_preferences_title">Kohanda IronFoxi</string>
+    <string name="ironfox_onboarding_preferences_description">Kohanada IronFoxi vastavalt oma eelistustele</string>
+    <string name="ironfox_onboarding_doh_caption">Paranda oma veebisirvimise privaatsust ja turvalisust kasutades nimelahendust üle HTTPS-i (DOH ehk DNS-over-HTTPS).</string>
+    <string name="ironfox_onboarding_jit_enabled">Kasuta JavaScripti dünaamilist kompileerimist (Just-in-time Compilation ehk JIT)</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">Paranda JavaScripti jõudlust dünaamilise kompileerimise abil. (pole soovitatav kõikidele kasutajatele)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">Turvalisuse arvel saad dünaamilise kompileerimisega parandada veebisaitide jõudlust. Soovitatav vaid lihtsamate ja väiksema jõudlusega nutiseadmete puhul.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">Kasuta ohutut veebisirvimist</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Reaalajas kaitse ohtlike veebisaitide, pahavara ja õngitsuskatsete vastu.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">IronFoxi ohutu veebisirvimise funktsionaalsus põhineb hetkel Google\'i teenustel. IronFox uuendab vahetevahel vastavat andmekogu ja tagab, et kasutajad on viimaste veebiohtude vastu kaitstud. Võimaliku ohu tuvastamisel võib IronFox saata kahtlase võrguaadressi fragmendi räsiväärtuse Google\'i serveritesse. Tagamaks, et sinu nutiseadme IP-aadress poleks seotud antud päringutega, kasutab IronFox eraldi puhverserverit.</string>
+    <string name="ironfox_onboarding_spoof_english">Häma keeleks en-US</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Varjates seadme keeli saad parandada oma privaatsust.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Küsi veebisaite Ameerika inglisekeelsetena (en-US). Sellisel puhul on sinu brauser vähem unikaalne ning aitab täpsema tuvastamise vastu, mis põhineb kasutajate keele-eelistustel.</string>
+</resources>

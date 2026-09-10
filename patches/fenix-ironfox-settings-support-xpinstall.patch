@@ -8,10 +8,18 @@ Provides support for a UI setting to enable/disable the installation of add-ons.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-index 69b25294b63e..387a69d829dc 100644
+index 6292e048e5ca..26cb96587fef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-@@ -199,10 +199,12 @@ class WebExtensionPromptFeature(
+@@ -54,6 +54,7 @@ import org.mozilla.fenix.theme.ThemeManager
+ import androidx.appcompat.R as appcompatR
+ import com.google.android.material.R as materialR
+ import mozilla.components.feature.addons.R as addonsR
++import org.ironfoxoss.core.R as ironfoxR
+ 
+ /**
+  * Feature implementation for handling [WebExtensionPromptRequest] and showing the respective UI.
+@@ -245,10 +246,12 @@ class WebExtensionPromptFeature(
                  // Title = Can't install extension
                  // Message = Failed to install $addonName
                  title = ""
@@ -22,7 +30,7 @@ index 69b25294b63e..387a69d829dc 100644
 +                } else if (context.components.settings.ironfox.xpinstallEnabled) {
                      context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install)
 +                } else {
-+                    context.getString(R.string.extension_failed_to_install_xpinstall_disabled_error)
++                    context.getString(ironfoxR.string.extension_failed_to_install_xpinstall_disabled_error)
                  }
              }
  

@@ -38,7 +38,8 @@ object IronFoxAddons {
    * @param addon The add-on we should check
    */
   fun isBuiltIn(addon: Addon): Boolean {
-    if (addon.id == FXA_WEBCHANNEL.id || addon.id == ICONS.id || addon.id == READERVIEW.id || addon.id == WEBCOMPAT.id) {
+    if (addon.id == FXA_WEBCHANNEL.id || addon.id == ICONS.id || addon.id == READERVIEW.id ||
+     addon.id == WEBCOMPAT.id) {
       return true
     } else {
       return false

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_title">Tilpas IronFox</string>
+    <string name="ironfox_onboarding_preferences_description">Tilpas IronFox efter din smag</string>
+    <string name="ironfox_onboarding_doh_caption">Gør din browsing mere sikker med DNS-over-HTTPS for at få forbedret privatliv og sikkerhed.</string>
+    <string name="ironfox_onboarding_install_ublock">Installér uBlock Origin</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Blokér annoncer, trackere og malware for en mere sikker og renere browseroplevelse.</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin forbedrer dit privatliv og sikkerhed ved at blokere uønsket indhold. IronFox bruger en tilpasset uBlock Origin-konfiguration med kuraterede filterlister for optimal beskyttelse og ydeevne.</string>
+    <string name="ironfox_onboarding_jit_enabled">Aktivér JavaScript Just-in-time kompilering (JIT)</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">Forbedr JavaScript-ydeevnen ved at aktivere JIT. (Anbefales ikke til de fleste brugere)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">På bekostning af sikkerheden kan du aktivere JIT for at forbedre hjemmesiders ydeevne. Anbefales kun til brugere med low-end enheder.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">Aktivér sikker browsing</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Få realtidsbeskyttelse mod farlige hjemmesider, malware og phishingforsøg.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">IronFox\' sikker browsing-funktion leveres i øjeblikket af Google. IronFox opdaterer regelmæssigt databasen for at sikre, at brugerne er beskyttet mod de nyeste trusler, og når der opdages et potentielt match, kan IronFox sende en delvis hash af den mistænkelige URL til Google. Bemærk, at IronFox proxyer disse forbindelser for at forhindre, at din offentlige IP-adresse bliver forbundet med disse anmodninger.</string>
+    <string name="ironfox_onboarding_spoof_english">Spoof sprog til en-US</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Forbedr din privatlivsbeskyttelse ved at skjule din enheds sprogindstillinger.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Anmod om engelske (en-US) versioner af hjemmesider. Dette hjælper din browser med at fremstå mindre unik, hvilket styrker beskyttelsen mod fingeraftryksteknikker, der identificerer brugere på baggrund af deres sprogpræferencer.</string>
+</resources>

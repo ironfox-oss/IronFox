@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_title">Персонализиране на IronFox</string>
+    <string name="ironfox_onboarding_preferences_description">Персонализирайте IronFox според вашите предпочитания</string>
+    <string name="ironfox_onboarding_doh_caption">Защитете сърфирането си с DNS-over-HTTPS за подобрена поверителност и сигурност.</string>
+    <string name="ironfox_onboarding_install_ublock">Инсталирайте uBlock Origin</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Блокирайте реклами, тракери и зловреден софтуер за по-безопасно и по-чисто сърфиране.</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin подобрява вашата поверителност и сигурност, като блокира нежелано съдържание. IronFox използва персонализирана конфигурация на uBlock Origin с курирани списъци с филтри за оптимална защита и производителност.</string>
+    <string name="ironfox_onboarding_jit_enabled">Активиране на JavaScript компилация навреме (JIT)</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">Подобрете производителността на JavaScript, като активирате JIT. (Не се препоръчва за повечето потребители)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">За сметка на сигурността, можете да активирате JIT, за да подобрите производителността на уебсайтове. Препоръчва се само за потребители с устройства от по-нисък клас.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">Активиране на безопасно сърфиране</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Получете защита в реално време срещу опасни уебсайтове, злонамерен софтуер и фишинг атаки.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">Функцията за безопасно сърфиране на IronFox понастоящем се предоставя от Google. IronFox периодично ще актуализира базата данни, за да гарантира, че потребителите са защитени от най-новите заплахи, и при откриване на потенциално съвпадение, IronFox може да изпрати частичен хеш на подозирания URL адрес до Google. Обърнете внимание, че IronFox проксира тези връзки, за да предотврати свързването на вашия публичен IP адрес с тези заявки.</string>
+    <string name="ironfox_onboarding_spoof_english">Подправяне на езика на en-US</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Подобрете поверителността си, като скриете езиковите настройки на устройството си.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Заявете английски (en-US) версии на уеб страници. Това помага на браузъра ви да изглежда по-малко уникален, като по този начин засилва защитата срещу техники за снемане на пръстови отпечатъци, които идентифицират потребителите въз основа на техните езикови предпочитания.</string>
+</resources>

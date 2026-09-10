@@ -7,9 +7,9 @@ import mozilla.appservices.remotesettings.RemoteSettingsService
 import mozilla.components.service.nimbus.NimbusApi
 import mozilla.components.service.nimbus.NimbusAppInfo
 import mozilla.components.service.nimbus.NimbusBuilder
+import org.ironfoxoss.core.R
 import org.json.JSONObject
 import org.mozilla.experiments.nimbus.internal.NimbusServerSettings
-import org.mozilla.fenix.R
 import org.mozilla.fenix.utils.Settings
 
 fun createNimbus(context: Context, settings: Settings, urlString: String?, remoteSettingsService: RemoteSettingsService?, geckoPrefHandler: Any?): NimbusApi {

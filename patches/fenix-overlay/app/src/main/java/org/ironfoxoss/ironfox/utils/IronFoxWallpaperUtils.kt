@@ -1,7 +1,7 @@
 package org.ironfoxoss.ironfox.utils
 
 import android.content.res.Configuration
-import org.mozilla.fenix.R
+import org.ironfoxoss.core.R
 
 // Helpers for managing IronFox wallpapers
 

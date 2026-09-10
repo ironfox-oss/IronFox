@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_description">IronFox를 원하는 대로 사용자 설정합니다</string>
+    <string name="ironfox_onboarding_install_ublock_caption">광고, 추적기, 멀웨어를 차단하여 더 안전하고 깔끔한 브라우징 경험을 제공합니다.</string>
+    <string name="ironfox_onboarding_install_ublock">uBlock Origin 설치</string>
+    <string name="ironfox_onboarding_doh_caption">DNS-over-HTTPS로 브라우징을 보호하여 프라이버시와 보안을 향상시킵니다.</string>
+    <string name="ironfox_onboarding_preferences_title">IronFox 사용자 설정</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin은 원하지 않는 콘텐츠를 차단하여 프라이버시와 보안을 향상시킵니다. IronFox는 최적의 보호와 성능을 위해 선별된 필터 목록이 포함된 커스텀 uBlock Origin 설정을 사용합니다.</string>
+    <string name="ironfox_onboarding_jit_enabled">JavaScript Just-in-time Compilation (JIT) 사용</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">JIT 기능을 활성화해 JavaScript 성능을 향상시킵니다. (대부분의 사용자에게 권장하지 않음)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">보안성을 희생하는 대신 JIT를 활성화하여 웹사이트 성능을 향상시킬 수 있습니다. 저사항 기기 사용자에게만 권장됩니다.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">세이프 브라우징 사용</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">위험한 웹사이트, 멀웨어, 피싱 공격 시도로부터 실시간 보호를 받습니다.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">IronFox의 세이프 브라우징 기능은 현재 Google에서 제공됩니다. IronFox는 사용자가 최신 위협으로부터 보호받을 수 있도록 데이터베이스를 주기적으로 업데이트하며, 잠재적으로 일치하는 항목을 발견할 경우 의심되는 URL의 부분 해시를 Google에 제출할 수 있습니다. IronFox는 이러한 요청이 사용자의 공용 IP 주소와 연결되지 않도록 해당 연결을 프록시 처리합니다.</string>
+    <string name="ironfox_onboarding_spoof_english">언어 설정을 en-US로 위조</string>
+    <string name="ironfox_onboarding_spoof_english_caption">기기의 언어 설정을 숨겨 프라이버시 보호를 향상시킵니다.</string>
+    <string name="ironfox_onboarding_spoof_english_description">웹페이지 영어(en-US) 버전을 요청합니다. 브라우저를 덜 독특하게 보이게 만들어, 언어 설정을 기반으로 사용자를 식별하는 핑거프린팅 기술에 대한 보호를 강화할 수 있습니다.</string>
+</resources>

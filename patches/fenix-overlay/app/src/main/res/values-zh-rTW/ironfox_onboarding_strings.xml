@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_description">自訂義 IronFox 以符合您的喜好</string>
+    <string name="ironfox_onboarding_install_ublock_caption">阻擋廣告、追踨器和惡意軟體來獲得更安全和乾淨的瀏覽體驗。</string>
+    <string name="ironfox_onboarding_install_ublock">安裝 uBlock Origin</string>
+    <string name="ironfox_onboarding_doh_caption">啟用 DNS-over-HTTPS 強化您的瀏覽隱私與安全。</string>
+    <string name="ironfox_onboarding_preferences_title">自定義 IronFox</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin 透過阻擋不必要的內容以加強您的隱私與安全性。 IronFox 使用了自訂的 uBlock Origin 設定檔，帶有精心挑選的篩選清單，以提供最佳的保護與效能。</string>
+    <string name="ironfox_onboarding_jit_enabled">啟用 JavaScript Just-in-time Compilation (JIT)</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">啟用 JIT 來提升 JavaScript 效能。（大多使用者不建議啟用）</string>
+    <string name="ironfox_onboarding_jit_enabled_description">在安全性的代價上，你可以啟用 JIT 來提升網站的效能。只建議給低端裝置使用者。</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">啟用安全瀏覽 （Safe Browsing）</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">取得針對危險網站、惡意軟體與釣魚攻擊的即時防護。</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">IronFox 的安全瀏覽功能目前由 Google 提供服務。IronFox 會定期更新資料庫以確保使用者免於最新威脅的侵害，且在遇到潛在的匹配項目時，IronFox 可能會向 Google 傳送疑似危險 URL 的部分雜湊值。請注意，IronFox 會透過代理伺服器轉發這些連線，以防止您的真實公網 IP 位址與這些請求產生關聯。</string>
+    <string name="ironfox_onboarding_spoof_english">欺騙語言為 en-US</string>
+    <string name="ironfox_onboarding_spoof_english_caption">透過隱藏裝置的語言設定來強化您的隱私。</string>
+    <string name="ironfox_onboarding_spoof_english_description">請求英文（en-US）版本的網頁。這幫助降低您瀏覽器的獨特性，來強化針對透過語言偏好識別使用者的指紋追蹤技術的防護能力。</string>
+</resources>
