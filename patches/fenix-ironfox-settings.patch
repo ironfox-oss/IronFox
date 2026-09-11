@@ -8,64 +8,64 @@ Adds support for IronFox-specific UI settings to control various functionality.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 7a166ddc83aae..07836fc3392b4 100644
+index 75f51971cb20..b445d15c4171 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -145,6 +145,7 @@ import java.util.Date
- import java.util.concurrent.TimeUnit
- import kotlin.math.roundToLong
- import mozilla.components.support.AppServicesInitializer.Config as AppServicesConfig
+@@ -144,6 +144,7 @@ import org.mozilla.fenix.theme.ThemeProvider
+ import org.mozilla.fenix.utils.Settings
+ import org.mozilla.fenix.utils.isLargeScreenSize
+ import org.mozilla.fenix.wallpapers.Wallpaper
 +import org.ironfoxoss.ironfox.utils.IFPrefs
  
  private const val RAM_THRESHOLD_MEGABYTES = 1024
  private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
-@@ -240,6 +241,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -238,6 +239,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              // Start loading the SharedPreferences file from disk on a background thread immediately.
              applicationScope.launch(IO) {
                  applicationContext.getSharedPreferences(Settings.FENIX_PREFERENCES, MODE_PRIVATE)
 +                IFPrefs.setPrefs(applicationContext)
              }
  
-             // Initialization is split into two phases based on if libmegazord is fully initialized.
+             // Allow overriding secret settings with values specified in `local.properties` at build time.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 5cc1da059f7d..517c235062dd 100644
+index aff32cbcd7f3..23e277590c11 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -136,6 +136,7 @@ import org.mozilla.geckoview.GeckoRuntime
- import java.util.UUID
- import java.util.concurrent.TimeUnit
- import mozilla.components.service.pocket.mars.api.Placement as MarsSpocsPlacement
+@@ -150,6 +150,7 @@ import org.mozilla.fenix.translations.TranslationsEnabledSettings
+ import org.mozilla.fenix.utils.Settings.DeleteDownloadBehavior
+ import org.mozilla.fenix.utils.getUndoDelay
+ import org.mozilla.geckoview.GeckoRuntime
 +import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
  
- /**
-  * Component group for all core browser functionality.
-@@ -237,6 +238,7 @@ class Core(
-             defaultSettings,
-             geckoRuntime,
-         ).also {
-+            GeckoSettingsBridge.setIronFoxPrefs(context, it)
-             WebCompatFeature.install(it)
-         }
+ /** Component group for all core browser functionality. */
+ @Suppress("LargeClass")
+@@ -262,6 +263,7 @@ class Core(
+                 runtime = geckoRuntime,
+             )
+             .also {
++                GeckoSettingsBridge.setIronFoxPrefs(context, it)
+                 WebCompatFeature.install(it)
+             }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index b9c948180af6..cda0f6b36652 100644
+index 70b91774b0ec..2d21d2447b87 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -86,6 +86,7 @@ import java.lang.ref.WeakReference
- import kotlin.system.exitProcess
- import mozilla.components.ui.icons.R as iconsR
- import org.mozilla.fenix.GleanMetrics.Settings as SettingsMetrics
+@@ -90,6 +90,7 @@ import org.mozilla.fenix.settings.account.AccountUiView
+ import org.mozilla.fenix.snackbar.FenixSnackbarDelegate
+ import org.mozilla.fenix.snackbar.SnackbarBinding
+ import org.mozilla.fenix.utils.Settings
 +import org.ironfoxoss.ironfox.utils.FenixSettingsVisibilityManager
  
- /**
-  * Main settings screen.
-@@ -652,8 +653,22 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+ /** Main settings screen. */
+ @Suppress("LargeClass", "TooManyFunctions")
+@@ -670,6 +671,20 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
          setupTrackingProtectionPreference(settings)
          setupDnsOverHttpsPreference(settings)
          setupEmailMaskPreference(settings, requireComponents)
 +        setupIronFoxPreferences()
-     }
- 
++    }
++
 +    internal fun setupIronFoxPreferences() {
 +        requirePreference<Preference>(R.string.pref_key_if_preferences).apply {
 +            setOnPreferenceClickListener {
@@ -77,11 +77,9 @@ index b9c948180af6..cda0f6b36652 100644
 +            }
 +        }
 +        FenixSettingsVisibilityManager.SettingsFragment(requireContext(), this)
-+     }
-+
+     }
+ 
      private val setToDefaultPromptRequestLauncher: ActivityResultLauncher<Intent> =
-         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-             with(requireContext()) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 83e0f40483b7..d1f203994c07 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

@@ -8,18 +8,18 @@ If autofill is enabled/disabled from the browser's UI settings, this ensures tha
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
-index 2a204c8c5832..a69ece4510a6 100644
+index 7acca4ad5b24..84679c01f884 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
-@@ -59,6 +59,7 @@ import org.mozilla.fenix.theme.FirefoxTheme
- import kotlin.Boolean
- import com.google.android.material.R as materialR
- import mozilla.components.ui.icons.R as iconsR
+@@ -59,6 +59,7 @@ import org.mozilla.fenix.settings.autofill.ui.AutofillSettingsStore
+ import org.mozilla.fenix.settings.biometric.BiometricPromptPreferenceFragment
+ import org.mozilla.fenix.settings.requirePreference
+ import org.mozilla.fenix.theme.FirefoxTheme
 +import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
  
  /**
-  * Autofill settings fragment displays a list of settings related to auto filling, adding and
-@@ -136,7 +137,12 @@ class AutofillSettingFragment : BiometricPromptPreferenceFragment(), SystemInset
+  * Autofill settings fragment displays a list of settings related to auto filling, adding and syncing credit cards and
+@@ -133,7 +134,12 @@ class AutofillSettingFragment : BiometricPromptPreferenceFragment(), SystemInset
      internal fun updateSaveAndAutofillCardsSwitch() {
          requirePreference<SwitchPreferenceCompat>(R.string.pref_key_credit_cards_save_and_autofill_cards).apply {
              isChecked = context.components.settings.shouldAutofillCreditCardDetails
@@ -33,7 +33,7 @@ index 2a204c8c5832..a69ece4510a6 100644
          }
      }
  
-@@ -146,7 +152,12 @@ class AutofillSettingFragment : BiometricPromptPreferenceFragment(), SystemInset
+@@ -141,7 +147,12 @@ class AutofillSettingFragment : BiometricPromptPreferenceFragment(), SystemInset
      internal fun updateSaveAndAutofillAddressesSwitch() {
          requirePreference<SwitchPreferenceCompat>(R.string.pref_key_addresses_save_and_autofill_addresses).apply {
              isChecked = context.components.settings.shouldAutofillAddressDetails

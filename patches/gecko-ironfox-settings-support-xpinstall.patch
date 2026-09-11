@@ -8,18 +8,18 @@ Provides support for a UI setting to enable/disable the installation of add-ons.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/browser/components/enterprisepolicies/Policies.sys.mjs b/browser/components/enterprisepolicies/Policies.sys.mjs
-index 193cf1d77633..2faac0dddaa3 100644
+index da3fc401ec74..b51a8e3ada3f 100644
 --- a/browser/components/enterprisepolicies/Policies.sys.mjs
 +++ b/browser/components/enterprisepolicies/Policies.sys.mjs
-@@ -30,6 +30,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+@@ -32,6 +32,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
    QuickSuggest: "moz-src:///browser/components/urlbar/QuickSuggest.sys.mjs",
    WebsiteFilter: "resource:///modules/policies/WebsiteFilter.sys.mjs",
-   WindowsLaunchOnLogin: "resource://gre/modules/WindowsLaunchOnLogin.sys.mjs",
-+  IFPrefUtils:          "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+   LaunchOnLogin: "resource://gre/modules/LaunchOnLogin.sys.mjs",
++  IFPrefUtils:   "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
  
    PoliciesUtils: "resource://gre/modules/PoliciesHelpers.sys.mjs",
    addAllowDenyPermissions: "resource://gre/modules/PoliciesHelpers.sys.mjs",
-@@ -2233,8 +2234,8 @@ export var Policies = {
+@@ -2255,8 +2256,8 @@ export var Policies = {
          lazy.addAllowDenyPermissions("install", param.Allow, null);
        }
        if ("Default" in param) {

@@ -19,202 +19,234 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
     const val FENIX_PREFERENCES = "fenix_preferences"
   }
 
-  override val preferences: SharedPreferences =
-   context.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
+  override val preferences: SharedPreferences = context.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
 
-  var accessibilityEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_accessibility_enabled),
-    default = false,
-  )
+  var accessibilityEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_accessibility_enabled),
+      default = false,
+    )
 
-  var alwaysUsePrivateBrowsing by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_always_use_private_browsing),
-    default = false,
-  )
+  var alwaysUsePrivateBrowsing by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_always_use_private_browsing),
+      default = false,
+    )
 
-  var autoplayBlockingClickToPlay by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_autoplay_policy_click_to_play),
-    default = false,
-  )
+  var autoplayBlockingClickToPlay by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_autoplay_policy_click_to_play),
+      default = false,
+    )
 
-  var autoplayBlockingSticky by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_autoplay_policy_sticky),
-    default = false,
-  )
+  var autoplayBlockingSticky by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_autoplay_policy_sticky),
+      default = false,
+    )
 
-  var autoplayBlockingTransient by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_autoplay_policy_transient),
-    default = true,
-  )
+  var autoplayBlockingTransient by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_autoplay_policy_transient),
+      default = true,
+    )
 
-  var cacheEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_cache_enabled),
-    default = false,
-  )
+  var cacheEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_cache_enabled),
+      default = false,
+    )
 
   // This is for our legacy collection setting - to be removed!
-  var collections by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_collections_enabled),
-    default = true,
-  )
+  var collections by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_collections_enabled),
+      default = true,
+    )
 
-  var collectionsMigrated by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_ironfox_collections_migrated),
-    default = false,
-  )
+  var collectionsMigrated by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_collections_migrated),
+      default = false,
+    )
 
-  var emeEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_eme_enabled),
-    default = false,
-  )
+  var emeEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_eme_enabled),
+      default = false,
+    )
 
-  var enableUnifiedPush by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
-    default = true,
-  )
+  var enableUnifiedPush by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
+      default = true,
+    )
 
-  var fppOverridesIronFoxEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_enabled),
-    default = true,
-  )
+  var fppOverridesIronFoxEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_enabled),
+      default = true,
+    )
 
-  var fppOverridesIronFoxTimezoneEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_timezone_enabled),
-    default = true,
-  )
+  var fppOverridesIronFoxTimezoneEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_timezone_enabled),
+      default = true,
+    )
 
-  var fppOverridesIronFoxWebGLEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_webgl_enabled),
-    default = true,
-  )
+  var fppOverridesIronFoxWebGLEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_webgl_enabled),
+      default = true,
+    )
 
-  var fppOverridesMozillaEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_fpp_overrides_mozilla_enabled),
-    default = true,
-  )
+  var fppOverridesMozillaEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_fpp_overrides_mozilla_enabled),
+      default = true,
+    )
 
-  var ipv6Enabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_ipv6_enabled),
-    default = true,
-  )
+  var ipv6Enabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ipv6_enabled),
+      default = true,
+    )
 
-  var ironFoxOnboardingCompleted by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_if_onboarding_completed),
-    default = false,
-  )
+  var ironFoxOnboardingCompleted by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_if_onboarding_completed),
+      default = false,
+    )
 
-  var javascriptEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_javascript_enabled),
-    default = true,
-  )
+  var javascriptEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_javascript_enabled),
+      default = true,
+    )
 
-  var javascriptJitEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_jit_enabled),
-    default = false,
-  )
+  var javascriptJitEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_jit_enabled),
+      default = false,
+    )
 
-  var javascriptJitTrustedPrincipalsEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_jit_trusted_principals_enabled),
-    default = false,
-  )
+  var javascriptJitTrustedPrincipalsEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_jit_trusted_principals_enabled),
+      default = false,
+    )
 
-  var openLinksInAPrivateTabCachedValue by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_open_links_in_a_private_tab_cached_value),
-    default = false,
-  )
+  var openLinksInAPrivateTabCachedValue by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_open_links_in_a_private_tab_cached_value),
+      default = false,
+    )
 
-  var pdfjsDisabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_pdfjs_disabled),
-    default = false,
-  )
+  var pdfjsDisabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_pdfjs_disabled),
+      default = false,
+    )
 
-  var prefersBrowserColorScheme by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_prefers_browser_color_scheme),
-    default = false,
-  )
+  var prefersBrowserColorScheme by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_prefers_browser_color_scheme),
+      default = false,
+    )
 
-  var prefersDarkColorScheme by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_prefers_dark_color_scheme),
-    default = false,
-  )
+  var prefersDarkColorScheme by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_prefers_dark_color_scheme),
+      default = false,
+    )
 
-  var prefersLightColorScheme by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_prefers_light_color_scheme),
-    default = true,
-  )
+  var prefersLightColorScheme by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_prefers_light_color_scheme),
+      default = true,
+    )
 
-  var printEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_print_enabled),
-    default = true,
-  )
+  var printEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_print_enabled),
+      default = true,
+    )
 
-  var refererXOriginAlways by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_referer_policy_always),
-    default = true,
-  )
+  var refererXOriginAlways by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_referer_policy_always),
+      default = true,
+    )
 
-  var refererXOriginBaseDomainsMatch by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_referer_policy_base_domains_match),
-    default = false,
-  )
+  var refererXOriginBaseDomainsMatch by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_referer_policy_base_domains_match),
+      default = false,
+    )
 
-  var refererXOriginHostsMatch by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_referer_policy_hosts_match),
-    default = false,
-  )
+  var refererXOriginHostsMatch by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_referer_policy_hosts_match),
+      default = false,
+    )
 
-  var safeBrowsingEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
-    default = true,
-  )
+  var safeBrowsingEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
+      default = true,
+    )
 
-  var shouldUseOledTheme by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_oled_theme),
-    default = false,
-  )
+  var spoofEnglish by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_spoof_english),
+      default = true,
+    )
 
-  var spoofEnglish by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_spoof_english),
-    default = true,
-  )
+  var spoofTimezone by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_spoof_timezone),
+      default = false,
+    )
 
-  var spoofTimezone by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_spoof_timezone),
-    default = false,
-  )
+  var svgEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_svg_enabled),
+      default = true,
+    )
 
-  var svgEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_svg_enabled),
-    default = true,
-  )
+  var translationsEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_translations_enabled),
+      default = true,
+    )
 
-  var translationsEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_translations_enabled),
-    default = true,
-  )
+  var useUnifiedPush by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_use_unifiedpush),
+      default = false,
+    )
 
-  var useUnifiedPush by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_use_unifiedpush),
-    default = false,
-  )
+  var wasmEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_wasm_enabled),
+      default = true,
+    )
 
-  var wasmEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_wasm_enabled),
-    default = true,
-  )
+  var webglDisabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_webgl_disabled),
+      default = true,
+    )
 
-  var webglDisabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_webgl_disabled),
-    default = true,
-  )
+  var webrtcEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_webrtc_enabled),
+      default = true,
+    )
 
-  var webrtcEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_webrtc_enabled),
-    default = true,
-  )
-
-  var xpinstallEnabled by booleanPreference(
-    key = context.getPreferenceKey(R.string.pref_key_xpinstall_enabled),
-    default = false,
-  )
+  var xpinstallEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_xpinstall_enabled),
+      default = false,
+    )
 }

@@ -8,16 +8,16 @@ Enables encrypted storage via Android's Keystore system (https://developer.andro
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-index 6ed5a8715f84..a9f60b19cd2a 100644
+index b2f79927f7b7..4d5331d02505 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 @@ -112,7 +112,7 @@ class BackgroundServices(
-         // Enable encryption for account state on supported API levels (23+).
-         // Just on Nightly and local builds for now.
-         // Enabling this for all channels is tracked in https://github.com/mozilla-mobile/fenix/issues/6704
--        secureStateAtRest = Config.channel.isNightlyOrDebug,
-+        secureStateAtRest = true,
-     )
+             // Enable encryption for account state on supported API levels (23+).
+             // Just on Nightly and local builds for now.
+             // Enabling this for all channels is tracked in https://github.com/mozilla-mobile/fenix/issues/6704
+-            secureStateAtRest = Config.channel.isNightlyOrDebug,
++            secureStateAtRest = true,
+         )
  
      @VisibleForTesting
 -- 

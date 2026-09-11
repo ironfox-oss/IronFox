@@ -23,7 +23,3 @@ allprojects {
     gradle.configureMavenRepositories(delegate)
   }
 }
-
-tasks.register('clean', Delete) {
-  delete rootProject.layout.buildDirectory
-}

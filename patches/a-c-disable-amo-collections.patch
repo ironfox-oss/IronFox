@@ -8,11 +8,11 @@ Disables fetching featured collections, recommendations, and icons from AMO (add
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
-index 0575b1166697e..49b888dc33218 100644
+index c2d89b3173d1..c79d74ccbada 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
 +++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
-@@ -83,7 +83,7 @@ class AddonManager(
-      * the [addonsProvider] or querying web extension state from the engine / store.
+@@ -78,7 +78,7 @@ class AddonManager(
+      *   state from the engine / store.
       */
      @Throws(AddonManagerException::class)
 -    @Suppress("TooGenericExceptionCaught")
@@ -20,22 +20,22 @@ index 0575b1166697e..49b888dc33218 100644
      suspend fun getAddons(
          waitForPendingActions: Boolean = true,
          allowCache: Boolean = true,
-@@ -113,7 +113,7 @@ class AddonManager(
-             // Get all the featured add-ons not installed from provider.
-             // NB: We're keeping translations only for the default locale.
-             var featuredAddons = emptyList<Addon>()
--            try {
-+/*            try {
-                 val userLanguage = Locale.getDefault().language
-                 val locales = listOf(userLanguage)
-                 featuredAddons =
-@@ -123,7 +123,7 @@ class AddonManager(
-             } catch (throwable: Throwable) {
-                 // Do not throw when we fail to fetch the featured add-ons since there can be installed add-ons.
-                 logger.warn("Failed to get the featured add-ons", throwable)
--            }
-+            } */
+@@ -110,7 +110,7 @@ class AddonManager(
+                 // Get all the featured add-ons not installed from provider.
+                 // NB: We're keeping translations only for the default locale.
+                 var featuredAddons = emptyList<Addon>()
+-                try {
++/*                try {
+                     val userLanguage = Locale.getDefault().language
+                     val locales = listOf(userLanguage)
+                     featuredAddons =
+@@ -121,7 +121,7 @@ class AddonManager(
+                 } catch (throwable: Throwable) {
+                     // Do not throw when we fail to fetch the featured add-ons since there can be installed add-ons.
+                     logger.warn("Failed to get the featured add-ons", throwable)
+-                }
++                } */
  
-             // Build a list of installed extensions that are not built-in extensions.
-             val installedAddons = installedExtensions
+                 // Build a list of installed extensions that are not built-in extensions.
+                 val installedAddons =
 -- 

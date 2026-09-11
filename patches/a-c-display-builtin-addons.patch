@@ -8,16 +8,16 @@ Displays built-in add-ons alongside user-installed ones.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
-index 0575b1166697..6470f6a7f64d 100644
+index c2d89b3173d1..35b99aa0abb0 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
 +++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
-@@ -127,7 +127,7 @@ class AddonManager(
- 
-             // Build a list of installed extensions that are not built-in extensions.
-             val installedAddons = installedExtensions
--                .filterValues { !it.isBuiltIn() }
-+//                .filterValues { !it.isBuiltIn() }
-                 .map {
-                     val extension = it.value
-                     val installedState = toInstalledState(extension)
+@@ -126,7 +126,7 @@ class AddonManager(
+                 // Build a list of installed extensions that are not built-in extensions.
+                 val installedAddons =
+                     installedExtensions
+-                        .filterValues { !it.isBuiltIn() }
++//                        .filterValues { !it.isBuiltIn() }
+                         .map {
+                             val extension = it.value
+                             val installedState = toInstalledState(extension)
 -- 

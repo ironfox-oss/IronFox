@@ -8,33 +8,33 @@ Adds custom privacy-focused search engines.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-index a18f612a94570..0c95c4d4a9990 100644
+index 966831a94618..df1118de8603 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 +++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-@@ -40,16 +40,16 @@ private const val MAX_SIZE = 32
- // List of general search engine ids, taken from
+@@ -41,16 +41,16 @@ private const val MAX_SIZE = 32
  // https://searchfox.org/mozilla-central/rev/ef0aa879e94534ffd067a3748d034540a9fc10b0/toolkit/components/search/SearchUtils.sys.mjs#200
- internal val GENERAL_SEARCH_ENGINE_IDS = setOf(
--    GOOGLE_ID,
-     "ddg",
--    "bing",
--    "baidu",
--    "ecosia",
--    "qwant",
--    "yahoo-jp",
--    "seznam-cz",
--    "coccoc",
--    "baidu",
-+    "ddgnoai",
-+    "ddghtml",
-+    "ddglite",
-+    "marginalia",
-+    "mojeek",
-+    "searxdis",
-+    "startpage",
-+    "startpage-eu",
-+    "no-search",
- )
+ internal val GENERAL_SEARCH_ENGINE_IDS =
+     setOf(
+-        GOOGLE_ID,
+         "ddg",
+-        "bing",
+-        "baidu",
+-        "ecosia",
+-        "qwant",
+-        "yahoo-jp",
+-        "seznam-cz",
+-        "coccoc",
+-        "baidu",
++        "ddgnoai",
++        "ddghtml",
++        "ddglite",
++        "marginalia",
++        "mojeek",
++        "searxdis",
++        "startpage",
++        "startpage-eu",
++        "no-search",
+     )
  
  /**
 -- 

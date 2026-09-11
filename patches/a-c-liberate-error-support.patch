@@ -65,19 +65,19 @@ index e4c4d98d9d0c..8a445a1e99b5 100644
          // Override the version of concept-fetch that A-S depends on,
          // since we want to replace it with our own.
 diff --git a/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt b/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
-index c8df3ab6d8e6..beed95e98e52 100644
+index 88d4a110bce9..cb24e28d9fdc 100644
 --- a/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
 +++ b/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
-@@ -21,7 +21,7 @@ import mozilla.components.concept.base.crash.CrashReporting
+@@ -22,7 +22,7 @@ import mozilla.components.concept.base.crash.CrashReporting
  import mozilla.components.feature.fxsuggest.facts.emitSuggestionQueryCountFact
  import mozilla.components.support.base.log.logger.Logger
  import mozilla.components.support.remotesettings.RemoteSettingsService
 -import mozilla.components.support.rusterrors.reportRustError
 +// import mozilla.components.support.rusterrors.reportRustError
- import mozilla.appservices.suggest.InternalException as UniffiInternalException
  
  /**
-@@ -129,7 +129,7 @@ class FxSuggestStorage(
+  * A coroutine-aware wrapper around the synchronous [SuggestStore] interface.
+@@ -125,7 +125,7 @@ class FxSuggestStorage(
              default
          } catch (e: UniffiInternalException) {
              Logger.error("Ignoring internal exception from `$name`", e)

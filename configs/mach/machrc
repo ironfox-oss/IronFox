@@ -4,5 +4,6 @@
 telemetry = false
 
 [mach_telemetry]
+is_employee = false
 is_enabled = false
 is_set_up = true

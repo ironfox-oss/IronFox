@@ -37,10 +37,10 @@ index 8c61dbb0291c..fbe56f557ec0 100644
      channel: release
      features:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 3c71fd5f01a1..34db4143fbc3 100644
+index 75f51971cb20..90391dc9cd63 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -107,7 +107,7 @@ import org.mozilla.fenix.components.appstate.AppAction
+@@ -111,7 +111,7 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.initializeGlean
  import org.mozilla.fenix.components.metrics.MozillaProductDetector
  import org.mozilla.fenix.components.startMetricsIfEnabled
@@ -49,7 +49,7 @@ index 3c71fd5f01a1..34db4143fbc3 100644
  import org.mozilla.fenix.ext.application
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.containsQueryParameters
-@@ -581,15 +581,15 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -628,13 +628,13 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
      }
  
      @OptIn(DelicateCoroutinesApi::class, ExperimentalAndroidComponentsApi::class) // GlobalScope usage
@@ -59,9 +59,7 @@ index 3c71fd5f01a1..34db4143fbc3 100644
 +/*        runOnVisualCompleteness(queue) {
              components.nimbus.geckoPrefHandler.start()
              GlobalScope.launch(IO) {
-                 components.nimbus.sdk.maybeFetchExperiments(
-                     settings = components.settings,
-                 )
+                 components.nimbus.sdk.maybeFetchExperiments(settings = components.settings)
                  components.nimbus.geckoPrefHandler.getPreferenceStateFromGecko().await()
 -            }
 +            } */
@@ -87,19 +85,19 @@ index f448f7f0a79b..48b8b5e1ad30 100644
  
          val showSearch = requireContext().settings().isSettingsSearchEnabled &&
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
-index 4cd5212dea9b..3b4ada79b960 100644
+index 811b336e3f5f..9e0e63271b93 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
-@@ -12,7 +12,7 @@ import mozilla.components.browser.state.action.SearchAction
+@@ -13,7 +13,7 @@ import mozilla.components.browser.state.action.SearchAction
  import mozilla.components.browser.state.store.BrowserStore
  import mozilla.components.support.locale.LocaleManager
  import mozilla.components.support.locale.LocaleUseCases
 -import org.mozilla.fenix.nimbus.FxNimbus
 +// import org.mozilla.fenix.nimbus.FxNimbus
- import java.util.Locale
  
  /**
-@@ -77,7 +77,7 @@ class DefaultLocaleSettingsController(
+  * Controller responsible for handling user interactions on the locale settings screen. This includes selecting a new
+@@ -72,7 +72,7 @@ class DefaultLocaleSettingsController(
          updateBaseConfiguration(activity, locale)
  
          // Invalidate cached values to use the new locale
@@ -108,7 +106,7 @@ index 4cd5212dea9b..3b4ada79b960 100644
          recreateActivity()
      }
  
-@@ -91,7 +91,7 @@ class DefaultLocaleSettingsController(
+@@ -86,7 +86,7 @@ class DefaultLocaleSettingsController(
          updateBaseConfiguration(activity, localeSettingsStore.state.localeList[0])
  
          // Invalidate cached values to use the default locale

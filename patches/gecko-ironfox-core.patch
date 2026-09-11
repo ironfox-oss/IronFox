@@ -18,15 +18,17 @@ index bd4e5d2b9075..2fa61710b3ed 100644
 +
 +DIRS += ["ironfox"]
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
-index 077c7ca2f14b..b33f5bb403ee 100644
+index 79a1b7c25b..917d5b8d16 100644
 --- a/mobile/android/moz.configure
 +++ b/mobile/android/moz.configure
-@@ -212,3 +212,5 @@ def check_host_bin_prog(var, prog, toolchain=None):
- 
+@@ -211,6 +211,7 @@ def check_host_bin_prog(var, prog, toolchain=None):
  check_host_bin_prog("EMBEDDED_UNIFFI_BINDGEN", "embedded-uniffi-bindgen")
  check_host_bin_prog("NIMBUS_FML", "nimbus-fml")
-+
+ 
 +include("../../ironfox/ironfox.configure")
+ 
+ @depends(
+     moz_app_name,
 diff --git a/mobile/android/app/geckoview-prefs.js b/mobile/android/app/geckoview-prefs.js
 index 2f5b02eed2ff..cb667820c722 100644
 --- a/mobile/android/app/geckoview-prefs.js

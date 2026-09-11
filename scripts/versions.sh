@@ -2,32 +2,32 @@
 # Sources
 
 # Firefox
-# Version: 155.0.1 (RELEASE)
+# Version: 156.0 (BUILD1)
 # https://github.com/mozilla-firefox/firefox
-readonly IRONFOX_GECKO_COMMIT='fb95137a04eb8fe1196cb12f26b100c1e060295c'
-readonly IRONFOX_GECKO_SHA512SUM='e73b72e0fb305922b55bd76a07daeb731618e078317c78e23e570c7c72b6e58bee8a3572e1e21f6be83004e0b0db3479ef48a1cf1f44a812aebb96eb027a77a6'
-readonly IRONFOX_GECKO_VERSION='155.0.1'
+readonly IRONFOX_GECKO_COMMIT='3bf8f468258c2181f455e23d4ffcd6acb8f4cdb1'
+readonly IRONFOX_GECKO_SHA512SUM='0f7175df72a179e7dc8ac5891ef9342f3e79a4c8cac7613a14707c2e3039ca755e6949894586a62353d96a3aac251a8f60a058448b21c944c2d26772a796a089'
+readonly IRONFOX_GECKO_VERSION='156.0'
 
 # IronFox
 readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}"
 
 # This value is used for ex. producing reproducable archives, and its value should be bumped upon new releases
-readonly IRONFOX_VERSION_DATE='2026.09.05'
+readonly IRONFOX_VERSION_DATE='2026.09.11'
 
 # Application Services
-# Version: v155.0
+# Version: v156.0
 # https://github.com/mozilla/application-services
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt)
-readonly IRONFOX_AS_COMMIT='c0fd8cea40c9b5dafc6604831f7bd7a8c096d313'
-readonly IRONFOX_AS_SHA512SUM='ec25a2f4ed4686f68e1cc497188f2d95e8c90d4b0a148bbf8f45a31758f45553283f4d4cf3e4dae4ca7960672dca8afd002c74556cc3e64e197e59f4aa6359c0'
-readonly IRONFOX_AS_VERSION='155.0'
+readonly IRONFOX_AS_COMMIT='da9dbeb4909c9cba68db68514788028f520cdd34'
+readonly IRONFOX_AS_SHA512SUM='40ec21c1e0d5cbfe2582ae749e6ba7fd80610690954f942bd2797fe84681b58b9f2cfbd78ce4d35ec3ca18188e57a7c32f673e62ffb9b36d8faffcd351686353'
+readonly IRONFOX_AS_VERSION='156.0'
 
 # firefox-l10n
 # https://github.com/mozilla-l10n/firefox-l10n
 # NOTE: This repo is updated several times a day...
 # so I think best approach here will be for us to just update it alongside new releases
-readonly IRONFOX_L10N_CENTRAL_COMMIT='c7244f438e3d60130d72582995c57c1c22021218'
-readonly IRONFOX_L10N_CENTRAL_SHA512SUM='20497d805079c342738013137fbbd788133217187a509d2dfec5aeeb826795144c2b793479f2c625e1ac3c68c64d8b03753df813f0bfa8be8f4e7d23d9707745'
+readonly IRONFOX_L10N_CENTRAL_COMMIT='1106589c755772ca621d9c060906a0febeab0b2d'
+readonly IRONFOX_L10N_CENTRAL_SHA512SUM='663a3c660131630c2b6082b874394e1f2c4f7fea968f55106cd9f726a146838a54e923a893819949a741b99c96fcb94781d44c82d847135bcecab10548495237'
 
 # Glean
 # Version: 68.0.1
@@ -61,10 +61,10 @@ readonly IRONFOX_PHOENIX_SHA512SUM='caa3d949205aeee37b2b0963bfd76ddba5233d0a02a1
 readonly IRONFOX_UNIFFI_VERSION='0.31.0'
 
 # UnifiedPush-AC
-# Version: 1.0.6
+# Version: 1.0.7
 # https://gitlab.com/ironfox-oss/unifiedpush-ac
-readonly IRONFOX_UP_AC_COMMIT='9a1a56603bd8a67f793382e8797192263d2afb79'
-readonly IRONFOX_UP_AC_SHA512SUM='a7e28e05f61e9141b83d143bcaaa67c804ceed9c29df28b811c5c9efa68824d0ceda2860dd099f676fe187ff57afde4fdeb50c12f21572fe8a9b5afef361ce12'
+readonly IRONFOX_UP_AC_COMMIT='18703293e90c56f4d80a4d774b99b01ae695ec79'
+readonly IRONFOX_UP_AC_SHA512SUM='a4ebbe8a688793c82eef79f2e668fbb8d3e9900048c5ad06dd7fc48b707126362b2fc3267f141c0af81a8d72a98b1808636cc7ce07fe823702b002027b20ec40'
 
 # WASI SDK
 # https://github.com/WebAssembly/wasi-sdk
@@ -185,10 +185,10 @@ readonly IRONFOX_JDK_17_SHA512SUM_OSX_X86_64='58f4ad0eac7445fdbd3c110860dbd04e16
 readonly IRONFOX_JDK_17_VERSION='17.0.20.1'
 
 # Node.js
-# Version: 26.8.1
+# Version: 26.8.2
 # https://nodejs.org/about/previous-releases
 # (Used by nvm)
-readonly IRONFOX_NODE_VERSION='26.8.1'
+readonly IRONFOX_NODE_VERSION='26.8.2'
 
 # npm
 # Version: 12.0.2
@@ -225,9 +225,9 @@ readonly IRONFOX_PYYAML_COMMIT='49790e73684bebad1df05ef8d828fa12f685bffb'
 readonly IRONFOX_PYYAML_SHA512SUM='2fd1334af2722c093592f93a5eee01d0b2e26976a12cb2e4859b4271a8fa47ff257d10c91b09bdb2b5aa9415b62693a69d6e6602e997c2bff6711aa02bf43937'
 
 # Rust
-# Version: 1.98.0
+# Version: 1.98.1
 # https://releases.rs/
-readonly IRONFOX_RUST_VERSION='1.98.0'
+readonly IRONFOX_RUST_VERSION='1.98.1'
 
 # rustup
 # Version: 1.29.0

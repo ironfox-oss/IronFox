@@ -8,7 +8,7 @@ Configures Firefox's implementation of GeckoView (GeckoProvider).
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
-index 0bca79f30c33..30c1f9b40278 100644
+index 0d72d61e72a8..2c54043e98a3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 @@ -7,14 +7,14 @@ package org.mozilla.fenix.gecko
@@ -29,31 +29,32 @@ index 0bca79f30c33..30c1f9b40278 100644
  import mozilla.components.service.sync.autofill.GeckoCreditCardsAddressesStorageDelegate
  import mozilla.components.service.sync.logins.GeckoLoginStorageDelegate
  import org.mozilla.fenix.Config
-@@ -72,13 +72,13 @@ object GeckoProvider {
-             ),
-         )
+@@ -71,14 +71,14 @@ object GeckoProvider {
+                 ),
+             )
  
--        geckoRuntime.crashPullDelegate = GeckoCrashPullDelegate(
-+/*        geckoRuntime.crashPullDelegate = GeckoCrashPullDelegate(
-             dispatcher = { crashIDs ->
-                 context.components.appStore.dispatch(
-                     AppAction.CrashActionWrapper(CrashAction.CheckDeferred(crashIDs.toList())),
-                 )
-             },
--        )
-+        ) */
+-        geckoRuntime.crashPullDelegate =
++/*        geckoRuntime.crashPullDelegate =
+             GeckoCrashPullDelegate(
+                 dispatcher = { crashIDs ->
+                     context.components.appStore.dispatch(
+                         AppAction.CrashActionWrapper(CrashAction.CheckDeferred(crashIDs.toList()))
+                     )
+                 }
+-            )
++            ) */
  
          return geckoRuntime
      }
-@@ -89,8 +89,8 @@ object GeckoProvider {
-         policy: TrackingProtectionPolicy,
+@@ -90,8 +90,8 @@ object GeckoProvider {
      ): GeckoRuntimeSettings {
-         val builder = GeckoRuntimeSettings.Builder()
--            .crashHandler(CrashHandlerService::class.java)
--            .experimentDelegate(NimbusExperimentDelegate())
-+//            .crashHandler(CrashHandlerService::class.java)
-+//            .experimentDelegate(NimbusExperimentDelegate())
-             .contentBlocking(
-                 policy.toContentBlockingSetting(
-                     cookieBannerHandlingMode = context.settings().getCookieBannerHandling(),
+         val builder =
+             GeckoRuntimeSettings.Builder()
+-                .crashHandler(CrashHandlerService::class.java)
+-                .experimentDelegate(NimbusExperimentDelegate())
++//                .crashHandler(CrashHandlerService::class.java)
++//                .experimentDelegate(NimbusExperimentDelegate())
+                 .contentBlocking(
+                     policy.toContentBlockingSetting(
+                         queryParameterStripping = false,
 -- 

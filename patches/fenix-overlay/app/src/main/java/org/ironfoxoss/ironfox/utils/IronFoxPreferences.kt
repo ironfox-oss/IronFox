@@ -835,7 +835,7 @@ object IronFoxPreferences {
    */
   fun setShouldUseOledTheme(context: Context, isEnabled: Boolean) {
     val settings = context.components.settings
-    settings.ironfox.shouldUseOledTheme = isEnabled
+    settings.shouldUseOledTheme = isEnabled
   }
 
   /**
@@ -844,7 +844,7 @@ object IronFoxPreferences {
    * @param context The application context
    */
   fun shouldUseOledTheme(context: Context): Boolean {
-    return context.components.settings.ironfox.shouldUseOledTheme
+    return context.components.settings.shouldUseOledTheme
   }
 
   /**

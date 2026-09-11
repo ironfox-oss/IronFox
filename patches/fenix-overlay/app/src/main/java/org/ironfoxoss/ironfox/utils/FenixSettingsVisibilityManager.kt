@@ -23,6 +23,7 @@ object FenixSettingsVisibilityManager {
     prefFragment: PreferenceFragmentCompat
   ) {
     hidePreference(context, R.string.pref_key_data_choices, prefFragment)
+    hidePreference(context, R.string.pref_key_firefox_labs, prefFragment)
     hidePreference(context, R.string.pref_key_link_sharing, prefFragment)
     hidePreference(context, R.string.pref_key_nimbus_experiments, prefFragment)
     hidePreference(context, R.string.pref_key_remote_improvements, prefFragment)
@@ -42,6 +43,7 @@ object FenixSettingsVisibilityManager {
     context: Context,
     prefFragment: PreferenceFragmentCompat
   ) {
+    displayPreference(context, R.string.pref_key_debug_force_weekly_privacy_report_notification, prefFragment)
     displayPreference(context, R.string.pref_key_enable_address_sync, prefFragment)
     displayPreference(context, R.string.pref_key_enable_homepage_as_new_tab, prefFragment)
     displayPreference(context, R.string.pref_key_enable_import_bookmarks, prefFragment)
@@ -51,6 +53,7 @@ object FenixSettingsVisibilityManager {
     displayPreference(context, R.string.pref_key_enable_lna_blocking_enabled, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_feature_enabled, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_tracker_blocking_enabled, prefFragment)
+    displayPreference(context, R.string.pref_key_enable_weekly_privacy_notification, prefFragment)
     displayPreference(context, R.string.pref_key_native_share_sheet, prefFragment)
     displayPreference(context, R.string.pref_key_should_show_custom_tab_extensions, prefFragment)
     displayPreference(context, R.string.pref_key_show_voice_search_in_display_toolbar, prefFragment)
@@ -63,7 +66,6 @@ object FenixSettingsVisibilityManager {
 
     hidePreference(context, R.string.pref_key_crash_pull_never_show_again, prefFragment)
     hidePreference(context, R.string.pref_key_enable_ads_client_for_stories, prefFragment)
-    hidePreference(context, R.string.pref_key_enable_firefox_labs, prefFragment)
     hidePreference(context, R.string.pref_key_enable_uninstall_survey, prefFragment)
     hidePreference(context, R.string.pref_key_microsurvey_feature_enabled, prefFragment)
     hidePreference(context, R.string.pref_key_nimbus_use_preview, prefFragment)

@@ -197,7 +197,7 @@ index 65d97c0775b6..943d5cefa715 100644
          findNavController().nav(
              id = R.id.onboardingFragment,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
-index 678fc80238ab..ebd5a0c928ee 100644
+index 2525976c8137..669a6a3329c3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 @@ -4,6 +4,9 @@
@@ -210,27 +210,28 @@ index 678fc80238ab..ebd5a0c928ee 100644
  import org.mozilla.fenix.nimbus.CustomizationToolbarData
  import org.mozilla.fenix.nimbus.MarketingData
  import org.mozilla.fenix.nimbus.OnboardingCardData
-@@ -105,6 +108,7 @@ private fun OnboardingCardData.toPageUiData() = OnboardingPageUiData(
-         ?.toOnboardingToolbarOptions(),
-     termsOfService = extraData?.termOfServiceData?.toOnboardingTermsOfService(),
-     marketingData = extraData?.marketingData?.toOnboardingMarketingData(),
-+    ifPreferencesData = extraData?.ifPreferencesData?.toOnboardingIfPreferenceOptions(),
- )
- 
- private fun OnboardingCardType.toPageUiDataType() = when (this) {
-@@ -115,6 +119,8 @@ private fun OnboardingCardType.toPageUiDataType() = when (this) {
-     OnboardingCardType.TOOLBAR_PLACEMENT -> OnboardingPageUiData.Type.TOOLBAR_PLACEMENT
-     OnboardingCardType.TERMS_OF_SERVICE -> OnboardingPageUiData.Type.TERMS_OF_SERVICE
-     OnboardingCardType.MARKETING_DATA -> OnboardingPageUiData.Type.MARKETING_DATA
-+    OnboardingCardType.IF_PREFERENCE_DOH -> OnboardingPageUiData.Type.IF_PREFERENCE_DOH
-+    OnboardingCardType.IF_PREFERENCES -> OnboardingPageUiData.Type.IF_PREFERENCES
+@@ -105,6 +108,7 @@ private fun OnboardingCardData.toPageUiData() = cardType?.let { type ->
+         toolbarOptions = extraData?.customizationToolbarData?.takeIf { it.isNotEmpty() }?.toOnboardingToolbarOptions(),
+         termsOfService = extraData?.termOfServiceData?.toOnboardingTermsOfService(),
+         marketingData = extraData?.marketingData?.toOnboardingMarketingData(),
++        ifPreferencesData = extraData?.ifPreferencesData?.toOnboardingIfPreferenceOptions(),
+     )
  }
+ 
+@@ -117,6 +121,8 @@ private fun OnboardingCardType.toPageUiDataType() =
+         OnboardingCardType.TOOLBAR_PLACEMENT -> OnboardingPageUiData.Type.TOOLBAR_PLACEMENT
+         OnboardingCardType.TERMS_OF_SERVICE -> OnboardingPageUiData.Type.TERMS_OF_SERVICE
+         OnboardingCardType.MARKETING_DATA -> OnboardingPageUiData.Type.MARKETING_DATA
++        OnboardingCardType.IF_PREFERENCE_DOH -> OnboardingPageUiData.Type.IF_PREFERENCE_DOH
++        OnboardingCardType.IF_PREFERENCES -> OnboardingPageUiData.Type.IF_PREFERENCES
+     }
  
  private fun List<CustomizationToolbarData>.toOnboardingToolbarOptions() = map { it.toOnboardingCustomizeToolbar() }
-@@ -155,6 +161,25 @@ private fun ToolbarType.toToolbarOptionType() = when (this) {
-     ToolbarType.TOOLBAR_BOTTOM -> ToolbarOptionType.TOOLBAR_BOTTOM
- }
- 
+@@ -161,6 +167,25 @@ private fun ToolbarType.toToolbarOptionType() =
+         ToolbarType.TOOLBAR_TOP -> ToolbarOptionType.TOOLBAR_TOP
+         ToolbarType.TOOLBAR_BOTTOM -> ToolbarOptionType.TOOLBAR_BOTTOM
+     }
++ 
 +private fun List<IfPreferencesData>.toOnboardingIfPreferenceOptions() = map { it.toOnboardingIfPreferenceOption() }
 +
 +private fun IfPreferencesData.toOnboardingIfPreferenceOption() = with(this) {
@@ -249,47 +250,48 @@ index 678fc80238ab..ebd5a0c928ee 100644
 +    IfOnboardingPreferenceType.INSTALL_UBLOCK -> IfPreferenceType.INSTALL_UBLOCK
 +    IfOnboardingPreferenceType.DEFAULT -> throw UnsupportedOperationException("Unsupported IfOnboardingPreferenceType: default")
 +}
-+
+ 
  /**
-  * Mapper to convert [OnboardingPageUiData] to [OnboardingPageState] that is a param for
-  * [OnboardingPage] composable.
-@@ -174,6 +199,8 @@ internal fun mapToOnboardingPageState(
+  * Mapper to convert [OnboardingPageUiData] to [OnboardingPageState] that is a param for [OnboardingPage] composable.
+@@ -180,6 +205,8 @@ internal fun mapToOnboardingPageState(
      onCustomizeToolbarButtonClick: () -> Unit,
      onTermsOfServiceButtonClick: () -> Unit,
      onMarketingDataContinueClick: () -> Unit = {},
 +    onIfPreferenceDohButtonClick: () -> Unit,
 +    onIfPreferencesButtonClick: () -> Unit,
- ): OnboardingPageState = when (onboardingPageUiData.type) {
-     OnboardingPageUiData.Type.DEFAULT_BROWSER -> createOnboardingPageState(
-         onboardingPageUiData = onboardingPageUiData,
-@@ -223,6 +250,20 @@ internal fun mapToOnboardingPageState(
-         onNegativeButtonClick = {}, // No negative button option for marketing data.
-         isSmallDevice = isSmallDevice,
-     )
+ ): OnboardingPageState =
+     when (onboardingPageUiData.type) {
+         OnboardingPageUiData.Type.DEFAULT_BROWSER ->
+@@ -237,6 +264,22 @@ internal fun mapToOnboardingPageState(
+                 onNegativeButtonClick = {}, // No negative button option for marketing data.
+                 isSmallDevice = isSmallDevice,
+             )
 +
-+    OnboardingPageUiData.Type.IF_PREFERENCE_DOH -> createOnboardingPageState(
-+        onboardingPageUiData = onboardingPageUiData,
-+        onPositiveButtonClick = onIfPreferenceDohButtonClick,
-+        onNegativeButtonClick = {}, // No negative button option for IronFox preferences.
-+        isSmallDevice = isSmallDevice,
-+    )
++        OnboardingPageUiData.Type.IF_PREFERENCE_DOH ->
++            createOnboardingPageState(
++                onboardingPageUiData = onboardingPageUiData,
++                onPositiveButtonClick = onIfPreferenceDohButtonClick,
++                onNegativeButtonClick = {}, // No negative button option for IronFox preferences.
++                isSmallDevice = isSmallDevice,
++            )
 +
-+    OnboardingPageUiData.Type.IF_PREFERENCES -> createOnboardingPageState(
-+        onboardingPageUiData = onboardingPageUiData,
-+        onPositiveButtonClick = onIfPreferencesButtonClick,
-+        onNegativeButtonClick = {}, // No negative button option for IronFox preferences.
-+        isSmallDevice = isSmallDevice,
-+    )
- }
++        OnboardingPageUiData.Type.IF_PREFERENCES ->
++            createOnboardingPageState(
++                onboardingPageUiData = onboardingPageUiData,
++                onPositiveButtonClick = onIfPreferencesButtonClick,
++                onNegativeButtonClick = {}, // No negative button option for IronFox preferences.
++                isSmallDevice = isSmallDevice,
++            )
+     }
  
  private fun createOnboardingPageState(
-@@ -241,5 +282,6 @@ private fun createOnboardingPageState(
-     toolbarOptions = onboardingPageUiData.toolbarOptions,
-     termsOfService = onboardingPageUiData.termsOfService,
-     marketingData = onboardingPageUiData.marketingData,
-+    ifPreferenceOptions = onboardingPageUiData.ifPreferencesData,
-     isSmallDevice = isSmallDevice,
- )
+@@ -257,5 +300,6 @@ private fun createOnboardingPageState(
+         toolbarOptions = onboardingPageUiData.toolbarOptions,
+         termsOfService = onboardingPageUiData.termsOfService,
+         marketingData = onboardingPageUiData.marketingData,
++        ifPreferenceOptions = onboardingPageUiData.ifPreferencesData,
+         isSmallDevice = isSmallDevice,
+     )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
 index 9ef810c6558a..fe7ac994de16 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
@@ -333,10 +335,10 @@ index 9ef810c6558a..fe7ac994de16 100644
   * Model containing data for the terms of service page during onboarding.
   */
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
-index 8e1186d28815..cc64f7f8f994 100644
+index 79a2a84c731f..aed5c964282b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
-@@ -20,6 +20,7 @@ data class OnboardingPageUiData(
+@@ -18,6 +18,7 @@ data class OnboardingPageUiData(
      val toolbarOptions: List<ToolbarOption>? = null,
      val termsOfService: OnboardingTermsOfService? = null,
      val marketingData: OnboardingMarketingData? = null,
@@ -344,24 +346,20 @@ index 8e1186d28815..cc64f7f8f994 100644
  ) {
      /**
       * Model for different types of Onboarding Pages.
-@@ -50,6 +51,12 @@ data class OnboardingPageUiData(
-         MARKETING_DATA(
-             telemetryId = "marketing_data",
-         ),
-+        IF_PREFERENCE_DOH(
-+            telemetryId = "if_preference_doh",
-+        ),
-+        IF_PREFERENCES(
-+            telemetryId = "if_preferences",
-+        ),
+@@ -32,6 +33,8 @@ data class OnboardingPageUiData(
+         TOOLBAR_PLACEMENT(telemetryId = "toolbar_placement"),
+         TERMS_OF_SERVICE(telemetryId = "terms_of_service"),
+         MARKETING_DATA(telemetryId = "marketing_data"),
++        IF_PREFERENCE_DOH(telemetryId = "if_preference_doh"),
++        IF_PREFERENCES(telemetryId = "if_preferences"),
      }
  }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-index bd2d946a0658..94c4bfcd2234 100644
+index 8e36d42a548f..f3ea813a8a70 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-@@ -238,6 +238,12 @@ fun OnboardingScreen(
+@@ -244,6 +244,12 @@ fun OnboardingScreen(
              onMarketingDataSkipClick()
              scrollToNextPageOrDismiss()
          },
@@ -374,7 +372,7 @@ index bd2d946a0658..94c4bfcd2234 100644
          onboardingStore = onboardingStore,
      )
  }
-@@ -341,6 +347,8 @@ private fun OnboardingContent(
+@@ -369,6 +375,8 @@ private fun OnboardingContent(
      onMarketingDataLearnMoreClick: () -> Unit,
      onMarketingDataContinueClick: (allowMarketingDataCollection: Boolean) -> Unit,
      onMarketingDataSkipClick: () -> Unit,
@@ -383,26 +381,26 @@ index bd2d946a0658..94c4bfcd2234 100644
  ) {
      BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
          val layout = getOnboardingLayout(this)
-@@ -388,6 +396,8 @@ private fun OnboardingContent(
-                     onAddFirefoxWidgetSkipClick = onSkipFirefoxWidgetClick,
-                     onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
-                     onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
-+                    onIfPreferenceDohButtonClick = onIfPreferenceDohButtonClick,
-+                    onIfPreferencesButtonClick = onIfPreferencesButtonClick,
-                     isSmallDevice = layout.isSmall,
-                 )
+@@ -415,6 +423,8 @@ private fun OnboardingContent(
+                         onAddFirefoxWidgetSkipClick = onSkipFirefoxWidgetClick,
+                         onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
+                         onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
++                        onIfPreferenceDohButtonClick = onIfPreferenceDohButtonClick,
++                        onIfPreferencesButtonClick = onIfPreferencesButtonClick,
+                         isSmallDevice = layout.isSmall,
+                     )
  
-@@ -489,6 +499,9 @@ private fun OnboardingPageForType(
-             state,
-             termsOfServiceEventHandler,
-         )
+@@ -512,6 +522,9 @@ private fun OnboardingPageForType(
+                 state,
+                 termsOfServiceEventHandler,
+             )
 +
 +        OnboardingPageUiData.Type.IF_PREFERENCE_DOH -> IronFoxPreferenceDohOnboardingPage(state)
 +        OnboardingPageUiData.Type.IF_PREFERENCES -> IronFoxPreferencesOnboardingPage(state)
      }
  }
  
-@@ -657,6 +670,8 @@ private fun OnboardingScreenPreview() {
+@@ -691,6 +704,8 @@ private fun OnboardingScreenPreview() {
              onMarketingDataSkipClick = {},
              onNotificationPermissionButtonClick = {},
              onNotificationPermissionSkipClick = {},

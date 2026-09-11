@@ -8,16 +8,16 @@ Removes the Glean SDK.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt b/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt
-index 7bb7ba269643..da28b1842c7a 100644
+index 6e90377acc02..ad14a00d2c10 100644
 --- a/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt
 +++ b/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt
-@@ -116,18 +116,18 @@ open class NimbusMessagingController(
+@@ -117,18 +117,18 @@ open class NimbusMessagingController(
      }
  
      private fun sendClickedMessageTelemetry(messageId: String, uuid: String?) {
 -        GleanMessaging.messageClicked.record(
 +/*        GleanMessaging.messageClicked.record(
-             GleanMessaging.MessageClickedExtra(messageKey = messageId, actionUuid = uuid),
+             GleanMessaging.MessageClickedExtra(messageKey = messageId, actionUuid = uuid)
 -        )
 +        ) */
      }
@@ -28,35 +28,34 @@ index 7bb7ba269643..da28b1842c7a 100644
              Microsurvey.SubmitButtonTappedExtra(
                  surveyId = messageId,
                  userSelection = answer,
-             ),
+             )
 -        )
 +        ) */
      }
  
      private fun convertActionIntoDeepLinkSchemeUri(action: String): Uri =
 diff --git a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsService.kt b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsService.kt
-index 64dd682969445..6e9ebe76a2a59 100644
+index f7309791ae36..df30681b87e7 100644
 --- a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsService.kt
 +++ b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsService.kt
-@@ -6,7 +6,7 @@ package mozilla.components.support.remotesettings
- 
+@@ -7,7 +7,7 @@ package mozilla.components.support.remotesettings
  import android.content.Context
  import android.os.Build
+ import java.util.Locale
 -import mozilla.appservices.remotesettings.GleanTelemetry
 +// import mozilla.appservices.remotesettings.GleanTelemetry
  import mozilla.appservices.remotesettings.RemoteSettingsConfig
  import mozilla.appservices.remotesettings.RemoteSettingsContext
  import mozilla.appservices.remotesettings.RemoteSettingsServer
 @@ -33,9 +33,9 @@ class RemoteSettingsService(
-         AppServicesRemoteSettingsService(
-             databasePath,
-             RemoteSettingsConfig(server = server, appContext = appContext),
--        ).also { service ->
--            service.setTelemetry(GleanTelemetry())
--        }
-+        )
-+//            service.setTelemetry(GleanTelemetry())
-+//        }
+                 databasePath,
+                 RemoteSettingsConfig(server = server, appContext = appContext),
+             )
+-            .also { service ->
++/*            .also { service ->
+                 service.setTelemetry(GleanTelemetry())
+-            }
++            } */
      }
  }
  

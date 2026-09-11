@@ -513,10 +513,6 @@ function prepare_fenix() {
   # Prevent Gradle from incorrectly reporting that telemetry is enabled
   "${IRONFOX_SED}" -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' "${IRONFOX_FENIX}/app/build.gradle"
 
-  # Disable Firefox Labs
-  ## (Depends on Nimbus)
-  "${IRONFOX_SED}" -i -e 's|FIREFOX_LABS = .*|FIREFOX_LABS = false|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt"
-
   # Enable pull-to-refresh
   "${IRONFOX_SED}" -i -e 's|PULL_TO_REFRESH_ENABLED = .*|PULL_TO_REFRESH_ENABLED = true|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt"
 

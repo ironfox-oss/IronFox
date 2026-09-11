@@ -8,10 +8,10 @@ Adds minor tweaks to the browser's user interface.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-index cdfbd405ad45..7958587dec5d 100644
+index 87a918cf8b2e..29ee5a6e23b5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-@@ -150,6 +150,8 @@ fun MainMenu(
+@@ -148,6 +148,8 @@ fun MainMenu(
      webExtensionMenuCount: Int,
      showIPProtection: Boolean,
      ipProtectionMenuState: IPProtectionMenuState,
@@ -20,7 +20,7 @@ index cdfbd405ad45..7958587dec5d 100644
      onMoreMenuClick: () -> Unit,
      onCustomizeReaderViewMenuClick: () -> Unit,
      onMozillaAccountButtonClick: () -> Unit,
-@@ -311,6 +313,7 @@ fun MainMenu(
+@@ -307,6 +309,7 @@ fun MainMenu(
  
          LibraryMenuGroup(
              isDownloadHighlighted = isDownloadHighlighted,
@@ -28,7 +28,7 @@ index cdfbd405ad45..7958587dec5d 100644
              onBookmarksMenuClick = onBookmarksMenuClick,
              onHistoryMenuClick = onHistoryMenuClick,
              onDownloadsMenuClick = onDownloadsMenuClick,
-@@ -318,11 +321,13 @@ fun MainMenu(
+@@ -314,11 +317,13 @@ fun MainMenu(
          )
  
          MenuGroup {
@@ -47,7 +47,7 @@ index cdfbd405ad45..7958587dec5d 100644
  
              if (accessPoint == MenuAccessPoint.Home) {
                  MenuItem(
-@@ -508,6 +513,7 @@ private fun MoreMenuButtonGroup(
+@@ -504,6 +509,7 @@ private fun MoreMenuButtonGroup(
  @Suppress("LongMethod")
  private fun LibraryMenuGroup(
      isDownloadHighlighted: Boolean = false,
@@ -55,14 +55,12 @@ index cdfbd405ad45..7958587dec5d 100644
      onBookmarksMenuClick: () -> Unit,
      onHistoryMenuClick: () -> Unit,
      onDownloadsMenuClick: () -> Unit,
-@@ -578,16 +584,18 @@ private fun LibraryMenuGroup(
+@@ -568,14 +574,16 @@ private fun LibraryMenuGroup(
  
          Spacer(Modifier.width(spacerWidth))
  
 -        LibraryMenuItem(
--            modifier = Modifier
--                .weight(1f)
--                .fillMaxHeight(),
+-            modifier = Modifier.weight(1f).fillMaxHeight(),
 -            iconRes = iconsR.drawable.mozac_ic_login_24,
 -            labelRes = R.string.browser_menu_passwords,
 -            shape = rightShape,
@@ -71,9 +69,7 @@ index cdfbd405ad45..7958587dec5d 100644
 -        )
 +        if (isPasswordManagerEnabled) {
 +            LibraryMenuItem(
-+                modifier = Modifier
-+                    .weight(1f)
-+                    .fillMaxHeight(),
++                modifier = Modifier.weight(1f).fillMaxHeight(),
 +                iconRes = iconsR.drawable.mozac_ic_login_24,
 +                labelRes = R.string.browser_menu_passwords,
 +                shape = rightShape,
@@ -84,7 +80,7 @@ index cdfbd405ad45..7958587dec5d 100644
      }
  }
  
-@@ -755,6 +763,8 @@ private fun MenuDialogPreview(
+@@ -738,6 +746,8 @@ private fun MenuDialogPreview(@PreviewParameter(PreviewThemeProvider::class) the
                  webExtensionMenuCount = 1,
                  showIPProtection = true,
                  ipProtectionMenuState = IPProtectionMenuState(),
@@ -93,7 +89,7 @@ index cdfbd405ad45..7958587dec5d 100644
                  onMoreMenuClick = {},
                  onCustomizeReaderViewMenuClick = {},
                  onMozillaAccountButtonClick = {},
-@@ -821,6 +831,8 @@ private fun MenuDialogPrivatePreview(
+@@ -801,6 +811,8 @@ private fun MenuDialogPrivatePreview(
                  showBanner = true,
                  isDownloadHighlighted = true,
                  webExtensionMenuCount = 0,
@@ -103,7 +99,7 @@ index cdfbd405ad45..7958587dec5d 100644
                  onCustomizeReaderViewMenuClick = {},
                  onMozillaAccountButtonClick = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
-index ed56bde6116b..da3cf0eb0c49 100644
+index bafe4f957dfe..2a73dc0f856f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
 @@ -39,6 +39,7 @@ internal fun MoreSettingsSubmenu(
@@ -114,15 +110,15 @@ index ed56bde6116b..da3cf0eb0c49 100644
      summarizationMenuState: SummarizationMenuState,
      isPrivate: Boolean,
      onWebCompatReporterClick: () -> Unit,
-@@ -97,6 +98,7 @@ internal fun MoreSettingsSubmenu(
-         )
+@@ -93,6 +94,7 @@ internal fun MoreSettingsSubmenu(
+         SaveAsPdfMenuItem(onSaveAsPDFMenuClick = onSaveAsPDFMenuClick)
          PrintMenuItem(
              isAndroidAutomotiveAvailable = isAndroidAutomotiveAvailable,
 +            isPrintDisabled = isPrintDisabled,
              onPrintMenuClick = onPrintMenuClick,
          )
      }
-@@ -231,9 +233,10 @@ private fun SaveAsPdfMenuItem(
+@@ -214,9 +216,10 @@ private fun SaveAsPdfMenuItem(onSaveAsPDFMenuClick: () -> Unit) {
  @Composable
  private fun PrintMenuItem(
      isAndroidAutomotiveAvailable: Boolean,
@@ -134,15 +130,15 @@ index ed56bde6116b..da3cf0eb0c49 100644
          MenuItem(
              label = stringResource(id = R.string.browser_menu_print_2),
              beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_print_24),
-@@ -325,6 +328,7 @@ private fun MoreSettingsSubmenuPreview(
+@@ -283,6 +286,7 @@ private fun MoreSettingsSubmenuPreview(@PreviewParameter(PreviewThemeProvider::c
                      showShortcuts = true,
                      showSaveToCollection = true,
                      isAndroidAutomotiveAvailable = false,
 +                    isPrintDisabled = false,
-                     summarizationMenuState = SummarizationMenuState.Default.copy(
-                         visible = true,
-                         highlighted = true,
-@@ -378,6 +382,7 @@ private fun MoreSettingsSubmenuDisabledOpenPreview(
+                     summarizationMenuState =
+                         SummarizationMenuState.Default.copy(
+                             visible = true,
+@@ -336,6 +340,7 @@ private fun MoreSettingsSubmenuDisabledOpenPreview(@PreviewParameter(PreviewThem
                      showShortcuts = true,
                      showSaveToCollection = true,
                      isAndroidAutomotiveAvailable = false,
@@ -151,37 +147,37 @@ index ed56bde6116b..da3cf0eb0c49 100644
                      isPrivate = false,
                      onWebCompatReporterClick = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 5634befbf0d0..53a4aa8166aa 100644
+index 94a209f7e86d..2988f50e3649 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -528,7 +528,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
-                                     accessPoint = args.accesspoint,
-                                     account = account,
-                                     accountState = accountState,
--                                    showQuitMenu = settings.shouldDeleteBrowsingDataOnQuit,
-+                                    showQuitMenu = true,
-                                     isBottomToolbar = settings.shouldUseBottomToolbar,
-                                     isExpandedToolbarEnabled = settings.shouldUseExpandedToolbar,
-                                     isSiteLoading = isSiteLoading,
-@@ -548,6 +548,8 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
-                                     showBanner = shouldShowMenuBanner && !defaultBrowser,
-                                     isDownloadHighlighted = isDownloadHighlighted,
-                                     webExtensionMenuCount = webExtensionsCount,
-+                                    isPasswordManagerEnabled = settings.shouldPromptToSaveLogins,
-+                                    isSyncActive = settings.signedInFxaAccount,
-                                     isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
-                                     showIPProtection = components.ipProtection.store.state.isEligible,
-                                     ipProtectionMenuState = ipProtectionMenuState,
-@@ -658,9 +660,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
-                                             externalAppName = appLinksRedirect?.appName ?: "",
-                                             isOpenInAppMenuHighlighted = isOpenInAppMenuHighlighted,
-                                             translationInfo = translationInfo,
--                                            showShortcuts = settings.showTopSitesFeature,
-+                                            showShortcuts = settings.showTopSitesFeature && !settings.ironfox.alwaysUsePrivateBrowsing,
-                                             showSaveToCollection = settings.collections,
-                                             isAndroidAutomotiveAvailable = context.isAndroidAutomotiveAvailable(),
-+                                            isPrintDisabled = !settings.ironfox.printEnabled,
-                                             summarizationMenuState = summarizationMenuState,
-                                             onWebCompatReporterClick = {
-                                                 menuStore.dispatch(MenuAction.Navigate.WebCompatReporter)
+@@ -539,7 +539,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                                         accessPoint = args.accesspoint,
+                                         account = account,
+                                         accountState = accountState,
+-                                        showQuitMenu = settings.shouldDeleteBrowsingDataOnQuit,
++                                        showQuitMenu = true,
+                                         isBottomToolbar = settings.shouldUseBottomToolbar,
+                                         isExpandedToolbarEnabled = settings.shouldUseExpandedToolbar,
+                                         isSiteLoading = isSiteLoading,
+@@ -560,6 +560,8 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                                         showBanner = shouldShowMenuBanner && !defaultBrowser,
+                                         isDownloadHighlighted = isDownloadHighlighted,
+                                         webExtensionMenuCount = webExtensionsCount,
++                                        isPasswordManagerEnabled = settings.shouldPromptToSaveLogins,
++                                        isSyncActive = settings.signedInFxaAccount,
+                                         isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
+                                         showIPProtection = components.ipProtection.store.state.isEligible,
+                                         ipProtectionMenuState = ipProtectionMenuState,
+@@ -672,9 +674,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                                                 externalAppName = appLinksRedirect?.appName ?: "",
+                                                 isOpenInAppMenuHighlighted = isOpenInAppMenuHighlighted,
+                                                 translationInfo = translationInfo,
+-                                                showShortcuts = settings.showTopSitesFeature,
++                                                showShortcuts = settings.showTopSitesFeature && !settings.ironfox.alwaysUsePrivateBrowsing,
+                                                 showSaveToCollection = settings.collections,
+                                                 isAndroidAutomotiveAvailable = context.isAndroidAutomotiveAvailable(),
++                                                isPrintDisabled = !settings.ironfox.printEnabled,
+                                                 summarizationMenuState = summarizationMenuState,
+                                                 onWebCompatReporterClick = {
+                                                     menuStore.dispatch(MenuAction.Navigate.WebCompatReporter)
 -- 

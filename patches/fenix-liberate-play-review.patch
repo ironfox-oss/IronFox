@@ -8,7 +8,7 @@ Removes the Google Play Review library.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 8f7a42c13672..65059dc4f782 100644
+index c1173b2ceb0f..b1cc135ad304 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
@@ -17,10 +17,10 @@ index 8f7a42c13672..65059dc4f782 100644
  import androidx.core.app.NotificationManagerCompat
 -import com.google.android.play.core.review.ReviewManagerFactory
 +// import com.google.android.play.core.review.ReviewManagerFactory
- import kotlinx.coroutines.CoroutineScope
- import kotlinx.coroutines.Dispatchers
+ import java.util.concurrent.TimeUnit
  import kotlinx.coroutines.MainScope
-@@ -274,7 +274,7 @@ class Components(
+ import mozilla.components.concept.ai.controls.AIFeatureBlock
+@@ -267,7 +267,7 @@ class Components(
  
      val playStoreReviewPromptController by lazyMonitored {
          PlayStoreReviewPromptController(
@@ -57,16 +57,20 @@ index 742b5d64e65d..b5ce0bc7723c 100644
              }
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 6200d8376b82..c6c96c24d6fe 100644
+index 70b91774b0ec..cbfab7241f79 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -532,7 +532,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+@@ -568,10 +568,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
  
-             // About preferences
-             resources.getString(R.string.pref_key_rate) -> {
--                components.playStoreReviewPromptController.tryLaunchPlayStoreReview(requireActivity(), ::openInNewTab)
-+//                components.playStoreReviewPromptController.tryLaunchPlayStoreReview(requireActivity(), ::openInNewTab)
-                 null
-             }
+                 // About preferences
+                 resources.getString(R.string.pref_key_rate) -> {
+-                    components.playStoreReviewPromptController.tryLaunchPlayStoreReview(
++/*                    components.playStoreReviewPromptController.tryLaunchPlayStoreReview(
+                         requireActivity(),
+                         ::openInNewTab,
+-                    )
++                    ) */
+                     null
+                 }
  
 -- 

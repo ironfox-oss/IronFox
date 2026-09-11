@@ -7,14 +7,32 @@ Modifies branding elements to IronFox.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
+index 0e9ae0625d23..9d7bd638d00d 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
+@@ -243,11 +243,11 @@ class BrowserToolbarSearchMiddleware(
+                 navController.navigate(NavGraphDirections.actionGlobalGleanDebugToolsFragment())
+             }
+ 
+-            "moz://a" ->
++/*            "moz://a" ->
+                 openSearchOrUrl(
+                     SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
+                     navController,
+-                )
++                ) */
+ 
+             else ->
+                 if (url.isNotBlank()) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 63cee0ad25f3..d03e8d1c9d91 100644
+index 1189780a19b0..1a6ddfbf14e6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException
- import java.net.URLEncoder
- import java.util.Locale
- import com.google.android.material.R as materialR
+@@ -19,6 +19,7 @@ import org.mozilla.fenix.BuildConfig
+ import org.mozilla.fenix.IntentReceiverActivity
+ import org.mozilla.fenix.customtabs.EXTRA_IS_SANDBOX_CUSTOM_TAB
+ import org.mozilla.fenix.settings.account.AuthIntentReceiverActivity
 +import org.ironfoxoss.core.IFConstants
  
  object SupportUtils {

@@ -23,10 +23,10 @@ index d867c71ba500..8b6f86ab1ecc 100644
      // Reading the sentry token from a local file (if it exists). In a release task on taskcluster it will be available.
      buildConfigField 'String', 'SENTRY_TOKEN', 'null'
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 5e4c49f47ff8..5d4f324f1fdb 100644
+index aff32cbcd7f3..0421a0491177 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -65,14 +65,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
+@@ -63,14 +63,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
  import mozilla.components.feature.search.SearchApplicationName
  import mozilla.components.feature.search.SearchDeviceType
  import mozilla.components.feature.search.SearchUpdateChannel
@@ -44,7 +44,7 @@ index 5e4c49f47ff8..5d4f324f1fdb 100644
  import mozilla.components.feature.session.HistoryDelegate
  import mozilla.components.feature.session.middleware.LastAccessMiddleware
  import mozilla.components.feature.session.middleware.undo.UndoMiddleware
-@@ -146,7 +146,7 @@ import org.mozilla.fenix.summarization.onboarding.FenixSummarizationFeatureConfi
+@@ -145,7 +145,7 @@ import org.mozilla.fenix.summarization.onboarding.FenixSummarizationFeatureConfi
  import org.mozilla.fenix.summarization.onboarding.SummarizationFeatureDiscoveryConfiguration
  import org.mozilla.fenix.tabgroups.storage.redux.middleware.TabGroupMiddleware
  import org.mozilla.fenix.tabgroups.storage.repository.DefaultTabGroupRepository
@@ -53,8 +53,8 @@ index 5e4c49f47ff8..5d4f324f1fdb 100644
  import org.mozilla.fenix.translations.TranslationsEnabledSettings
  import org.mozilla.fenix.utils.Settings.DeleteDownloadBehavior
  import org.mozilla.fenix.utils.getUndoDelay
-@@ -381,7 +381,7 @@ class Core(
-                     ),
+@@ -357,7 +357,7 @@ class Core(
+                         ),
                  ),
                  ReaderViewMiddleware(),
 -                TelemetryMiddleware(context, context.components.settings, metrics, crashReporter),
@@ -62,7 +62,7 @@ index 5e4c49f47ff8..5d4f324f1fdb 100644
                  ThumbnailsMiddleware(thumbnailStorage),
                  UndoMiddleware(context.components.settings.getUndoDelay()),
                  RegionMiddleware(context, locationService),
-@@ -394,7 +394,7 @@ class Core(
+@@ -370,7 +370,7 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -71,25 +71,25 @@ index 5e4c49f47ff8..5d4f324f1fdb 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  ProtectionsDashboardMiddleware(protectionsStorage),
-@@ -446,7 +446,7 @@ class Core(
-             // Install the "icons" WebExtension to automatically load icons for every visited website.
-             icons.install(engine, this)
+@@ -416,7 +416,7 @@ class Core(
+                 // Install the "icons" WebExtension to automatically load icons for every visited website.
+                 icons.install(engine, this)
  
--            CoroutineScope(Dispatchers.Main).launch {
-+/*            CoroutineScope(Dispatchers.Main).launch {
-                 val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
-                 val providerList = withContext(Dispatchers.IO) {
-                     SerpTelemetryRepository(
-@@ -459,7 +459,7 @@ class Core(
-                 adsTelemetry.install(engine, this@apply, providerList)
-                 // Install the "cookies" WebExtension and tracks user interaction with SERPs.
-                 searchTelemetry.install(engine, this@apply, providerList)
--            }
-+            } */
+-                CoroutineScope(Dispatchers.Main).launch {
++/*                CoroutineScope(Dispatchers.Main).launch {
+                     val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
+                     val providerList =
+                         withContext(Dispatchers.IO) {
+@@ -431,7 +431,7 @@ class Core(
+                     adsTelemetry.install(engine, this@apply, providerList)
+                     // Install the "cookies" WebExtension and tracks user interaction with SERPs.
+                     searchTelemetry.install(engine, this@apply, providerList)
+-                }
++                } */
  
-             WebNotificationFeature(
-                 context,
-@@ -532,7 +532,7 @@ class Core(
+                 WebNotificationFeature(
+                     context,
+@@ -487,7 +487,7 @@ class Core(
          )
      }
  
@@ -98,13 +98,13 @@ index 5e4c49f47ff8..5d4f324f1fdb 100644
          context.components.analytics.metrics
      }
  
-@@ -542,7 +542,7 @@ class Core(
+@@ -497,7 +497,7 @@ class Core(
  
      val searchTelemetry by lazyMonitored {
          InContentTelemetry()
 -    }
 +    } */
  
-     /**
-      * Shortcut component for managing shortcuts on the device home screen.
+     /** Shortcut component for managing shortcuts on the device home screen. */
+     val webAppShortcutManager by lazyMonitored {
 -- 

@@ -260,10 +260,10 @@ index d1ea4e428233..a95f0e4d8642 100644
              }
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index d8e4023d8790..cbbfdeacb501 100644
+index 75f51971cb20..c1f97d74f011 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -83,7 +83,7 @@ import mozilla.components.support.utils.Browsers
+@@ -87,7 +87,7 @@ import mozilla.components.support.utils.Browsers
  import mozilla.components.support.utils.RunWhenReadyQueue
  import mozilla.components.support.utils.logElapsedTime
  import mozilla.components.support.webextensions.WebExtensionSupport
@@ -272,7 +272,7 @@ index d8e4023d8790..cbbfdeacb501 100644
  import org.mozilla.fenix.GleanMetrics.Addons
  import org.mozilla.fenix.GleanMetrics.Addresses
  import org.mozilla.fenix.GleanMetrics.AndroidAutofill
-@@ -101,12 +101,12 @@ import org.mozilla.fenix.GleanMetrics.SearchDefaultEngine
+@@ -104,12 +104,12 @@ import org.mozilla.fenix.GleanMetrics.SearchDefaultEngine
  import org.mozilla.fenix.GleanMetrics.SearchDefaultEngineForPrivate
  import org.mozilla.fenix.GleanMetrics.TabStrip
  import org.mozilla.fenix.GleanMetrics.TermsOfUse
@@ -287,7 +287,7 @@ index d8e4023d8790..cbbfdeacb501 100644
  import org.mozilla.fenix.components.startMetricsIfEnabled
  import org.mozilla.fenix.experiments.maybeFetchExperiments
  import org.mozilla.fenix.ext.application
-@@ -202,7 +202,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -201,7 +201,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          // [TIMER] Record the start of the [PerfStartup.applicationOnCreate] metric here. Do this
          // manually because Glean has not started initializing yet. Note that by this point the
          // content providers from Fenix and its libraries have run their initializers already.
@@ -296,7 +296,7 @@ index d8e4023d8790..cbbfdeacb501 100644
  
          // Capture A-C logs to Android logcat. Note that gecko maybe directly post to logcat
          // regardless of what we do here.
-@@ -242,9 +242,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -253,9 +253,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
  
              // [TIMER] Record the end of the `PerfStartup.applicationOnCreate` metric. Note that
              // glean will queue this if the backend is still starting up.
@@ -308,19 +308,19 @@ index d8e4023d8790..cbbfdeacb501 100644
          }
      }
  
-@@ -396,7 +396,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-             VisibilityLifecycleObserver(),
-         )
+@@ -436,7 +436,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+                 VisibilityLifecycleObserver(),
+             )
  
 -        components.analytics.metricsStorage.tryRegisterAsUsageRecorder(this)
 +//        components.analytics.metricsStorage.tryRegisterAsUsageRecorder(this)
  
          CoroutineScope(IO).launch {
              components.useCases.wallpaperUseCases.fetchCurrentWallpaperUseCase.invoke()
-@@ -894,9 +894,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-             components.core.engine,
-             settings,
-         ),
+@@ -910,9 +910,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+                 components.core.engine,
+                 settings,
+             ),
 -        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
 +//        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
      ) {
@@ -329,7 +329,7 @@ index d8e4023d8790..cbbfdeacb501 100644
          with(Metrics) {
              // Set this early to guarantee it's in every ping from here on.
              distributionId.set(components.distributionIdManager.getDistributionId())
-@@ -1053,10 +1053,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -1062,10 +1062,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              }
          }
  
@@ -352,13 +352,13 @@ index d8e4023d8790..cbbfdeacb501 100644
      override fun onConfigurationChanged(config: android.content.res.Configuration) {
          // Workaround for androidx appcompat issue where follow system day/night mode config changes
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index 965e47791b02..9e7e875204e9 100644
+index 69b8d895eccb..67af8758f4db 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -86,13 +86,13 @@ import mozilla.components.support.utils.SafeIntent
- import mozilla.components.support.utils.toSafeIntent
+@@ -97,14 +97,14 @@ import mozilla.components.support.utils.toSafeIntent
  import mozilla.components.support.webextensions.WebExtensionOptionsPageObserver
  import mozilla.components.support.webextensions.WebExtensionPopupObserver
+ import mozilla.components.ui.icons.R as iconsR
 -import mozilla.telemetry.glean.private.NoExtras
 +/* import mozilla.telemetry.glean.private.NoExtras
  import org.mozilla.fenix.GleanMetrics.AppIcon
@@ -366,12 +366,13 @@ index 965e47791b02..9e7e875204e9 100644
  import org.mozilla.fenix.GleanMetrics.Metrics
  import org.mozilla.fenix.GleanMetrics.NativeShareSheet
  import org.mozilla.fenix.GleanMetrics.SplashScreen
--import org.mozilla.fenix.GleanMetrics.StartOnHome
-+import org.mozilla.fenix.GleanMetrics.StartOnHome */
+ import org.mozilla.fenix.GleanMetrics.StartOnHome
+-import org.mozilla.fenix.GleanMetrics.SyncAccount
++import org.mozilla.fenix.GleanMetrics.SyncAccount */
  import org.mozilla.fenix.addons.ExtensionsProcessDisabledBackgroundController
  import org.mozilla.fenix.addons.ExtensionsProcessDisabledForegroundController
- import org.mozilla.fenix.bindings.ExternalAppLinkStatusBinding
-@@ -112,10 +112,10 @@ import org.mozilla.fenix.components.ipprotection.ErrorMessages
+ import org.mozilla.fenix.automation.AutomatedLaunch
+@@ -126,10 +126,10 @@ import org.mozilla.fenix.components.ipprotection.ErrorMessages
  import org.mozilla.fenix.components.ipprotection.IPProtectionInfoPrompter
  import org.mozilla.fenix.components.menu.MenuAccessPoint
  import org.mozilla.fenix.components.menu.share.QRCodeDialogFragment
@@ -384,7 +385,7 @@ index 965e47791b02..9e7e875204e9 100644
  import org.mozilla.fenix.components.share.QR_CODE_URI_KEY
  import org.mozilla.fenix.components.share.SEND_TO_DEVICES_ACTION
  import org.mozilla.fenix.components.share.SendToDevicesDialogFragment
-@@ -142,7 +142,7 @@ import org.mozilla.fenix.ext.hasTopDestination
+@@ -156,7 +156,7 @@ import org.mozilla.fenix.ext.hasTopDestination
  import org.mozilla.fenix.ext.isAllowedDuringOnboardingIntent
  import org.mozilla.fenix.ext.nav
  import org.mozilla.fenix.ext.openSetDefaultBrowserOption
@@ -393,21 +394,21 @@ index 965e47791b02..9e7e875204e9 100644
  import org.mozilla.fenix.ext.setNavigationIcon
  import org.mozilla.fenix.extension.WebExtensionPromptFeature
  import org.mozilla.fenix.home.HomeFragment
-@@ -497,11 +497,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
-             storage = DefaultSplashScreenStorage(components.settings),
-             showSplashScreen = { installSplashScreen().setKeepOnScreenCondition(it) },
-             onSplashScreenFinished = { result ->
--                if (result.sendTelemetry) {
-+/*                if (result.sendTelemetry) {
-                     SplashScreen.firstLaunchExtended.record(
-                         SplashScreen.FirstLaunchExtendedExtra(dataFetched = result.wasDataFetched),
-                     )
--                }
-+                } */
+@@ -517,11 +517,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+                 storage = DefaultSplashScreenStorage(components.settings),
+                 showSplashScreen = { installSplashScreen().setKeepOnScreenCondition(it) },
+                 onSplashScreenFinished = { result ->
+-                    if (result.sendTelemetry) {
++/*                    if (result.sendTelemetry) {
+                         SplashScreen.firstLaunchExtended.record(
+                             SplashScreen.FirstLaunchExtendedExtra(dataFetched = result.wasDataFetched)
+                         )
+-                    }
++                    } */
  
-                 if (savedInstanceState == null && shouldShowOnboarding) {
-                     navHost.navController.navigate(NavGraphDirections.actionGlobalOnboarding())
-@@ -567,12 +567,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+                     if (savedInstanceState == null && shouldShowOnboarding) {
+                         navHost.navController.navigate(NavGraphDirections.actionGlobalOnboarding())
+@@ -589,12 +589,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                  }
                  maybeShowSetAsDefaultBrowserPrompt()
              } else {
@@ -422,16 +423,16 @@ index 965e47791b02..9e7e875204e9 100644
          if (components.settings.isTelemetryEnabled) {
              lifecycle.addObserver(
                  BreadcrumbsRecorder(
-@@ -596,7 +596,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
-                         AppIcon.newPrivateTabTapped.record(NoExtras())
-                     }
+@@ -612,7 +612,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+                     AppIcon.newPrivateTabTapped.record(NoExtras())
                  }
+             }
 -        }
 +        } */
          supportActionBar?.hide()
  
          lifecycle.addObservers(
-@@ -719,7 +719,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -757,7 +757,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              components.strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
                  components.appStore.dispatch(AppAction.UpdateWasNativeDefaultBrowserPromptShown(true))
                  showSetDefaultBrowserPrompt()
@@ -440,7 +441,7 @@ index 965e47791b02..9e7e875204e9 100644
                  components.settings.setAsDefaultPromptCalled()
              }
          }
-@@ -785,7 +785,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -819,7 +819,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              }
          }
  
@@ -449,7 +450,7 @@ index 965e47791b02..9e7e875204e9 100644
              if (components.settings.checkIfFenixIsDefaultBrowserOnAppResume()) {
                  if (components.appStore.state.wasNativeDefaultBrowserPromptShown) {
                      Metrics.defaultBrowserChangedViaNativeSystemPrompt.record(NoExtras())
-@@ -801,7 +801,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -835,7 +835,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              if (components.core.sentFromFirefoxManager.shouldShowSnackbar) {
                  components.appStore.dispatch(ShareAction.ShareToWhatsApp)
              }
@@ -458,7 +459,7 @@ index 965e47791b02..9e7e875204e9 100644
  
          lifecycleScope.launch(IO) {
              // Register the [MARKETING_CHANNEL_ID] channel so that it appears in the Android Settings App.
-@@ -1024,9 +1024,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -1084,9 +1084,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
          val qrCodeUri = intent.getStringExtra(QR_CODE_URI_KEY)
          if (qrCodeUri != null) {
              if (supportFragmentManager.findFragmentByTag(QRCodeDialogFragment.TAG) == null) {
@@ -468,11 +469,20 @@ index 965e47791b02..9e7e875204e9 100644
 -                }
 +                } */
  
-                 QRCodeDialogFragment.newInstance(qrCodeUri).showNow(
-                     supportFragmentManager,
-@@ -1329,9 +1329,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
-             )
-         }
+                 QRCodeDialogFragment.newInstance(qrCodeUri)
+                     .showNow(
+@@ -1148,7 +1148,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+ 
+     @VisibleForTesting
+     internal fun navigateToSignInForSendTab() {
+-        SyncAccount.signInToSendTab.record(NoExtras())
++//        SyncAccount.signInToSendTab.record(NoExtras())
+         beginAwaitingSignInForSendTab()
+         navHost.navController.navigate(
+             NavGraphDirections.actionGlobalTurnOnSync(entrypoint = FenixFxAEntryPoint.DeepLink)
+@@ -1483,9 +1483,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+                 )
+             }
  
 -        if (shouldShowOnboarding) {
 +/*        if (shouldShowOnboarding) {
@@ -482,9 +492,9 @@ index 965e47791b02..9e7e875204e9 100644
  
          return nimbusOperation
      }
-@@ -1599,14 +1599,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
-                 )
-             }
+@@ -1743,14 +1743,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+                     )
+                 }
              if (recentlyUsedPwaCount == 0) {
 -                Metrics.hasRecentPwas.set(false)
 +//                Metrics.hasRecentPwas.set(false)
@@ -576,31 +586,31 @@ index ffaf8374e719..4acd094709b0 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsFragment.kt
-index 1b366c90eee6..9c4b7bcaba91 100644
+index 2ff41c7be5f3..c519a91e462c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsFragment.kt
-@@ -27,7 +27,7 @@ import androidx.fragment.app.Fragment
- import androidx.fragment.compose.content
- import androidx.navigation.fragment.findNavController
+@@ -28,7 +28,7 @@ import androidx.navigation.fragment.findNavController
+ import mozilla.components.compose.base.button.IconButton
  import mozilla.components.lib.state.helpers.StoreProvider.Companion.fragmentStore
+ import mozilla.components.ui.icons.R as iconsR
 -import mozilla.telemetry.glean.Glean
 +// import mozilla.telemetry.glean.Glean
  import org.mozilla.fenix.R
  import org.mozilla.fenix.debugsettings.gleandebugtools.ui.GleanDebugToolsScreen
- import org.mozilla.fenix.ext.requireComponents
-@@ -41,8 +41,8 @@ class GleanDebugToolsFragment : Fragment() {
- 
-     private val store by fragmentStore(
-         GleanDebugToolsState(
--            logPingsToConsoleEnabled = Glean.getLogPings(),
--            debugViewTag = Glean.getDebugViewTag() ?: "",
-+            logPingsToConsoleEnabled = false,
-+            debugViewTag = "",
-         ),
-     ) {
-         GleanDebugToolsStore(
+ import org.mozilla.fenix.e2e.SystemInsetsPaddedFragment
+@@ -41,8 +41,8 @@ class GleanDebugToolsFragment : Fragment(), SystemInsetsPaddedFragment {
+     private val store by
+         fragmentStore(
+             GleanDebugToolsState(
+-                logPingsToConsoleEnabled = Glean.getLogPings(),
+-                debugViewTag = Glean.getDebugViewTag() ?: "",
++                logPingsToConsoleEnabled = false,
++                debugViewTag = "",
+             )
+         ) {
+             GleanDebugToolsStore(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsStorage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsStorage.kt
-index b8ce7d7adbcb..0138975174d3 100644
+index 2476c28a28cb..88ebc4c7fd30 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsStorage.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsStorage.kt
 @@ -5,9 +5,9 @@
@@ -615,10 +625,10 @@ index b8ce7d7adbcb..0138975174d3 100644
 +// import org.mozilla.fenix.Config
  import org.mozilla.fenix.utils.Settings
  
- /**
-@@ -43,12 +43,12 @@ class DefaultGleanDebugToolsStorage(
-     private val settings: Settings,
- ) : GleanDebugToolsStorage {
+ /** A storage used to access the Glean APIs. */
+@@ -35,12 +35,12 @@ interface GleanDebugToolsStorage {
+  */
+ class DefaultGleanDebugToolsStorage(private val settings: Settings) : GleanDebugToolsStorage {
      override fun setLogPings(enabled: Boolean) {
 -        Glean.setLogPings(enabled)
 +//        Glean.setLogPings(enabled)
@@ -632,16 +642,16 @@ index b8ce7d7adbcb..0138975174d3 100644
      }
  
      override fun clearPersistedDebugViewTag() {
-@@ -70,7 +70,7 @@ class DefaultGleanDebugToolsStorage(
-          * Get all the types of pings that can be submitted.
-          */
+@@ -56,7 +56,7 @@ class DefaultGleanDebugToolsStorage(private val settings: Settings) : GleanDebug
+ 
+         /** Get all the types of pings that can be submitted. */
          fun getPingTypes(): Set<String> {
 -            return Glean.getRegisteredPingNames()
 +            return emptySet()
          }
  
          /**
-@@ -86,16 +86,16 @@ class DefaultGleanDebugToolsStorage(
+@@ -72,16 +72,16 @@ class DefaultGleanDebugToolsStorage(private val settings: Settings) : GleanDebug
           * @param settings Where the debug view tag is persisted.
           */
          fun persistDebugViewTagIfRequested(intent: Intent, settings: Settings) {
@@ -662,7 +672,7 @@ index b8ce7d7adbcb..0138975174d3 100644
          }
  
          /**
-@@ -107,12 +107,12 @@ class DefaultGleanDebugToolsStorage(
+@@ -93,10 +93,10 @@ class DefaultGleanDebugToolsStorage(private val settings: Settings) : GleanDebug
           * @param settings Where the debug view tag is persisted.
           */
          fun restorePersistedDebugViewTag(settings: Settings) {
@@ -670,19 +680,16 @@ index b8ce7d7adbcb..0138975174d3 100644
 +            if (true) {
                  return
              }
--            settings.gleanDebugViewTag
-+/*            settings.gleanDebugViewTag
-                 .takeIf { it.isNotEmpty() }
--                ?.let { Glean.setDebugViewTag(it) }
-+                ?.let { Glean.setDebugViewTag(it) } */
+-            settings.gleanDebugViewTag.takeIf { it.isNotEmpty() }?.let { Glean.setDebugViewTag(it) }
++//            settings.gleanDebugViewTag.takeIf { it.isNotEmpty() }?.let { Glean.setDebugViewTag(it) }
          }
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 5b173db95928..d00147d26eaf 100644
+index fe6d2583c6cf..83f5c3af36aa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -34,16 +34,16 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
+@@ -35,16 +35,16 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
  import mozilla.components.support.base.log.logger.Logger
  import mozilla.components.support.utils.Browsers
  import mozilla.components.support.utils.BuildManufacturerChecker
@@ -702,9 +709,9 @@ index 5b173db95928..d00147d26eaf 100644
  import org.mozilla.fenix.ext.application
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.hideToolbar
-@@ -75,9 +75,9 @@ class OnboardingFragment : Fragment() {
+@@ -74,9 +74,9 @@ class OnboardingFragment : Fragment() {
  
-     private val removeMarketingFeature = ViewBoundFeatureWrapper<MarketingPageRemovalSupport>()
+     private val addMarketingFeature = ViewBoundFeatureWrapper<MarketingPageAdditionSupport>()
  
 -    private val rtamoAttributionHandler by lazy {
 +/*    private val rtamoAttributionHandler by lazy {
@@ -714,21 +721,22 @@ index 5b173db95928..d00147d26eaf 100644
  
      private val termsOfServiceEventHandler by lazy {
          DefaultOnboardingTermsOfServiceEventHandler(
-@@ -110,10 +110,10 @@ class OnboardingFragment : Fragment() {
-             } else {
-                 OnboardingReason.NEW_USER
-             },
--            installSource = installSourcePackage(
--                packageManager = requireContext().application.packageManager,
+@@ -124,11 +124,11 @@ class OnboardingFragment : Fragment() {
+                 } else {
+                     OnboardingReason.NEW_USER
+                 },
+-            installSource =
+-                installSourcePackage(
 +            installSource = ""
-+/*                packageManager = requireContext().application.packageManager,
-                 packageName = requireContext().application.packageName,
--            ),
-+            ), */
++/*                installSourcePackage(
+                     packageManager = requireContext().application.packageManager,
+                     packageName = requireContext().application.packageName,
+-                ),
++                ), */
          )
      }
  
-@@ -330,7 +330,7 @@ class OnboardingFragment : Fragment() {
+@@ -351,7 +351,7 @@ class OnboardingFragment : Fragment() {
      }
  
      private fun startGlean() {
@@ -737,7 +745,7 @@ index 5b173db95928..d00147d26eaf 100644
          viewLifecycleOwner.lifecycleScope.launch {
              initializeGlean(
                  requireContext().applicationContext,
-@@ -354,7 +354,7 @@ class OnboardingFragment : Fragment() {
+@@ -375,7 +375,7 @@ class OnboardingFragment : Fragment() {
              isTelemetryEnabled = settings.isTelemetryEnabled,
              isMarketingTelemetryEnabled = false,
              isDailyUsagePingEnabled = settings.isDailyUsagePingEnabled,
@@ -747,23 +755,21 @@ index 5b173db95928..d00147d26eaf 100644
  
      private fun onFinish(onboardingPageUiData: OnboardingPageUiData?) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-index 788cee797c10..ff3aaf0c8f60 100644
+index 0e9ae0625d23..ed38a335532e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-@@ -229,11 +229,11 @@ class BrowserToolbarSearchMiddleware(
+@@ -239,9 +239,9 @@ class BrowserToolbarSearchMiddleware(
                  browserStore.dispatch(EngagementFinished(abandoned = false))
              }
  
 -            "about:glean" -> {
 +/*            "about:glean" -> {
-                 navController.navigate(
-                     NavGraphDirections.actionGlobalGleanDebugToolsFragment(),
-                 )
+                 navController.navigate(NavGraphDirections.actionGlobalGleanDebugToolsFragment())
 -            }
 +            } */
  
-             "moz://a" -> openSearchOrUrl(
-                 SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
+             "moz://a" ->
+                 openSearchOrUrl(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt
 index 5be4069681f7..1612da5ff7ed 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt
@@ -791,10 +797,10 @@ index c63204ac7e16..75023e2a1a46 100644
          context?.let {
              requireView().findNavController().navigateWithBreadcrumb(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483b7..ccb3b68e9094 100644
+index 69e9f18a2457..525f70f97075 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -41,7 +41,7 @@ import org.mozilla.experiments.nimbus.NimbusEventStore
+@@ -44,7 +44,7 @@ import org.mozilla.experiments.nimbus.NimbusEventStore
  import org.mozilla.fenix.BuildConfig
  import org.mozilla.fenix.Config
  import org.mozilla.fenix.FeatureFlags
@@ -803,13 +809,13 @@ index 83e0f40483b7..ccb3b68e9094 100644
  import org.mozilla.fenix.R
  import org.mozilla.fenix.autofill.address.RegionAddressFeatureGate
  import org.mozilla.fenix.browser.browsingmode.BrowsingMode
-@@ -472,7 +472,7 @@ class Settings(
- 
-     var contileContextId by stringPreference(
-         appContext.getPreferenceKey(R.string.pref_key_contile_context_id),
--        default = { TopSites.contextId.generateAndSet().toString() },
-+        default = "",
-         persistDefaultIfNotExists = true,
-     )
+@@ -565,7 +565,7 @@ class Settings(
+     var contileContextId by
+         stringPreference(
+             appContext.getPreferenceKey(R.string.pref_key_contile_context_id),
+-            default = { TopSites.contextId.generateAndSet().toString() },
++            default = "",
+             persistDefaultIfNotExists = true,
+         )
  
 -- 

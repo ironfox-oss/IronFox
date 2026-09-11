@@ -27,10 +27,10 @@ index 324a25a10af0..4225ec0a1ead 100644
          <activity
              android:name=".HomeActivity"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 87a4f911c0cf..4e136b311159 100644
+index c1173b2ceb0f..f606335abeb6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -145,7 +145,7 @@ class Components(private val context: Context) {
+@@ -139,7 +139,7 @@ class Components(
      val useCases by lazyMonitored {
          UseCases(
              context = context,
@@ -39,7 +39,7 @@ index 87a4f911c0cf..4e136b311159 100644
              engine = lazyMonitored { core.engine },
              store = lazyMonitored { core.store },
              shortcutManager = lazyMonitored { core.webAppShortcutManager },
-@@ -262,7 +262,7 @@ class Components(private val context: Context) {
+@@ -252,7 +252,7 @@ class Components(
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
      val performance by lazyMonitored { PerformanceComponent() }
@@ -48,20 +48,20 @@ index 87a4f911c0cf..4e136b311159 100644
      val wifiConnectionMonitor by lazyMonitored { WifiConnectionMonitor(context as Application) }
  
      val strictMode by lazyMonitored {
-@@ -388,7 +388,7 @@ class Components(private val context: Context) {
-             ),
-         ).also {
-             it.dispatch(AppAction.SetupChecklistAction.Init)
--            it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
-+//            it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
-         }
+@@ -365,7 +365,7 @@ class Components(
+             )
+             .also {
+                 it.dispatch(AppAction.SetupChecklistAction.Init)
+-                it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
++//                it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
+             }
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index f0ee597d00c8..7136852819da 100644
+index 75f51971cb20..0955ced3949e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -124,7 +124,7 @@ import org.mozilla.fenix.push.WebPushEngineIntegration
+@@ -136,7 +136,7 @@ import org.mozilla.fenix.push.WebPushEngineIntegration
  import org.mozilla.fenix.session.VisibilityLifecycleCallback
  import org.mozilla.fenix.settings.doh.DefaultDohSettingsProvider
  import org.mozilla.fenix.settings.doh.DohSettingsProvider
@@ -70,7 +70,7 @@ index f0ee597d00c8..7136852819da 100644
  import org.mozilla.fenix.theme.DefaultThemeProvider
  import org.mozilla.fenix.theme.Theme
  import org.mozilla.fenix.theme.Theme.Private
-@@ -212,7 +212,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -219,7 +219,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          //
          // Note: This doesn't setup any [UncaughtExceptionHandler].
          // Note: Gecko processes have their own crash handling mechanisms.
@@ -79,27 +79,20 @@ index f0ee597d00c8..7136852819da 100644
  
          // While this [initializeFenixProcess] method is run for _all processes_ in the app, we only
          // do global initialization for the _main process_ here. This main process initialization
-@@ -661,15 +661,15 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-         }
+@@ -705,17 +705,17 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+         components.ipProtection.storageSynchronizer.initialize()
      }
  
 -    private fun setupCrashReporting(): CrashReporter {
--        return components
+-        return components.analytics.crashReporter.install(this, ::handleCaughtException)
 +    private fun setupCrashReporting() {
-+/*        return components
-             .analytics
-             .crashReporter
--            .install(this, ::handleCaughtException)
-+            .install(this, ::handleCaughtException) */
++//        return components.analytics.crashReporter.install(this, ::handleCaughtException)
      }
  
      private fun handleCaughtException() {
--        if (
-+/*        if (
-             isMainProcess() &&
-             components.settings.useNewCrashReporterFlow &&
-             !components.performance.visualCompletenessQueue.isReady()
-@@ -678,7 +678,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+-        if (isMainProcess() && !components.performance.visualCompletenessQueue.isReady()) {
++/*        if (isMainProcess() && !components.performance.visualCompletenessQueue.isReady()) {
+             val intent = Intent(applicationContext, StartupCrashActivity::class.java)
  
              intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
              applicationContext.startActivity(intent)
@@ -108,28 +101,28 @@ index f0ee597d00c8..7136852819da 100644
      }
  
      private fun initializeNimbus() {
-@@ -705,7 +705,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -740,7 +740,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+      */
      private fun setupMegazordInitial() {
          // Rust components must be initialized at the very beginning, before any other Rust call, ...
-         AppServicesInitializer.init(
--            AppServicesConfig(components.analytics.crashReporter),
-+            AppServicesConfig(),
-         )
+-        AppServicesInitializer.init(AppServicesConfig(components.analytics.crashReporter))
++        AppServicesInitializer.init(AppServicesConfig())
      }
  
+     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-index 0bb38f8e5773..54dff3639970 100644
+index b2f79927f7b7..06e46f17e62c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 @@ -225,7 +225,7 @@ class BackgroundServices(
  
-         // Enable push if it's configured.
-         push.feature?.let { autoPushFeature ->
--            FxaPushSupportFeature(context, accountManager, autoPushFeature, crashReporter)
-+            FxaPushSupportFeature(context, accountManager, autoPushFeature)
-                 .initialize()
-         }
+                 // Enable push if it's configured.
+                 push.feature?.let { autoPushFeature ->
+-                    FxaPushSupportFeature(context, accountManager, autoPushFeature, crashReporter).initialize()
++                    FxaPushSupportFeature(context, accountManager, autoPushFeature).initialize()
+                 }
  
+                 SendTabFeature(accountManager) { device, tabs ->
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
 index 05c401dc3cac..560f13167e7d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
@@ -158,10 +151,10 @@ index 05c401dc3cac..560f13167e7d 100644
                  },
              )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-index 788cee797c10..61fb08c6e103 100644
+index 0e9ae0625d23..f50ad775f283 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-@@ -213,14 +213,14 @@ class BrowserToolbarSearchMiddleware(
+@@ -227,12 +227,12 @@ class BrowserToolbarSearchMiddleware(
          }
  
          when (url) {
@@ -170,12 +163,10 @@ index 788cee797c10..61fb08c6e103 100644
                  // The list of past crashes can be accessed via "settings > about", but desktop and
                  // fennec users may be used to navigating to "about:crashes". So we intercept this here
                  // and open the crash list activity instead.
-                 navController.navigate(
-                     NavGraphDirections.actionGlobalCrashListFragment(),
-                 )
+                 navController.navigate(NavGraphDirections.actionGlobalCrashListFragment())
 -            }
 +            } */
  
              "about:addons" -> {
-                 navController.navigate(
+                 navController.navigate(NavGraphDirections.actionGlobalAddonsManagementFragment())
 -- 

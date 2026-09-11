@@ -127,7 +127,4 @@
   <!-- Onboarding - States -->
   <string name="ironfox_onboarding_state_installing_ublock">Installing uBlock Origin…</string>
   <string name="ironfox_onboarding_state_installing_ublock_error">An error occurred while installing uBlock Origin: %1$s</string>
-
-  <!-- OLED Theme -->
-  <string name="preference_oled_theme" translatable="false">OLED</string>
 </resources>

@@ -1111,7 +1111,7 @@
       "appId": "org.mozilla.firefox",
       "channel": "release",
       "userFacingName": "IP Protection",
-      "userFacingDescription": "Controls unwanted functionality related to IP Protection",
+      "userFacingDescription": "Controls functionality related to IP Protection",
       "isEnrollmentPaused": false,
       "isRollout": false,
       "bucketConfig": {
@@ -1135,7 +1135,9 @@
               "featureId": "ip-protection",
               "enabled": true,
               "value": {
-                "show-beta-badge": false
+                "allowed-regions": ["XX"],
+                "show-beta-badge": false,
+                "show-onboarding-bottom-sheet": false
               }
             }
           ]

@@ -8,16 +8,16 @@ Removes Mozilla's promotion to enable Firefox Sync at the bookmarks fragment.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt
-index 58434eee1781..8e1209cee015 100644
+index 8b89f9131590..f8035940c424 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt
-@@ -1027,7 +1027,7 @@ private fun EmptyList(
-             when (state) {
-                 is EmptyListState.NotAuthenticated -> RootEmptyContent(
-                     dispatcher,
--                    showSignIn = true,
-+                    showSignIn = false,
-                 )
-                 EmptyListState.Authenticated -> RootEmptyContent(
-                     dispatcher,
+@@ -1039,7 +1039,7 @@ private fun EmptyList(
+                 is EmptyListState.NotAuthenticated ->
+                     RootEmptyContent(
+                         dispatcher,
+-                        showSignIn = true,
++                        showSignIn = false,
+                     )
+                 EmptyListState.Authenticated ->
+                     RootEmptyContent(
 -- 

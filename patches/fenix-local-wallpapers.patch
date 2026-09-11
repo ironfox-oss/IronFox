@@ -50,11 +50,11 @@ index ace40a777e07..e356264082aa 100644
                  val linkEndIndex = linkStartIndex + link.length
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
-index ab7ba29ba34c..1abb54b8c61e 100644
+index 0fffc6d8581a..7a218110734b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
-@@ -6,11 +6,11 @@ package org.mozilla.fenix.wallpapers
- 
+@@ -9,11 +9,11 @@ import java.util.Date
+ import java.util.Locale
  import kotlinx.coroutines.Dispatchers
  import kotlinx.coroutines.withContext
 -import mozilla.components.concept.fetch.Client
@@ -66,75 +66,74 @@ index ab7ba29ba34c..1abb54b8c61e 100644
 -import org.mozilla.fenix.BuildConfig
 +// import org.mozilla.fenix.BuildConfig
  import org.mozilla.fenix.utils.toHexColor
- import java.text.SimpleDateFormat
- import java.util.Date
-@@ -22,23 +22,18 @@ import java.util.Locale
+ 
+ /**
+@@ -21,22 +21,16 @@ import org.mozilla.fenix.utils.toHexColor
+  *
   * @param client The client that will be used to fetch metadata.
   */
- class WallpaperMetadataFetcher(
--    private val client: Client,
-+    private val resources: Resources,
- ) {
--    private val metadataUrl = BuildConfig.WALLPAPER_URL.substringBefore("android") +
--        "metadata/v$CURRENT_JSON_VERSION/wallpapers.json"
-+//    private val metadataUrl = BuildConfig.WALLPAPER_URL.substringBefore("android") +
-+//        "metadata/v$CURRENT_JSON_VERSION/wallpapers.json"
+-class WallpaperMetadataFetcher(private val client: Client) {
+-    private val metadataUrl =
+-        BuildConfig.WALLPAPER_URL.substringBefore("android") + "metadata/v$CURRENT_JSON_VERSION/wallpapers.json"
++class WallpaperMetadataFetcher(private val resources: Resources) {
++//    private val metadataUrl =
++//        BuildConfig.WALLPAPER_URL.substringBefore("android") + "metadata/v$CURRENT_JSON_VERSION/wallpapers.json"
  
-     /**
-      * Downloads the list of wallpapers from the remote source. Failures will return an empty list.
-      */
-     suspend fun downloadWallpaperList(): List<Wallpaper> = withContext(Dispatchers.IO) {
--        Result.runCatching {
--            val request = Request(url = metadataUrl, method = Request.Method.GET, conservative = true)
--            val response = client.fetch(request)
--            response.body.useBufferedReader {
--                val json = it.readText()
--                JSONObject(json).parseAsWallpapers()
--            }
--        }.getOrElse { listOf() }
-+        val json = resources.openRawResource(R.raw.wallpapers).bufferedReader()
-+            .use { it.readText() }
-+        return@withContext JSONObject(json).parseAsWallpapers()
-     }
+     /** Downloads the list of wallpapers from the remote source. Failures will return an empty list. */
+     suspend fun downloadWallpaperList(): List<Wallpaper> =
+         withContext(Dispatchers.IO) {
+-            Result.runCatching {
+-                    val request = Request(url = metadataUrl, method = Request.Method.GET, conservative = true)
+-                    val response = client.fetch(request)
+-                    response.body.useBufferedReader {
+-                        val json = it.readText()
+-                        JSONObject(json).parseAsWallpapers()
+-                    }
+-                }
+-                .getOrElse { listOf() }
++            val json = resources.openRawResource(R.raw.wallpapers).bufferedReader()
++                .use { it.readText() }
++            return@withContext JSONObject(json).parseAsWallpapers()
+         }
  
      private fun JSONObject.parseAsWallpapers(): List<Wallpaper> =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
-index d11145f10a38..185b1a955ca3 100644
+index 9227cfb45f849..e867f8dbf2a72 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
-@@ -17,6 +17,8 @@ import org.mozilla.fenix.components.appstate.AppAction
+@@ -18,6 +18,9 @@ import mozilla.components.support.ktx.android.graphics.toSampledBitmap
+ import org.mozilla.fenix.components.AppStore
+ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.utils.Settings
- import java.io.File
- import java.util.Date
 +import android.content.res.Resources
++import android.graphics.BitmapFactory
 +import org.ironfoxoss.ironfox.utils.IronFoxWallpaperUtils
  
  /**
   * Contains use cases related to the wallpaper feature.
-@@ -29,6 +31,7 @@ import java.util.Date
-  * @param currentLocale The locale currently being used on the device.
+@@ -32,6 +35,7 @@ import org.mozilla.fenix.utils.Settings
   */
+ @Suppress("LongParameterList")
  class WallpapersUseCases(
 +    resources: Resources,
      settings: Settings,
      filesDir: File,
      appStore: AppStore,
-@@ -46,7 +49,7 @@ class WallpapersUseCases(
+@@ -50,7 +54,7 @@ class WallpapersUseCases(
      // Use case for initializing wallpaper feature. Should usually be called early
      // in the app's lifetime to ensure that any potential long-running tasks can complete quickly.
      val initialize: InitializeWallpapersUseCase by lazy {
 -        val metadataFetcher = WallpaperMetadataFetcher(client)
 +        val metadataFetcher = WallpaperMetadataFetcher(resources)
-         val migrationHelper = LegacyWallpaperMigration(
-             storageRootDirectory = storageRootDirectory,
-             settings = settings,
-@@ -66,12 +69,12 @@ class WallpapersUseCases(
+         val migrationHelper =
+             LegacyWallpaperMigration(
+                 storageRootDirectory = storageRootDirectory,
+@@ -70,11 +74,11 @@ class WallpapersUseCases(
+ 
      // Use case for loading specific wallpaper bitmaps.
      val loadBitmap: LoadBitmapUseCase by lazy {
-         DefaultLoadBitmapUseCase(
--            getFilesDir = { filesDir },
-+            resources = resources
-         )
+-        DefaultLoadBitmapUseCase(getFilesDir = { filesDir }, getDisplaySize = getDisplaySize)
++        DefaultLoadBitmapUseCase(resources = resources, getDisplaySize = getDisplaySize)
      }
  
      val loadThumbnail: LoadThumbnailUseCase by lazy {
@@ -143,53 +142,69 @@ index d11145f10a38..185b1a955ca3 100644
      }
  
      // Use case for selecting a new wallpaper.
-@@ -196,7 +199,7 @@ class WallpapersUseCases(
+@@ -195,7 +199,7 @@ class WallpapersUseCases(
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal class DefaultLoadBitmapUseCase(
 -        private val getFilesDir: suspend () -> File,
-+        private val resources: Resources
++        private val resources: Resources,
+         private val getDisplaySize: () -> Size,
      ) : LoadBitmapUseCase {
          override suspend fun invoke(wallpaper: Wallpaper, orientation: Int): Bitmap? =
-             loadWallpaperFromDisk(wallpaper, orientation)
-@@ -206,10 +209,10 @@ class WallpapersUseCases(
-             wallpaper: Wallpaper,
+@@ -207,11 +211,11 @@ class WallpapersUseCases(
              orientation: Int,
-         ): Bitmap? = try {
--            val path = wallpaper.getLocalPathFromContext(orientation)
-+            val drawableRes = if (wallpaper.name !== Wallpaper.DEFAULT) IronFoxWallpaperUtils.getWallpaperDrawable(wallpaper.name, orientation) else return null
-             withContext(Dispatchers.IO) {
--                val file = File(getFilesDir(), path)
--                BitmapFactory.decodeStream(file.inputStream())
-+//                val file = File(getFilesDir(), path)
-+                BitmapFactory.decodeResource(resources, drawableRes)
-             }
-         } catch (e: CancellationException) {
-             // CancellationException must not be swallowed: if the coroutine was canceled while loading,
-@@ -247,13 +250,13 @@ class WallpapersUseCases(
+         ): Bitmap? =
+             try {
+-                val path = wallpaper.getLocalPathFromContext(orientation)
++                val drawableRes = if (wallpaper.name !== Wallpaper.DEFAULT) IronFoxWallpaperUtils.getWallpaperDrawable(wallpaper.name, orientation) else return null
+                 withContext(Dispatchers.IO) {
+-                    val file = File(getFilesDir(), path)
+-                    val target = getDisplaySize().orientedTo(orientation)
+-                    file.toSampledBitmap(targetWidth = target.width, targetHeight = target.height)
++//                    val file = File(getFilesDir(), path)
++//                    val target = getDisplaySize().orientedTo(orientation)
++                    BitmapFactory.decodeResource(resources, drawableRes)
+                 }
+             } catch (e: CancellationException) {
+                 // CancellationException must not be swallowed: if the coroutine was canceled while loading,
+@@ -264,18 +268,21 @@ class WallpapersUseCases(
      }
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 -    internal class DefaultLoadThumbnailUseCase(private val filesDir: File) : LoadThumbnailUseCase {
 +    internal class DefaultLoadThumbnailUseCase(private val resources: Resources) : LoadThumbnailUseCase {
-         override suspend fun invoke(wallpaper: Wallpaper): Bitmap? = withContext(Dispatchers.IO) {
-             Result.runCatching {
--                val path = Wallpaper.getLocalPath(wallpaper.name, Wallpaper.ImageType.Thumbnail)
-+                val drawableRes = if (wallpaper.name !== Wallpaper.DEFAULT) IronFoxWallpaperUtils.getWallpaperDrawableThumbnail(wallpaper.name) else return@runCatching null
-                 withContext(Dispatchers.IO) {
+         override suspend fun invoke(wallpaper: Wallpaper, targetSize: Size): Bitmap? =
+-            try {
+-                withContext(Dispatchers.IO) {
+-                    val path = Wallpaper.getLocalPath(wallpaper.name, Wallpaper.ImageType.Thumbnail)
 -                    val file = File(filesDir, path)
--                    BitmapFactory.decodeStream(file.inputStream())
-+//                    val file = File(filesDir, path)
-+                    BitmapFactory.decodeResource(resources, drawableRes)
+-                    file.toSampledBitmap(targetWidth = targetSize.width, targetHeight = targetSize.height)
++            if (wallpaper.name == Wallpaper.DEFAULT) {
++               null
++            } else {
++                try {
++                    withContext(Dispatchers.IO) {
++                        val drawableRes = IronFoxWallpaperUtils.getWallpaperDrawableThumbnail(wallpaper.name)
++                        BitmapFactory.decodeResource(resources, drawableRes)
++                    }
++                } catch (e: CancellationException) {
++                    throw e
++                } catch (_: Exception) {
++                    null
                  }
-             }.getOrNull()
-         }
-@@ -285,7 +288,7 @@ class WallpapersUseCases(
+-            } catch (e: CancellationException) {
+-                throw e
+-            } catch (_: Exception) {
+-                null
+             }
+     }
+ 
+@@ -303,7 +310,7 @@ class WallpapersUseCases(
           */
          override suspend fun invoke(wallpaper: Wallpaper): Wallpaper.ImageFileState {
-             return if (wallpaper.collection == Wallpaper.DefaultCollection ||
--                fileManager.wallpaperImagesExist(wallpaper)
-+                true
+             return if (
+-                wallpaper.collection == Wallpaper.DefaultCollection || fileManager.wallpaperImagesExist(wallpaper)
++                wallpaper.collection == Wallpaper.DefaultCollection || true
              ) {
                  selectWallpaper(wallpaper)
                  dispatchDownloadState(wallpaper, Wallpaper.ImageFileState.Downloaded)

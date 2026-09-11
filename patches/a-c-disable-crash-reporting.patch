@@ -8,7 +8,7 @@ Disables and prevents the collection/submission of crash reports.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
-index 2b16913688f6e..c115de2c586a1 100644
+index 0038d4ed4b4a..30beb1027e2b 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 @@ -32,10 +32,10 @@ import mozilla.components.lib.crash.db.toReportEntity
@@ -24,10 +24,10 @@ index 2b16913688f6e..c115de2c586a1 100644
  import mozilla.components.support.base.log.logger.Logger
  
  /**
-@@ -99,8 +99,8 @@ private const val START_OF_144_NIGHTLY_TIMESTAMP = 1755475200000L
-  * @param useLegacyReporting Enable/Disable handling crash reporting through a notification or system dialog.
+@@ -96,8 +96,8 @@ private const val START_OF_154_NIGHTLY_TIMESTAMP = 1787070240000L
   */
- class CrashReporter internal constructor(
+ class CrashReporter
+ internal constructor(
 -    private val services: List<CrashReporterService> = emptyList(),
 -    private val telemetryServices: List<CrashTelemetryService> = emptyList(),
 +    private val services: List<Any> = emptyList(),
@@ -35,7 +35,7 @@ index 2b16913688f6e..c115de2c586a1 100644
      private val shouldPrompt: Prompt = Prompt.NEVER,
      enabled: Boolean = true,
      internal val promptConfiguration: PromptConfiguration = PromptConfiguration(),
-@@ -115,8 +115,8 @@ class CrashReporter internal constructor(
+@@ -112,8 +112,8 @@ internal constructor(
  
      constructor(
          context: Context,
@@ -46,7 +46,7 @@ index 2b16913688f6e..c115de2c586a1 100644
          shouldPrompt: Prompt = Prompt.NEVER,
          enabled: Boolean = true,
          promptConfiguration: PromptConfiguration = PromptConfiguration(),
-@@ -154,9 +154,9 @@ class CrashReporter internal constructor(
+@@ -151,17 +151,17 @@ internal constructor(
          get() = runtimeTagProviders.fold(emptyMap()) { acc, provider -> acc + provider() }
  
      init {
@@ -57,8 +57,7 @@ index 2b16913688f6e..c115de2c586a1 100644
 +        } */
      }
  
-     /**
-@@ -165,8 +165,8 @@ class CrashReporter internal constructor(
+     /** Install this [CrashReporter] instance. At this point the component will be setup to collect crash reports. */
      fun install(
          applicationContext: Context,
          handleCaughtExceptionSideEffects: (() -> Unit)? = null,
@@ -68,9 +67,9 @@ index 2b16913688f6e..c115de2c586a1 100644
 +/*        instance = this
  
          val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
-         val handler = ExceptionHandler(
-@@ -177,7 +177,7 @@ class CrashReporter internal constructor(
-         )
+         val handler =
+@@ -173,7 +173,7 @@ internal constructor(
+             )
          Thread.setDefaultUncaughtExceptionHandler(handler)
  
 -        return this
@@ -78,16 +77,16 @@ index 2b16913688f6e..c115de2c586a1 100644
      }
  
      /**
-@@ -224,7 +224,7 @@ class CrashReporter internal constructor(
-      */
+@@ -213,7 +213,7 @@ internal constructor(
+     /** Submit a crash report to all registered services. */
      fun submitReport(crash: Crash, then: () -> Unit = {}): Job {
          return scope.launch {
 -            services.forEach { service ->
 +/*            services.forEach { service ->
-                 val reportId = when (crash) {
-                     is Crash.NativeCodeCrash -> service.report(crash)
-                     is Crash.UncaughtExceptionCrash -> service.report(crash)
-@@ -242,7 +242,7 @@ class CrashReporter internal constructor(
+                 val reportId =
+                     when (crash) {
+                         is Crash.NativeCodeCrash -> service.report(crash)
+@@ -232,14 +232,14 @@ internal constructor(
              logger.info("Crash report submitted to ${services.size} services")
              withContext(mainDispatcher) {
                  then()
@@ -96,8 +95,7 @@ index 2b16913688f6e..c115de2c586a1 100644
          }
      }
  
-@@ -251,7 +251,7 @@ class CrashReporter internal constructor(
-      */
+     /** Submit a crash report to all registered telemetry services. */
      fun submitCrashTelemetry(crash: Crash, then: () -> Unit = {}): Job {
          return scope.launch {
 -            telemetryServices.forEach { telemetryService ->
@@ -105,7 +103,7 @@ index 2b16913688f6e..c115de2c586a1 100644
                  when (crash) {
                      is Crash.NativeCodeCrash -> telemetryService.record(crash)
                      is Crash.UncaughtExceptionCrash -> telemetryService.record(crash)
-@@ -261,7 +261,7 @@ class CrashReporter internal constructor(
+@@ -249,7 +249,7 @@ internal constructor(
              logger.info("Crash report submitted to ${telemetryServices.size} telemetry services")
              withContext(mainDispatcher) {
                  then()
@@ -114,7 +112,7 @@ index 2b16913688f6e..c115de2c586a1 100644
          }
      }
  
-@@ -273,16 +273,16 @@ class CrashReporter internal constructor(
+@@ -259,16 +259,16 @@ internal constructor(
           * if stacktrace is empty, replace throwable with UnexpectedlyMissingStacktrace exception so
           * we can figure out which module is submitting caught exception reports without a stacktrace.
           */
@@ -135,7 +133,7 @@ index 2b16913688f6e..c115de2c586a1 100644
          }
      }
  
-@@ -296,14 +296,14 @@ class CrashReporter internal constructor(
+@@ -282,12 +282,12 @@ internal constructor(
       * ```
       */
      override fun recordCrashBreadcrumb(breadcrumb: Breadcrumb) {
@@ -143,66 +141,66 @@ index 2b16913688f6e..c115de2c586a1 100644
 +//        crashBreadcrumbs.add(breadcrumb)
      }
  
-     /**
-      * Set whether telemetry has been enabled.
-      */
+     /** Set whether telemetry has been enabled. */
      fun setTelemetryEnabled(enabled: Boolean) {
 -        telemetryServices.forEach { it.setTelemetryEnabled(enabled) }
 +//        telemetryServices.forEach { it.setTelemetryEnabled(enabled) }
      }
  
      /**
-@@ -397,13 +397,13 @@ class CrashReporter internal constructor(
+@@ -381,14 +381,14 @@ internal constructor(
      }
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
--    internal fun sendCrashReport(context: Context, crash: Crash) = try {
--        ContextCompat.startForegroundService(context, SendCrashReportService.createReportIntent(context, crash))
+-    internal fun sendCrashReport(context: Context, crash: Crash) =
+-        try {
 +    internal fun sendCrashReport(context: Context, crash: Crash) {
-+/*        ContextCompat.startForegroundService(context, SendCrashReportService.createReportIntent(context, crash))
-     } catch (e: BadParcelableException) {
--        (crash as? Crash.UncaughtExceptionCrash)?.let {
-+        (crash as? Crash.UncaughtExceptionCrash)?.let { */
-             // We may end up with a throwable that isn't completely serializable, which will cause
-             // a crash when the service tries to unbundle it.
--            val updatedCrash = it.copy(throwable = it.throwable.forceSerializable())
-+/*            val updatedCrash = it.copy(throwable = it.throwable.forceSerializable())
-             ContextCompat.startForegroundService(
-                 context,
-                 SendCrashReportService.createReportIntent(context, updatedCrash),
-@@ -417,17 +417,17 @@ class CrashReporter internal constructor(
-             logger.warn("ignored failed service start while backgrounded")
-         } else {
-             throw e
--        }
-+        } */
-     }
++/*        try {
+             ContextCompat.startForegroundService(context, SendCrashReportService.createReportIntent(context, crash))
+         } catch (e: BadParcelableException) {
+-            (crash as? Crash.UncaughtExceptionCrash)?.let {
++            (crash as? Crash.UncaughtExceptionCrash)?.let { */
+                 // We may end up with a throwable that isn't completely serializable, which will cause
+                 // a crash when the service tries to unbundle it.
+-                val updatedCrash = it.copy(throwable = it.throwable.forceSerializable())
++/*                val updatedCrash = it.copy(throwable = it.throwable.forceSerializable())
+                 ContextCompat.startForegroundService(
+                     context,
+                     SendCrashReportService.createReportIntent(context, updatedCrash),
+@@ -400,18 +400,18 @@ internal constructor(
+                 logger.warn("ignored failed service start while backgrounded")
+             } else {
+                 throw e
+-            }
++            } */
+         }
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
--    internal fun sendCrashTelemetry(context: Context, crash: Crash) = try {
--        ContextCompat.startForegroundService(context, SendCrashTelemetryService.createReportIntent(context, crash))
+-    internal fun sendCrashTelemetry(context: Context, crash: Crash) =
+-        try {
 +    internal fun sendCrashTelemetry(context: Context, crash: Crash) {
-+/*        ContextCompat.startForegroundService(context, SendCrashTelemetryService.createReportIntent(context, crash))
-     } catch (e: BadParcelableException) {
--        (crash as? Crash.UncaughtExceptionCrash)?.let {
-+        (crash as? Crash.UncaughtExceptionCrash)?.let { */
-             // We may end up with a throwable that isn't completely serializable, which will cause
-             // a crash when the service tries to unbundle it.
--            val updatedCrash = it.copy(throwable = it.throwable.forceSerializable())
-+/*            val updatedCrash = it.copy(throwable = it.throwable.forceSerializable())
-             ContextCompat.startForegroundService(
-                 context,
-                 SendCrashTelemetryService.createReportIntent(context, updatedCrash),
-@@ -441,7 +441,7 @@ class CrashReporter internal constructor(
-             logger.warn("ignored failed service start while backgrounded")
-         } else {
-             throw e
--        }
-+        } */
-     }
++/*        try {
+             ContextCompat.startForegroundService(context, SendCrashTelemetryService.createReportIntent(context, crash))
+         } catch (e: BadParcelableException) {
+-            (crash as? Crash.UncaughtExceptionCrash)?.let {
++            (crash as? Crash.UncaughtExceptionCrash)?.let { */
+                 // We may end up with a throwable that isn't completely serializable, which will cause
+                 // a crash when the service tries to unbundle it.
+-                val updatedCrash = it.copy(throwable = it.throwable.forceSerializable())
++/*                val updatedCrash = it.copy(throwable = it.throwable.forceSerializable())
+                 ContextCompat.startForegroundService(
+                     context,
+                     SendCrashTelemetryService.createReportIntent(context, updatedCrash),
+@@ -423,7 +423,7 @@ internal constructor(
+                 logger.warn("ignored failed service start while backgrounded")
+             } else {
+                 throw e
+-            }
++            } */
+         }
  
      @VisibleForTesting
-@@ -464,8 +464,8 @@ class CrashReporter internal constructor(
+@@ -446,8 +446,8 @@ internal constructor(
          }
      }
  

@@ -8,30 +8,30 @@ Provides support for a UI setting to enable/disable the installation of add-ons.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-index 6292e048e5ca..26cb96587fef 100644
+index ed0532672a58..50ba09e31a0e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-@@ -54,6 +54,7 @@ import org.mozilla.fenix.theme.ThemeManager
- import androidx.appcompat.R as appcompatR
- import com.google.android.material.R as materialR
- import mozilla.components.feature.addons.R as addonsR
+@@ -54,6 +54,7 @@ import org.mozilla.fenix.addons.DownloadAddonDialogFragmentArgs
+ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.settings.SupportUtils
+ import org.mozilla.fenix.theme.ThemeManager
 +import org.ironfoxoss.core.R as ironfoxR
  
- /**
-  * Feature implementation for handling [WebExtensionPromptRequest] and showing the respective UI.
-@@ -245,10 +246,12 @@ class WebExtensionPromptFeature(
-                 // Title = Can't install extension
-                 // Message = Failed to install $addonName
-                 title = ""
--                if (addonName.isNotEmpty()) {
-+                if (context.components.settings.ironfox.xpinstallEnabled && addonName.isNotEmpty()) {
-                     context.getString(addonsR.string.mozac_feature_addons_failed_to_install, addonName)
--                } else {
-+                } else if (context.components.settings.ironfox.xpinstallEnabled) {
-                     context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install)
-+                } else {
-+                    context.getString(ironfoxR.string.extension_failed_to_install_xpinstall_disabled_error)
+ /** Feature implementation for handling [WebExtensionPromptRequest] and showing the respective UI. */
+ class WebExtensionPromptFeature(
+@@ -236,10 +237,12 @@ class WebExtensionPromptFeature(
+                     // Title = Can't install extension
+                     // Message = Failed to install $addonName
+                     title = ""
+-                    if (addonName.isNotEmpty()) {
++                    if (context.components.settings.ironfox.xpinstallEnabled && addonName.isNotEmpty()) {
+                         context.getString(addonsR.string.mozac_feature_addons_failed_to_install, addonName)
+-                    } else {
++                    } else if (context.components.settings.ironfox.xpinstallEnabled) {
+                         context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install)
++                    } else {
++                        context.getString(ironfoxR.string.extension_failed_to_install_xpinstall_disabled_error)
+                     }
                  }
-             }
  
 -- 

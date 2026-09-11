@@ -155,10 +155,10 @@ index 24554c7ab197..2bfaf905d77c 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt
-index 613112904628..cb367416eafc 100644
+index adaf2ac411b4..e02d1b0e4c41 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt
-@@ -26,7 +26,7 @@ import mozilla.components.browser.state.store.BrowserStore
+@@ -27,7 +27,7 @@ import mozilla.components.browser.state.store.BrowserStore
  import mozilla.components.feature.tabs.TabsUseCases
  import mozilla.components.feature.top.sites.TopSite
  import mozilla.components.feature.top.sites.TopSitesUseCases
@@ -167,7 +167,7 @@ index 613112904628..cb367416eafc 100644
  import mozilla.components.support.ktx.android.content.getColorFromAttr
  import mozilla.components.support.ktx.android.view.showKeyboard
  import mozilla.components.support.ktx.kotlin.isUrl
-@@ -41,7 +41,7 @@ import org.mozilla.fenix.browser.browsingmode.BrowsingMode
+@@ -43,7 +43,7 @@ import org.mozilla.fenix.browser.browsingmode.BrowsingMode
  import org.mozilla.fenix.components.AppStore
  import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.appstate.AppAction.ShortcutAction
@@ -176,7 +176,7 @@ index 613112904628..cb367416eafc 100644
  import org.mozilla.fenix.components.usecases.FenixBrowserUseCases
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.nav
-@@ -144,7 +144,7 @@ class DefaultTopSiteController(
+@@ -120,7 +120,7 @@ class DefaultTopSiteController(
      private val selectTabUseCase: TabsUseCases.SelectTabUseCase,
      private val fenixBrowserUseCases: FenixBrowserUseCases,
      private val topSitesUseCases: TopSitesUseCases,
@@ -185,28 +185,30 @@ index 613112904628..cb367416eafc 100644
      private val viewLifecycleScope: CoroutineScope,
      private val source: TopSitesSource,
  ) : TopSiteController {
-@@ -305,17 +305,17 @@ class DefaultTopSiteController(
+@@ -267,19 +267,19 @@ class DefaultTopSiteController(
          }
  
          val availableEngines: List<SearchEngine> = getAvailableSearchEngines()
 -        val searchAccessPoint = MetricsUtils.Source.TOPSITE
 +//        val searchAccessPoint = MetricsUtils.Source.TOPSITE
  
-         availableEngines.firstOrNull { engine ->
-             engine.resultUrls.firstOrNull { it.contains(topSite.url) } != null
-         }?.let { searchEngine ->
--            MetricsUtils.recordSearchMetrics(
-+/*            MetricsUtils.recordSearchMetrics(
-                 searchEngine,
-                 searchEngine == store.state.search.selectedOrDefaultSearchEngine,
-                 searchAccessPoint,
-                 activity.components.nimbus.events,
--            )
-+            ) */
-         }
+         availableEngines
+             .firstOrNull { engine ->
+                 engine.resultUrls.firstOrNull { it.contains(topSite.url) } != null
+             }
+             ?.let { searchEngine ->
+-                MetricsUtils.recordSearchMetrics(
++/*                MetricsUtils.recordSearchMetrics(
+                     searchEngine,
+                     searchEngine == store.state.search.selectedOrDefaultSearchEngine,
+                     searchAccessPoint,
+                     activity.components.nimbus.events,
+-                )
++                ) */
+             }
  
          if (settings.enableHomepageAsNewTab) {
-@@ -387,15 +387,15 @@ class DefaultTopSiteController(
+@@ -351,15 +351,15 @@ class DefaultTopSiteController(
      }
  
      private fun sendMozAdsClickInteraction(clickUrl: String) {

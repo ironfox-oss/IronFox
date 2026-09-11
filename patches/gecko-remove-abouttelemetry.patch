@@ -8,13 +8,13 @@ Removes the `about:telemetry` page.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 76f707e5f1e8e..58e069cb6b720 100644
+index 239b0600b6da..78c9952a603c 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
-@@ -211,9 +211,9 @@ static const RedirEntry kRedirMap[] = {
- #  endif
-          nsIAboutModule::ALLOW_SCRIPT},
+@@ -221,9 +221,9 @@ static const RedirEntry kRedirMap[] = {
  #endif
+     {"sync-log", "chrome://global/content/aboutSyncLog.html",
+      nsIAboutModule::ALLOW_SCRIPT},
 -    {"telemetry", "chrome://global/content/aboutTelemetry.xhtml",
 -     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
 -#ifndef MOZ_WIDGET_ANDROID
@@ -25,13 +25,13 @@ index 76f707e5f1e8e..58e069cb6b720 100644
       "chrome://global/content/translations/about-translations.html",
       nsIAboutModule::ALLOW_SCRIPT |
 diff --git a/docshell/build/components.conf b/docshell/build/components.conf
-index 5c1543ab806f5..1f58b563001ad 100644
+index 1f86eca9205d..1aa523de225b 100644
 --- a/docshell/build/components.conf
 +++ b/docshell/build/components.conf
-@@ -30,7 +30,7 @@ about_pages = [
-     'serviceworkers',
+@@ -29,7 +29,7 @@ about_pages = [
      'srcdoc',
      'support',
+     'sync-log',
 -    'telemetry',
 +#    'telemetry',
      'url-classifier',

@@ -90,9 +90,9 @@ object IFPrefs {
     prefs.setDefaultBoolPref(R.string.pref_key_tracking_protection_custom_allow_list_convenience, false) // [DEFAULT]
     prefs.setDefaultBoolPref(R.string.pref_key_tracking_protection_strict_allow_list_convenience, false) // [DEFAULT]
 
-    // Disable Firefox Labs
-    /// (Depends on Nimbus)
-    prefs.setBoolPref(R.string.pref_key_enable_firefox_labs, false)
+    // Disable the Firefox Referral Program
+    prefs.setStringPref(R.string.pref_key_referral_code, "") // [DEFAULT]
+    prefs.setBoolPref(R.string.pref_key_referral_ping_submitted, true) // Ensure we don't submit the referral ping
 
     // Disable Firefox Relay by default
     prefs.setDefaultBoolPref(R.string.pref_key_email_mask_suggestion, false)
@@ -144,6 +144,7 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_should_show_inactive_tabs_popup, false)
     prefs.setBoolPref(R.string.pref_key_should_show_lock_pbm_banner, false)
     prefs.setBoolPref(R.string.pref_key_should_show_open_in_app_banner, false)
+    prefs.setBoolPref(R.string.pref_key_show_collections_migration_card, false)
     prefs.setBoolPref(R.string.pref_key_show_first_time_translation, false)
     prefs.setBoolPref(R.string.pref_key_show_menu_banner, false)
     prefs.setBoolPref(R.string.pref_key_summarize_toolbar_cfr_shown, true)
@@ -237,9 +238,6 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_is_user_skyflag_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_tiktok_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_x_twitter_attributed, false) // [DEFAULT]
-
-    /// Ensure we don't submit the referral ping
-    prefs.setBoolPref(R.string.pref_key_referral_ping_submitted, true)
 
     // Disable third-party/OS-level root certificates by default
     prefs.setDefaultBoolPref(R.string.pref_key_allow_third_party_root_certs, false) // [DEFAULT]
