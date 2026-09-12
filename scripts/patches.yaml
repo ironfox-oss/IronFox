@@ -273,6 +273,15 @@ patches:
     effect: "Improves privacy and freedom for users, by avoiding the use of Google Play Services."
     category: "Dependency"
 
+  - file: "geckoview-disable-gms-geolocation.patch"
+    name: "GeckoView - Disable Google Location Services"
+    description: |
+      Prevents the browser from attempting to use Google Play Services (or the OEM) to retrieve geolocation
+      if the Android system geolocation provider is enabled, and instead uses the device's GPS.
+    reason: "Avoids unnecessary/unwanted use of Google Play Services."
+    effect: "Improves privacy and protects the freedom of users."
+    category: "Dependency"
+
   - file: "fenix-disable-gms-fonts.patch"
     name: "Fenix - Disable loading fonts from Google Play Services (or the OEM)"
     description: |

@@ -1,0 +1,51 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Fri, 11 Sep 2026 04:40:54 +0000
+Subject: [PATCH] GeckoView - Disable Google Location Services
+
+Prevents the browser from attempting to use Google Play Services (or the OEM) to retrieve geolocation
+if the Android system geolocation provider is enabled, and instead uses the device's GPS.
+If the GPS is unavailable, we still fall-back to network geolocation, but we use Gecko's implementation
+with BeaconDB instead.
+
+Reduces our reliance on/use of proprietary services.
+
+(For reference: https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient#public-abstract-taskboolean-isgooglelocationaccuracyenabled)
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoAppShell.java b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoAppShell.java
+index 613c208c9a53..c54b99707ff1 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoAppShell.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoAppShell.java
+@@ -291,6 +291,9 @@ public class GeckoAppShell {
+     final List<String> providers = lm.getAllProviders();
+ 
+     for (final String provider : providers) {
++      if (provider != LocationManager.GPS_PROVIDER) {
++        continue;
++      }
+       final Location location = lm.getLastKnownLocation(provider);
+       if (location == null) {
+         continue;
+@@ -335,8 +338,8 @@ public class GeckoAppShell {
+       return true;
+     }
+ 
+-    if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+-        && !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
++    if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
++//        && !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+       return false;
+     }
+ 
+@@ -355,7 +358,7 @@ public class GeckoAppShell {
+       criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+     }
+ 
+-    final String provider = lm.getBestProvider(criteria, true);
++    final String provider = LocationManager.GPS_PROVIDER;
+     if (provider == null) {
+       return false;
+     }
+-- 
