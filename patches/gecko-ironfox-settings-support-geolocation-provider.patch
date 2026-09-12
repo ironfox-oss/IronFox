@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Fri, 11 Sep 2026 04:40:54 +0000
+Subject: [PATCH] Gecko - IronFox Settings: Geolocation provider
+
+Adds a preference to enable/disable the Android system geolocation provider.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/toolkit/components/geolocation/GeolocationService.cpp b/toolkit/components/geolocation/GeolocationService.cpp
+index 70af7ec0c2383..b1a886153092b 100644
+--- a/toolkit/components/geolocation/GeolocationService.cpp
++++ b/toolkit/components/geolocation/GeolocationService.cpp
+@@ -70,7 +70,9 @@ nsresult GeolocationService::Init() {
+   obs->AddObserver(this, "xpcom-shutdown", false);
+ 
+ #ifdef MOZ_WIDGET_ANDROID
+-  mProvider = new AndroidLocationProvider();
++  if (Preferences::GetBool("browser.ironfox.geo.provider.use_android")) {
++    mProvider = new AndroidLocationProvider();
++  }
+ #endif
+ 
+ #ifdef MOZ_WIDGET_GTK
+-- 

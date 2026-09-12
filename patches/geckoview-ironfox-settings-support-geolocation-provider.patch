@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Fri, 11 Sep 2026 04:40:54 +0000
+Subject: [PATCH] GeckoView - IronFox Settings: Geolocation provider
+
+Adds a preference to enable/disable the Android system geolocation provider.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/shared/components/geckoview/GeckoViewPermission.sys.mjs b/mobile/shared/components/geckoview/GeckoViewPermission.sys.mjs
+index 316bafd2b24b..bcc3c5063809 100644
+--- a/mobile/shared/components/geckoview/GeckoViewPermission.sys.mjs
++++ b/mobile/shared/components/geckoview/GeckoViewPermission.sys.mjs
+@@ -9,6 +9,7 @@ const lazy = {};
+ ChromeUtils.defineESModuleGetters(lazy, {
+   E10SUtils: "resource://gre/modules/E10SUtils.sys.mjs",
+   EventDispatcher: "resource://gre/modules/Messaging.sys.mjs",
++  IFPrefUtils:     "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+ });
+ 
+ const PERM_ACCESS_FINE_LOCATION = "android.permission.ACCESS_FINE_LOCATION";
+@@ -179,7 +180,7 @@ export class GeckoViewPermission {
+ 
+       if (allowOrDeny === Services.perms.ALLOW_ACTION) {
+         // Ask for app permission after asking for content permission.
+-        if (perm.type === "geolocation") {
++        if (perm.type === "geolocation" && lazy.IFPrefUtils.getBoolPref("browser.ironfox.geo.provider.use_android")) {
+           const granted = await actor.getAppPermissions([
+             PERM_ACCESS_FINE_LOCATION,
+           ]);
+-- 

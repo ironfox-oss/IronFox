@@ -927,4 +927,52 @@ object IronFoxPreferences {
   fun shouldShowSecretDebugMenuThisSession(
     context: Context
   ): Boolean = context.components.settings.showSecretDebugMenuThisSession
+
+  /**
+   * Check if the Android Geolocation Provider is enabled
+   *
+   * @param context The application context
+   */
+  fun isAndroidGeoProviderEnabled(
+    context: Context
+  ): Boolean = context.components.settings.ironfox.geoProviderAndroidEnabled
+
+  /**
+   * Set whether we should enable the Android Geolocation Provider
+   *
+   * @param context The application context
+   * @param isEnabled Whether we should enable the provider
+   */
+  fun setAndroidGeoProviderEnabled(
+    context: Context,
+    isEnabled: Boolean,
+  ) {
+    val settings = context.components.settings
+
+    settings.ironfox.geoProviderAndroidEnabled = isEnabled
+  }
+
+  /**
+   * Check if the Network Geolocation Provider is enabled
+   *
+   * @param context The application context
+   */
+  fun isNetworkGeoProviderEnabled(
+    context: Context
+  ): Boolean = context.components.settings.ironfox.geoProviderNetworkEnabled
+
+  /**
+   * Set whether we should enable the Network Geolocation Provider
+   *
+   * @param context The application context
+   * @param isEnabled Whether we should enable the provider
+   */
+  fun setNetworkGeoProviderEnabled(
+    context: Context,
+    isEnabled: Boolean,
+  ) {
+    val settings = context.components.settings
+
+    settings.ironfox.geoProviderNetworkEnabled = isEnabled
+  }
 }

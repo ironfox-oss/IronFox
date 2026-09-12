@@ -939,6 +939,20 @@ patches:
     effect: "Users can disable the extension blocklist if desired."
     category: "User Interface"
 
+  - file: "gecko-ironfox-settings-support-geolocation-provider.patch"
+    name: "Gecko - IronFox Settings: Geolocation provider"
+    description: "Provides support for a UI setting to enable/disable the Android system geolocation provider."
+    reason: "To provide users with the ability to enable or disable the Android system geolocation provider."
+    effect: "Users are provided with more control and can decide which geolocation provider they would like to use."
+    category: "User Interface"
+
+  - file: "geckoview-ironfox-settings-support-geolocation-provider.patch"
+    name: "GeckoView - IronFox Settings: Geolocation provider"
+    description: "Provides support for a UI setting to enable/disable the Android system geolocation provider."
+    reason: "To provide users with the ability to enable or disable the Android system geolocation provider."
+    effect: "Users are provided with more control and can decide which geolocation provider they would like to use."
+    category: "User Interface"
+
   - file: "gecko-ironfox-settings-support-xpinstall.patch"
     name: "Gecko - IronFox Settings: XPInstall"
     description: "Provides support for a UI setting to enable/disable the installation of add-ons."

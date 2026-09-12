@@ -31,6 +31,10 @@ export const GeckoSettingsBridge = {
       setAccessibilityEnabled(value);
     } else if (pref == "browser.ironfox.fenix.ipv6Enabled") {
       lazy.IFPrefUtils.setAndLockBoolPref("network.dns.disableIPv6", !value);
+    } else if (pref == "browser.ironfox.fenix.geoProviderAndroidEnabled") {
+      setAndroidGeoProviderEnabled(value);
+    } else if (pref == "browser.ironfox.fenix.geoProviderNetworkEnabled") {
+      setNetworkGeoProviderEnabled(value);
     } else if (pref == "browser.ironfox.fenix.javascriptJitEnabled") {
       setJITEnabled(value);
     } else if (pref == "browser.ironfox.fenix.safeBrowsingEnabled") {
@@ -266,6 +270,24 @@ function setAccessibilityEnabled(value) {
 };
 
 /**
+ * Control the Android Geolocation Provider
+ *
+ * @param {boolean} value - Whether the provider should be enabled or disabled
+ */
+function setAndroidGeoProviderEnabled(value) {
+  lazy.IFPrefUtils.setAndLockBoolPref("browser.ironfox.geo.provider.use_android", value);
+
+  // If the provider is enabled, we don't want to lock the pref for the network location provider
+  // because users may prefer to enable/disable it directly
+  const setPref =
+    value === true
+      ? lazy.IFPrefUtils.setAndUnlockBoolPref
+      : lazy.IFPrefUtils.setAndLockBoolPref
+
+  setPref("geo.provider.use_mls", !value);
+};
+
+/**
  * Control JIT
  *
  * @param {boolean} value - Whether the JITs should be enabled or disabled
@@ -283,6 +305,28 @@ function setJITEnabled(value) {
   setPref("javascript.options.jithints", value);
   setPref("javascript.options.native_regexp", value);
   setPref("javascript.options.wasm_optimizingjit", value);
+};
+
+/**
+ * Control the Network Geolocation Provider
+ *
+ * @param {boolean} value - Whether the provider should be enabled or disabled
+ */
+function setNetworkGeoProviderEnabled(value) {
+  // Convert our value
+  const stringVal =
+    value === false
+      ? ""
+      : "https://api.beacondb.net/v1/geolocate"
+
+  // If the provider is enabled, the pref should be unlocked,
+  // because users may prefer to use a different MLS instance
+  const setPref =
+    value === true
+      ? lazy.IFPrefUtils.setAndUnlockStringPref
+      : lazy.IFPrefUtils.setAndLockStringPref
+
+  setPref("geo.provider.network.url", stringVal);
 };
 
 /**
@@ -534,6 +578,8 @@ function boolPrefHasUISetting(pref) {
     // Fenix
     "browser.cache.disk.enable",
     "browser.ironfox.fenix.accessibilityEnabled",
+    "browser.ironfox.fenix.geoProviderAndroidEnabled",
+    "browser.ironfox.fenix.geoProviderNetworkEnabled",
     "browser.ironfox.fenix.ipv6Enabled",
     "browser.ironfox.fenix.javascriptJitEnabled",
     "browser.ironfox.fenix.safeBrowsingEnabled",

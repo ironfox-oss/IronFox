@@ -43,6 +43,8 @@ object GeckoSettingsBridge {
     setTranslationsEnabled(context, engine)
     setIPv6Enabled(context, engine)
     setPDFjsDisabled(context, engine)
+    setAndroidGeoProviderEnabled(context, engine)
+    setNetworkGeoProviderEnabled(context, engine)
     setAutoplayBlockingPolicy(context, engine)
     setPreferredWebsiteAppearance(context, engine)
     setRefererXOriginPolicy(context, engine)
@@ -180,6 +182,16 @@ object GeckoSettingsBridge {
   fun setPDFjsDisabled(context: Context, engine: Engine) {
     val pdfjsDisabled = IronFoxPreferences.isPDFjsDisabled(context)
     setDefaultPref(engine, "pdfjs.disabled", pdfjsDisabled)
+  }
+
+  fun setAndroidGeoProviderEnabled(context: Context, engine: Engine) {
+    val androidGeoProviderEnabled = IronFoxPreferences.isAndroidGeoProviderEnabled(context)
+    setDefaultPref(engine, "browser.ironfox.fenix.geoProviderAndroidEnabled", androidGeoProviderEnabled)
+  }
+
+  fun setNetworkGeoProviderEnabled(context: Context, engine: Engine) {
+    val networkGeoProviderEnabled = IronFoxPreferences.isNetworkGeoProviderEnabled(context)
+    setDefaultPref(engine, "browser.ironfox.fenix.geoProviderNetworkEnabled", networkGeoProviderEnabled)
   }
 
   fun setAutoplayBlockingPolicy(context: Context, engine: Engine) {

@@ -44,6 +44,68 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
     super.onResume()
     showToolbar(getString(ironfoxR.string.if_preferences))
 
+    /*** Miscellaneous ***/
+
+    /**
+     * Indicates whether or not we should enable the Android Geolocation Provider
+     * Default: true
+     * Gecko preference(s) impacted:
+     *  browser.ironfox.geo.provider.use_android,
+     *  geo.provider.use_mls
+     */
+    val geoProviderAndroidEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_ironfox_geo_provider_android_enabled)
+
+    geoProviderAndroidEnabledPreference.isChecked = IronFoxPreferences.isAndroidGeoProviderEnabled(requireContext())
+    geoProviderAndroidEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, geoProviderAndroidEnabled ->
+      val context = requireContext()
+      val engine = requireComponents.core.engine
+
+      IronFoxPreferences.setAndroidGeoProviderEnabled(context, geoProviderAndroidEnabled)
+      GeckoSettingsBridge.setAndroidGeoProviderEnabled(context, engine)
+
+      Toast.makeText(
+        context,
+        getString(fenixR.string.quit_application),
+        Toast.LENGTH_LONG,
+      ).show()
+      Handler(Looper.getMainLooper()).postDelayed(
+        {
+          exitProcess(0)
+        },
+        DEFAULT_EXIT_DELAY,
+      )
+      true
+    }
+
+    /**
+     * Indicates whether or not we should enable the Network Geolocation Provider
+     * Default: true
+     * Gecko preference(s) impacted: geo.provider.network.url
+     */
+    val geoProviderNetworkEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_ironfox_geo_provider_network_enabled)
+
+    geoProviderNetworkEnabledPreference.isChecked = IronFoxPreferences.isNetworkGeoProviderEnabled(requireContext())
+    geoProviderNetworkEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, geoProviderNetworkEnabled ->
+      val context = requireContext()
+      val engine = requireComponents.core.engine
+
+      IronFoxPreferences.setNetworkGeoProviderEnabled(context, geoProviderNetworkEnabled)
+      GeckoSettingsBridge.setNetworkGeoProviderEnabled(context, engine)
+
+      Toast.makeText(
+        context,
+        getString(fenixR.string.quit_application),
+        Toast.LENGTH_LONG,
+      ).show()
+      Handler(Looper.getMainLooper()).postDelayed(
+        {
+          exitProcess(0)
+        },
+        DEFAULT_EXIT_DELAY,
+      )
+      true
+    }
+
     /*** Privacy and Security ***/
 
     /**

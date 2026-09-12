@@ -38,6 +38,10 @@
   <string name="pref_key_fpp_overrides_ironfox_enabled" translatable="false">pref_key_fpp_overrides_ironfox_enabled</string>
   <string name="pref_key_fpp_overrides_mozilla_enabled" translatable="false">pref_key_fpp_overrides_mozilla_enabled</string>
 
+  <!-- Geolocation -->
+  <string name="pref_key_ironfox_geo_provider_android_enabled" translatable="false">pref_key_ironfox_geo_provider_android_enabled</string>
+  <string name="pref_key_ironfox_geo_provider_network_enabled" translatable="false">pref_key_ironfox_geo_provider_network_enabled</string>
+
   <!-- IPv6 -->
   <string name="pref_key_ipv6_enabled" translatable="false">pref_key_ipv6_enabled</string>
 

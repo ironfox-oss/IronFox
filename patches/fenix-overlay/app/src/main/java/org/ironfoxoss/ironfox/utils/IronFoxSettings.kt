@@ -106,6 +106,18 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
       default = true,
     )
 
+  var geoProviderAndroidEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_geo_provider_android_enabled),
+      default = true,
+    )
+
+  var geoProviderNetworkEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_geo_provider_network_enabled),
+      default = true,
+    )
+
   var ipv6Enabled by
     booleanPreference(
       key = context.getPreferenceKey(R.string.pref_key_ipv6_enabled),

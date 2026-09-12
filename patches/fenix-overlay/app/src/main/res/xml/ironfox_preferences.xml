@@ -68,6 +68,30 @@
       android:title="@string/preference_prefers_browser_color_scheme" />
   </androidx.preference.PreferenceCategory>
 
+  <!-- Geolocation -->
+  <androidx.preference.PreferenceCategory
+    android:layout="@layout/preference_category_no_icon_style"
+    android:selectable="false"
+    android:title="@string/if_preferences_geo"
+    app:iconSpaceReserved="false">
+
+    <!-- Whether we should enable the Android Geolocation Provider -->
+    <androidx.preference.SwitchPreference
+      android:defaultValue="true"
+      android:key="@string/pref_key_ironfox_geo_provider_android_enabled"
+      android:summary="@string/preference_ironfox_geo_provider_android_summary"
+      android:title="@string/preference_ironfox_geo_provider_android_enabled"
+      app:iconSpaceReserved="false" />
+
+    <!-- Whether we should enable the Network Geolocation Provider -->
+    <androidx.preference.SwitchPreference
+      android:defaultValue="true"
+      android:key="@string/pref_key_ironfox_geo_provider_network_enabled"
+      android:summary="@string/preference_ironfox_geo_provider_network_summary"
+      android:title="@string/preference_ironfox_geo_provider_network_enabled"
+      app:iconSpaceReserved="false" />
+  </androidx.preference.PreferenceCategory>
+
   <!-- Privacy and Security -->
   <androidx.preference.PreferenceCategory
     android:layout="@layout/preference_category_no_icon_style"

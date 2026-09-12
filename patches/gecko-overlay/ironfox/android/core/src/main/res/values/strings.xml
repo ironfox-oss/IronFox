@@ -16,6 +16,7 @@
   <!-- IronFox Settings -->
   <string name="if_title" translatable="false">IronFox</string>
   <string name="if_preferences">IronFox settings</string>
+  <string name="if_preferences_geo">Geolocation</string>
   <string name="if_preferences_misc">Miscellaneous</string>
   <string name="if_preferences_privacy">Privacy</string>
   <string name="if_preferences_privacy_security">Privacy and security</string>
@@ -46,6 +47,12 @@
   <string name="preference_fpp_overrides_ironfox_summary">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from IronFox - Changing this setting will restart your browser</string>
   <string name="preference_fpp_overrides_mozilla_enabled">Enable fingerprinting protection overrides from Mozilla</string>
   <string name="preference_fpp_overrides_mozilla_summary">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from Mozilla - Changing this setting will restart your browser</string>
+
+  <!-- Geolocation -->
+  <string name="preference_ironfox_geo_provider_android_enabled">Enable the Android Geolocation Provider</string>
+  <string name="preference_ironfox_geo_provider_android_summary">If enabled, IronFox will attempt to use Android’s OS location services to provide your geolocation to websites (if you grant the site permission) - Changing this setting will restart your browser</string>
+  <string name="preference_ironfox_geo_provider_network_enabled">Enable the Network Geolocation Provider</string>
+  <string name="preference_ironfox_geo_provider_network_summary">If enabled and the Android Geolocation Provider is unavailable, IronFox will use the BeaconDB network geolocation service to provide your location to websites (if you grant the site permission) - Changing this setting will restart your browser</string>
 
   <!-- IPv6 -->
   <string name="preference_ipv6_enabled">Enable IPv6 network connectivity</string>
