@@ -1884,6 +1884,14 @@ fi
 readonly IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE
 export IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE
 
+## Timestamp we should use to set the version for IronFox Nightly (if overriding it is desired)
+readonly IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE_DEFAULT='null'
+if [[ -z "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE+x}" ]]; then
+  IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE="${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE_DEFAULT}"
+fi
+readonly IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE
+export IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE
+
 ## Timestamp we should use to set the version for our local IronFox Core substitution (if overriding it is desired)
 readonly IRONFOX_CORE_TIMESTAMP_OVERRIDE_DEFAULT='null'
 if [[ -z "${IRONFOX_CORE_TIMESTAMP_OVERRIDE+x}" ]]; then

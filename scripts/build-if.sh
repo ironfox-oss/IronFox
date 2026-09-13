@@ -950,13 +950,33 @@ function prep_fenix() {
   fi
   "${IRONFOX_CP}" -rf "${IRONFOX_TEMP}/fenix/app/src/main/res/" "${IRONFOX_FENIX}/app/src/main/res/"
 
+  # Set-up the app ID, version name and version code
   if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-    "${IRONFOX_SED}" -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|g' "${IRONFOX_FENIX}/app/build.gradle"
-    "${IRONFOX_SED}" -i -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
+    local -r fenix_app_id_suffix='ironfox'
+    local -r fenix_version="${IRONFOX_VERSION}"
   else
-    "${IRONFOX_SED}" -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox.nightly"|g' "${IRONFOX_FENIX}/app/build.gradle"
-    "${IRONFOX_SED}" -i -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox.nightly/' "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
+    local -r fenix_app_id_suffix='ironfox.nightly'
+
+    # Set our version timestamp
+    if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" != 'null' ]]; then
+      local -r fenix_version_timestamp="${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
+    else
+      local -r fenix_version_timestamp="$("${IRONFOX_DATE}" "+%s%N")"
+    fi
+
+    local -r fenix_version="${IRONFOX_VERSION}.${fenix_version_timestamp}"
   fi
+  local -r fenix_app_id="org.ironfoxoss.${fenix_app_id_suffix}"
+
+  # shellcheck disable=SC2140
+  "${IRONFOX_SED}" -i \
+    -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|g' \
+    -e "s|applicationIdSuffix \"".firefox\""|applicationIdSuffix \"".${fenix_app_id_suffix}\""|g" \
+    -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|g' \
+    -e "s/Config.releaseVersionName(project)/'${fenix_version}'/" \
+    "${IRONFOX_FENIX}/app/build.gradle"
+
+  "${IRONFOX_SED}" -i -e "/android:targetPackage/s/org.mozilla.firefox/${fenix_app_id}/" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
 
   "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" ${IRONFOX_FENIX}/app/src/*/res/values*/*strings.xml
 

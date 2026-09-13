@@ -503,13 +503,6 @@ function prepare_fenix() {
 
   pushd "${IRONFOX_FENIX}"
 
-  # Set-up the app ID, version name and version code
-  "${IRONFOX_SED}" -i \
-    -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|' \
-    -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
-    -e "s/Config.releaseVersionName(project)/'${IRONFOX_VERSION}'/" \
-    "${IRONFOX_FENIX}/app/build.gradle"
-
   # Prevent Gradle from incorrectly reporting that telemetry is enabled
   "${IRONFOX_SED}" -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' "${IRONFOX_FENIX}/app/build.gradle"
 
