@@ -20,4 +20,24 @@ index fb3fb7211084..e98044f2faed 100644
              translationsBinding.set(
                  feature = TranslationsBinding(
                      browserStore = rootView.context.components.core.store,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/settings/TranslationSettings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/settings/TranslationSettings.kt
+index 9c560fdec7faf..e09c19e6449bb 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/settings/TranslationSettings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/settings/TranslationSettings.kt
+@@ -70,13 +70,13 @@ fun TranslationSettings(
+ 
+     Surface {
+         LazyColumn {
+-            item {
++/*            item {
+                 TranslationsControlSwitchItem(
+                     enabled = state.translationsEnabled,
+                     onFeatureControlToggled = onFeatureControlToggled,
+                     onNavigateToUrl = onNavigateToUrl,
+                 )
+-            }
++            } */
+ 
+             items(state.switchItems) { item: TranslationSwitchItem ->
+                 SwitchListItem(
 -- 

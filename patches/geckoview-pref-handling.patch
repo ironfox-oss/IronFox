@@ -111,4 +111,28 @@ index 6996d0f77a2c5..e58be9c63d5b5 100644
                  break;
                default:
                  throw new Error(
+diff --git a/mobile/shared/modules/geckoview/GeckoViewAIFeatures.sys.mjs b/mobile/shared/modules/geckoview/GeckoViewAIFeatures.sys.mjs
+index 4382359c793b..12b4ce8da05c 100644
+--- a/mobile/shared/modules/geckoview/GeckoViewAIFeatures.sys.mjs
++++ b/mobile/shared/modules/geckoview/GeckoViewAIFeatures.sys.mjs
+@@ -14,7 +14,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+  *
+  * Bug 2020367: Ideally, this list will be generated or centralized by toolkit in the future.
+  */
+-const ANDROID_AI_FEATURE_IDS = ["translations"];
++const ANDROID_AI_FEATURE_IDS = [];
+ 
+ /**
+  * Get an {@link AIFeature} object for a feature id.
+@@ -24,8 +24,8 @@ const ANDROID_AI_FEATURE_IDS = ["translations"];
+  */
+ function getAIFeature(featureId) {
+   switch (featureId) {
+-    case "translations":
+-      return lazy.TranslationsFeature;
++//    case "translations":
++//      return lazy.TranslationsFeature;
+     default:
+       return null;
+   }
 -- 
