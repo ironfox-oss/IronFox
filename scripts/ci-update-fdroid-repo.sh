@@ -16,6 +16,12 @@ if [[ "${IRONFOX_CI}" != 1 ]]; then
   exit 1
 fi
 
+# Ensure we're on the production or dev branch
+if [[ "${IRONFOX_CURRENT_BRANCH}" != "${IRONFOX_DEV_BRANCH}" ]] && [[ "${IRONFOX_CURRENT_BRANCH}" != "${IRONFOX_PROD_BRANCH}" ]]; then
+  echo_red_text "ERROR: Unable to publish release to F-Droid on branch: '${IRONFOX_CURRENT_BRANCH}'!"
+  exit 1
+fi
+
 # Get dependencies
 echo_red_text 'CI - Downloading dependencies...'
 /bin/sudo /bin/dnf update -y --refresh || exit 1

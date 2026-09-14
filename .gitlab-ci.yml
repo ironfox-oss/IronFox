@@ -88,7 +88,7 @@ update-fdroid-repo:
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
-    - if: $CI_COMMIT_BRANCH == $IRONFOX_PROD_BRANCH
+    - if: $CI_COMMIT_BRANCH == $IRONFOX_DEV_BRANCH || $CI_COMMIT_BRANCH == $IRONFOX_PROD_BRANCH
   tags:
     - saas-linux-2xlarge-amd64
   variables:

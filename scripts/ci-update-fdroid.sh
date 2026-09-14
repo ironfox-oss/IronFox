@@ -29,7 +29,13 @@ fi
 # Constants
 
 # Base releases URL
-readonly IRONFOX_RELEASES_BASE_URL='https://releases.ironfoxoss.org/ironfox/releases'
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+  readonly IRONFOX_RELEASES_S3_PATH='releases'
+else
+  readonly IRONFOX_RELEASES_S3_PATH='nightly'
+fi
+
+readonly IRONFOX_RELEASES_BASE_URL="https://releases.ironfoxoss.org/ironfox/${IRONFOX_RELEASES_S3_PATH}"
 
 # fdroid repo
 readonly IRONFOX_FDROID_REPO_ROOT="${IRONFOX_EXTERNAL}/fdroid"
@@ -40,13 +46,29 @@ readonly IRONFOX_FDROID_REPO_PATH='ironfox-oss/fdroid'
 # fdroid-metadata repo
 readonly IRONFOX_FDROID_METADATA="${IRONFOX_FDROID_REPO_ROOT}/fdroid/metadata"
 readonly IRONFOX_FDROID_METADATA_BRANCH='main'
+
 readonly IRONFOX_FDROID_METADATA_FILE_NAME='org.ironfoxoss.ironfox.yml'
 readonly IRONFOX_FDROID_METADATA_FILE_PATH="${IRONFOX_FDROID_METADATA}/${IRONFOX_FDROID_METADATA_FILE_NAME}"
+
+readonly IRONFOX_FDROID_METADATA_NIGHTLY_FILE_NAME='org.ironfoxoss.ironfox.nightly.yml'
+readonly IRONFOX_FDROID_METADATA_NIGHTLY_FILE_PATH="${IRONFOX_FDROID_METADATA}/${IRONFOX_FDROID_METADATA_NIGHTLY_FILE_NAME}"
 
 # Git
 readonly IRONFOX_GIT_EMAIL='ci@ironfoxoss.org'
 readonly IRONFOX_GIT_NAME='IronFox CI'
 readonly IRONFOX_GIT_USERNAME='ironfox-ci'
+
+# APK version
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+  readonly IRONFOX_APK_VERSION="${IRONFOX_VERSION}"
+else
+  if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "null" ]] || [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "" ]]; then
+    echo_red_text "ERROR: Missing IronFox Nightly timestamp! Please set 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE'."
+    exit 1
+  else
+    readonly IRONFOX_APK_VERSION="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
+  fi
+fi
 
 # Configure Git
 function configure_git() {
@@ -68,7 +90,13 @@ function download_release() {
   local -r version="$1"
   local -r arch="$2"
   local -r output_dir="$3"
-  local -r target_apk="ironfox-${version}-${arch}.apk"
+
+  if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+    local -r target_apk="ironfox-${version}-${arch}.apk"
+  else
+    local -r target_apk="ironfox-${IRONFOX_CHANNEL}-${version}-${arch}.apk"
+  fi
+
   local -r target_expected_sha512sum="${target_apk}-sha512sum.txt"
   local -r target_expected_sha512sum_url="${IRONFOX_RELEASES_BASE_URL}/${version}/${arch}/${target_expected_sha512sum}"
   local -r target_apk_url="${IRONFOX_RELEASES_BASE_URL}/${version}/${arch}/${target_apk}"
@@ -102,13 +130,13 @@ function download_release() {
 # Function to download all APKs for a desired release
 function download_releases() {
   # ARM64
-  download_release "${IRONFOX_VERSION}" 'arm64-v8a' "${IRONFOX_FDROID_REPO}"
+  download_release "${IRONFOX_APK_VERSION}" 'arm64-v8a' "${IRONFOX_FDROID_REPO}"
 
   # ARM
-  download_release "${IRONFOX_VERSION}" 'armeabi-v7a' "${IRONFOX_FDROID_REPO}"
+  download_release "${IRONFOX_APK_VERSION}" 'armeabi-v7a' "${IRONFOX_FDROID_REPO}"
 
   # x86_64
-  download_release "${IRONFOX_VERSION}" 'x86_64' "${IRONFOX_FDROID_REPO}"
+  download_release "${IRONFOX_APK_VERSION}" 'x86_64' "${IRONFOX_FDROID_REPO}"
 }
 
 # Configure Git
@@ -128,24 +156,30 @@ download_releases
 
 # Because we now upload releases to releases.ironfoxoss.org, the F-Droid repo doesn't need to store them all anymore
 # So to improve performance and reduce size, we can keep only the last 3 releases
+"${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
+download "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" "${IRONFOX_TEMP}/previous_release.txt"
+download "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" "${IRONFOX_TEMP}/previous_previous_release.txt"
 
-download "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" "${IRONFOX_ROOT}/previous_release.txt"
-download "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" "${IRONFOX_ROOT}/previous_previous_release.txt"
+readonly previous_version=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/previous_release.txt" | "${IRONFOX_XARGS}")
+readonly previous_previous_version=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/previous_previous_release.txt" | "${IRONFOX_XARGS}")
 
-readonly previous_version=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_release.txt" | "${IRONFOX_XARGS}")
-readonly previous_previous_version=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_previous_release.txt" | "${IRONFOX_XARGS}")
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+  readonly if_apk_name='ironfox'
+else
+  readonly if_apk_name="ironfox-${IRONFOX_CHANNEL}"
+fi
 
-readonly current_apk_arm64="ironfox-${IRONFOX_VERSION}-arm64-v8a.apk"
-readonly previous_apk_arm64="ironfox-${previous_version}-arm64-v8a.apk"
-readonly previous_previous_apk_arm64="ironfox-${previous_previous_version}-arm64-v8a.apk"
+readonly current_apk_arm64="${if_apk_name}-${IRONFOX_APK_VERSION}-arm64-v8a.apk"
+readonly previous_apk_arm64="${if_apk_name}-${previous_version}-arm64-v8a.apk"
+readonly previous_previous_apk_arm64="${if_apk_name}-${previous_previous_version}-arm64-v8a.apk"
 
-readonly current_apk_arm="ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk"
-readonly previous_apk_arm="ironfox-${previous_version}-armeabi-v7a.apk"
-readonly previous_previous_apk_arm="ironfox-${previous_previous_version}-armeabi-v7a.apk"
+readonly current_apk_arm="${if_apk_name}-${IRONFOX_APK_VERSION}-armeabi-v7a.apk"
+readonly previous_apk_arm="${if_apk_name}-${previous_version}-armeabi-v7a.apk"
+readonly previous_previous_apk_arm="${if_apk_name}-${previous_previous_version}-armeabi-v7a.apk"
 
-readonly current_apk_x86_64="ironfox-${IRONFOX_VERSION}-x86_64.apk"
-readonly previous_apk_x86_64="ironfox-${previous_version}-x86_64.apk"
-readonly previous_previous_apk_x86_64="ironfox-${previous_previous_version}-x86_64.apk"
+readonly current_apk_x86_64="${if_apk_name}-${IRONFOX_APK_VERSION}-x86_64.apk"
+readonly previous_apk_x86_64="${if_apk_name}-${previous_version}-x86_64.apk"
+readonly previous_previous_apk_x86_64="${if_apk_name}-${previous_previous_version}-x86_64.apk"
 
 for apk in "${IRONFOX_FDROID_REPO}"/*.apk; do
   apk_basename=$("${IRONFOX_BASENAME}" "${apk}")
@@ -161,9 +195,15 @@ done
 source "${IRONFOX_PYENV}"
 IFS=":" read -r vercode vername <<< "$("${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/get_latest_version.py" $("${IRONFOX_LS}" "${IRONFOX_FDROID_REPO}"/*.apk))"
 
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+  readonly if_fdroid_metadata_file="${IRONFOX_FDROID_METADATA_FILE_PATH}"
+else
+  readonly if_fdroid_metadata_file="${IRONFOX_FDROID_METADATA_NIGHTLY_FILE_PATH}"
+fi
+
 "${IRONFOX_SED}" -i \
   -e "s/CurrentVersion: .*/CurrentVersion: \"v${vername}\"/" \
-  -e "s/CurrentVersionCode: .*/CurrentVersionCode: ${vercode}/" "${IRONFOX_FDROID_METADATA_FILE_PATH}"
+  -e "s/CurrentVersionCode: .*/CurrentVersionCode: ${vercode}/" "${if_fdroid_metadata_file}"
 
 pushd "${IRONFOX_FDROID_METADATA}" || {
   echo_red_text "ERROR: Unable to pushd into '${IRONFOX_FDROID_METADATA}'"
@@ -171,8 +211,8 @@ pushd "${IRONFOX_FDROID_METADATA}" || {
 }
 
 # Update metadata repository
-"${IRONFOX_GIT}" add "${IRONFOX_FDROID_METADATA_FILE_NAME}"
-"${IRONFOX_GIT}" commit -m "feat: update for release ${IRONFOX_VERSION}" || echo 'Metadata repo already up to date! Not committing anything...'
+"${IRONFOX_GIT}" add "${IRONFOX_FDROID_METADATA_FILE_NAME}" "${IRONFOX_FDROID_METADATA_NIGHTLY_FILE_NAME}"
+"${IRONFOX_GIT}" commit -m "feat: update for IronFox ${IRONFOX_CHANNEL}: ${IRONFOX_APK_VERSION}" || echo 'Metadata repo already up to date! Not committing anything...'
 "${IRONFOX_GIT}" push origin "HEAD:${IRONFOX_FDROID_METADATA_BRANCH}" || echo 'Metadata repo already up to date! Not pushing anything...'
 
 popd || {
@@ -182,7 +222,7 @@ popd || {
 
 # Update F-Droid repository
 "${IRONFOX_GIT}" add "${IRONFOX_FDROID_REPO}" "${IRONFOX_FDROID_METADATA}"
-"${IRONFOX_GIT}" commit -m "feat: update for release ${IRONFOX_VERSION}"
+"${IRONFOX_GIT}" commit -m "feat: update for IronFox ${IRONFOX_CHANNEL}: ${IRONFOX_APK_VERSION}"
 "${IRONFOX_GIT}" push origin "HEAD:${IRONFOX_FDROID_REPO_BRANCH}"
 
 popd # ignore error
