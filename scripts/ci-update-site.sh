@@ -31,7 +31,12 @@ fi
 readonly IRONFOX_BASE_URL='https://ironfoxoss.org'
 
 # Base releases URL
-readonly IRONFOX_RELEASES_BASE_URL='https://releases.ironfoxoss.org/ironfox/releases'
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+  readonly IRONFOX_RELEASES_S3_PATH='releases'
+else
+  readonly IRONFOX_RELEASES_S3_PATH='nightly'
+fi
+readonly IRONFOX_RELEASES_BASE_URL="https://releases.ironfoxoss.org/ironfox/${IRONFOX_RELEASES_S3_PATH}"
 
 # Git
 readonly IRONFOX_GIT_EMAIL='ci@ironfoxoss.org'
@@ -48,6 +53,18 @@ readonly IRONFOX_RELEASE_PAGE_URL="${IRONFOX_BASE_URL}/releases"
 
 # RSS email address
 readonly IRONFOX_RSS_EMAIL='contact@ironfoxoss.org'
+
+# Release version
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+  readonly IRONFOX_RELEASE_VERSION="${IRONFOX_VERSION}"
+else
+  if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "null" ]] || [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "" ]]; then
+    echo_red_text "ERROR: Missing IronFox Nightly timestamp! Please set 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE'."
+    exit 1
+  else
+    readonly IRONFOX_RELEASE_VERSION="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
+  fi
+fi
 
 # Set our external CI environment variables
 
@@ -85,59 +102,68 @@ pushd "${IRONFOX_SITE_REPO}"
 source "${IRONFOX_PYENV}" || exit 1
 "${IRONFOX_PYTHON}" ./scripts/gen_patch_pages.py "${IRONFOX_SCRIPTS}/patches.yaml"
 
-if [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_PROD_BRANCH}" ]]; then
-  # Update version name
-  "${IRONFOX_SED}" -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_VERSION}\";/g" \
-    ./src/version.ts
+if [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_DEV_BRANCH}" ]] || [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_PROD_BRANCH}" ]]; then
+  if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+    # Update version name
+    "${IRONFOX_SED}" -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_RELEASE_VERSION}\";/g" \
+      ./src/version.ts
 
-  # Update release notes
-  download "${IRONFOX_RELEASES_BASE_URL}/${IRONFOX_VERSION}/ironfox-${IRONFOX_VERSION}-release-notes.md" "${IRONFOX_VERSION}-temp.md"
+    # Update release notes
+    download "${IRONFOX_RELEASES_BASE_URL}/${IRONFOX_RELEASE_VERSION}/ironfox-${IRONFOX_RELEASE_VERSION}-release-notes.md" "${IRONFOX_RELEASE_VERSION}-temp.md"
 
-  "${IRONFOX_CP}" -f ./release-notes.md ./release-notes-temp.md
-  "${IRONFOX_RM}" -f ./release-notes.md
+    "${IRONFOX_CP}" -f ./release-notes.md ./release-notes-temp.md
+    "${IRONFOX_RM}" -f ./release-notes.md
 
-  "${IRONFOX_SED}" -i "s|# IronFox ${IRONFOX_VERSION}||g" "${IRONFOX_VERSION}-temp.md"
-  {
-    echo "<div id='${IRONFOX_VERSION}'>"
-    echo "  <h1>${IRONFOX_VERSION}</h1>"
-    echo "</div>"
-    "${IRONFOX_CAT}" "${IRONFOX_VERSION}-temp.md"
-    echo ''
-  } >> "${IRONFOX_VERSION}.md"
-  "${IRONFOX_RM}" -f "${IRONFOX_VERSION}-temp.md"
+    "${IRONFOX_SED}" -i "s|# IronFox ${IRONFOX_RELEASE_VERSION}||g" "${IRONFOX_RELEASE_VERSION}-temp.md"
+    {
+      echo "<div id='${IRONFOX_RELEASE_VERSION}'>"
+      echo "  <h1>${IRONFOX_RELEASE_VERSION}</h1>"
+      echo "</div>"
+      "${IRONFOX_CAT}" "${IRONFOX_RELEASE_VERSION}-temp.md"
+      echo ''
+    } >> "${IRONFOX_RELEASE_VERSION}.md"
+    "${IRONFOX_RM}" -f "${IRONFOX_RELEASE_VERSION}-temp.md"
 
-  "${IRONFOX_CAT}" "${IRONFOX_VERSION}.md" ./release-notes-temp.md > ./release-notes.md
-  "${IRONFOX_RM}" -f "${IRONFOX_VERSION}.md"
-  "${IRONFOX_RM}" -f ./release-notes-temp.md
+    "${IRONFOX_CAT}" "${IRONFOX_RELEASE_VERSION}.md" ./release-notes-temp.md > ./release-notes.md
+    "${IRONFOX_RM}" -f "${IRONFOX_RELEASE_VERSION}.md"
+    "${IRONFOX_RM}" -f ./release-notes-temp.md
 
-  "${IRONFOX_RM}" -f ./src/content/docs/releases.mdx
-  {
-    echo '---'
-    echo 'title: IronFox releases'
-    echo '---'
-    echo ''
-    echo 'import { IRONFOX_VERSION } from "../../version.ts";'
-    echo 'import MarkdownLayout from "../../layouts/MarkdownLayout.astro";'
-    echo ''
-    echo '<MarkdownLayout>'
-    echo ''
-    echo '> Latest release: <a href={`https://ironfoxoss.org/releases/#${IRONFOX_VERSION}`} rel="noopener noreferrer me">{IRONFOX_VERSION}</a>'
-    echo ''
-    "${IRONFOX_CAT}" ./release-notes.md
-    echo '</MarkdownLayout>'
-  } >> ./src/content/docs/releases.mdx
+    "${IRONFOX_RM}" -f ./src/content/docs/releases.mdx
+    {
+      echo '---'
+      echo 'title: IronFox releases'
+      echo '---'
+      echo ''
+      echo 'import { IRONFOX_VERSION } from "../../version.ts";'
+      echo 'import MarkdownLayout from "../../layouts/MarkdownLayout.astro";'
+      echo ''
+      echo '<MarkdownLayout>'
+      echo ''
+      echo '> Latest release: <a href={`https://ironfoxoss.org/releases/#${IRONFOX_VERSION}`} rel="noopener noreferrer me">{IRONFOX_VERSION}</a>'
+      echo ''
+      "${IRONFOX_CAT}" ./release-notes.md
+      echo '</MarkdownLayout>'
+    } >> ./src/content/docs/releases.mdx
+  fi
 
   # Update RSS
-  "${IRONFOX_RM}" -f ./public/releases/rss.xml
+  if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+    readonly if_rss_path='releases'
+  else
+    readonly if_rss_path='nightly'
+  fi
+  "${IRONFOX_RM}" -f ./public/"${if_rss_path}"/rss.xml
+  "${IRONFOX_MKDIR}" -p ./public/"${if_rss_path}"
 
   # The RSS feed only needs to include the last 3 releases
-  download "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" "${IRONFOX_ROOT}/previous_release.txt"
-  download "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" "${IRONFOX_ROOT}/previous_previous_release.txt"
+  "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
+  download "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" "${IRONFOX_TEMP}/previous_release.txt"
+  download "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" "${IRONFOX_TEMP}/previous_previous_release.txt"
 
-  readonly IRONFOX_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_release.txt" | "${IRONFOX_XARGS}")
-  readonly IRONFOX_PREVIOUS_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_ROOT}/previous_previous_release.txt" | "${IRONFOX_XARGS}")
+  readonly IRONFOX_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/previous_release.txt" | "${IRONFOX_XARGS}")
+  readonly IRONFOX_PREVIOUS_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/previous_previous_release.txt" | "${IRONFOX_XARGS}")
 
-  for xml in ./rss/releases/*.xml; do
+  for xml in ./rss/"${if_rss_path}"/*.xml; do
     xml_basename=$("${IRONFOX_BASENAME}" "${xml}")
     if [[ "${xml_basename}" != "${IRONFOX_PREVIOUS_VERSION}.xml" ]] &&
       [[ "${xml_basename}" != "${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml" ]]; then
@@ -154,30 +180,30 @@ if [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_PROD_BRANCH}" ]]; then
 
   {
     echo '    <item>'
-    echo "      <title>IronFox ${IRONFOX_VERSION}</title>"
-    echo "      <link>${IRONFOX_RELEASE_PAGE_URL}/#${IRONFOX_VERSION}</link>"
-    echo "      <guid isPermaLink='true'>${IRONFOX_RELEASE_PAGE_URL}/#${IRONFOX_VERSION}</guid>"
+    echo "      <title>IronFox ${IRONFOX_RELEASE_VERSION}</title>"
+    echo "      <link>${IRONFOX_RELEASE_PAGE_URL}/#${IRONFOX_RELEASE_VERSION}</link>"
+    echo "      <guid isPermaLink='true'>${IRONFOX_RELEASE_PAGE_URL}/#${IRONFOX_RELEASE_VERSION}</guid>"
     echo "      <pubDate>${IRONFOX_RSS_DATE} GMT</pubDate>"
     echo "      <author>${IRONFOX_RSS_EMAIL}</author>"
     echo "      <enclosure url='${IRONFOX_BASE_URL}/ironfox.png' width='604' height='599' length='24128' type='image/png'/>"
     echo "    </item>"
-  } >> ./rss/releases/"${IRONFOX_VERSION}.xml"
+  } >> ./rss/"${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml"
 
   {
-    "${IRONFOX_CAT}" ./templates/releases.rss.xml
-    "${IRONFOX_CAT}" ./rss/releases/"${IRONFOX_VERSION}.xml"
+    "${IRONFOX_CAT}" ./templates/"${if_rss_path}.rss.xml"
+    "${IRONFOX_CAT}" ./rss/"${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml"
 
-    if [[ -f ./rss/releases/"${IRONFOX_PREVIOUS_VERSION}.xml" ]]; then
-      "${IRONFOX_CAT}" ./rss/releases/"${IRONFOX_PREVIOUS_VERSION}.xml"
+    if [[ -f ./rss/"${if_rss_path}/${IRONFOX_PREVIOUS_VERSION}.xml" ]]; then
+      "${IRONFOX_CAT}" ./rss/"${if_rss_path}/${IRONFOX_PREVIOUS_VERSION}.xml"
     fi
 
-    if [[ -f ./rss/releases/"${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml" ]]; then
-      "${IRONFOX_CAT}" ./rss/releases/"${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml"
+    if [[ -f ./rss/"${if_rss_path}/${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml" ]]; then
+      "${IRONFOX_CAT}" ./rss/"${if_rss_path}/${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml"
     fi
 
     echo '  </channel>'
     echo '</rss>'
-  } >> ./public/releases/rss.xml
+  } >> ./public/"${if_rss_path}"/rss.xml
 fi
 
 # Commit changes
