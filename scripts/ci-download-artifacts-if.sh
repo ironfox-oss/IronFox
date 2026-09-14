@@ -158,7 +158,7 @@ function download_artifact() {
       echo_red_text "ERROR: Missing IronFox Nightly timestamp! Please set 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE'."
       exit 1
     else
-      local -r if_version="${IRONFOX_NIGHTLY_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
+      local -r if_version="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
     fi
   fi
 
