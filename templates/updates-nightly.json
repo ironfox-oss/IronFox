@@ -1,0 +1,26 @@
+{
+  "org.ironfoxoss.ironfox.nightly": {
+    "version": "{IRONFOX_NIGHTLY_VERSION}",
+    "release-notes": "https://gitlab.com/ironfox-oss/IronFox/-/tree/{IRONFOX_CI_COMMIT}",
+    "arm64-v8a": {
+      "sha512sum": "{IRONFOX_ARM64_SHA512SUM}",
+      "url": "https://releases.ironfoxoss.org/ironfox/nightly/{IRONFOX_NIGHTLY_VERSION}/arm64-v8a/ironfox-nightly-{IRONFOX_NIGHTLY_VERSION}-arm64-v8a.apk"
+    },
+    "armeabi-v7a": {
+      "sha512sum": "{IRONFOX_ARM_SHA512SUM}",
+      "url": "https://releases.ironfoxoss.org/ironfox/nightly/{IRONFOX_NIGHTLY_VERSION}/armeabi-v7a/ironfox-nightly-{IRONFOX_NIGHTLY_VERSION}-armeabi-v7a.apk"
+    },
+    "x86_64": {
+      "sha512sum": "{IRONFOX_X86_64_SHA512SUM}",
+      "url": "https://releases.ironfoxoss.org/ironfox/nightly/{IRONFOX_NIGHTLY_VERSION}/x86_64/ironfox-nightly-{IRONFOX_NIGHTLY_VERSION}-x86_64.apk"
+    },
+    "universal": {
+      "sha512sum": "{IRONFOX_UNIVERSAL_SHA512SUM}",
+      "url": "https://releases.ironfoxoss.org/ironfox/nightly/{IRONFOX_NIGHTLY_VERSION}/universal/ironfox-nightly-{IRONFOX_NIGHTLY_VERSION}-universal.apk"
+    },
+    "bundle": {
+      "sha512sum": "{IRONFOX_BUNDLE_SHA512SUM}",
+      "url": "https://releases.ironfoxoss.org/ironfox/nightly/{IRONFOX_NIGHTLY_VERSION}/bundle/ironfox-nightly-{IRONFOX_NIGHTLY_VERSION}.apks"
+    }
+  }
+}

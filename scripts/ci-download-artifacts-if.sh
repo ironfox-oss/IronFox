@@ -151,18 +151,29 @@ function download_artifact() {
     exit 1
   fi
 
+  if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+    local -r if_version="${IRONFOX_VERSION}"
+  else
+    if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "null" ]] || [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "" ]]; then
+      echo_red_text "ERROR: Missing IronFox Nightly timestamp! Please set 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE'."
+      exit 1
+    else
+      local -r if_version="${IRONFOX_NIGHTLY_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
+    fi
+  fi
+
   if [[ "${artifact}" == 'fenix' ]]; then
     if [[ "${arch}" == 'bundle' ]]; then
       if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-        local -r target_file="ironfox-${IRONFOX_VERSION}.apks"
+        local -r target_file="ironfox-${if_version}.apks"
       else
-        local -r target_file="ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}.apks"
+        local -r target_file="ironfox-${IRONFOX_CHANNEL}-${if_version}.apks"
       fi
     else
       if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-        local -r target_file="ironfox-${IRONFOX_VERSION}-${arch_suffix}.apk"
+        local -r target_file="ironfox-${if_version}-${arch_suffix}.apk"
       else
-        local -r target_file="ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-${arch_suffix}.apk"
+        local -r target_file="ironfox-${IRONFOX_CHANNEL}-${if_version}-${arch_suffix}.apk"
       fi
     fi
   elif [[ "${artifact}" == 'geckoview' ]]; then

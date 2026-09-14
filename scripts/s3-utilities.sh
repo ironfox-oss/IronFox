@@ -311,3 +311,91 @@ function push_and_add_sha512sum() {
   # Create and push a SHA512sum for our file to S3 storage
   push_sha512sum "${file_in}" "${s3_path_out}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
 }
+
+# Delete a file from S3 storage
+function delete_file() {
+  function print_usage() {
+    echo "Usage: delete_file 'path/on/s3/to/file' '/path/to/s3_access_key_file' '/path/to/s3_bucket_name_file' '/path/to/s3_endpoint_file'
+      '/path/to/s3_secret_key_file'"
+  }
+
+  if [[ -z "${2+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the target path on S3 storage for the file to delete!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${3+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 access key!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${4+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 bucket name!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${5+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 endpoint!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${6+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 secret key!'
+    print_usage
+    exit 1
+  fi
+
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
+  # Ensure we have cat
+  verify_exec "${IRONFOX_CAT}" 'IRONFOX_CAT' || exit 1
+
+  # Ensure we have s3cmd
+  verify_exec "${IRONFOX_S3CMD}" 'IRONFOX_S3CMD' || exit 1
+
+  # Ensure we have xargs
+  verify_exec "${IRONFOX_XARGS}" 'IRONFOX_XARGS' || exit 1
+
+  # Ensure we can source our Python environment
+  verify_file "${IRONFOX_PYENV}" || exit 1
+
+  local -r s3_file="$1"
+  local -r s3_access_key_file="$2"
+  local -r s3_bucket_name_file="$3"
+  local -r s3_endpoint_file="$4"
+  local -r s3_secret_key_file="$5"
+  local -r s3_file_name="$("${IRONFOX_BASENAME}" "${s3_file}")"
+
+  # Ensure our secrets are valid
+  verify_file "${s3_access_key_file}" || exit 1
+  verify_file "${s3_bucket_name_file}" || exit 1
+  verify_file "${s3_endpoint_file}" || exit 1
+  verify_file "${s3_secret_key_file}" || exit 1
+
+  # Ensure we're not running with xtrace at this point...
+  set +x
+
+  local -r s3_access_key=$("${IRONFOX_CAT}" "${s3_access_key_file}" | "${IRONFOX_XARGS}")
+  local -r s3_bucket_name=$("${IRONFOX_CAT}" "${s3_bucket_name_file}" | "${IRONFOX_XARGS}")
+  local -r s3_endpoint=$("${IRONFOX_CAT}" "${s3_endpoint_file}" | "${IRONFOX_XARGS}")
+  local -r s3_secret_key=$("${IRONFOX_CAT}" "${s3_secret_key_file}" | "${IRONFOX_XARGS}")
+
+  local -r s3_target_path="s3://${s3_bucket_name}/${s3_file}"
+
+  echo_red_text "Deleting ${s3_file_name} from S3..."
+  source "${IRONFOX_PYENV}"
+  "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} rm "${s3_file}" \
+    --access_key="${s3_access_key}" \
+    --secret_key="${s3_secret_key}" \
+    --host="${s3_endpoint}" \
+    --host-bucket="${s3_endpoint}"
+  echo_green_text "SUCCESS: Deleted ${s3_file_name} from S3"
+
+  # Set verbosity
+  set_verbosity
+}

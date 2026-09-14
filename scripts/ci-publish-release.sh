@@ -19,6 +19,16 @@ if [[ "${IRONFOX_CI}" != 1 ]]; then
   exit 1
 fi
 
+# Set our target
+if [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_PROD_BRANCH}" ]]; then
+  readonly IRONFOX_PUBLISH_TARGET='release'
+elif [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_DEV_BRANCH}" ]]; then
+  readonly IRONFOX_PUBLISH_TARGET='nightly'
+else
+  echo_red_text "ERROR: Unable to publish release on branch: '${IRONFOX_CURRENT_BRANCH}'!"
+  exit 1
+fi
+
 # Get dependencies
 echo_red_text 'CI - Downloading dependencies...'
 /bin/sudo /bin/dnf update -y --refresh || exit 1
@@ -48,5 +58,5 @@ echo_green_text 'CI - SUCCESS: Downloaded artifacts.'
 # Publish our packages
 echo_red_text 'CI - Publishing packages...'
 set +x || exit 1
-/bin/bash "${IRONFOX_SCRIPTS}/ci-publish-packages.sh" || exit 1
+/bin/bash "${IRONFOX_SCRIPTS}/ci-publish-packages.sh" "${IRONFOX_PUBLISH_TARGET}" || exit 1
 echo_green_text 'CI - SUCCESS: Published packages.'

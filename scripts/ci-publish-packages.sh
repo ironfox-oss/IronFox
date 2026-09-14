@@ -28,6 +28,33 @@ if [[ "${IRONFOX_CI}" != 1 ]]; then
   exit 1
 fi
 
+# Ensure we have GNU awk
+verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || exit 1
+
+# Set-up target parameters
+if [[ -z "${1+x}" ]]; then
+  readonly target='release'
+else
+  readonly target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+fi
+
+IRONFOX_PUBLISH_NIGHTLY=0
+IRONFOX_PUBLISH_RELEASE=0
+if [[ "${target}" == 'nightly' ]]; then
+  # Publish IronFox Nightly
+  IRONFOX_PUBLISH_NIGHTLY=1
+elif [[ "${target}" == 'release' ]]; then
+  # Publish IronFox Release
+  IRONFOX_PUBLISH_RELEASE=1
+else
+  echo_red_text "ERROR: Invalid target: ${target}\n You must enter one of the following:"
+  echo 'Release: release (Default)'
+  echo 'Nightly: nightly'
+  exit 1
+fi
+readonly IRONFOX_PUBLISH_NIGHTLY
+readonly IRONFOX_PUBLISH_RELEASE
+
 # Verify secrets
 verify_file_with_env "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" 'IRONFOX_RELEASES_S3_ACCESS_KEY_FILE' || exit 1
 verify_file_with_env "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" 'IRONFOX_RELEASES_S3_BUCKET_NAME_FILE' || exit 1
@@ -49,18 +76,33 @@ readonly IRONFOX_GITLAB_GENERIC_PACKAGES_URL="${IRONFOX_GITLAB_API_URL}/projects
 # Final release notes file
 readonly IRONFOX_RELEASE_NOTES="${IRONFOX_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-release-notes.md"
 
+# Ensure we have the Nightly version
+if [[ "${IRONFOX_PUBLISH_NIGHTLY}" == 1 ]]; then
+  if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "null" ]] || [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "" ]]; then
+    echo_red_text "ERROR: Missing IronFox Nightly timestamp! Please set 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE'."
+    exit 1
+  else
+    readonly IRONFOX_NIGHTLY_VERSION="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
+  fi
+fi
+
 # Artifacts
-readonly IRONFOX_APK_ARM64="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-arm64-v8a.apk"
-readonly IRONFOX_APK_ARM="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk"
-readonly IRONFOX_APK_X86_64="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-x86_64.apk"
-readonly IRONFOX_APK_UNIVERSAL="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk"
-readonly IRONFOX_APKSET="${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks"
+if [[ "${IRONFOX_PUBLISH_RELEASE}" == 1 ]]; then
+  readonly IRONFOX_APK_VERSION="${IRONFOX_VERSION}"
+else
+  readonly IRONFOX_APK_VERSION="${IRONFOX_NIGHTLY_VERSION}"
+fi
+readonly IRONFOX_APK_ARM64="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_APK_VERSION}-arm64-v8a.apk"
+readonly IRONFOX_APK_ARM="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_APK_VERSION}-armeabi-v7a.apk"
+readonly IRONFOX_APK_X86_64="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_APK_VERSION}-x86_64.apk"
+readonly IRONFOX_APK_UNIVERSAL="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_APK_VERSION}-universal.apk"
+readonly IRONFOX_APKSET="${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_APK_VERSION}.apks"
 
 # Set our external CI environment variables
 
 ## Commit SHA
 if [[ -z "${CI_COMMIT_SHA+x}" ]]; then
-  echo_red_text 'ERROR: Missing commit SHA! Please set CI_COMMIT_SHA.'
+  echo_red_text "ERROR: Missing commit SHA! Please set 'CI_COMMIT_SHA'."
   exit 1
 else
   readonly IRONFOX_CI_COMMIT="${CI_COMMIT_SHA}"
@@ -68,7 +110,7 @@ fi
 
 ## Short commit SHA
 if [[ -z "${CI_COMMIT_SHORT_SHA+x}" ]]; then
-  echo_red_text 'ERROR: Missing short commit SHA! Please set CI_COMMIT_SHORT_SHA.'
+  echo_red_text "ERROR: Missing short commit SHA! Please set 'CI_COMMIT_SHORT_SHA'."
   exit 1
 else
   readonly IRONFOX_CI_COMMIT_SHORT="${CI_COMMIT_SHORT_SHA}"
@@ -76,7 +118,7 @@ fi
 
 ## Job ID
 if [[ -z "${CI_JOB_ID+x}" ]]; then
-  echo_red_text 'ERROR: Missing job ID! Please set CI_JOB_ID.'
+  echo_red_text "ERROR: Missing job ID! Please set 'CI_JOB_ID'."
   exit 1
 else
   readonly IRONFOX_CI_JOB_ID="${CI_JOB_ID}"
@@ -370,19 +412,95 @@ function publish_to_gitlab() {
   echo_green_text "SUCCESS: Published IronFox: ${IRONFOX_VERSION} to GitLab"
 }
 
+# Create the universal updates.json for IronFox - Release
+## (ex. used by Obtainium)
+function create_release_json() {
+  local -r s3_path='ironfox/releases'
+
+  "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/updates.json" "${IRONFOX_TEMP}/updates.json"
+
+  "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|g" "${IRONFOX_TEMP}/updates.json"
+
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json"
+
+  push_to_s3 "${IRONFOX_TEMP}/updates.json" "${s3_path}"
+}
+
+# Create the universal updates.json for IronFox - Nightly
+## (ex. used by Obtainium)
+function create_nightly_json() {
+  local -r s3_path='ironfox/nightly'
+
+  "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/updates-nightly.json" "${IRONFOX_TEMP}/updates.json"
+
+  "${IRONFOX_SED}" -i "s|{IRONFOX_NIGHTLY_VERSION}|${IRONFOX_NIGHTLY_VERSION}|g" "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_CI_COMMIT}|${IRONFOX_CI_COMMIT}|g" "${IRONFOX_TEMP}/updates.json"
+
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json"
+
+  push_to_s3 "${IRONFOX_TEMP}/updates.json" "${s3_path}"
+}
+
 # Create our universal updates.json
 ## (ex. used by Obtainium)
 function create_universal_json() {
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/updates.json" "${IRONFOX_ROOT}/updates.json"
+  # Clean-up
+  "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates-temp.json"
+  "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates-temp.json-sha512sum.txt"
 
-  "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|g" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|g" "${IRONFOX_ROOT}/updates.json"
+  local -r json_file_name='updates.json'
+  if [[ "${IRONFOX_PUBLISH_RELEASE}" == 1 ]]; then
+    local -r json_url="${IRONFOX_RELEASES_URL}/ironfox/nightly/${json_file_name}"
+  else
+    local -r json_url="${IRONFOX_RELEASES_URL}/ironfox/releases/${json_file_name}"
+  fi
+  local -r json_expected_sha512sum="${json_file_name}-sha512sum.txt"
+  local -r json_expected_sha512sum_url="${json_url}-sha512sum.txt"
 
-  push_to_s3 "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
+  # Download the current updates.json for the opposite channel (so that we can combine the files)
+  download "${json_url}" "${IRONFOX_TEMP}/updates-temp.json"
+
+  # Check the SHA512sum
+  echo_red_text "Validating SHA512sum for file: '${json_file_name}'.."
+  download "${json_expected_sha512sum_url}" "${IRONFOX_TEMP}/updates-temp.json-sha512sum.txt"
+  local -r expected_sha512sum=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/updates-temp.json-sha512sum.txt" | "${IRONFOX_XARGS}")
+  local -r local_sha512sum=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_TEMP}/updates-temp.json" | "${IRONFOX_AWK}" '{print $1}')
+  if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
+    echo_red_text "ERROR: Checksum validation for file failed: '${json_file_name}'!"
+    echo "Expected SHA512sum: '${expected_sha512sum}'"
+    echo "Actual SHA512sum:   '${local_sha512sum}'"
+
+    # If checksum validation fails, also just clean-up the files
+    "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates-temp.json"
+    "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates-temp.json-sha512sum.txt"
+    exit 1
+  fi
+  echo_green_text "SUCCESS: Validated checksum for file: '${json_file_name}'!"
+  echo "SHA512sum: '${local_sha512sum}'"
+
+  # Combine the files...
+  if [[ "${IRONFOX_PUBLISH_RELEASE}" == 1 ]]; then
+    "${IRONFOX_JQ}" -s '.[0] * .[1]' "${IRONFOX_TEMP}/updates.json" "${IRONFOX_TEMP}/updates-temp.json" > "${IRONFOX_TEMP}/updates-combined.json"
+  else
+    "${IRONFOX_JQ}" -s '.[0] * .[1]' "${IRONFOX_TEMP}/updates-temp.json" "${IRONFOX_TEMP}/updates.json" > "${IRONFOX_TEMP}/updates-combined.json"
+  fi
+  "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/updates-combined.json" "${IRONFOX_TEMP}/updates.json"
+  "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates-combined.json"
+
+  push_to_s3 "${IRONFOX_ROOT}/updates.json" 'ironfox'
 }
 
 # Push IronFox for a desired architecture to S3 storage
@@ -399,14 +517,22 @@ function _push_ironfox() {
 
   local -r ironfox_arch="$1"
 
-  # Set our build
-  if [[ "${ironfox_arch}" == 'bundle' ]]; then
-    local -r ironfox_file="${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks"
+  if [[ "${IRONFOX_PUBLISH_RELEASE}" == 1 ]]; then
+    local -r if_version="${IRONFOX_VERSION}"
+    local -r s3_path='releases'
   else
-    local -r ironfox_file="${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-${ironfox_arch}.apk"
+    local -r if_version="${IRONFOX_NIGHTLY_VERSION}"
+    local -r s3_path='nightly'
   fi
 
-  push_to_s3 "${ironfox_file}" "ironfox/releases/${IRONFOX_VERSION}/${ironfox_arch}"
+  # Set our build
+  if [[ "${ironfox_arch}" == 'bundle' ]]; then
+    local -r ironfox_file="${IRONFOX_APKS_ARTIFACTS}/ironfox-${if_version}.apks"
+  else
+    local -r ironfox_file="${IRONFOX_APK_ARTIFACTS}/ironfox-${if_version}-${ironfox_arch}.apk"
+  fi
+
+  push_to_s3 "${ironfox_file}" "ironfox/${s3_path}/${if_version}/${ironfox_arch}"
 }
 
 # Push IronFox to S3 storage
@@ -427,36 +553,55 @@ function push_ironfox() {
   _push_ironfox 'bundle'
 
   # Get the 2 previous IronFox versions
+  if [[ "${IRONFOX_PUBLISH_RELEASE}" == 1 ]]; then
+    local -r s3_channel='releases'
+  else
+    local -r s3_channel='nightly'
+  fi
+
   if [[ ! -f "${IRONFOX_TEMP}/previous_release.txt" ]]; then
     # (`previous_release.txt` should already be downloaded from `create_release_notes`, but if it is missing for some reason, download it)
-    download "${IRONFOX_RELEASES_URL}/ironfox/releases/latest_release.txt" "${IRONFOX_TEMP}/previous_release.txt"
+    download "${IRONFOX_RELEASES_URL}/ironfox/${s3_channel}/latest_release.txt" "${IRONFOX_TEMP}/previous_release.txt"
   fi
-  download "${IRONFOX_RELEASES_URL}/ironfox/releases/previous_release.txt" "${IRONFOX_TEMP}/previous_previous_release.txt"
+  download "${IRONFOX_RELEASES_URL}/ironfox/${s3_channel}/previous_release.txt" "${IRONFOX_TEMP}/previous_previous_release.txt"
 
   # Update the current IronFox version
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
   "${IRONFOX_TOUCH}" "${IRONFOX_TEMP}/latest_release.txt"
   echo -n "${IRONFOX_VERSION}" > "${IRONFOX_TEMP}/latest_release.txt"
-  push_to_s3 "${IRONFOX_TEMP}/latest_release.txt" 'ironfox/releases'
+  push_to_s3 "${IRONFOX_TEMP}/latest_release.txt" "ironfox/${s3_channel}"
 
   # Update the 2 previous versions
-  push_to_s3 "${IRONFOX_TEMP}/previous_release.txt" 'ironfox/releases'
-  push_to_s3 "${IRONFOX_TEMP}/previous_previous_release.txt" 'ironfox/releases'
+  push_to_s3 "${IRONFOX_TEMP}/previous_release.txt" "ironfox/${s3_channel}"
+  push_to_s3 "${IRONFOX_TEMP}/previous_previous_release.txt" "ironfox/${s3_channel}"
 
   # Add release notes
-  push_to_s3 "${IRONFOX_RELEASE_NOTES}" "ironfox/releases/${IRONFOX_VERSION}"
+  if [[ "${IRONFOX_PUBLISH_RELEASE}" == 1 ]]; then
+    push_to_s3 "${IRONFOX_RELEASE_NOTES}" "ironfox/${s3_channel}/${IRONFOX_VERSION}"
+  fi
 
   echo_green_text "SUCCESS: Pushed IronFox: ${IRONFOX_VERSION} to ${IRONFOX_RELEASES_URL}"
 }
 
 # First, create our release notes
-create_release_notes
+if [[ "${IRONFOX_PUBLISH_RELEASE}" == 1 ]]; then
+  create_release_notes
+fi
 
 # Push IronFox to S3
 push_ironfox
 
 # Create a GitLab release
-publish_to_gitlab
+if [[ "${IRONFOX_PUBLISH_RELEASE}" == 1 ]]; then
+  publish_to_gitlab
+fi
+
+# Update our release-specific updates.json file
+if [[ "${IRONFOX_PUBLISH_RELEASE}" == 1 ]]; then
+  create_release_json
+else
+  create_nightly_json
+fi
 
 # Update our universal updates.json file
 ## (ex. used by Obtainium)
