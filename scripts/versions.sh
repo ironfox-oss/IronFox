@@ -2,10 +2,10 @@
 # Sources
 
 # Firefox
-# Version: 156.0 (BUILD1)
+# Version: 156.0 (RELEASE)
 # https://github.com/mozilla-firefox/firefox
 readonly IRONFOX_GECKO_COMMIT='3bf8f468258c2181f455e23d4ffcd6acb8f4cdb1'
-readonly IRONFOX_GECKO_SHA512SUM='cf55dc211cf49bfabaefefcc3ede3b499da76fb16ba1d5597afa3128dbf3437dbf60cb39e0752e41022b220a8bc5617a9d5220f15176b66a9c689a632793b57a'
+readonly IRONFOX_GECKO_SHA512SUM='a7eef93bc66a52f53cbcf4bf58cb1ea26dffec0f2d1d7b326aa13232fa745cf04e7eb699f6e2345def232f97c2b85dc7329ba9989ab93bdb8cd32a136f6dd312'
 readonly IRONFOX_GECKO_VERSION='156.0'
 
 # IronFox
@@ -26,8 +26,8 @@ readonly IRONFOX_AS_VERSION='156.0'
 # https://github.com/mozilla-l10n/firefox-l10n
 # NOTE: This repo is updated several times a day...
 # so I think best approach here will be for us to just update it alongside new releases
-readonly IRONFOX_L10N_CENTRAL_COMMIT='1106589c755772ca621d9c060906a0febeab0b2d'
-readonly IRONFOX_L10N_CENTRAL_SHA512SUM='663a3c660131630c2b6082b874394e1f2c4f7fea968f55106cd9f726a146838a54e923a893819949a741b99c96fcb94781d44c82d847135bcecab10548495237'
+readonly IRONFOX_L10N_CENTRAL_COMMIT='119d8030c20bfb5ffef72d806e22a2c212c79028'
+readonly IRONFOX_L10N_CENTRAL_SHA512SUM='67793ae9b63b9a802111ed33c35785054fb83045b8f2934abd59523ac550b6338d694bcf06b951d3ad0dc50a8f492f95dc7c6fb4db011bf754293f0285a19311'
 
 # Glean
 # Version: 68.0.1

@@ -1,1 +1,7 @@
-- Updated to Firefox [`155.0.1`](https://firefox.com/firefox/android/155.0.1/releasenotes/).
+- Updated to Firefox [`156.0`](https://firefox.com/firefox/android/156.0/releasenotes/).
+- Updated to UnifiedPush-AC [`1.0.7`](https://gitlab.com/ironfox-oss/unifiedpush-ac/-/releases/1.0.7).
+- Updated to Rust [`1.98.1`](https://releases.rs/docs/1.98.1/).
+- Added [DNSBunker]((https://gitlab.com/ironfox-oss/IronFox/-/commit/1fcef91adcedea136add0030f3f07dd4431dcdac)) and [`dnsforge.de`](https://gitlab.com/ironfox-oss/IronFox/-/commit/9b0d46896ce71e1b797a6c67d4845bf5f310fd00) to the list of built-in DNS over HTTPS providers.
+- [Added UI settings to enable/disable the Android *(system)* geolocation provider, as well as the *(fallback)* network geolocation provider](https://gitlab.com/ironfox-oss/IronFox/-/commit/94688950b34c32a76f3036c56982a9995dda4fb6), located at `Settings` -> `IronFox settings` -> `Geolocation`.
+- If the Android *(system)* geolocation provider is enabled, [GeckoView will now **only** use the device's GPS](https://gitlab.com/ironfox-oss/IronFox/-/commit/c301293ffc091cf12b397782fcd0cdc1180c4127), instead of using the system network provider *(ex. Google Play Services)*, to improve privacy and reduce our reliance on proprietary/external services.
+- [Hid the broken upstream setting to enable/disable Translations](https://gitlab.com/ironfox-oss/IronFox/-/commit/ed21d965aa32ca17ffba697195e1017a36fdb2fa), as it depends on AI Controls functionality, and we add our own UI setting to enable/disable Translations instead.
