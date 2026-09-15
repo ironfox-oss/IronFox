@@ -62,4 +62,9 @@
     <string name="preference_referer_policy_hosts_match">교차 출처 리퍼러 비활성화</string>
     <string name="restart_required_summary">이 설정을 변경하면 브라우저가 재시작됩니다</string>
     <string name="if_preferences_secret">숨겨진 설정</string>
+    <string name="if_preferences_geo">위치 정보</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Android 위치 정보 제공자 활성화</string>
+    <string name="preference_ironfox_geo_provider_android_summary">활성화하면 IronFox가 Android의 OS의 위치 서비스를 사용해 웹사이트에 사용자 위치 정보 제공을 시도합니다(사이트 권한을 허용한 경우) - 이 설정을 변경하면 브라우저가 재시작됩니다</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">네트워크 위치 정보 제공자 활성화</string>
+    <string name="preference_ironfox_geo_provider_network_summary">이 기능이 활성화되어 있고 Android 위치 정보 제공자를 사용할 수 없을 경우, IronFox는 BeaconDB 네트워크 위치 정보 서비스를 이용해 위치 정보를 웹사이트에 제공합니다(사이트 권한을 허용한 경우) - 이 설정을 변경하면 브라우저가 재시작됩니다</string>
 </resources>

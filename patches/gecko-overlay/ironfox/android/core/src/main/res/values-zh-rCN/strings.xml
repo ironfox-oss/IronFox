@@ -62,4 +62,9 @@
     <string name="preference_autoplay_policy_transient">允许在与页面快速交互后使用（默认值）</string>
     <string name="preference_always_use_private_browsing">始终使用隐私浏览模式</string>
     <string name="wallpaper_collection_fennec_description">来自 Fennec F-Droid 的壁纸。%s</string>
+    <string name="if_preferences_geo">地理定位</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">启用 Android 地理定位提供程序</string>
+    <string name="preference_ironfox_geo_provider_android_summary">如果启用，IronFox 将尝试使用 Android 操作系统定位服务为网站提供您的地理位置（如果您授予网站权限）——更改此设置将重新启动浏览器</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">启用网络地理定位提供程序</string>
+    <string name="preference_ironfox_geo_provider_network_summary">如果已启用且 Android 地理定位提供程序不可用，IronFox 将使用 BeaconDB 网络地理定位服务向网站提供您的位置（如果您授予网站权限）——更改此设置将重新启动浏览器</string>
 </resources>

@@ -62,4 +62,9 @@
     <string name="wallpaper_collection_fennec_description">Tapety z przeglądarki Fennec z F-Droid. %s</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Przy wyłączonym WebGL, włącza WebGL dla niektórych stron w celu poprawienia ich wyświetlania - Zmiana tego ustawienia zrestartuje przeglądarkę</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Instalacja dodatków jest domyślnie wyłączona. Można ją włączyć ­w Ustawienia -&gt; IronFox -&gt; Ustawienia IronFox -&gt; Bezpieczeństwo -&gt; Zezwól na instalację dodatków. Włączenie instalacji dodatków obniża poziom bezpieczeństwa.</string>
+    <string name="if_preferences_geo">Geolokalizacja</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Włącz dostawcę geolokalizacji Androida</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Jeśli włączone, IronFox będzie próbował używać usług lokalizacji Androida, aby podawać twoją geolokalizację stronom internetowym (jeżeli udzielisz im uprawnień) - Zmiana tego ustawienia uruchomi przeglądarkę ponownie</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Włącz sieciowego dostawcę geolokalizacji</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Jeśli włączone, i dostawca geolokalizacji Androida jest niedostępny, IronFox będzie używał sieciowych usług geolokalizacji BeaconDB, aby podawać twoją lokalizację stronom internetowym (jeżeli udzielisz im uprawnień) - Zmiana tego ustawienia uruchomi przeglądarkę ponownie</string>
 </resources>

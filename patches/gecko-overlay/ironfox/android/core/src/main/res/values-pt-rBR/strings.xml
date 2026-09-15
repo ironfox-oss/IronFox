@@ -63,4 +63,9 @@
     <string name="preference_autoplay_policy_sticky">Adesivo</string>
     <string name="preference_always_use_private_browsing">Sempre usar o modo de navegação privativa</string>
     <string name="wallpaper_collection_fennec_description">Planos de fundo do Fennec F-Droid. %s</string>
+    <string name="if_preferences_geo">Localização geográfica</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Ativar o provedor de localização do Android</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Caso ativado, o IronFox tentará usar os serviços de localização do Android para fornecer sua localização aos sites (caso dê a permissão ao site) - Alterar esta configuração reiniciará o navegador</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Ativar o provedor de localização de rede</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Caso ativado e o provedor de localização do Android estiver indisponível, o IronFox usará o serviço de localização de rede do BeaconDB para fornecer sua localização aos sites (caso dê a permissão ao site) - Alterar esta configuração reiniciará o navegador</string>
 </resources>

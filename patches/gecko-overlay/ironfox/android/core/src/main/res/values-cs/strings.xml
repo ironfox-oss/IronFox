@@ -62,4 +62,9 @@
     <string name="preference_autoplay_policy_click_to_play">Klepnutí pro přehrání</string>
     <string name="preference_always_use_private_browsing">Vždy použít režim anonymního prohlížení</string>
     <string name="wallpaper_collection_fennec_description">Pozadí z projektu Fennec F-Droid. %s</string>
+    <string name="if_preferences_geo">Geolokace</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Povolit poskytovatele geolokace systému Android</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Pokud je povoleno, pokusí se IronFox použít polohové služby systému Android pro poskytnutí vaší geolokace webovým stránkám (pokud stránce udělíte oprávnění). Změna tohoto nastavení restartuje váš prohlížeč</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Povolit síťového poskytovatele geolokace</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Pokud je povoleno a není dostupný poskytovatel geolokace systému Android, použije IronFox geolokační službu BeaconDB pro poskytnutí vaší polohy webovým stránkám (pokud stránce udělíte oprávnění). Změna tohoto nastavení restartuje váš prohlížeč</string>
 </resources>
