@@ -529,9 +529,9 @@ function _push_ironfox() {
 
   # Set our build
   if [[ "${ironfox_arch}" == 'bundle' ]]; then
-    local -r ironfox_file="${IRONFOX_APKS_ARTIFACTS}/ironfox-${if_version}.apks"
+    local -r ironfox_file="${IRONFOX_APKS_ARTIFACTS}/${IRONFOX_APK_NAME}-${if_version}.apks"
   else
-    local -r ironfox_file="${IRONFOX_APK_ARTIFACTS}/ironfox-${if_version}-${ironfox_arch}.apk"
+    local -r ironfox_file="${IRONFOX_APK_ARTIFACTS}/${IRONFOX_APK_NAME}-${if_version}-${ironfox_arch}.apk"
   fi
 
   push_to_s3 "${ironfox_file}" "ironfox/${s3_path}/${if_version}/${ironfox_arch}"
