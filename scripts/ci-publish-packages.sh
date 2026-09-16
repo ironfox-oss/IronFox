@@ -502,7 +502,7 @@ function create_universal_json() {
   "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/updates-combined.json" "${IRONFOX_TEMP}/updates.json"
   "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates-combined.json"
 
-  push_to_s3 "${IRONFOX_ROOT}/updates.json" 'ironfox'
+  push_to_s3 "${IRONFOX_TEMP}/updates.json" 'ironfox'
 }
 
 # Push IronFox for a desired architecture to S3 storage
