@@ -19,14 +19,17 @@ if [[ "${IRONFOX_CI}" != 1 ]]; then
   exit 1
 fi
 
-# Set our target
-if [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_PROD_BRANCH}" ]]; then
-  readonly IRONFOX_PUBLISH_TARGET='release'
-elif [[ "${IRONFOX_CURRENT_BRANCH}" == "${IRONFOX_DEV_BRANCH}" ]]; then
-  readonly IRONFOX_PUBLISH_TARGET='nightly'
-else
+# Ensure we're on the production or dev branch
+if [[ "${IRONFOX_CURRENT_BRANCH}" != "${IRONFOX_DEV_BRANCH}" ]] && [[ "${IRONFOX_CURRENT_BRANCH}" != "${IRONFOX_PROD_BRANCH}" ]]; then
   echo_red_text "ERROR: Unable to publish release on branch: '${IRONFOX_CURRENT_BRANCH}'!"
   exit 1
+fi
+
+# Set our target
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+  readonly IRONFOX_PUBLISH_TARGET='release'
+else
+  readonly IRONFOX_PUBLISH_TARGET='nightly'
 fi
 
 # Get dependencies
