@@ -183,6 +183,11 @@ export TZ='UTC'
 # Set RSS publication date/time
 readonly IRONFOX_RSS_DATE="$("${IRONFOX_DATE}" +"%a, %d %b %Y %T")"
 
+if [[ -f ./rss/"${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml" ]]; then
+  echo_red_text "ERROR: '${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml' already exists!"
+  exit 1
+fi
+"${IRONFOX_TOUCH}" ./rss/"${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml"
 {
   echo '    <item>'
   echo "      <title>IronFox ${IRONFOX_RELEASE_VERSION}</title>"
