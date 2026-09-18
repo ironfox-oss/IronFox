@@ -8,18 +8,28 @@ Disables and prevents A/B testing/experimentation and remote configuration of se
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-index 02e864c59250..3f490e270943 100644
+index b7a013c9b57e..660a8a705313 100644
 --- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
 +++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-@@ -35,7 +35,7 @@ const CRASHREPORTER_ENABLED =
+@@ -36,7 +36,7 @@ const CRASHREPORTER_ENABLED =
    AppConstants.MOZ_CRASHREPORTER && AppConstants.MOZ_APP_NAME !== "thunderbird";
  
  const IS_MAIN_PROCESS =
 -  Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
 +  false;
  
- const UPLOAD_ENABLED_PREF = "datareporting.healthreport.uploadEnabled";
- const STUDIES_OPT_OUT_PREF = "app.shield.optoutstudies.enabled";
+ const Prefs = Object.freeze({
+   AI_FEATURES_ENABLED: "browser.ai.control.default",
+@@ -536,6 +536,9 @@ export const ExperimentAPI = new (class {
+    *          store
+    */
+   async ready() {
++    if (!this.#initializedPromise) {
++      return Promise.resolve();
++    }
+     return this.manager.store.ready();
+   }
+ 
 diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 index f7c6421ebcd7..949543a1f979 100644
 --- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
