@@ -5,6 +5,8 @@ Subject: [PATCH] Gecko - IronFox branding
 
 Modifies branding elements to IronFox.
 
+(Parts of this have been adapted from LibreWolf: https://librewolf.dev/librewolf/source/src/branch/main/patches/ui-patches/neterror.patch)
+
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/toolkit/content/aboutSupport.js b/toolkit/content/aboutSupport.js
@@ -30,4 +32,17 @@ index 58de33cd7d60c..5235710277c55 100644
      let version = AppConstants.MOZ_APP_VERSION_DISPLAY;
      if (data.vendor) {
        version += " (" + data.vendor + ")";
+diff --git a/toolkit/themes/shared/aboutNetError.css b/toolkit/themes/shared/aboutNetError.css
+index b345001410b85..4069ff0b5f833 100644
+--- a/toolkit/themes/shared/aboutNetError.css
++++ b/toolkit/themes/shared/aboutNetError.css
+@@ -298,7 +298,7 @@ button:disabled {
+   }
+ 
+   .img-container > img {
+-    width: 8.75em;
++    width: 3.5em;
+     margin-block-start: 2em;
+     margin-inline-end: 2.5em;
+ 
 -- 
