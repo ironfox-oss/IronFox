@@ -220,6 +220,16 @@ popd || {
   exit 1
 }
 
+# Indicate our target release channel (so that `ci-update-git.repo.sh` can handle it properly...)
+"${IRONFOX_RM}" -f "${IRONFOX_FDROID_REPO_ROOT}/target-release" "${IRONFOX_FDROID_REPO_ROOT}/target-nightly"
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+  "${IRONFOX_TOUCH}" "${IRONFOX_FDROID_REPO_ROOT}/target-release"
+  "${IRONFOX_GIT}" add "${IRONFOX_FDROID_REPO_ROOT}/target-release"
+else
+  "${IRONFOX_TOUCH}" "${IRONFOX_FDROID_REPO_ROOT}/target-nightly"
+  "${IRONFOX_GIT}" add "${IRONFOX_FDROID_REPO_ROOT}/target-nightly"
+fi
+
 # Update F-Droid repository
 "${IRONFOX_GIT}" add "${IRONFOX_FDROID_REPO}" "${IRONFOX_FDROID_METADATA}"
 "${IRONFOX_GIT}" commit -m "feat: update for IronFox ${IRONFOX_CHANNEL}: ${IRONFOX_APK_VERSION}"
