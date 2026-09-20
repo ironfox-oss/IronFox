@@ -216,6 +216,16 @@ fi
   echo '</rss>'
 } >> ./public/"${if_rss_path}"/rss.xml
 
+# Indicate our target release channel (so that `ci-update-git.repo.sh` can handle it properly...)
+"${IRONFOX_RM}" -f "${IRONFOX_SITE_REPO}/target-release" "${IRONFOX_SITE_REPO}/target-nightly"
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+  "${IRONFOX_TOUCH}" "${IRONFOX_SITE_REPO}/target-release"
+  "${IRONFOX_GIT}" add "${IRONFOX_SITE_REPO}/target-release"
+else
+  "${IRONFOX_TOUCH}" "${IRONFOX_SITE_REPO}/target-nightly"
+  "${IRONFOX_GIT}" add "${IRONFOX_SITE_REPO}/target-nightly"
+fi
+
 # Commit changes
 "${IRONFOX_GIT}" add rss src public release-notes.md
 "${IRONFOX_GIT}" commit -m "feat: update patch docs to reflect ironfox-oss/IronFox@${IRONFOX_CI_COMMIT}" || exit 0
