@@ -31,6 +31,16 @@ if [[ "${IRONFOX_CURRENT_BRANCH}" != "${IRONFOX_DEV_BRANCH}" ]] && [[ "${IRONFOX
   exit 1
 fi
 
+# Set our external CI environment variables
+
+## Commit SHA
+if [[ -z "${CI_COMMIT_SHA+x}" ]]; then
+  echo_red_text 'ERROR: Missing commit SHA! Please set CI_COMMIT_SHA.'
+  exit 1
+else
+  readonly IRONFOX_CI_COMMIT="${CI_COMMIT_SHA}"
+fi
+
 # Constants
 
 # Base URL
@@ -44,6 +54,9 @@ else
 fi
 readonly IRONFOX_RELEASES_BASE_URL="https://releases.ironfoxoss.org/ironfox/${IRONFOX_RELEASES_S3_PATH}"
 
+# GitLab repo URL
+readonly IRONFOX_GITLAB_REPO_URL='https://gitlab.com/ironfox-oss/IronFox'
+
 # Git
 readonly IRONFOX_GIT_EMAIL='ci@ironfoxoss.org'
 readonly IRONFOX_GIT_NAME='IronFox CI'
@@ -55,7 +68,11 @@ readonly IRONFOX_SITE_REPO_BRANCH='dev'
 readonly IRONFOX_SITE_REPO_PATH='ironfox-oss/ironfoxoss.org'
 
 # Release page URL
-readonly IRONFOX_RELEASE_PAGE_URL="${IRONFOX_BASE_URL}/releases"
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+  readonly IRONFOX_RELEASE_PAGE_URL="${IRONFOX_BASE_URL}/releases"
+else
+  readonly IRONFOX_RELEASE_PAGE_URL="${IRONFOX_GITLAB_REPO_URL}/-/tree/${IRONFOX_CI_COMMIT}"
+fi
 
 # RSS email address
 readonly IRONFOX_RSS_EMAIL='contact@ironfoxoss.org'
@@ -70,16 +87,6 @@ else
   else
     readonly IRONFOX_RELEASE_VERSION="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
   fi
-fi
-
-# Set our external CI environment variables
-
-## Commit SHA
-if [[ -z "${CI_COMMIT_SHA+x}" ]]; then
-  echo_red_text 'ERROR: Missing commit SHA! Please set CI_COMMIT_SHA.'
-  exit 1
-else
-  readonly IRONFOX_CI_COMMIT="${CI_COMMIT_SHA}"
 fi
 
 # Configure Git
