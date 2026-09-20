@@ -530,11 +530,17 @@ function _push_ironfox() {
   # Set our build
   if [[ "${ironfox_arch}" == 'bundle' ]]; then
     local -r ironfox_file="${IRONFOX_APKS_ARTIFACTS}/${IRONFOX_APK_NAME}-${if_version}.apks"
+    local -r ironfox_file_latest="${IRONFOX_APKS_ARTIFACTS}/${IRONFOX_APK_NAME}-latest.apks"
   else
     local -r ironfox_file="${IRONFOX_APK_ARTIFACTS}/${IRONFOX_APK_NAME}-${if_version}-${ironfox_arch}.apk"
+    local -r ironfox_file_latest="${IRONFOX_APK_ARTIFACTS}/${IRONFOX_APK_NAME}-latest-${ironfox_arch}.apk"
   fi
 
   push_to_s3 "${ironfox_file}" "ironfox/${s3_path}/${if_version}/${ironfox_arch}"
+
+  # Ensure the latest version can always be downloaded from https://releases.ironfoxoss.org/ironfox/releases/latest/{ironfox_arch}/ironfox-latest-{ironfox_arch}.apk (or ironfox-latest.apks for bundles)
+  "${IRONFOX_CP}" -f "${ironfox_file}" "${ironfox_file_latest}"
+  push_to_s3 "${ironfox_file_latest}" "ironfox/${s3_path}/latest/${ironfox_arch}"
 }
 
 # Push IronFox to S3 storage
