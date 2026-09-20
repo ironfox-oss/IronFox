@@ -29,13 +29,16 @@ fi
 # Constants
 
 # Base releases URL
+readonly IRONFOX_RELEASES_BASE_URL="https://releases.ironfoxoss.org/ironfox"
+
+# Target S3 path
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
   readonly IRONFOX_RELEASES_S3_PATH='releases'
 else
   readonly IRONFOX_RELEASES_S3_PATH='nightly'
 fi
 
-readonly IRONFOX_RELEASES_BASE_URL="https://releases.ironfoxoss.org/ironfox/${IRONFOX_RELEASES_S3_PATH}"
+readonly IRONFOX_RELEASES_TARGET_URL="${IRONFOX_RELEASES_BASE_URL}/${IRONFOX_RELEASES_S3_PATH}"
 
 # fdroid repo
 readonly IRONFOX_FDROID_REPO_ROOT="${IRONFOX_EXTERNAL}/fdroid"
@@ -98,8 +101,8 @@ function download_release() {
   fi
 
   local -r target_expected_sha512sum="${target_apk}-sha512sum.txt"
-  local -r target_expected_sha512sum_url="${IRONFOX_RELEASES_BASE_URL}/${version}/${arch}/${target_expected_sha512sum}"
-  local -r target_apk_url="${IRONFOX_RELEASES_BASE_URL}/${version}/${arch}/${target_apk}"
+  local -r target_expected_sha512sum_url="${IRONFOX_RELEASES_TARGET_URL}/${version}/${arch}/${target_expected_sha512sum}"
+  local -r target_apk_url="${IRONFOX_RELEASES_TARGET_URL}/${version}/${arch}/${target_apk}"
   local -r output_apk="${output_dir}/${target_apk}"
   local -r output_expected_sha512sum="${output_dir}/${target_expected_sha512sum}"
 
@@ -157,38 +160,99 @@ download_releases
 # Because we now upload releases to releases.ironfoxoss.org, the F-Droid repo doesn't need to store them all anymore
 # So to improve performance and reduce size, we can keep only the last 3 releases
 "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
-download "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" "${IRONFOX_TEMP}/previous_release.txt"
-download "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" "${IRONFOX_TEMP}/previous_previous_release.txt"
 
-readonly previous_version=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/previous_release.txt" | "${IRONFOX_XARGS}")
-readonly previous_previous_version=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/previous_previous_release.txt" | "${IRONFOX_XARGS}")
+ownload "${IRONFOX_RELEASES_BASE_URL}/releases/previous_release.txt" "${IRONFOX_TEMP}/release_previous_release.txt"
+download "${IRONFOX_RELEASES_BASE_URL}/releases/previous_previous_release.txt" "${IRONFOX_TEMP}/release_previous_previous_release.txt"
 
+download "${IRONFOX_RELEASES_BASE_URL}/nightly/previous_release.txt" "${IRONFOX_TEMP}/nightly_previous_release.txt"
+download "${IRONFOX_RELEASES_BASE_URL}/nightly/previous_previous_release.txt" "${IRONFOX_TEMP}/nightly_previous_previous_release.txt"
+
+# If we're targetting Release, we also need to get the current Nightly version
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-  readonly if_apk_name='ironfox'
+  download "${IRONFOX_RELEASES_BASE_URL}/nightly/latest_release.txt" "${IRONFOX_TEMP}/nightly_latest_release.txt"
+  readonly IRONFOX_NIGHTLY_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/nightly_latest_release.txt" | "${IRONFOX_XARGS}")
 else
-  readonly if_apk_name="ironfox-${IRONFOX_CHANNEL}"
+  readonly IRONFOX_NIGHTLY_VERSION="${IRONFOX_APK_VERSION}"
 fi
 
-readonly current_apk_arm64="${if_apk_name}-${IRONFOX_APK_VERSION}-arm64-v8a.apk"
-readonly previous_apk_arm64="${if_apk_name}-${previous_version}-arm64-v8a.apk"
-readonly previous_previous_apk_arm64="${if_apk_name}-${previous_previous_version}-arm64-v8a.apk"
+readonly release_previous_version=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/release_previous_release.txt" | "${IRONFOX_XARGS}")
+readonly release_previous_previous_version=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/release_previous_previous_release.txt" | "${IRONFOX_XARGS}")
 
-readonly current_apk_arm="${if_apk_name}-${IRONFOX_APK_VERSION}-armeabi-v7a.apk"
-readonly previous_apk_arm="${if_apk_name}-${previous_version}-armeabi-v7a.apk"
-readonly previous_previous_apk_arm="${if_apk_name}-${previous_previous_version}-armeabi-v7a.apk"
+readonly nightly_previous_version=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/nightly_previous_release.txt" | "${IRONFOX_XARGS}")
+readonly nightly_previous_previous_version=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/nightly_previous_previous_release.txt" | "${IRONFOX_XARGS}")
 
-readonly current_apk_x86_64="${if_apk_name}-${IRONFOX_APK_VERSION}-x86_64.apk"
-readonly previous_apk_x86_64="${if_apk_name}-${previous_version}-x86_64.apk"
-readonly previous_previous_apk_x86_64="${if_apk_name}-${previous_previous_version}-x86_64.apk"
+readonly release_current_apk_arm64="ironfox-${IRONFOX_VERSION}-arm64-v8a.apk"
+readonly release_previous_apk_arm64="ironfox-${release_previous_version}-arm64-v8a.apk"
+readonly release_previous_previous_apk_arm64="ironfox-${release_previous_previous_version}-arm64-v8a.apk"
+readonly release_current_apk_arm64_sha512sum="${release_current_apk_arm64}-sha512sum.txt"
+readonly release_previous_apk_arm64_sha512sum="${release_previous_apk_arm64}-sha512sum.txt"
+readonly release_previous_previous_apk_arm64_sha512sum="${release_previous_previous_apk_arm64}-sha512sum.txt"
+
+readonly nightly_current_apk_arm64="ironfox-nightly-${IRONFOX_NIGHTLY_VERSION}-arm64-v8a.apk"
+readonly nightly_previous_apk_arm64="ironfox-nightly-${nightly_previous_version}-arm64-v8a.apk"
+readonly nightly_previous_previous_apk_arm64="ironfox-nightly-${nightly_previous_previous_version}-arm64-v8a.apk"
+readonly nightly_current_apk_arm64_sha512sum="${nightly_current_apk_arm64}-sha512sum.txt"
+readonly nightly_previous_apk_arm64_sha512sum="${nightly_previous_apk_arm64}-sha512sum.txt"
+readonly nightly_previous_previous_apk_arm64_sha512sum="${nightly_previous_previous_apk_arm64}-sha512sum.txt"
+
+readonly release_current_apk_arm="ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk"
+readonly release_previous_apk_arm="ironfox-${release_previous_version}-armeabi-v7a.apk"
+readonly release_previous_previous_apk_arm="ironfox-${release_previous_previous_version}-armeabi-v7a.apk"
+readonly release_current_apk_arm_sha512sum="${release_current_apk_arm}-sha512sum.txt"
+readonly release_previous_apk_arm_sha512sum="${release_previous_apk_arm}-sha512sum.txt"
+readonly release_previous_previous_apk_arm_sha512sum="${release_previous_previous_apk_arm}-sha512sum.txt"
+
+readonly nightly_current_apk_arm="ironfox-nightly-${IRONFOX_NIGHTLY_VERSION}-armeabi-v7a.apk"
+readonly nightly_previous_apk_arm="ironfox-nightly-${nightly_previous_version}-armeabi-v7a.apk"
+readonly nightly_previous_previous_apk_arm="ironfox-nightly-${nightly_previous_previous_version}-armeabi-v7a.apk"
+readonly nightly_current_apk_arm_sha512sum="${nightly_current_apk_arm}-sha512sum.txt"
+readonly nightly_previous_apk_arm_sha512sum="${nightly_previous_apk_arm}-sha512sum.txt"
+readonly nightly_previous_previous_apk_arm_sha512sum="${nightly_previous_previous_apk_arm}-sha512sum.txt"
+
+readonly release_current_apk_x86_64="ironfox-${IRONFOX_VERSION}-x86_64.apk"
+readonly release_previous_apk_x86_64="ironfox-${release_previous_version}-x86_64.apk"
+readonly release_previous_previous_apk_x86_64="ironfox-${release_previous_previous_version}-x86_64.apk"
+readonly release_current_apk_x86_64_sha512sum="${release_current_apk_x86_64}-sha512sum.txt"
+readonly release_previous_apk_x86_64_sha512sum="${release_previous_apk_x86_64}-sha512sum.txt"
+readonly release_previous_previous_apk_x86_64_sha512sum="${release_previous_previous_apk_x86_64}-sha512sum.txt"
+
+readonly nightly_current_apk_x86_64="ironfox-nightly-${IRONFOX_NIGHTLY_VERSION}-x86_64.apk"
+readonly nightly_previous_apk_x86_64="ironfox-nightly-${nightly_previous_version}-x86_64.apk"
+readonly nightly_previous_previous_apk_x86_64="ironfox-nightly-${nightly_previous_previous_version}-x86_64.apk"
+readonly nightly_current_apk_x86_64_sha512sum="${nightly_current_apk_x86_64}-sha512sum.txt"
+readonly nightly_previous_apk_x86_64_sha512sum="${nightly_previous_apk_x86_64}-sha512sum.txt"
+readonly nightly_previous_previous_apk_x86_64_sha512sum="${nightly_previous_previous_apk_x86_64}-sha512sum.txt"
 
 for apk in "${IRONFOX_FDROID_REPO}"/*.apk; do
   apk_basename=$("${IRONFOX_BASENAME}" "${apk}")
-  if [[ "${apk_basename}" != "${current_apk_arm64}" ]] && [[ "${apk_basename}" != "${previous_apk_arm64}" ]] &&
-    [[ "${apk_basename}" != "${previous_previous_apk_arm64}" ]] && [[ "${apk_basename}" != "${current_apk_arm}" ]] &&
-    [[ "${apk_basename}" != "${previous_apk_arm}" ]] && [[ "${apk_basename}" != "${previous_previous_apk_arm}" ]] &&
-    [[ "${apk_basename}" != "${current_apk_x86_64}" ]] && [[ "${apk_basename}" != "${previous_apk_x86_64}" ]] &&
-    [[ "${apk_basename}" != "${previous_previous_apk_x86_64}" ]]; then
+  if [[ "${apk_basename}" != "${release_current_apk_arm64}" ]] && [[ "${apk_basename}" != "${release_previous_apk_arm64}" ]] &&
+    [[ "${apk_basename}" != "${release_previous_previous_apk_arm64}" ]] && [[ "${apk_basename}" != "${release_current_apk_arm}" ]] &&
+    [[ "${apk_basename}" != "${release_previous_apk_arm}" ]] && [[ "${apk_basename}" != "${release_previous_previous_apk_arm}" ]] &&
+    [[ "${apk_basename}" != "${release_current_apk_x86_64}" ]] && [[ "${apk_basename}" != "${release_previous_apk_x86_64}" ]] &&
+    [[ "${apk_basename}" != "${release_previous_previous_apk_x86_64}" ]] && [[ "${apk_basename}" != "${nightly_current_apk_arm64}" ]] &&
+    [[ "${apk_basename}" != "${nightly_previous_apk_arm64}" ]] && [[ "${apk_basename}" != "${nightly_previous_previous_apk_arm64}" ]] &&
+    [[ "${apk_basename}" != "${nightly_current_apk_arm}" ]] && [[ "${apk_basename}" != "${nightly_previous_apk_arm}" ]] &&
+    [[ "${apk_basename}" != "${nightly_previous_previous_apk_arm}" ]] && [[ "${apk_basename}" != "${nightly_current_apk_x86_64}" ]] &&
+    [[ "${apk_basename}" != "${nightly_previous_apk_x86_64}" ]] && [[ "${apk_basename}" != "${nightly_previous_previous_apk_x86_64}" ]]; then
     "${IRONFOX_RM}" -vf "${apk}"
+  fi
+done
+
+for sha_txt in "${IRONFOX_FDROID_REPO}"/*-sha512sum.txt; do
+  sha_basename=$("${IRONFOX_BASENAME}" "${sha_txt}")
+  if [[ "${sha_basename}" != "${release_current_apk_arm64_sha512sum}" ]] && [[ "${sha_basename}" != "${release_previous_apk_arm64_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${release_previous_previous_apk_arm64_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${release_current_apk_arm_sha512sum}" ]] && [[ "${sha_basename}" != "${release_previous_apk_arm_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${release_previous_previous_apk_arm_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${release_current_apk_x86_64_sha512sum}" ]] && [[ "${sha_basename}" != "${release_previous_apk_x86_64_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${release_previous_previous_apk_x86_64_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${nightly_current_apk_arm64_sha512sum}" ]] && [[ "${sha_basename}" != "${nightly_previous_apk_arm64_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${nightly_previous_previous_apk_arm64_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${nightly_current_apk_arm_sha512sum}" ]] && [[ "${sha_basename}" != "${nightly_previous_apk_arm_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${nightly_previous_previous_apk_arm_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${nightly_current_apk_x86_64_sha512sum}" ]] && [[ "${sha_basename}" != "${nightly_previous_apk_x86_64_sha512sum}" ]] &&
+    [[ "${sha_basename}" != "${nightly_previous_previous_apk_x86_64_sha512sum}" ]]; then
+    "${IRONFOX_RM}" -vf "${sha_txt}"
   fi
 done
 

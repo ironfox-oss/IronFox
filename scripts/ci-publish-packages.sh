@@ -562,8 +562,10 @@ function push_ironfox() {
 
   # Get the 2 previous IronFox versions
   if [[ "${IRONFOX_PUBLISH_RELEASE}" == 1 ]]; then
+    local -r if_version="${IRONFOX_VERSION}"
     local -r s3_channel='releases'
   else
+    local -r if_version="${IRONFOX_NIGHTLY_VERSION}"
     local -r s3_channel='nightly'
   fi
 
@@ -576,7 +578,7 @@ function push_ironfox() {
   # Update the current IronFox version
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
   "${IRONFOX_TOUCH}" "${IRONFOX_TEMP}/latest_release.txt"
-  echo -n "${IRONFOX_VERSION}" > "${IRONFOX_TEMP}/latest_release.txt"
+  echo -n "${if_version}" > "${IRONFOX_TEMP}/latest_release.txt"
   push_to_s3 "${IRONFOX_TEMP}/latest_release.txt" "ironfox/${s3_channel}"
 
   # Update the 2 previous versions
