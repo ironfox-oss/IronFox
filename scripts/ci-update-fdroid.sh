@@ -161,7 +161,7 @@ download_releases
 # So to improve performance and reduce size, we can keep only the last 3 releases
 "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
 
-ownload "${IRONFOX_RELEASES_BASE_URL}/releases/previous_release.txt" "${IRONFOX_TEMP}/release_previous_release.txt"
+download "${IRONFOX_RELEASES_BASE_URL}/releases/previous_release.txt" "${IRONFOX_TEMP}/release_previous_release.txt"
 download "${IRONFOX_RELEASES_BASE_URL}/releases/previous_previous_release.txt" "${IRONFOX_TEMP}/release_previous_previous_release.txt"
 
 download "${IRONFOX_RELEASES_BASE_URL}/nightly/previous_release.txt" "${IRONFOX_TEMP}/nightly_previous_release.txt"
