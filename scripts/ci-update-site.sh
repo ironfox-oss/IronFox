@@ -28,7 +28,7 @@ fi
 # Ensure we're on the production or dev branch
 if [[ "${IRONFOX_CURRENT_BRANCH}" != "${IRONFOX_DEV_BRANCH}" ]] && [[ "${IRONFOX_CURRENT_BRANCH}" != "${IRONFOX_PROD_BRANCH}" ]]; then
   echo_red_text "ERROR: Unable to update site on branch: '${IRONFOX_CURRENT_BRANCH}'!"
-  exit 1
+  exit 0
 fi
 
 # Constants
