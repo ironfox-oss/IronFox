@@ -118,6 +118,15 @@ def ironfox_channel(release):
     return "release"
   return "nightly"
 
+# Set the application ID
+@depends("--enable-ironfox-release")
+def ironfox_app_id(release):
+  if release:
+    return "org.ironfoxoss.ironfox"
+  return "org.ironfoxoss.ironfox.nightly"
+
+set_define("IRONFOX_APP_ID", ironfox_app_id)
+
 # Set constants
 ## These values are shared and can be used directly by both Gecko and Java/Kotlin libraries (via their respective IFConstants)
 project_flag("IRONFOX_BUGS_URL",                nargs=1, help="IronFox issue tracker URL", set_as_define=True)

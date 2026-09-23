@@ -6,6 +6,7 @@
 /// Set constants
 // (These are set as prefs for use by ironfox.cfg)
 // (The values should match Gecko's IFConstants.sys.mjs)
+pref("browser.ironfox.const.IRONFOX_APP_ID",                    "@IRONFOX_APP_ID@", locked);
 pref("browser.ironfox.const.IRONFOX_APP_NAME",                  "@IRONFOX_APP_NAME@", locked);
 pref("browser.ironfox.const.IRONFOX_APP_NAME_PRETTY",           "@IRONFOX_APP_NAME_PRETTY@", locked);
 pref("browser.ironfox.const.IRONFOX_BUGS_URL",                  "@IRONFOX_BUGS_URL@", locked);

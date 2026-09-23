@@ -17,6 +17,7 @@ android {
     consumerProguardFiles "proguard-rules.pro"
 
     // Set constants
+    buildConfigField 'String', "IRONFOX_APP_ID",                    "\"${gradle.mozconfig.defines.IRONFOX_APP_ID}\"";
     buildConfigField 'String', "IRONFOX_APP_NAME",                  "\"${gradle.mozconfig.defines.IRONFOX_APP_NAME}\"";
     buildConfigField 'String', "IRONFOX_APP_NAME_PRETTY",           "\"${gradle.mozconfig.defines.IRONFOX_APP_NAME_PRETTY}\"";
     buildConfigField 'String', "IRONFOX_BUGS_URL",                  "\"${gradle.mozconfig.defines.IRONFOX_BUGS_URL}\"";

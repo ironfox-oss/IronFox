@@ -4,6 +4,7 @@
  * IronFox Constants
  */
 export const IFConstants = Object.freeze({
+  IRONFOX_APP_ID:                   "@IRONFOX_APP_ID@",
   IRONFOX_APP_NAME:                 "@IRONFOX_APP_NAME@",
   IRONFOX_APP_NAME_PRETTY:          "@IRONFOX_APP_NAME_PRETTY@",
   IRONFOX_BUGS_URL:                 "@IRONFOX_BUGS_URL@",

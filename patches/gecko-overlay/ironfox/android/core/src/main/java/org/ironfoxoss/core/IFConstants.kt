@@ -7,6 +7,7 @@ import org.ironfoxoss.core.BuildConfig
  *
  */
 object IFConstants {
+  const val IRONFOX_APP_ID =                  BuildConfig.IRONFOX_APP_ID
   const val IRONFOX_APP_NAME =                BuildConfig.IRONFOX_APP_NAME
   const val IRONFOX_APP_NAME_PRETTY =         BuildConfig.IRONFOX_APP_NAME_PRETTY
   const val IRONFOX_BUGS_URL =                BuildConfig.IRONFOX_BUGS_URL
