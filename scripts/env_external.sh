@@ -518,9 +518,6 @@ export UV_TOOL_DIR
 readonly UV_PYTHON_CPYTHON_BUILD="${IRONFOX_PYTHON_GIT_RELEASE}"
 export UV_PYTHON_CPYTHON_BUILD
 
-# Set IronFox version
-export IRONFOX_VERSION
-
 ## Set Node.js bin path
 readonly NVM_BIN="${IRONFOX_NVM}/versions/node/v${IRONFOX_NODE_VERSION}/bin"
 export NVM_BIN

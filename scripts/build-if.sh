@@ -752,6 +752,7 @@ function set_build_env() {
   unset IF_LOCAL_GLEAN_VERSION_GRADLE
   unset IF_LOCAL_GLEAN_VERSION_STAMP
   unset IRONFOX_CORE_TIMESTAMP
+  unset IRONFOX_IF_VERSION
   unset MOZ_BUILD_DATE
 
   # Create our directory
@@ -759,6 +760,21 @@ function set_build_env() {
 
   local -r IF_BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
   local -r IF_LOCAL_VERSION_STAMP="$("${IRONFOX_DATE}" "+%s%N")"
+
+  # Set the version
+  if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+    local -r IRONFOX_IF_VERSION="${IRONFOX_VERSION}"
+  else
+    # Set our version timestamp
+    if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" != 'null' ]]; then
+      local -r IF_VERSION_STAMP="${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
+    else
+      local -r IF_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}"
+    fi
+
+    local -r IRONFOX_IF_VERSION="${IRONFOX_VERSION}.${IF_VERSION_STAMP}"
+  fi
+  export IRONFOX_IF_VERSION
 
   # Override Gecko(View)'s build ID
   local -r moz_build_id_file="${IRONFOX_TEMP}/env/moz-build-id.txt"
@@ -953,18 +969,8 @@ function prep_fenix() {
   # Set-up the app ID, version name and version code
   if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     local -r fenix_app_id_suffix='ironfox'
-    local -r fenix_version="${IRONFOX_VERSION}"
   else
     local -r fenix_app_id_suffix='ironfox.nightly'
-
-    # Set our version timestamp
-    if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" != 'null' ]]; then
-      local -r fenix_version_timestamp="${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
-    else
-      local -r fenix_version_timestamp="$("${IRONFOX_DATE}" "+%s%N")"
-    fi
-
-    local -r fenix_version="${IRONFOX_VERSION}.${fenix_version_timestamp}"
   fi
   local -r fenix_app_id="org.ironfoxoss.${fenix_app_id_suffix}"
 
@@ -973,7 +979,7 @@ function prep_fenix() {
     -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|g' \
     -e "s|applicationIdSuffix \"".firefox\""|applicationIdSuffix \"".${fenix_app_id_suffix}\""|g" \
     -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|g' \
-    -e "s/Config.releaseVersionName(project)/'${fenix_version}'/" \
+    -e "s/Config.releaseVersionName(project)/'${IRONFOX_IF_VERSION}'/" \
     "${IRONFOX_FENIX}/app/build.gradle"
 
   "${IRONFOX_SED}" -i -e "/android:targetPackage/s/org.mozilla.firefox/${fenix_app_id}/" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"

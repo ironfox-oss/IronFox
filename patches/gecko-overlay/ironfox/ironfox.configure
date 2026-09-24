@@ -149,15 +149,15 @@ imply_option("IRONFOX_URL",                     "https://ironfoxoss.org/")
 
 # Set version
 option(
-  env="IRONFOX_VERSION",
+  env="IRONFOX_IF_VERSION",
   nargs="?",
   help="IronFox version",
 )
 
-@depends("IRONFOX_VERSION")
+@depends("IRONFOX_IF_VERSION")
 def ironfox_version(version):
   if not version:
-    die("ERROR: Missing IronFox version! Please set the version with IRONFOX_VERSION")
+    die("ERROR: Missing IronFox version! Please set the version with IRONFOX_IF_VERSION")
   return version[0]
 
 set_define("IRONFOX_VERSION", ironfox_version)
