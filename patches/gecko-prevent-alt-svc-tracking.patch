@@ -5,7 +5,7 @@ Subject: [PATCH] Gecko - Prevent alt-svc tracking
 
 Prevents alt-svc data from persisting to protect against cross-session tracking.
 
-(Adapted from Tor Browser).
+Adapted from LibreWolf: https://librewolf.dev/librewolf/source/src/branch/main/patches/clear-alt-svc.patch
 
 For more details, see https://librewolf.dev/librewolf/issues/issues/3254.
 
