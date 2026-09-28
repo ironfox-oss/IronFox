@@ -763,16 +763,16 @@ function set_build_env() {
 
   # Set the version
   if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-    local -r IRONFOX_IF_VERSION="${IRONFOX_VERSION}"
+    readonly IRONFOX_IF_VERSION="${IRONFOX_VERSION}"
   else
     # Set our version timestamp
     if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" != 'null' ]]; then
-      local -r IF_VERSION_STAMP="${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
+      readonly IF_VERSION_STAMP="${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
     else
-      local -r IF_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}"
+      readonly IF_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}"
     fi
 
-    local -r IRONFOX_IF_VERSION="${IRONFOX_VERSION}.${IF_VERSION_STAMP}"
+    readonly IRONFOX_IF_VERSION="${IRONFOX_VERSION}.${IF_VERSION_STAMP}"
   fi
   export IRONFOX_IF_VERSION
 
