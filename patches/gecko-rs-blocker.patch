@@ -9,39 +9,12 @@ Adapted from LibreWolf: https://codeberg.org/librewolf/source/src/branch/main/pa
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
-diff --git a/services/settings/remote-settings.sys.mjs b/services/settings/remote-settings.sys.mjs
-index b180cfc850ee..41e7f9c43f45 100644
---- a/services/settings/remote-settings.sys.mjs
-+++ b/services/settings/remote-settings.sys.mjs
-@@ -19,6 +19,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
-   SyncHistory: "resource://services-settings/SyncHistory.sys.mjs",
-   UptakeTelemetry: "resource://services-settings/UptakeTelemetry.sys.mjs",
-   Utils: "resource://services-settings/Utils.sys.mjs",
-+  SharedUtils: "resource://services-settings/SharedUtils.sys.mjs",
- });
- 
- const PREF_SETTINGS_BRANCH = "services.settings.";
-@@ -286,6 +287,10 @@ function remoteSettingsFunction() {
-         const collection = changeset.metadata.id;
-         const identifier = `${bucket}/${collection}`;
- 
-+        if (!lazy.SharedUtils.isCollectionAllowed(bucket, collection, lazy.Utils.allowedCollections)) {
-+          continue;
-+        }
-+
-         if (pulled.includes(identifier)) {
-           // The startup bundles contain both main and preview changesets.
-           // Importing both increases complexity down the line, and brings no value.
 diff --git a/services/settings/RemoteSettings.worker.mjs b/services/settings/RemoteSettings.worker.mjs
-index 3e4e915..a927685 100644
+index 3e4e915c13ed..1df034046bd0 100644
 --- a/services/settings/RemoteSettings.worker.mjs
 +++ b/services/settings/RemoteSettings.worker.mjs
-@@ -62,12 +62,16 @@ const Agent = {
-    *
-    * @param {string} bucket
+@@ -64,10 +64,12 @@ const Agent = {
     * @param {string} collection
-+   * @param {string} allowedCollections
-+   * @param {string} allowedCollectionsFromDump
     * @returns {int} Number of records loaded from dump or -1 if no dump found.
     */
 -  async importJSONDump(bucket, collection) {
@@ -56,7 +29,7 @@ index 3e4e915..a927685 100644
      if (records === null) {
        // Return -1 if file is missing.
 diff --git a/services/settings/RemoteSettingsClient.sys.mjs b/services/settings/RemoteSettingsClient.sys.mjs
-index f4f9b1c0bce9..fc3c6bb2b1ba 100644
+index f84cdf9796925..4b4424845434b 100644
 --- a/services/settings/RemoteSettingsClient.sys.mjs
 +++ b/services/settings/RemoteSettingsClient.sys.mjs
 @@ -209,12 +209,21 @@ class AttachmentDownloader extends Downloader {
@@ -115,7 +88,7 @@ index f4f9b1c0bce9..fc3c6bb2b1ba 100644
      if (result < 0) {
        lazy.console.debug(`${this.identifier} no dump available`);
 diff --git a/services/settings/RemoteSettingsWorker.sys.mjs b/services/settings/RemoteSettingsWorker.sys.mjs
-index 57bfb3f..874b35a 100644
+index 57bfb3f3d544..874b35abff18 100644
 --- a/services/settings/RemoteSettingsWorker.sys.mjs
 +++ b/services/settings/RemoteSettingsWorker.sys.mjs
 @@ -162,8 +162,8 @@ class Worker {
@@ -130,15 +103,12 @@ index 57bfb3f..874b35a 100644
      });
    }
 diff --git a/services/settings/SharedUtils.sys.mjs b/services/settings/SharedUtils.sys.mjs
-index e5b20d9..9a71c99 100644
+index e5b20d9b9dd6e..1f97726c31999 100644
 --- a/services/settings/SharedUtils.sys.mjs
 +++ b/services/settings/SharedUtils.sys.mjs
-@@ -34,8 +34,13 @@ export var SharedUtils = {
-    *
+@@ -35,7 +35,10 @@ export var SharedUtils = {
     * @param {string}  bucket
     * @param {string}  collection
-+   * @param {string}  allowedCollections
-+   * @param {string}  allowedCollectionsFromDump
     */
 -  async loadJSONDump(bucket, collection) {
 +  async loadJSONDump(bucket, collection, allowedCollections, allowedCollectionsFromDump) {
@@ -148,20 +118,11 @@ index e5b20d9..9a71c99 100644
      // When using the preview bucket, we still want to load the main dump.
      // But we store it locally in the preview bucket.
      const jsonBucket = bucket.replace("-preview", "");
-@@ -50,4 +55,75 @@ export var SharedUtils = {
+@@ -50,4 +53,37 @@ export var SharedUtils = {
      // Will throw if JSON is invalid.
      return response.json();
    },
 +
-+  /**
-+   * Internal code to determine whether the bucket and collection are allowed to
-+   * be loaded by the remote settings client for a given list of allowed
-+   * bucket/collection combinations.
-+   * @param {string} bucket
-+   * @param {string} collection
-+   * @param {Array<string>} allowedCollections
-+   * @returns {boolean} whether the bucket and collection are allowed to load
-+   */
 +  _isCollectionAllowedInternal(bucket, collection, allowedCollections) {
 +    return (
 +      allowedCollections.includes(`${bucket}/${collection}`) ||
@@ -170,65 +131,36 @@ index e5b20d9..9a71c99 100644
 +    );
 +  },
 +
-+  /**
-+   * Determines whether the bucket and collection are allowed to be loaded by the
-+   * remote settings client.
-+   * @param {string} bucket
-+   * @param {string} collection
-+   * @param {string} allowedCollections
-+   * @returns {boolean} whether the bucket and collection are allowed to load
-+   */
 +  isCollectionAllowed(bucket, collection, allowedCollections) {
-+    if (
-+      this._isCollectionAllowedInternal(
-+        bucket,
-+        collection,
-+        allowedCollections
-+      )
-+    ) {
++    if (this._isCollectionAllowedInternal(bucket, collection, allowedCollections)) {
 +      return true;
 +    }
-+    console.warn(
++    // eslint-disable-next-line no-console
++    console.debug(
 +      `Connection attempt to RS collection "${bucket}/${collection}" was blocked/filtered.`
 +    );
 +    return false;
 +  },
 +
-+  /**
-+   * Determines whether the bucket and collection are allowed to be loaded from
-+   * an in-tree remote settings dump.
-+   * @param {string} bucket
-+   * @param {string} collection
-+   * @param {string} allowedCollections
-+   * @param {string} allowedCollectionsFromDump
-+   * @returns {boolean} whether the bucket and collection are allowed to load
-+   */
 +  isCollectionAllowedFromDump(bucket, collection, allowedCollections, allowedCollectionsFromDump) {
 +    if (
-+      this._isCollectionAllowedInternal(
-+        bucket,
-+        collection,
-+        allowedCollectionsFromDump
-+      ) ||
-+      this._isCollectionAllowedInternal(
-+        bucket,
-+        collection,
-+        allowedCollections
-+      )
++      this._isCollectionAllowedInternal(bucket, collection, allowedCollectionsFromDump) ||
++      this._isCollectionAllowedInternal(bucket, collection, allowedCollections)
 +    ) {
 +      return true;
 +    }
-+    console.warn(
++    // eslint-disable-next-line no-console
++    console.debug(
 +      `Access attempt to RS collection "${bucket}/${collection}" from local dump was blocked/filtered.`
 +    );
 +    return false;
 +  },
  };
 diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
-index 76f69ab74e..27a566241e 100644
+index 70f77c9fcbbb6..58d1e2f8d8e50 100644
 --- a/services/settings/Utils.sys.mjs
 +++ b/services/settings/Utils.sys.mjs
-@@ -10,6 +10,7 @@ const lazy = {};
+@@ -11,6 +11,7 @@ const lazy = {};
  
  ChromeUtils.defineESModuleGetters(lazy, {
    SharedUtils: "resource://services-settings/SharedUtils.sys.mjs",
@@ -236,8 +168,8 @@ index 76f69ab74e..27a566241e 100644
  });
  
  XPCOMUtils.defineLazyServiceGetter(
-@@ -91,6 +92,18 @@ XPCOMUtils.defineLazyPreferenceGetter(
-   false
+@@ -99,6 +100,18 @@ XPCOMUtils.defineLazyPreferenceGetter(
+   ""
  );
  
 +ChromeUtils.defineLazyGetter(lazy, "allowedCollections", () =>
@@ -255,7 +187,7 @@ index 76f69ab74e..27a566241e 100644
  function _isUndefined(value) {
    return typeof value === "undefined";
  }
-@@ -105,6 +118,14 @@ export var Utils = {
+@@ -111,6 +124,14 @@ export var Utils = {
        : AppConstants.REMOTE_SETTINGS_SERVER_URLS[0];
    },
  
@@ -270,7 +202,7 @@ index 76f69ab74e..27a566241e 100644
    CHANGES_PATH: "/buckets/monitor/collections/changes/changeset",
  
    /**
-@@ -393,7 +414,9 @@ export var Utils = {
+@@ -450,7 +471,9 @@ export var Utils = {
      if (lastModified === undefined) {
        const { timestamp: dumpTimestamp } = await lazy.SharedUtils.loadJSONDump(
          bucket,
@@ -281,7 +213,7 @@ index 76f69ab74e..27a566241e 100644
        );
        // Client recognize -1 as missing dump.
        lastModified = dumpTimestamp ?? -1;
-@@ -503,7 +526,9 @@ export var Utils = {
+@@ -560,7 +583,9 @@ export var Utils = {
      }
  
      return {
@@ -292,8 +224,44 @@ index 76f69ab74e..27a566241e 100644
        timestamp,
        serverTimeMillis,
        backoffSeconds,
+diff --git a/services/settings/remote-settings.sys.mjs b/services/settings/remote-settings.sys.mjs
+index b180cfc850ee3..41e7f9c43f45d 100644
+--- a/services/settings/remote-settings.sys.mjs
++++ b/services/settings/remote-settings.sys.mjs
+@@ -19,6 +19,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   SyncHistory: "resource://services-settings/SyncHistory.sys.mjs",
+   UptakeTelemetry: "resource://services-settings/UptakeTelemetry.sys.mjs",
+   Utils: "resource://services-settings/Utils.sys.mjs",
++  SharedUtils: "resource://services-settings/SharedUtils.sys.mjs",
+ });
+ 
+ const PREF_SETTINGS_BRANCH = "services.settings.";
+@@ -286,6 +287,10 @@ function remoteSettingsFunction() {
+         const collection = changeset.metadata.id;
+         const identifier = `${bucket}/${collection}`;
+ 
++        if (!lazy.SharedUtils.isCollectionAllowed(bucket, collection, lazy.Utils.allowedCollections)) {
++          continue;
++        }
++
+         if (pulled.includes(identifier)) {
+           // The startup bundles contain both main and preview changesets.
+           // Importing both increases complexity down the line, and brings no value.
+diff --git a/toolkit/components/search/ConfigSearchEngine.sys.mjs b/toolkit/components/search/ConfigSearchEngine.sys.mjs
+index 5ca99c812c395..f60507b1c084a 100644
+--- a/toolkit/components/search/ConfigSearchEngine.sys.mjs
++++ b/toolkit/components/search/ConfigSearchEngine.sys.mjs
+@@ -189,7 +189,7 @@ class IconHandler {
+       try {
+         iconData = await this.#iconCollection.attachments.download(record);
+       } catch (ex) {
+-        console.error("Could not download new icon", ex);
++        lazy.logConsole.debug("Could not download new icon", ex);
+         continue;
+       }
+ 
 diff --git a/toolkit/components/search/SearchEngineSelector.sys.mjs b/toolkit/components/search/SearchEngineSelector.sys.mjs
-index 3a42b383af19..e375db546bcd 100644
+index 3a42b383af198..e375db546bcda 100644
 --- a/toolkit/components/search/SearchEngineSelector.sys.mjs
 +++ b/toolkit/components/search/SearchEngineSelector.sys.mjs
 @@ -409,13 +409,13 @@ export class SearchEngineSelector {
