@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Gecko - Prevent alt-svc tracking
+
+Prevents alt-svc data from persisting to protect against cross-session tracking.
+
+(Adapted from Tor Browser).
+
+For more details, see https://librewolf.dev/librewolf/issues/issues/3254.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/netwerk/protocol/http/nsHttpHandler.cpp b/netwerk/protocol/http/nsHttpHandler.cpp
+index 0192e5f6f2..f1de771683 100644
+--- a/netwerk/protocol/http/nsHttpHandler.cpp
++++ b/netwerk/protocol/http/nsHttpHandler.cpp
+@@ -9,6 +9,7 @@
+ 
+ #include "ASpdySession.h"
+ #include "AltServiceChild.h"
++#include "CacheObserver.h"
+ #include "EventTokenBucket.h"
+ #include "HttpLog.h"
+ #include "LoadContextInfo.h"
+@@ -2321,6 +2322,9 @@ nsHttpHandler::Observe(nsISupports* subject, const char* topic,
+     // clear cache of all authentication credentials.
+     mAuthCache->ClearAll();
+     mPrivateAuthCache->ClearAll();
++    if (CacheObserver::ClearCacheOnShutdown() && mAltSvcCache) {
++      mAltSvcCache->ClearAltServiceMappings();
++    }
+     if (mWifiTickler) mWifiTickler->Cancel();
+ 
+     // Inform nsIOService that network is tearing down.
+
+-- 

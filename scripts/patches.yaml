@@ -575,6 +575,15 @@ patches:
      usual side effects that appear when the Beacon API is disabled.
     category: "Privacy"
 
+  - file: "gecko-prevent-alt-svc-tracking.patch"
+    name: "Gecko - Prevent alt-svc tracking"
+    description: "Prevents alt-svc data from persisting across-sessions."
+    reason: | 
+      Improves privacy by preventing the use of alt-svc data for cross-session tracking.
+      (For details, see: https://librewolf.dev/librewolf/issues/issues/3254).
+    effect: "Users are provided with strengthened tracking protection."
+    category: "Privacy"
+
   - file: "gecko-prevent-fingerprinting-via-chrome-resources.patch"
     name: "Gecko - Prevent fingerprinting via internal resources"
     description: "Prevents the browser from exposing branding assets and certain other internal resources to websites."
