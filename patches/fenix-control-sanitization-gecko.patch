@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Mon, 28 Sep 2026 01:58:10 +0000
+Subject: [PATCH] Fenix - Control Gecko Sanitization
+
+If the setting to clear data on shutdown is enabled/disabled from the browser's UI settings, this ensures that the functionality is
+also fully enabled/disabled within Gecko.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/deletebrowsingdata/DeleteBrowsingDataOnQuitFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/deletebrowsingdata/DeleteBrowsingDataOnQuitFragment.kt
+index 290cf4f4ecdc..d1c632b71d02 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/deletebrowsingdata/DeleteBrowsingDataOnQuitFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/deletebrowsingdata/DeleteBrowsingDataOnQuitFragment.kt
+@@ -15,6 +15,7 @@ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.showToolbar
+ import org.mozilla.fenix.settings.SharedPreferenceUpdater
+ import org.mozilla.fenix.settings.requirePreference
++import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
+ 
+ /**
+  * Settings screen allowing users to configure what browsing data to automatically delete when choosing the Quit options
+@@ -49,6 +50,8 @@ class DeleteBrowsingDataOnQuitFragment : PreferenceFragmentCompat(), SystemInset
+                 object : SharedPreferenceUpdater() {
+                     override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+                         setAllCheckboxes(newValue as Boolean)
++                        GeckoSettingsBridge.setSanitizeOnShutdown(context, context.components.core.engine)
++                        GeckoSettingsBridge.setSanitizeCacheOnShutdown(context, context.components.core.engine)
+                         return super.onPreferenceChange(preference, newValue)
+                     }
+                 }
+@@ -65,6 +68,8 @@ class DeleteBrowsingDataOnQuitFragment : PreferenceFragmentCompat(), SystemInset
+                         deleteOnQuitPref.isChecked = false
+                         settings.shouldDeleteBrowsingDataOnQuit = false
+                     }
++                    GeckoSettingsBridge.setSanitizeOnShutdown(preference.context, preference.context.components.core.engine)
++                    GeckoSettingsBridge.setSanitizeCacheOnShutdown(preference.context, preference.context.components.core.engine)
+                     return true
+                 }
+             }
+-- 

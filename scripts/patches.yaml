@@ -809,6 +809,16 @@ patches:
     effect: "Users can fully disable password manager functionality from the UI."
     category: "User Experience"
 
+  - file: "fenix-control-sanitization-gecko.patch"
+    name: "Fenix - Control Gecko Sanitization"
+    description: |
+     If the setting to clear data on shutdown is enabled/disabled from the browser's UI settings, this ensures that the functionality is
+     also fully enabled/disabled within Gecko.
+    reason: |
+     Helps ensure that Gecko preferences/behavior is in sync with Fenix settings/behavior, avoids issues, and improves UX.
+    effect: "Users can properly control sanitization of data as expected from the UI."
+    category: "User Experience"
+
   # User Interface
   - file: "fenix-ironfox-branding.patch"
     name: "Fenix - IronFox branding"

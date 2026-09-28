@@ -10,7 +10,9 @@ import mozilla.components.concept.engine.preferences.Branch
 import mozilla.components.concept.engine.preferences.BrowserPreference
 import mozilla.components.ExperimentalAndroidComponentsApi
 import mozilla.components.concept.engine.Engine
+import org.ironfoxoss.ironfox.utils.IFPrefUtils
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
+import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.components
 
 // Helpers for managing Gecko preferences from Fenix
@@ -51,6 +53,8 @@ object GeckoSettingsBridge {
     setAddressAutofillEnabled(context, engine)
     setCardAutofillEnabled(context, engine)
     setPasswordManagerEnabled(context, engine)
+    setSanitizeOnShutdown(context, engine)
+    setSanitizeCacheOnShutdown(context, engine)
     setHttpsOnlyMode(context, engine)
     setIronFoxOnboardingCompleted(context, engine)
 
@@ -246,6 +250,17 @@ object GeckoSettingsBridge {
   fun setPasswordManagerEnabled(context: Context, engine: Engine) {
     val passwordManagerEnabled = context.components.settings.shouldPromptToSaveLogins
     setDefaultPref(engine, "signon.rememberSignons", passwordManagerEnabled)
+  }
+
+  fun setSanitizeOnShutdown(context: Context, engine: Engine) {
+    val sanitizeOnShutdown = context.components.settings.shouldDeleteAnyDataOnQuit()
+    setDefaultPref(engine, "privacy.sanitize.sanitizeOnShutdown", sanitizeOnShutdown)
+  }
+
+  fun setSanitizeCacheOnShutdown(context: Context, engine: Engine) {
+    val sanitizeCacheOnShutdown = IFPrefUtils(context).getBoolPref(R.string.pref_key_delete_caches_on_quit)
+    setDefaultPref(engine, "privacy.clearOnShutdown.cache", sanitizeCacheOnShutdown)
+    setDefaultPref(engine, "privacy.clearOnShutdown_v2.cache", sanitizeCacheOnShutdown)
   }
 
   // HTTPS-Only mode is a weird edge case, for some reason the value is not being reflected on the first launch

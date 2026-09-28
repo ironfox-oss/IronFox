@@ -602,6 +602,9 @@ function boolPrefHasUISetting(pref) {
     "media.peerconnection.enabled",
     "pdfjs.disabled",
     "print.enabled",
+    "privacy.clearOnShutdown.cache",
+    "privacy.clearOnShutdown_v2.cache",
+    "privacy.sanitize.sanitizeOnShutdown",
     "signon.rememberSignons",
     "xpinstall.enabled",
 
