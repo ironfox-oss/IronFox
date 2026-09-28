@@ -514,6 +514,13 @@ readonly UV_TOOL_DIR="${IRONFOX_UV_LOCAL}/tools"
 export UV_TOOL_BIN_DIR
 export UV_TOOL_DIR
 
+# Xcode command line tools path
+## (For now, we need to use 26.5, as 27.0 is currently broken due to a bug upstream)
+if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
+  readonly MACOS_SDK_DIR='/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk'
+  export MACOS_SDK_DIR
+fi
+
 ## Pin Python version
 readonly UV_PYTHON_CPYTHON_BUILD="${IRONFOX_PYTHON_GIT_RELEASE}"
 export UV_PYTHON_CPYTHON_BUILD
