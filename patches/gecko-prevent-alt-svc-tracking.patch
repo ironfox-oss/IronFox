@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
-Date: Sun, 05 Jul 2026 20:19:20 +0000
+Date: Mon, 28 Sep 2026 01:46:49 +0000
 Subject: [PATCH] Gecko - Prevent alt-svc tracking
 
 Prevents alt-svc data from persisting to protect against cross-session tracking.
