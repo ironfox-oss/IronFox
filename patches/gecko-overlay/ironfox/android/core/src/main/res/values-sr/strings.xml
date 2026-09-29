@@ -1,3 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    </resources>
+    <string name="restart_required_summary">Промена овог подешавања ће поновно покренути прегледач</string>
+    <string name="unsupported_summary">Ово подешавање се НЕ препоручује и није подржано. Наставите пажљиво.</string>
+    <string name="ironfox_retry">Покушај поново</string>
+    <string name="if_preferences">Подешавања IronFox</string>
+    <string name="if_preferences_geo">Геолокација</string>
+    <string name="if_preferences_misc">Разно</string>
+    <string name="if_preferences_privacy">Приватност</string>
+    <string name="if_preferences_privacy_security">Приватност и безбедност</string>
+    <string name="if_preferences_secret">Тајна подешавања</string>
+    <string name="if_preferences_security">Безбедност</string>
+    <string name="preference_accessibility_enabled">Омогућите услуге приступачности</string>
+    <string name="preference_always_use_private_browsing">Увек користите режим приватног прегледања</string>
+</resources>

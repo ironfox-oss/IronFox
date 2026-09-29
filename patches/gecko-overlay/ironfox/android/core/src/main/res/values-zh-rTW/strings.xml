@@ -62,4 +62,9 @@
     <string name="preference_fpp_overrides_ironfox_timezone_summary">預設對特定網站停用時區偽裝來減少網頁顯示錯誤 - 變更此設定將會重新啟動您的瀏覽器</string>
     <string name="ironfox_retry">重試</string>
     <string name="preference_fpp_overrides_ironfox_enabled">啟用來自 IronFox 的指紋保護覆寫</string>
+    <string name="if_preferences_geo">地理定位</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">啟用 Android 地理定位提供程式</string>
+    <string name="preference_ironfox_geo_provider_android_summary">如果啟用，IronFox 將會嘗試使用 Android 作業系統提供網站您的地理位置（如果您授予網站權限） - 變更此設定將會重新啟動您的瀏覽器</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">啟用網路地理定位提供程式</string>
+    <string name="preference_ironfox_geo_provider_network_summary">如果已啟用 Android 地理定位提供程式不可用， IronFox 將會使用 BeaconDB 網路地理定位服務以提供網站您的位置（如果您授予網站權限） - 變更此設定將會重新啟動您的瀏覽器</string>
 </resources>

@@ -62,4 +62,6 @@
     <string name="ironfox_onboarding_state_installing_ublock">Installazione di uBlock Origin…</string>
     <string name="ironfox_onboarding_state_installing_ublock_error">Si è verificato un errore durante l\'installazione di uBlock Origin: %1$s</string>
     <string name="ironfox_retry">Riprova</string>
+    <string name="if_preferences_geo">Geolocalizzazione</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Attiva la geolocalizzazione Android</string>
 </resources>

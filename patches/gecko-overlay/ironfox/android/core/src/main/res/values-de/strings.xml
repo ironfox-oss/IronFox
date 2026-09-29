@@ -62,4 +62,9 @@
     <string name="preference_autoplay_policy_click_to_play">Zum Abspielen anklicken</string>
     <string name="preference_always_use_private_browsing">Immer den privaten Modus verwenden</string>
     <string name="wallpaper_collection_fennec_description">Hintergrundbilder von Fennec F-Droid. %s</string>
+    <string name="if_preferences_geo">Geolokalisierung</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Den Android-Standortdienst aktivieren</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Den Netzwerk-Standortdienst aktivieren</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Wenn diese Option aktiviert ist, versucht IronFox, die Standortdienste des Android-Betriebssystems zu nutzen, um Websites Ihren Standort mitzuteilen (sofern Sie der Website die entsprechende Berechtigung erteilen). Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Wenn diese Option aktiviert ist und der Android-Standortdienst nicht verfügbar ist, nutzt IronFox den Standortdienst BeaconDB, um Websites Ihren Standort mitzuteilen (sofern Sie der Website die entsprechende Berechtigung erteilen). Das Ändern dieser Einstellung startet den Browser neu</string>
 </resources>

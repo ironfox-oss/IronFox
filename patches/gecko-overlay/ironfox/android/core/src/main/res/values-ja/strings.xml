@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="restart_required_summary">この設定を変更するとブラウザが再起動されます</string>
-    <string name="unsupported_summary">この設定は非推奨かつサポート対象外です。変更には十分注意してください。</string>
+    <string name="restart_required_summary">この設定を変更するとブラウザが再起動します</string>
+    <string name="unsupported_summary">この設定は非推奨でサポートの対象外です。利用の際は十分にご注意願います。</string>
     <string name="if_preferences">IronFox 設定</string>
     <string name="if_preferences_misc">その他</string>
     <string name="if_preferences_privacy">プライバシー</string>
@@ -62,4 +62,9 @@
     <string name="ironfox_onboarding_state_installing_ublock">uBlock Origin をインストール中…</string>
     <string name="ironfox_onboarding_state_installing_ublock_error">uBlock Origin をインストール中にエラーが発生しました: %1$s</string>
     <string name="ironfox_retry">再試行</string>
+    <string name="if_preferences_geo">位置情報</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Androidの位置情報プロバイダーを有効化</string>
+    <string name="preference_ironfox_geo_provider_android_summary">この機能を有効にすると、IronFoxはAndroid OSの位置情報サービスを使いユーザーの現在地情報をウェブサイトへ提供しようとします（サイトへの許可を付与した場合に限ります） - この設定を変更するとブラウザが再起動します</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">ネットワーク位置情報プロバイダを有効化</string>
+    <string name="preference_ironfox_geo_provider_network_summary">この機能が有効でAndroidの位置情報プロバイダーが利用できない場合は、IronFoxはBeaconDBネットワーク位置情報サービスを使いウェブサイトへ利用者の位置情報を提供します（サイトへの許可を付与した場合に限ります） - この設定を変更するとブラウザが再起動します</string>
 </resources>

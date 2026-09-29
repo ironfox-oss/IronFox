@@ -62,4 +62,9 @@
     <string name="preference_autoplay_policy_click_to_play">Oynatmak için tıkla</string>
     <string name="preference_always_use_private_browsing">Her zaman gizli tarama modunu kullan</string>
     <string name="wallpaper_collection_fennec_description">Fennec F-Droid\'den arka planlar. %s</string>
+    <string name="if_preferences_geo">Coğrafi Konum</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Android Coğrafi Konum Sağlayıcısını Etkinleştir</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Eğer etkinleştirilirse, Ironfox Android\'in işletim sistemi konum servisleri ile websitelere coğrafi konumunuzu paylaşmaya çalışacak (eğer site izni verirseniz) - Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır.</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Ağ coğrafi konumu sağlayıcısını etkinleştirin</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Eğer etkinleştirilir ve Android Coğrafi Konum sağlayıcısı mevcut değilse, Ironfox BeaconDB ağ coğrafi konumu sağlayıcısını kullanarak websitelere konumunuzu paylaşacaktır (eğer site izni verilirse) - Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır</string>
 </resources>
