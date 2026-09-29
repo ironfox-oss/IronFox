@@ -561,7 +561,7 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxhdpi/ic_logo_wordmark_private.webp"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_normal.webp"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_private.webp"
-  "${IRONFOX_SED}" -i -e 's|R.drawable.fox_ai_on_state|R.drawable.ic_storage|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/ai/AiControlsScreen.kt"
+  "${IRONFOX_SED}" -i -e 's|R.drawable.fox_ai_on_state|R.drawable.ic_storage|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/ai/AIControlsScreen.kt"
   "${IRONFOX_SED}" -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.ic_storage|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt"
   "${IRONFOX_SED}" -i -e 's|R.drawable.microsurvey_success|R.drawable.ic_storage|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt"
   "${IRONFOX_SED}" -i -e 's|R.drawable.nova_onboarding_marketing|R.drawable.ic_storage|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/onboarding/view/MarketingDataOnboardingPage.kt"
