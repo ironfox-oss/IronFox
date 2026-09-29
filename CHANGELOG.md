@@ -1,1 +1,5 @@
-- Updated to Firefox [`156.0.1`](https://firefox.com/firefox/android/156.0.1/releasenotes/).
+- Updated to Firefox [`157.0`](https://firefox.com/firefox/android/157.0/releasenotes/).
+- Updated to Phoenix [`2026.09.29.2`](https://codeberg.org/celenity/Phoenix/releases/tag/2026.09.29.2).
+- Updated to UnifiedPush-AC [`1.0.8`](https://gitlab.com/ironfox-oss/unifiedpush-ac/-/releases/1.0.8).
+- [Prevented `alt-svc` data from persisting](https://gitlab.com/ironfox-oss/IronFox/-/commit/4976f33178c40867141c5b7c242e0691083f0286) to protect against cross-session tracking.
+- Minor tweaks and fixes.
