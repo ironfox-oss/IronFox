@@ -29,6 +29,33 @@ index c1173b2ceb0f..b1cc135ad304 100644
              numberOfAppLaunches = { settings.numberOfAppLaunches },
          )
      }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/privacyreport/PrivacyReportNotificationWorker.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/privacyreport/PrivacyReportNotificationWorker.kt
+index ab026f3adc65..27058ecd82e3 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/privacyreport/PrivacyReportNotificationWorker.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/privacyreport/PrivacyReportNotificationWorker.kt
+@@ -21,11 +21,12 @@ import mozilla.components.support.base.android.NotificationsDelegate
+ import mozilla.components.support.base.log.logger.Logger
+ import mozilla.components.support.utils.DateTimeProvider
+ import mozilla.components.support.utils.DefaultDateTimeProvider
+-import org.mozilla.fenix.components.logger
++// import org.mozilla.fenix.components.logger
+ import org.mozilla.fenix.utils.Settings
+ 
+ private const val PRIVACY_REPORT_NOTIFICATION_WORK_NAME = "org.mozilla.fenix.privacyreport.work"
+ private val WEEK_IN_MILLIS = TimeUnit.DAYS.toMillis(7)
++private val logger = Logger("PrivacyReportNotificationWorker")
+ 
+ /** Weekly blocked-tracker counts over this show the "trackers blocked" notification variant. */
+ private const val SHOW_NOTIFICATION_THRESHOLD = 47
+@@ -52,7 +53,7 @@ class PrivacyReportNotificationWorker(
+     private val dateTimeProvider: DateTimeProvider = DefaultDateTimeProvider(),
+ ) : CoroutineWorker(applicationContext, workerParameters) {
+ 
+-    private val logger = Logger("PrivacyReportNotificationWorker")
++//    private val logger = Logger("PrivacyReportNotificationWorker")
+ 
+     override suspend fun doWork(): Result {
+         ensurePrivacyReportNotificationChannelExists(applicationContext)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
 index 742b5d64e65d..b5ce0bc7723c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt

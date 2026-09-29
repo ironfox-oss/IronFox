@@ -7,19 +7,6 @@ Adds support for a true OLED black theme.
 
 Signed-off-by: Akash Yadav <itsaky01@gmail.com>
 ---
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 75f51971cb20..728ff3680edd 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -793,7 +793,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-             settings.shouldUseLightTheme -> {
-                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-             }
--            settings.shouldUseDarkTheme -> {
-+            settings.shouldUseDarkTheme || settings.shouldUseOledTheme -> {
-                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-             }
-             SDK_INT < Build.VERSION_CODES.P && settings.shouldUseAutoBatteryTheme -> {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 index aff32cbcd7f3..fd0a5a8a793f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
@@ -68,20 +55,10 @@ index b8007c652e2a..b6c8381975b0 100644
          )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
-index 111db63dc375..235fa906d303 100644
+index 8eaf185575f0..048c411c1510 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
-@@ -269,6 +269,9 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
-         val settings = requireComponents.settings
-         radioDarkestTheme = requirePreference(R.string.pref_key_oled_theme)
-         radioDarkestTheme.isVisible = settings.enableOledTheme
-+        radioDarkestTheme.onClickListener {
-+            setNewTheme(AppCompatDelegate.MODE_NIGHT_YES)
-+        }
-     }
- 
-     private fun bindFollowDeviceTheme() {
-@@ -281,8 +284,9 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
+@@ -285,8 +285,9 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
      }
  
      private fun setNewTheme(mode: Int) {
@@ -93,38 +70,8 @@ index 111db63dc375..235fa906d303 100644
          activity?.recreate()
          with(requireComponents.core) {
              engine.settings.preferredColorScheme = getPreferredColorScheme()
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt
-index 258a30e3b8bd..2b4fe759d7a6 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt
-@@ -23,6 +23,8 @@ import mozilla.components.compose.base.theme.lightAcornGradientScheme
- import mozilla.components.compose.base.theme.lightColorPalette
- import mozilla.components.compose.base.theme.privateAcornGradientScheme
- import mozilla.components.compose.base.theme.privateColorPalette
-+import androidx.compose.ui.platform.LocalContext
-+import org.ironfoxoss.ironfox.utils.maybeApplyOledColors
- 
- /**
-  * The theme for Mozilla Firefox for Android (Fenix).
-@@ -38,14 +40,14 @@ fun FirefoxTheme(
-     val colors: AcornColors =
-         when (theme) {
-             Theme.Light -> lightColorPalette
--            Theme.Dark -> darkColorPalette
-+            Theme.Dark -> darkColorPalette.maybeApplyOledColors(LocalContext.current)
-             Theme.Private -> privateColorPalette
-         }
- 
-     val colorScheme: ColorScheme =
-         when (theme) {
-             Theme.Light -> acornLightColorScheme()
--            Theme.Dark -> acornDarkColorScheme()
-+            Theme.Dark -> acornDarkColorScheme().maybeApplyOledColors(LocalContext.current)
-             Theme.Private -> acornPrivateColorScheme()
-         }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt
-index 904191f39554..2b8ad0b66af7 100644
+index 904191f39554..89462cad381f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt
 @@ -26,9 +26,14 @@ import org.mozilla.fenix.HomeActivity
@@ -155,21 +102,19 @@ index 904191f39554..2b8ad0b66af7 100644
                  BrowsingMode.Private -> R.style.PrivateTheme
              }
  
-@@ -91,7 +100,13 @@ abstract class ThemeManager {
+@@ -91,6 +100,12 @@ abstract class ThemeManager {
              return typedValue.resourceId
          }
  
--        /**
 +        @ColorInt
 +        fun resolveAttributeColor(@AttrRes attribute: Int, context: Context): Int {
 +            val resourceId = resolveAttribute(attribute, context)
 +            return ContextCompat.getColor(context, resourceId)
 +        }
 +
-+         /**
+         /**
           * Resolves the attribute to a color.
           *
-          * @param attribute The attribute to resolve.
 @@ -132,7 +147,7 @@ abstract class ThemeManager {
  
  class DefaultThemeManager(

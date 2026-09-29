@@ -8,7 +8,7 @@ Adds minor tweaks to the browser's user interface.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-index 87a918cf8b2e..29ee5a6e23b5 100644
+index 91dddf5d6ac7..cf0e2513e89c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
 @@ -148,6 +148,8 @@ fun MainMenu(
@@ -16,7 +16,7 @@ index 87a918cf8b2e..29ee5a6e23b5 100644
      showIPProtection: Boolean,
      ipProtectionMenuState: IPProtectionMenuState,
 +    isPasswordManagerEnabled: Boolean,
-+    isSyncActive: Boolean,
++    isFxaSignedIn: Boolean,
      onMoreMenuClick: () -> Unit,
      onCustomizeReaderViewMenuClick: () -> Unit,
      onMozillaAccountButtonClick: () -> Unit,
@@ -37,7 +37,7 @@ index 87a918cf8b2e..29ee5a6e23b5 100644
 -                accountState = accountState,
 -                onClick = onMozillaAccountButtonClick,
 -            )
-+            if (isSyncActive) {
++            if (isFxaSignedIn) {
 +                MozillaAccountMenuItem(
 +                    account = account,
 +                    accountState = accountState,
@@ -85,7 +85,7 @@ index 87a918cf8b2e..29ee5a6e23b5 100644
                  showIPProtection = true,
                  ipProtectionMenuState = IPProtectionMenuState(),
 +                isPasswordManagerEnabled = false,
-+                isSyncActive = false,
++                isFxaSignedIn = false,
                  onMoreMenuClick = {},
                  onCustomizeReaderViewMenuClick = {},
                  onMozillaAccountButtonClick = {},
@@ -94,7 +94,7 @@ index 87a918cf8b2e..29ee5a6e23b5 100644
                  isDownloadHighlighted = true,
                  webExtensionMenuCount = 0,
 +                isPasswordManagerEnabled = false,
-+                isSyncActive = false,
++                isFxaSignedIn = false,
                  onMoreMenuClick = {},
                  onCustomizeReaderViewMenuClick = {},
                  onMozillaAccountButtonClick = {},
@@ -147,7 +147,7 @@ index bafe4f957dfe..2a73dc0f856f 100644
                      isPrivate = false,
                      onWebCompatReporterClick = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 94a209f7e86d..2988f50e3649 100644
+index 39ef4d3125c5..86971c7a1126 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 @@ -539,7 +539,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
@@ -159,15 +159,18 @@ index 94a209f7e86d..2988f50e3649 100644
                                          isBottomToolbar = settings.shouldUseBottomToolbar,
                                          isExpandedToolbarEnabled = settings.shouldUseExpandedToolbar,
                                          isSiteLoading = isSiteLoading,
-@@ -560,6 +560,8 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -560,8 +560,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                                          showBanner = shouldShowMenuBanner && !defaultBrowser,
                                          isDownloadHighlighted = isDownloadHighlighted,
                                          webExtensionMenuCount = webExtensionsCount,
 +                                        isPasswordManagerEnabled = settings.shouldPromptToSaveLogins,
-+                                        isSyncActive = settings.signedInFxaAccount,
++                                        isFxaSignedIn = settings.signedInFxaAccount,
                                          isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
-                                         showIPProtection = components.ipProtection.store.state.isEligible,
+-                                        showIPProtection = components.ipProtection.store.state.isEligible,
++                                        showIPProtection = components.ipProtection.store.state.isEligible && settings.signedInFxaAccount,
                                          ipProtectionMenuState = ipProtectionMenuState,
+                                         onMozillaAccountButtonClick = {
+                                             menuStore.dispatch(
 @@ -672,9 +674,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                                                  externalAppName = appLinksRedirect?.appName ?: "",
                                                  isOpenInAppMenuHighlighted = isOpenInAppMenuHighlighted,
@@ -180,4 +183,29 @@ index 94a209f7e86d..2988f50e3649 100644
                                                  summarizationMenuState = summarizationMenuState,
                                                  onWebCompatReporterClick = {
                                                      menuStore.dispatch(MenuAction.Navigate.WebCompatReporter)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index 9a1ff6febcaf..201c13986d19 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -653,7 +653,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+         )
+         setupGeckoLogsPreference(settings)
+         setupHttpsOnlyPreferences(settings)
+-        setupIPProtectionPreferences(components.ipProtection.store)
++        setupIPProtectionPreferences(components.ipProtection.store, settings)
+         setupNotificationPreference(NotificationManagerCompat.from(requireContext()).areNotificationsEnabled())
+ 
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN) {
+@@ -895,9 +895,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+     }
+ 
+     @VisibleForTesting
+-    internal fun setupIPProtectionPreferences(ipProtectionStore: IPProtectionStore) {
++    internal fun setupIPProtectionPreferences(ipProtectionStore: IPProtectionStore, settings: Settings) {
+         findPreference<IPProtectionPreference>(getPreferenceKey(R.string.pref_key_ip_protection_settings))?.apply {
+-            isVisible = ipProtectionStore.state.isEligible
++            isVisible = ipProtectionStore.state.isEligible && settings.signedInFxaAccount
+             showBetaBadge = FxNimbus.features.ipProtection.value().showBetaBadge
+         }
+     }
 -- 

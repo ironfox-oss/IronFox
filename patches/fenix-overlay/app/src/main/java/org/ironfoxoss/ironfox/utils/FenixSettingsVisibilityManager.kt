@@ -60,6 +60,7 @@ object FenixSettingsVisibilityManager {
     displayPreference(context, R.string.pref_key_tab_groups, prefFragment)
     displayPreference(context, R.string.pref_key_tab_groups_drag_and_drop, prefFragment)
     displayPreference(context, R.string.pref_key_tab_groups_live_reorder, prefFragment)
+    displayPreference(context, R.string.pref_key_tab_groups_strip, prefFragment)
     displayPreference(context, R.string.pref_key_use_minimal_bottom_toolbar_while_entering_text, prefFragment)
     displayPreference(context, R.string.pref_key_use_scroll_data_for_dynamic_toolbar, prefFragment)
     displayAppZygote(context, prefFragment)

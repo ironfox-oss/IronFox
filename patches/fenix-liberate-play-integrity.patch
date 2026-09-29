@@ -179,13 +179,13 @@ index a2f3b58abf0c..31cd76c3b50c 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 3c71fd5f01a1..f7ffe6549d50 100644
+index 35903275d6..08445b9891 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -575,7 +575,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -627,7 +627,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          }
          runOnVisualCompleteness(queue) {
-             GlobalScope.launch(IO) {
+             applicationScope.launch(ioDispatcher) {
 -                components.integrityClient.warmUp()
 +//                components.integrityClient.warmUp()
              }

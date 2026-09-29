@@ -3,7 +3,7 @@ From: celenity <celenity@celenity.dev>
 Date: Sun, 21 Jul 2026 01:00:59 +0000
 Subject: [PATCH] GeckoView - Target release
 
-Ensure that we build and publish the release variant of GeckoView.
+Ensures that we build and publish the release variant of GeckoView.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---

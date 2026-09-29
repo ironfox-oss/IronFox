@@ -2,32 +2,32 @@
 # Sources
 
 # Firefox
-# Version: 156.0.1 (RELEASE)
+# Version: 157.0 (BUILD1)
 # https://github.com/mozilla-firefox/firefox
-readonly IRONFOX_GECKO_COMMIT='19a90052d7869f7b194ff27d316520366ad1d592'
-readonly IRONFOX_GECKO_SHA512SUM='d630b92ab7d1c1ed884031c1958a945271da6ab9cf97577f7cdb07f498a3a5737214315087383e2d1b623c4c901d6d0e192db2c55717b38f20715870a2f02161'
-readonly IRONFOX_GECKO_VERSION='156.0.1'
+readonly IRONFOX_GECKO_COMMIT='fdd757a2e09c9471cddf383e64e631e4ce178499'
+readonly IRONFOX_GECKO_SHA512SUM='2924adc908619ca24d1fa011edfc4910bda2d4ea42536313d5949ac9b213db40e27bbd19daf45b4d9498f48b838df5fe1dd6fd21d135863a2206a51a7066fea5'
+readonly IRONFOX_GECKO_VERSION='157.0'
 
 # IronFox
 readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}"
 
 # This value is used for ex. producing reproducable archives, and its value should be bumped upon new releases
-readonly IRONFOX_VERSION_DATE='2026.09.11'
+readonly IRONFOX_VERSION_DATE='2026.09.29'
 
 # Application Services
-# Version: v156.0
+# Version: v157.0.1
 # https://github.com/mozilla/application-services
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt)
-readonly IRONFOX_AS_COMMIT='da9dbeb4909c9cba68db68514788028f520cdd34'
-readonly IRONFOX_AS_SHA512SUM='40ec21c1e0d5cbfe2582ae749e6ba7fd80610690954f942bd2797fe84681b58b9f2cfbd78ce4d35ec3ca18188e57a7c32f673e62ffb9b36d8faffcd351686353'
-readonly IRONFOX_AS_VERSION='156.0'
+readonly IRONFOX_AS_COMMIT='b2c6a64e19e793218c255e3c57beb034b761bb8a'
+readonly IRONFOX_AS_SHA512SUM='1467a05b3a8b2d7f4696251420b62955058b100f5f1b18b99bd3ac04814c5da256db0e3a206cbee1fc2c9fcf993bcec3cc1c294106bc46836364d49d103f6aae'
+readonly IRONFOX_AS_VERSION='157.0.1'
 
 # firefox-l10n
 # https://github.com/mozilla-l10n/firefox-l10n
 # NOTE: This repo is updated several times a day...
 # so I think best approach here will be for us to just update it alongside new releases
-readonly IRONFOX_L10N_CENTRAL_COMMIT='0479ccc0e210e08ba6114014eda5ede265ff6983'
-readonly IRONFOX_L10N_CENTRAL_SHA512SUM='54c1bb79acd93fc76d7e191002d9c0842ad6bf8b330f38d5af52a3e58913125fc87f58775daee60418c7637bda3d023a859226f7020cccd05910df07251f952f'
+readonly IRONFOX_L10N_CENTRAL_COMMIT='4f9026a9f01c172e10846e0dd4988512ab307fa6'
+readonly IRONFOX_L10N_CENTRAL_SHA512SUM='9ba0e3da3bbbae44464dbf593f3c3f2b9a7e6be80561ed90f50b06580adf0a015307e32f1cdb95fb523e6615ebec155736b765a05c217915d42df9ecfffec71f'
 
 # Glean
 # Version: 68.0.1
@@ -61,10 +61,10 @@ readonly IRONFOX_PHOENIX_SHA512SUM='a09e526f42367b63729a994cb7504f8a0a516441da2b
 readonly IRONFOX_UNIFFI_VERSION='0.31.0'
 
 # UnifiedPush-AC
-# Version: 1.0.7
+# Version: 1.0.8
 # https://gitlab.com/ironfox-oss/unifiedpush-ac
-readonly IRONFOX_UP_AC_COMMIT='18703293e90c56f4d80a4d774b99b01ae695ec79'
-readonly IRONFOX_UP_AC_SHA512SUM='a4ebbe8a688793c82eef79f2e668fbb8d3e9900048c5ad06dd7fc48b707126362b2fc3267f141c0af81a8d72a98b1808636cc7ce07fe823702b002027b20ec40'
+readonly IRONFOX_UP_AC_COMMIT='1fc4832dfd5cc34530b5e64d19aef657920bc668'
+readonly IRONFOX_UP_AC_SHA512SUM='61684659e524acf7645fb6a08c428591a55123b8f84389e25c4f38f2c1624e96416d4b05bc911ec85d081fcced5067c18c4dc3e007f29e0e71cb4a5842085fb5'
 
 # WASI SDK
 # https://github.com/WebAssembly/wasi-sdk

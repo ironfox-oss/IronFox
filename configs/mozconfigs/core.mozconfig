@@ -47,9 +47,6 @@ export MOZ_CRASHREPORTER=
 ### Windows-specific, but doesn't hurt to set here
 ac_add_options --disable-default-browser-agent
 
-## Disable FFmpeg
-ac_add_options --disable-ffmpeg
-
 ## Disable installation of extensions from system directories
 ac_add_options --disable-system-extension-dirs
 
@@ -78,7 +75,6 @@ ac_add_options --disable-vtune
 ac_add_options --disable-wasm-codegen-debug
 ac_add_options --disable-webdriver
 ac_add_options --disable-webrender-debugger
-ac_add_options --disable-webspeechtestbackend
 export MOZ_CALLGRIND=
 export MOZ_EXECUTION_TRACING=
 export MOZ_INSTRUMENTS=
@@ -107,10 +103,6 @@ export MOZ_TELEMETRY_REPORTING=
 ## Disable the updater
 ac_add_options --disable-unverified-updates
 ac_add_options --disable-updater
-
-## Disable Windows Media Foundation support
-### Windows-specific, but doesn't hurt to set here
-ac_add_options --disable-wmf
 
 ## Disable Node.js
 ac_add_options --disable-nodejs

@@ -193,7 +193,7 @@ index 979e420aa7..36061cd0c1 100644
                  utmMedium: ${settings.utmMedium}
                  utmSource: ${settings.utmSource}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-index e4dc2586bb..571f2930f1 100644
+index f9c8241279..540929ffd7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 @@ -8,7 +8,7 @@ import androidx.annotation.StringRes
@@ -204,8 +204,8 @@ index e4dc2586bb..571f2930f1 100644
 +// import mozilla.components.concept.integrity.IntegrityClient
  import mozilla.components.concept.storage.CreditCardsAddressesStorage
  import mozilla.components.concept.storage.LoginsStorage
- import org.mozilla.fenix.R
-@@ -17,17 +17,17 @@ import org.mozilla.fenix.debugsettings.addons.ui.AddonsDebugToolsScreen
+ import mozilla.components.feature.ipprotection.store.IPProtectionStore
+@@ -19,19 +19,19 @@ import org.mozilla.fenix.debugsettings.addons.ui.AddonsDebugToolsScreen
  import org.mozilla.fenix.debugsettings.addresses.AddressesDebugRegionRepository
  import org.mozilla.fenix.debugsettings.addresses.AddressesTools
  import org.mozilla.fenix.debugsettings.autofill.AutofillTools
@@ -223,13 +223,15 @@ index e4dc2586bb..571f2930f1 100644
 -import org.mozilla.fenix.debugsettings.integrity.IntegrityTools
 +// import org.mozilla.fenix.debugsettings.gleandebugtools.ui.GleanDebugToolsScreen
 +// import org.mozilla.fenix.debugsettings.integrity.IntegrityTools
+ import org.mozilla.fenix.debugsettings.ipprotection.IPProtectionLocationTools as IPProtectionLocationToolsScreen
+ import org.mozilla.fenix.debugsettings.listentopage.ListenToPageTools
  import org.mozilla.fenix.debugsettings.logins.LoginsTools
 -import org.mozilla.fenix.debugsettings.region.RegionTools
 +// import org.mozilla.fenix.debugsettings.region.RegionTools
  import org.mozilla.fenix.debugsettings.store.DebugDrawerAction
  import org.mozilla.fenix.debugsettings.store.DebugDrawerStore
  import org.mozilla.fenix.debugsettings.tabprocesstools.TabProcessTools
-@@ -67,7 +67,7 @@ enum class DebugDrawerRoute(
+@@ -71,7 +71,7 @@ enum class DebugDrawerRoute(
          route = "autofill",
          title = R.string.debug_drawer_autofill_title,
      ),
@@ -238,7 +240,7 @@ index e4dc2586bb..571f2930f1 100644
          route = "cfr_tools",
          title = R.string.debug_drawer_cfr_tools_title,
      ),
-@@ -78,19 +78,19 @@ enum class DebugDrawerRoute(
+@@ -82,19 +82,19 @@ enum class DebugDrawerRoute(
      RegionDebugTools(
          route = "region_debug_tools",
          title = R.string.debug_drawer_region_tools_title,
@@ -261,22 +263,20 @@ index e4dc2586bb..571f2930f1 100644
      TabGroupTools(
          route = "tab_group_tools",
          title = R.string.debug_drawer_tab_group_tools_title,
-@@ -98,11 +98,11 @@ enum class DebugDrawerRoute(
-     TabProcessTools(
+@@ -103,10 +103,10 @@ enum class DebugDrawerRoute(
          route = "tab_process_tools",
          title = R.string.debug_drawer_tab_process_tools_title,
--    ),
+     ),
 -    DistributionTools(
-+    );
 +/*    DistributionTools(
          route = "distribution_tools",
          title = R.string.debug_drawer_distribution_tools_title,
--    );
-+    ); */
- 
-     companion object {
-         /**
-@@ -130,7 +130,7 @@ enum class DebugDrawerRoute(
+-    ),
++    ), */
+     IPProtectionLocationTools(
+         route = "ip_protection_location_tools",
+         title = R.string.debug_drawer_ip_protection_location_tools_title,
+@@ -145,7 +145,7 @@ enum class DebugDrawerRoute(
              addressesDebugRegionRepository: AddressesDebugRegionRepository,
              creditCardsAddressesStorage: CreditCardsAddressesStorage,
              clientUUID: ClientUUID,
@@ -284,8 +284,8 @@ index e4dc2586bb..571f2930f1 100644
 +            integrityClient: Unit?,
              inactiveTabsEnabled: Boolean,
              tabGroupRepository: TabGroupRepository,
-         ): List<DebugDrawerDestination> = entries.map { debugDrawerRoute ->
-@@ -194,7 +194,7 @@ enum class DebugDrawerRoute(
+             lazyIPProtectionStore: Lazy<IPProtectionStore>,
+@@ -211,7 +211,7 @@ enum class DebugDrawerRoute(
                      }
                  }
  
@@ -294,7 +294,7 @@ index e4dc2586bb..571f2930f1 100644
                      onClick = {
                          debugDrawerStore.dispatch(DebugDrawerAction.NavigateTo.CfrTools)
                      }
-@@ -219,7 +219,7 @@ enum class DebugDrawerRoute(
+@@ -236,7 +236,7 @@ enum class DebugDrawerRoute(
                      content = {
                          RegionTools(browserStore = browserStore)
                      }
@@ -303,7 +303,7 @@ index e4dc2586bb..571f2930f1 100644
  
                  AddonsDebugTools -> {
                      onClick = {
-@@ -230,7 +230,7 @@ enum class DebugDrawerRoute(
+@@ -247,7 +247,7 @@ enum class DebugDrawerRoute(
                      }
                  }
  
@@ -312,7 +312,7 @@ index e4dc2586bb..571f2930f1 100644
                      onClick = {
                          debugDrawerStore.dispatch(DebugDrawerAction.NavigateTo.CrashDebugTools)
                      }
-@@ -245,7 +245,7 @@ enum class DebugDrawerRoute(
+@@ -262,7 +262,7 @@ enum class DebugDrawerRoute(
                      content = {
                          IntegrityTools(clientUUID, integrityClient)
                      }
@@ -321,7 +321,7 @@ index e4dc2586bb..571f2930f1 100644
  
                  TabGroupTools -> {
                      onClick = {
-@@ -268,14 +268,14 @@ enum class DebugDrawerRoute(
+@@ -285,14 +285,14 @@ enum class DebugDrawerRoute(
                      }
                  }
  
@@ -335,11 +335,11 @@ index e4dc2586bb..571f2930f1 100644
                      }
 -                }
 +                } */
-             }
  
-             DebugDrawerDestination(
+                 IPProtectionLocationTools -> {
+                     onClick = {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-index d1a2ffa6cf..5db3767126 100644
+index ead961f23e..42a92606e1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
 @@ -54,23 +54,23 @@ class DebugDrawerNavigationMiddleware(
@@ -369,14 +369,14 @@ index d1a2ffa6cf..5db3767126 100644
              is DebugDrawerAction.NavigateTo.DistributionTools ->
 -                navController.navigate(route = DebugDrawerRoute.DistributionTools.route)
 +                Unit // no-op
-         }
-     }
- }
+             is DebugDrawerAction.NavigateTo.IPProtectionLocationTools ->
+                 navController.navigate(route = DebugDrawerRoute.IPProtectionLocationTools.route)
+             is DebugDrawerAction.NavigateTo.ListenToPageTools ->
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-index 34657d412602..4ec46370ce8b 100644
+index 70523695b8..bfd32bf53a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-@@ -26,10 +26,10 @@ import kotlinx.coroutines.flow.map
+@@ -26,14 +26,14 @@ import kotlinx.coroutines.flow.map
  import mozilla.components.browser.state.state.BrowserState
  import mozilla.components.browser.state.state.createTab
  import mozilla.components.browser.state.store.BrowserStore
@@ -384,12 +384,16 @@ index 34657d412602..4ec46370ce8b 100644
 +// import mozilla.components.concept.integrity.IntegrityClient
  import mozilla.components.concept.storage.CreditCardsAddressesStorage
  import mozilla.components.concept.storage.LoginsStorage
+ import mozilla.components.feature.ipprotection.store.IPProtectionStore
+ import mozilla.components.feature.listentopage.ListenState
+ import mozilla.components.feature.listentopage.ListenStore
+ import mozilla.components.feature.listentopage.listenReducer
 -import mozilla.telemetry.glean.Glean
 +// import mozilla.telemetry.glean.Glean
  import org.mozilla.fenix.R
  import org.mozilla.fenix.components.ClientUUID
  import org.mozilla.fenix.components.components
-@@ -103,8 +103,8 @@ fun FenixOverlay(
+@@ -110,8 +110,8 @@ fun FenixOverlay(
              GleanDebugToolsStore(
                  initialState =
                      GleanDebugToolsState(
@@ -400,7 +404,7 @@ index 34657d412602..4ec46370ce8b 100644
                      ),
                  middlewares =
                      listOf(
-@@ -162,7 +162,7 @@ private fun FenixOverlay(
+@@ -173,7 +173,7 @@ private fun FenixOverlay(
      addressesDebugRegionRepository: AddressesDebugRegionRepository,
      creditCardsAddressesStorage: CreditCardsAddressesStorage,
      clientUUID: ClientUUID,
@@ -408,14 +412,14 @@ index 34657d412602..4ec46370ce8b 100644
 +    integrityClient: Unit?,
      tabGroupRepository: TabGroupRepository,
      inactiveTabsEnabled: Boolean,
- ) {
-@@ -289,7 +289,7 @@ private fun FenixOverlayPreview() {
+     lazyIPProtectionStore: Lazy<IPProtectionStore>,
+@@ -306,7 +306,7 @@ private fun FenixOverlayPreview() {
          addressesDebugRegionRepository = FakeAddressesDebugRegionRepository(),
          creditCardsAddressesStorage = FakeCreditCardsAddressesStorage(),
          clientUUID = FakeClientUUID(),
 -        integrityClient = IntegrityClient.testSuccess,
 +        integrityClient = null,
          tabGroupRepository = mockTabGroupRepository,
-     )
- }
+         lazyIPProtectionStore = lazy { IPProtectionStore() },
+         listenStore = ListenStore(ListenState(), ::listenReducer),
 -- 

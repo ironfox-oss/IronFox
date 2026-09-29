@@ -576,63 +576,6 @@
     },
     {
       "schemaVersion": "1.12.0",
-      "slug": "ironfox-firefox-jp-guide-default-site",
-      "id": "ironfox-firefox-jp-guide-default-site",
-      "arguments": {},
-      "application": "org.mozilla.firefox",
-      "appName": "fenix",
-      "appId": "org.mozilla.firefox",
-      "channel": "release",
-      "userFacingName": "Firefox Japanese Guide",
-      "userFacingDescription": "Controls whether the Firefox Japanese Guide should be added as a default shortcut",
-      "isEnrollmentPaused": false,
-      "isRollout": false,
-      "bucketConfig": {
-        "count": 10000,
-        "start": 0,
-        "total": 10000,
-        "namespace": "fenix-firefox-jp-guide-default-site-release-1",
-        "randomizationUnit": "nimbus_id"
-      },
-      "featureIds": [
-        "firefox-jp-guide-default-site"
-      ],
-      "probeSets": [],
-      "outcomes": [],
-      "branches": [
-        {
-          "slug": "disabled",
-          "ratio": 100,
-          "features": [
-            {
-              "featureId": "firefox-jp-guide-default-site",
-              "enabled": true,
-              "value": {
-                "enabled": false
-              }
-            }
-          ]
-        }
-      ],
-      "targeting": "true",
-      "startDate": "2024-12-13",
-      "enrollmentEndDate": null,
-      "endDate": null,
-      "proposedDuration": 100,
-      "proposedEnrollment": 100,
-      "referenceBranch": "disabled",
-      "featureValidationOptOut": false,
-      "localizations": null,
-      "locales": null,
-      "publishedDate": "2024-12-13T20:55:47.460708Z",
-      "isFirefoxLabsOptIn": false,
-      "firefoxLabsTitle": null,
-      "firefoxLabsDescription": null,
-      "firefoxLabsGroup": null,
-      "requiresRestart": true
-    },
-    {
-      "schemaVersion": "1.12.0",
       "slug": "ironfox-fingerprinting-protection",
       "id": "ironfox-fingerprinting-protection",
       "arguments": {},

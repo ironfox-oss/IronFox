@@ -712,7 +712,6 @@ function canOverrideBoolPref(pref) {
     "privacy.fingerprintingProtection",
     "privacy.fingerprintingProtection.pbmode",
     "privacy.globalprivacycontrol.enabled",
-    "privacy.globalprivacycontrol.functionality.enabled",
     "privacy.globalprivacycontrol.pbmode.enabled",
     "privacy.purge_trackers.enabled",
     "privacy.query_stripping.enabled",

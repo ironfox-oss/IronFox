@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 29 Sep 2026 07:31:44 +0000
+Subject: [PATCH] Fenix - Remove Firefox VPN promotion
+
+Removes Mozilla's promotional "Try it free" nag to enable Firefox VPN in the browser's settings.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/IPProtectionMenuItem.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/IPProtectionMenuItem.kt
+index a95ed73cb3d0..43f440e93cfb 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/IPProtectionMenuItem.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/IPProtectionMenuItem.kt
+@@ -207,7 +207,7 @@ private fun badgeText(status: IPProtectionMenuStatus): String =
+         IPProtectionMenuStatus.Activating -> stringResource(R.string.ip_protection_menu_connecting)
+         IPProtectionMenuStatus.DataLimitReached -> stringResource(R.string.ip_protection_menu_paused)
+         IPProtectionMenuStatus.ConnectionError -> stringResource(R.string.ip_protection_menu_error)
+-        IPProtectionMenuStatus.AuthRequired -> stringResource(R.string.ip_protection_menu_try_vpn_cta)
++        IPProtectionMenuStatus.AuthRequired -> stringResource(R.string.preferences_ip_protection_off)
+     }
+ 
+ private fun badgeState(status: IPProtectionMenuStatus): MenuItemState =
+-- 

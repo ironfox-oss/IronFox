@@ -8,19 +8,19 @@ Removes the Nimbus library/service.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-index 8b57d01c4fc8..87e90956d26f 100644
+index d8dfbe90bb..80283e173e 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 +++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-@@ -21,7 +21,7 @@ buildscript {
- 
+@@ -17,7 +17,7 @@ buildscript {
  plugins {
-     alias(libs.plugins.python.envs.plugin)
+     id 'com.android.library'
+     alias(libs.plugins.dependency.analysis)
 -    id 'org.mozilla.nimbus-gradle-plugin'
 +//    id 'org.mozilla.nimbus-gradle-plugin'
  }
  
- apply plugin: 'com.android.library'
-@@ -59,9 +59,9 @@ dependencies {
+ android {
+@@ -46,9 +46,9 @@ dependencies {
  
      implementation project(':components:concept-engine')
      implementation project(':components:concept-fetch')
@@ -32,7 +32,7 @@ index 8b57d01c4fc8..87e90956d26f 100644
      implementation project(':components:support-ktx')
      implementation project(':components:support-utils')
  
-@@ -96,7 +96,7 @@ ext {
+@@ -87,7 +87,7 @@ ext {
  apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
  apply from: '../../../common-config.gradle'
  apply from: '../../../publish.gradle'
@@ -41,7 +41,7 @@ index 8b57d01c4fc8..87e90956d26f 100644
      // The path to the Nimbus feature manifest file
      manifestFile = "geckoview.fml.yaml"
  
-@@ -110,7 +110,7 @@ nimbus {
+@@ -101,7 +101,7 @@ nimbus {
      // *NOTE*: This example will not work for all projects, but should work for Fenix, Focus, and Android Components
      applicationServicesDir = gradle.hasProperty('localProperties.autoPublish.application-services.dir')
              ? gradle.getProperty('localProperties.autoPublish.application-services.dir') : null

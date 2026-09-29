@@ -27,10 +27,10 @@ index 324a25a10af0..4225ec0a1ead 100644
          <activity
              android:name=".HomeActivity"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index c1173b2ceb0f..f606335abeb6 100644
+index 7b612460fa8e..10a12e478876 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -139,7 +139,7 @@ class Components(
+@@ -148,7 +148,7 @@ class Components(
      val useCases by lazyMonitored {
          UseCases(
              context = context,
@@ -39,16 +39,7 @@ index c1173b2ceb0f..f606335abeb6 100644
              engine = lazyMonitored { core.engine },
              store = lazyMonitored { core.store },
              shortcutManager = lazyMonitored { core.webAppShortcutManager },
-@@ -252,7 +252,7 @@ class Components(
-     val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
-     val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
-     val performance by lazyMonitored { PerformanceComponent() }
--    val push by lazyMonitored { Push(context, analytics.crashReporter) }
-+    val push by lazyMonitored { Push(context) }
-     val wifiConnectionMonitor by lazyMonitored { WifiConnectionMonitor(context as Application) }
- 
-     val strictMode by lazyMonitored {
-@@ -365,7 +365,7 @@ class Components(
+@@ -375,7 +375,7 @@ class Components(
              )
              .also {
                  it.dispatch(AppAction.SetupChecklistAction.Init)
@@ -110,19 +101,6 @@ index 75f51971cb20..0955ced3949e 100644
      }
  
      @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-index b2f79927f7b7..06e46f17e62c 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-@@ -225,7 +225,7 @@ class BackgroundServices(
- 
-                 // Enable push if it's configured.
-                 push.feature?.let { autoPushFeature ->
--                    FxaPushSupportFeature(context, accountManager, autoPushFeature, crashReporter).initialize()
-+                    FxaPushSupportFeature(context, accountManager, autoPushFeature).initialize()
-                 }
- 
-                 SendTabFeature(accountManager) { device, tabs ->
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
 index 05c401dc3cac..560f13167e7d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt

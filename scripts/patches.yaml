@@ -482,6 +482,13 @@ patches:
     effect: "Improves user experience by removing an unwanted Sync promotion."
     category: "Mozilla"
 
+  - file: "fenix-remove-vpn-promo.patch"
+    name: "Fenix - Remove Firefox VPN promotion"
+    description: "Removes Mozilla's promotional 'Try it free' nag to enable Firefox VPN in the browser's settings."
+    reason: "To prevent unwanted nags/promotional suggestions from interrupting user workflows."
+    effect: "Improves user experience by removing an unwanted VPN promotion."
+    category: "Mozilla"
+
   - file: "gecko-remove-url-tracking-params.patch"
     name: "Gecko - Remove URL tracking parameters"
     description: "Prevents the browser from appending URL tracking parameters to Mozilla support links."

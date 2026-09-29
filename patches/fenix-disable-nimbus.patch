@@ -37,10 +37,10 @@ index 8c61dbb0291c..fbe56f557ec0 100644
      channel: release
      features:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 75f51971cb20..90391dc9cd63 100644
+index 35903275d6..60f7382192 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -111,7 +111,7 @@ import org.mozilla.fenix.components.appstate.AppAction
+@@ -112,7 +112,7 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.initializeGlean
  import org.mozilla.fenix.components.metrics.MozillaProductDetector
  import org.mozilla.fenix.components.startMetricsIfEnabled
@@ -49,23 +49,23 @@ index 75f51971cb20..90391dc9cd63 100644
  import org.mozilla.fenix.ext.application
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.containsQueryParameters
-@@ -628,13 +628,13 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -633,13 +633,13 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
      }
  
-     @OptIn(DelicateCoroutinesApi::class, ExperimentalAndroidComponentsApi::class) // GlobalScope usage
+     @OptIn(ExperimentalAndroidComponentsApi::class)
 -    private fun queueNimbusFetchInForeground(queue: RunWhenReadyQueue) =
 -        runOnVisualCompleteness(queue) {
 +    private fun queueNimbusFetchInForeground(queue: RunWhenReadyQueue) {
 +/*        runOnVisualCompleteness(queue) {
              components.nimbus.geckoPrefHandler.start()
-             GlobalScope.launch(IO) {
+             applicationScope.launch(ioDispatcher) {
                  components.nimbus.sdk.maybeFetchExperiments(settings = components.settings)
                  components.nimbus.geckoPrefHandler.getPreferenceStateFromGecko().await()
 -            }
 +            } */
          }
  
-     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+     private fun queueSuggestIngest(queue: RunWhenReadyQueue) =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 index f448f7f0a79b..48b8b5e1ad30 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
