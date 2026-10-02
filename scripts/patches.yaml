@@ -930,6 +930,13 @@ patches:
     effect: "Integration with accessibility services are disabled by default, but users can re-enable it from the UI."
     category: "User Interface"
 
+  - file: "fenix-ironfox-settings-support-ip-protection.patch"
+    name: "Fenix - IronFox Settings: Firefox VPN"
+    description: "Provides support for a UI setting to enable/disable Firefox VPN (IP Protection)."
+    reason: "To allow users to disable Firefox VPN if desired."
+    effect: "Users can enable or disable Firefox VPN from the UI."
+    category: "User Interface"
+
   - file: "fenix-ironfox-settings-support-pb-always.patch"
     name: "Fenix - IronFox Settings: Always use private browsing"
     description: "Provides support for a UI setting to always use private browsing mode."

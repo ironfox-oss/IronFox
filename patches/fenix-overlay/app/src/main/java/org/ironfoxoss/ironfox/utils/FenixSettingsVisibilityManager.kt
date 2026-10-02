@@ -48,7 +48,6 @@ object FenixSettingsVisibilityManager {
     displayPreference(context, R.string.pref_key_enable_homepage_as_new_tab, prefFragment)
     displayPreference(context, R.string.pref_key_enable_import_bookmarks, prefFragment)
     displayPreference(context, R.string.pref_key_enable_import_passwords, prefFragment)
-    displayPreference(context, R.string.pref_key_enable_ip_protection, prefFragment)
     displayPreference(context, R.string.pref_key_enable_isolated_process, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_blocking_enabled, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_feature_enabled, prefFragment)

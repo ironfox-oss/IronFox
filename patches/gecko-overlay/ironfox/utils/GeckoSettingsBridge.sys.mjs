@@ -577,6 +577,7 @@ function boolPrefHasUISetting(pref) {
   const boolPrefs = [
     // Fenix
     "browser.cache.disk.enable",
+    "browser.ipProtection.enabled",
     "browser.ironfox.fenix.accessibilityEnabled",
     "browser.ironfox.fenix.geoProviderAndroidEnabled",
     "browser.ironfox.fenix.geoProviderNetworkEnabled",

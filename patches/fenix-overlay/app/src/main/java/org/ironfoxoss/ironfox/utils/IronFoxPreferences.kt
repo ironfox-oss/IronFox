@@ -540,6 +540,30 @@ object IronFoxPreferences {
   ): Boolean = context.components.settings.ironfox.translationsEnabled
 
   /**
+   * Set whether to enable IP Protection
+   *
+   * @param context The application context
+   * @param isEnabled Whether to enable IP Protection
+   */
+  fun setIPProtectionEnabled(
+    context: Context,
+    isEnabled: Boolean,
+  ) {
+    val settings = context.components.settings
+
+    settings.ironfox.ipProtectionEnabled = isEnabled
+  }
+
+  /**
+   * Check if IP Protection is enabled
+   *
+   * @param context The application context
+   */
+  fun isIPProtectionEnabled(
+    context: Context
+  ): Boolean = context.components.settings.ironfox.ipProtectionEnabled
+
+  /**
    * Set whether to enable IPv6 network connectivity
    *
    * @param context The application context

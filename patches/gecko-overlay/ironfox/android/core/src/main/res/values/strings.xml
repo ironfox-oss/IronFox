@@ -42,6 +42,9 @@
   <!-- Firefox Translations -->
   <string name="preference_translations_enabled">Enable Firefox Translations</string>
 
+  <!-- Firefox VPN -->
+  <string name="preference_ironfox_ip_protection_enabled">Enable Firefox VPN</string>
+
   <!-- FPP overrides -->
   <string name="preference_fpp_overrides_ironfox_enabled">Enable fingerprinting protection overrides from IronFox</string>
   <string name="preference_fpp_overrides_ironfox_summary">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from IronFox - Changing this setting will restart your browser</string>

@@ -307,6 +307,14 @@
       android:title="@string/preference_translations_enabled"
       app:iconSpaceReserved="false" />
 
+    <!-- Whether we should enable Firefox VPN -->
+    <androidx.preference.SwitchPreference
+      android:defaultValue="true"
+      android:key="@string/pref_key_ironfox_ip_protection_enabled"
+      android:summary="@string/restart_required_summary"
+      android:title="@string/preference_ironfox_ip_protection_enabled"
+      app:iconSpaceReserved="false" />
+
     <!-- Whether we should enable IPv6 network connectivity -->
     <androidx.preference.SwitchPreference
       android:defaultValue="true"

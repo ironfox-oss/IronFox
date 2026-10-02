@@ -43,6 +43,7 @@ object GeckoSettingsBridge {
     setWASMEnabled(context, engine)
     setWebRTCEnabled(context, engine)
     setTranslationsEnabled(context, engine)
+    setIPProtectionEnabled(context, engine)
     setIPv6Enabled(context, engine)
     setPDFjsDisabled(context, engine)
     setAndroidGeoProviderEnabled(context, engine)
@@ -176,6 +177,11 @@ object GeckoSettingsBridge {
   fun setTranslationsEnabled(context: Context, engine: Engine) {
     val translationsEnabled = IronFoxPreferences.isTranslationsEnabled(context)
     setDefaultPref(engine, "browser.ironfox.fenix.translationsEnabled", translationsEnabled)
+  }
+
+  fun setIPProtectionEnabled(context: Context, engine: Engine) {
+    val ipProtectionEnabled = IronFoxPreferences.isIPProtectionEnabled(context)
+    setDefaultPref(engine, "browser.ipProtection.enabled", ipProtectionEnabled)
   }
 
   fun setIPv6Enabled(context: Context, engine: Engine) {

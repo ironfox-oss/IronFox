@@ -641,6 +641,35 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
     }
 
     /**
+     * Indicates whether or not we should enable Firefox VPN
+     * Default: true
+     * Gecko preference(s) impacted: browser.ipProtection.enabled
+     */
+    val ipProtectionEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_ironfox_ip_protection_enabled)
+
+    ipProtectionEnabledPreference.isChecked = IronFoxPreferences.isIPProtectionEnabled(requireContext())
+    ipProtectionEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, ipProtectionEnabled ->
+      val context = requireContext()
+      val engine = requireComponents.core.engine
+
+      IronFoxPreferences.setIPProtectionEnabled(context, ipProtectionEnabled)
+      GeckoSettingsBridge.setIPProtectionEnabled(context, engine)
+
+      Toast.makeText(
+        context,
+        getString(fenixR.string.quit_application),
+        Toast.LENGTH_LONG,
+      ).show()
+      Handler(Looper.getMainLooper()).postDelayed(
+        {
+          exitProcess(0)
+        },
+        DEFAULT_EXIT_DELAY,
+      )
+      true
+    }
+
+    /**
      * Indicates whether or not we should enable IPv6 network connectivity
      * Default: true
      * Gecko preference(s) impacted: network.dns.disableIPv6
