@@ -49,7 +49,7 @@ import kotlinx.coroutines.withContext
 import mozilla.components.compose.base.button.FilledButton
 import mozilla.components.support.base.log.logger.Logger
 import org.ironfoxoss.core.R as ironfoxR
-import org.ironfoxoss.ironfox.utils.IronFoxAddons
+import org.ironfoxoss.ironfox.utils.IFAddonUtils
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.R as fenixR
 import org.mozilla.fenix.ext.components
@@ -343,7 +343,7 @@ private suspend fun installUBlockOrigin(
   }
 
   val components = context.components
-  val result = IronFoxAddons.installAddon(components, IronFoxAddons.UBLOCK_ORIGIN, true)
+  val result = IFAddonUtils.installAddon(components, IFAddonUtils.UBLOCK_ORIGIN)
   if (result.isFailure) {
     logger.error("Failed to install uBlock Origin", result.exceptionOrNull())
     onContentStateChange(
