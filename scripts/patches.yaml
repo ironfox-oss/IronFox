@@ -902,6 +902,13 @@ patches:
     effect: "Users are provided with a cleaner, focused browsing experience."
     category: "User Interface"
 
+  - file: "fenix-search-settings-visibility.patch"
+    name: "Fenix - Search Settings visibility"
+    description: "Provides support for controlling the visibility of UI settings within the Search Settings fragment."
+    reason: "To hide unwanted settings and display wanted ones."
+    effect: "Unwanted UI settings are hidden, and settings that we do want to display are revealed."
+    category: "User Interface"
+
   - file: "fenix-secret-settings-visibility.patch"
     name: "Fenix - Secret Settings visibility"
     description: "Provides support for controlling the visibility of UI settings within the Secret Settings fragment."

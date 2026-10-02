@@ -97,17 +97,4 @@ index 7c68a88f9f45..1ef39c9efaec 100644
              resultsUriFilter = filter?.let { it::shouldIncludeUri },
          )
      }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
-index e71478723548..a6e3a286622b 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
-@@ -45,7 +45,7 @@ class SearchEngineFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
-         )
- 
-         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_sponsored_suggestions).apply {
--            isVisible = context.components.settings.enableFxSuggest
-+            isVisible = false
-         }
-         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_nonsponsored_suggestions).apply {
-             isVisible = context.components.settings.enableFxSuggest
 -- 

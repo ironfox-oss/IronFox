@@ -248,6 +248,10 @@ object IFPrefs {
     // Disable URL autocomplete by default
     prefs.setDefaultBoolPref(R.string.pref_key_enable_autocomplete_urls, false)
 
+    // Disable voice search
+    // This depends on/uses Google Speech Services...
+    prefs.setBoolPref(R.string.pref_key_show_voice_search, false)
+
     // Disable Zygote preloading by default
     // https://grapheneos.org/usage#exec-spawning
     prefs.setDefaultBoolPref(R.string.pref_key_enable_app_zygote_process, false)

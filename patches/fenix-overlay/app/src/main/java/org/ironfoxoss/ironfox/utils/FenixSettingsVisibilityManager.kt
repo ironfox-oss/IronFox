@@ -88,6 +88,20 @@ object FenixSettingsVisibilityManager {
   }
 
   /**
+   * Control the visibility of settings at the search settings fragment
+   *
+   * @param context Application context
+   * @param prefFragment Preference fragment
+   */
+  fun SearchSettingsFragment(
+    context: Context,
+    prefFragment: PreferenceFragmentCompat
+  ) {
+    hidePreference(context, R.string.pref_key_show_sponsored_suggestions, prefFragment)
+    hidePreference(context, R.string.pref_key_show_voice_search, prefFragment)
+  }
+
+  /**
    * Control the visibility of settings at the tracking protection fragment
    *
    * @param context Application context

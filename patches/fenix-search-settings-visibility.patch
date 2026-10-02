@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 05 Jul 2026 20:19:20 +0000
+Subject: [PATCH] Fenix - Search Settings visibility
+
+Provides support for controlling the visibility of UI settings within the Search Settings fragment.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
+index 2f7cc0a2b9399..f55c3a4786bcf 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
+@@ -4,6 +4,7 @@
+ 
+ package org.mozilla.fenix.settings.search
+ 
++import org.ironfoxoss.ironfox.utils.FenixSettingsVisibilityManager
+ import android.appwidget.AppWidgetManager
+ import android.content.Context
+ import android.os.Bundle
+@@ -59,6 +60,7 @@ class SearchEngineFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
+         requirePreference<Preference>(R.string.pref_key_search_widget_installed_2).apply {
+             isVisible = canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(requireContext()))
+         }
++        FenixSettingsVisibilityManager.SearchSettingsFragment(requireContext(), this)
+ 
+         view?.hideKeyboard()
+     }
+-- 
