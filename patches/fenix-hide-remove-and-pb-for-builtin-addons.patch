@@ -6,7 +6,7 @@ Subject: [PATCH] Fenix - Hide the 'Remove' and 'Run in private browsing' toggles
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
-index 1ac4e1998307c..1a04976b63999 100644
+index 1ac4e1998307..4456d0ef954f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
 @@ -38,6 +38,7 @@ import org.mozilla.fenix.e2e.SystemInsetsPaddedFragment
@@ -24,7 +24,7 @@ index 1ac4e1998307c..1a04976b63999 100644
 +        if (!IFAddonUtils.canUninstallAddon(addon)) {
 +            binding.removeAddOn.isVisible = false
 +        }
-+        if (IFAddonUtils.isBuiltIn(addon)) {
++        if (IFAddonUtils.isAddonBuiltIn(addon)) {
 +            providePrivateBrowsingSwitch().isVisible = false
 +        }
          context?.let {
