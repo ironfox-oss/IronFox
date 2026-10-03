@@ -34,56 +34,32 @@ index 593cf97b046c4..62f91585304e7 100644
      importPrefBranch(
        aPrefBranch + "whitelist.add",
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index 4fe6aaa127d12..e166515c880a3 100644
+index ec8db11391e3..3239f285e867 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -104,6 +104,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
+@@ -97,6 +97,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
      "resource://gre/modules/addons/siteperms-addon-utils.sys.mjs",
    isPrincipalInSitePermissionsBlocklist:
      "resource://gre/modules/addons/siteperms-addon-utils.sys.mjs",
-+  GeckoViewWebExtension: "resource://gre/modules/GeckoViewWebExtension.sys.mjs",
-+  EventDispatcher: "resource://gre/modules/Messaging.sys.mjs",
++  IFAddonUtils:  "moz-src:///ironfox/utils/IFAddonUtils.sys.mjs",
  });
  
  XPCOMUtils.defineLazyPreferenceGetter(
-@@ -2417,7 +2419,21 @@ var AddonManagerInternal = {
- 
-     return promiseInstall;
-   },
--
-+  async installGeckoViewWebExtension(extensionUri) {
-+    const installId = Services.uuid.generateUUID().toString();
-+    let { extension } = await lazy.GeckoViewWebExtension.installWebExtension(
-+        installId,
-+        extensionUri
-+    );
-+    if (extension) {
-+        await lazy.EventDispatcher.instance.sendRequest({
-+            type: "GeckoView:WebExtension:OnInstalled",
-+            extension,
-+        });
-+    } else {
-+        console.error("Failed to install the extension: extension is null.");
-+    }
-+  },
-   /**
-    * Starts installation of an AddonInstall notifying the registered
-    * web install listener of a blocked or started install.
-@@ -2590,6 +2606,9 @@ var AddonManagerInternal = {
+@@ -2576,6 +2577,9 @@ var AddonManagerInternal = {
        );
  
        if (installAllowed) {
 +        aInstall.cancel();
-+        this.installGeckoViewWebExtension(aInstall.sourceURI);
++        lazy.IFAddonUtils.installAddon(aInstall.sourceURI);
 +        return;
          startInstall("AMO");
        } else if (installPerm === Ci.nsIPermissionManager.DENY_ACTION) {
          // Block without prompt
 diff --git a/toolkit/mozapps/extensions/amContentHandler.sys.mjs b/toolkit/mozapps/extensions/amContentHandler.sys.mjs
-index 03f4e80539e7..1fa9a6fd7e9c 100644
+index 03f4e80539e7d..0ac46cfb7988b 100644
 --- a/toolkit/mozapps/extensions/amContentHandler.sys.mjs
 +++ b/toolkit/mozapps/extensions/amContentHandler.sys.mjs
-@@ -10,9 +10,11 @@
+@@ -10,9 +10,12 @@
  const XPI_CONTENT_TYPE = "application/x-xpinstall";
  
  import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
@@ -91,11 +67,12 @@ index 03f4e80539e7..1fa9a6fd7e9c 100644
  
  const lazy = XPCOMUtils.declareLazy({
    AddonManager: "resource://gre/modules/AddonManager.sys.mjs",
++  IFAddonUtils:  "moz-src:///ironfox/utils/IFAddonUtils.sys.mjs",
 +  IFPrefUtils:  "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
    ThirdPartyUtil: {
      service: "@mozilla.org/thirdpartyutil;1",
      iid: Ci.mozIThirdPartyUtil,
-@@ -75,8 +77,6 @@ amContentHandler.prototype = {
+@@ -75,8 +78,6 @@ amContentHandler.prototype = {
        throw error;
      }
  
@@ -104,7 +81,7 @@ index 03f4e80539e7..1fa9a6fd7e9c 100644
      let sourceHost;
      let sourceURL;
      try {
-@@ -105,6 +105,19 @@ amContentHandler.prototype = {
+@@ -105,6 +106,20 @@ amContentHandler.prototype = {
        }
      }
  
@@ -118,6 +95,7 @@ index 03f4e80539e7..1fa9a6fd7e9c 100644
 +    } else if (installPerm == Ci.nsIPermissionManager.DENY_ACTION) {
 +        throw Components.Exception("", Cr.NS_ERROR_WONT_HANDLE_CONTENT);
 +    } else {
++        lazy.IFAddonUtils.displayInstallDisabledPrompt();
 +        return Cr.NS_OK;
 +    };
 +

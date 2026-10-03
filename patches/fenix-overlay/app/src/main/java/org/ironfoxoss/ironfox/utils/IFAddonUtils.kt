@@ -10,6 +10,10 @@ import mozilla.components.feature.addons.AddonManagerException
 import mozilla.components.support.base.log.logger.Logger
 import org.mozilla.fenix.components.Components
 
+/**
+ * IronFox Fenix Add-on Utilities
+ *
+ */
 object IFAddonUtils {
   private val logger = Logger("IFAddonUtils")
 

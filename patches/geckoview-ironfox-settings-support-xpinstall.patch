@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Fri, 02 Oct 2026 23:57:21 +0000
+Subject: [PATCH] GeckoView - IronFox Settings: XPInstall
+
+Provides support for a UI setting to enable/disable the installation of add-ons.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/shared/modules/geckoview/GeckoViewWebExtension.sys.mjs b/mobile/shared/modules/geckoview/GeckoViewWebExtension.sys.mjs
+index 2f2120d22694..7daa7af63a47 100644
+--- a/mobile/shared/modules/geckoview/GeckoViewWebExtension.sys.mjs
++++ b/mobile/shared/modules/geckoview/GeckoViewWebExtension.sys.mjs
+@@ -33,6 +33,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   GeckoViewTabBridge: "resource://gre/modules/GeckoViewTab.sys.mjs",
+   Management: "resource://gre/modules/Extension.sys.mjs",
+   PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.sys.mjs",
++  IFAddonUtils:         "moz-src:///ironfox/utils/IFAddonUtils.sys.mjs",
+ });
+ 
+ const { debug, warn } = GeckoViewUtils.initLogging("Console");
+@@ -989,6 +990,10 @@ export var GeckoViewWebExtension = {
+   },
+ 
+   async installWebExtension(aInstallId, aUri, installMethod) {
++    if (!lazy.IFAddonUtils.canInstallAddon(aUri.spec)) {
++      await lazy.IFAddonUtils.displayInstallDisabledPrompt();
++      throw new Error(`Not allowed to install add-on from URL: '${aUri.spec}'`);
++    }
+     const install = await lazy.AddonManager.getInstallForURL(aUri.spec, {
+       telemetryInfo: {
+         source: "geckoview-app",
+@@ -1028,6 +1033,9 @@ export var GeckoViewWebExtension = {
+     if (!extension) {
+       throw new Error(`Could not find an extension with id='${aId}'.`);
+     }
++    if (!lazy.IFAddonUtils.canUninstallAddon(aId)) {
++      throw new Error(`Not allowed to uninstall add-on: '${aId}'`);
++    }
+ 
+     return extension.uninstall();
+   },
+-- 

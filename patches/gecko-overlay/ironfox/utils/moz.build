@@ -1,4 +1,5 @@
 MOZ_SRC_FILES += [
   "GeckoSettingsBridge.sys.mjs",
+  "IFAddonUtils.sys.mjs",
   "IFPrefUtils.sys.mjs",
 ]
