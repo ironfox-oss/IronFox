@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="restart_required_summary">更改这个设置会重启你的浏览器</string>
+    <string name="restart_required_summary">更改此设置会重启浏览器</string>
     <string name="unsupported_summary">这个设置「不」被推荐或支持。请谨慎操作。</string>
     <string name="if_preferences">IronFox 设置</string>
     <string name="if_preferences_misc">杂项</string>
@@ -67,4 +67,5 @@
     <string name="preference_ironfox_geo_provider_android_summary">如果启用，IronFox 将尝试使用 Android 操作系统定位服务为网站提供您的地理位置（如果您授予网站权限）——更改此设置将重新启动浏览器</string>
     <string name="preference_ironfox_geo_provider_network_enabled">启用网络地理定位提供程序</string>
     <string name="preference_ironfox_geo_provider_network_summary">如果已启用且 Android 地理定位提供程序不可用，IronFox 将使用 BeaconDB 网络地理定位服务向网站提供您的位置（如果您授予网站权限）——更改此设置将重新启动浏览器</string>
+    <string name="preference_ironfox_ip_protection_enabled">启用 Firefox VPN</string>
 </resources>

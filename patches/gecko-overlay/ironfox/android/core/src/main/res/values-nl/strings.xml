@@ -21,7 +21,7 @@
     <string name="preference_jit_enabled_summary">Wanneer uitgeschakeld, kan de prestatie van complexe webpagina\'s verminderd zijn - Na wijziging zal de browser opnieuw opstarten</string>
     <string name="preference_pdfjs_disabled">PDF-bestanden openen in externe app</string>
     <string name="preference_website_appearance_title">Voorkeursweergave websites</string>
-    <string name="preference_website_appearance_description">Sommige websites passen hun kleurenschema aan op basis van jouw voorkeuren. Kies welk kleurenschema voor die sites gebruikt wordt. Houd er rekening mee dat andere opties dan \'Licht\' de browserinstellingen laten afwijken en dus fingerprinting kunnen vergemakkelijken.</string>
+    <string name="preference_website_appearance_description">Sommige websites passen hun kleurenschema aan op basis van voorkeur. Kies welk kleurenschema voor die sites gebruikt wordt. Houd er rekening mee dat andere opties dan \'Licht\' de browserinstellingen laten afwijken en dus fingerprinting kunnen vergemakkelijken.</string>
     <string name="preference_prefers_browser_color_scheme">Browserthema volgen</string>
     <string name="preference_prefers_light_color_scheme">Licht (standaard)</string>
     <string name="preference_prefers_dark_color_scheme">Donker</string>
@@ -62,4 +62,10 @@
     <string name="preference_autoplay_policy_click_to_play">Klik om af te spelen</string>
     <string name="preference_always_use_private_browsing">Altijd privénavigatie gebruiken</string>
     <string name="wallpaper_collection_fennec_description">Achtergronden van Fennec F-Droid. %s</string>
+    <string name="preference_ironfox_ip_protection_enabled">Firefox VPN inschakelen</string>
+    <string name="if_preferences_geo">Geolocatie</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Geolocatie-provider van Android inschakelen</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Als deze optie is ingeschakeld, zal IronFox proberen de locatiediensten van Android te gebruiken om de geolocatie aan websites door te geven (als de website daarvoor toestemming krijgt) - Na wijziging zal de browser opnieuw opstarten</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Netwerkgeolocatie-provider inschakelen</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Als deze optie is ingeschakeld en de geolocatie-provider van Android niet beschikbaar is, zal IronFox gebruikmaken van de BeaconDB-netwerkdienst om de locatie aan websites door te geven (mits de website daarvoor toestemming krijgt) - Na wijziging zal de browser opnieuw opstarten</string>
 </resources>

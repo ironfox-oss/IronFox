@@ -62,4 +62,10 @@
     <string name="preference_autoplay_policy_click_to_play">Воспроизведение по клику</string>
     <string name="preference_always_use_private_browsing">Всегда использовать режим инкогнито</string>
     <string name="wallpaper_collection_fennec_description">Обои из Fennec F-Droid. %s</string>
+    <string name="if_preferences_geo">Геолокация</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Включить поставщика геолокации Android</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Если включено, IronFox попытается использовать службы определения местоположения ОС Android, чтобы передавать ваше местоположение веб-сайтам (если вы предоставите сайту разрешение) — изменение этой настройки приведёт к перезапуску браузера</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Включить сетевого поставщика геолокации</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Если включено и поставщик геолокации Android недоступен, IronFox будет использовать сетевую службу геолокации BeaconDB, чтобы передавать ваше местоположение веб-сайтам (если вы предоставите сайту разрешение) — изменение этой настройки приведёт к перезапуску браузера</string>
+    <string name="preference_ironfox_ip_protection_enabled">Включить Firefox VPN</string>
 </resources>

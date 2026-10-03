@@ -67,4 +67,5 @@
     <string name="preference_ironfox_geo_provider_android_summary">如果啟用，IronFox 將會嘗試使用 Android 作業系統提供網站您的地理位置（如果您授予網站權限） - 變更此設定將會重新啟動您的瀏覽器</string>
     <string name="preference_ironfox_geo_provider_network_enabled">啟用網路地理定位提供程式</string>
     <string name="preference_ironfox_geo_provider_network_summary">如果已啟用 Android 地理定位提供程式不可用， IronFox 將會使用 BeaconDB 網路地理定位服務以提供網站您的位置（如果您授予網站權限） - 變更此設定將會重新啟動您的瀏覽器</string>
+    <string name="preference_ironfox_ip_protection_enabled">啟用 Firefox VPN</string>
 </resources>
