@@ -81,6 +81,10 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_enable_contile, false)
     prefs.setBoolPref(R.string.pref_key_suppress_sponsored_tiles, true)
 
+    // Disable "continuous" onboarding
+    /// This displays pop-ups/nags at random for days after the user completes the onboarding...
+    prefs.setBoolPref(R.string.pref_key_continuous_onboarding_enabled, false)
+
     // Disable crash reporting
     prefs.setBoolPref(R.string.pref_key_crash_reporter, false)
     prefs.setStringPref(R.string.pref_key_crash_reporting_choice, CrashReportOption.Never.toString())
