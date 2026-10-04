@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sat, 03 Oct 2026 02:48:43 +0000
+Subject: [PATCH] Fenix - Use generic device name for Sync
+
+Sets the default device name for Firefox Sync to a generic value, to avoid leaking the
+device model/manufacturer, and the fact that the user is using IronFox, to Mozilla.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
+index a70cd4d8472f..c9a919f1fb99 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
+@@ -5,7 +5,7 @@
+ package org.mozilla.fenix.components
+ 
+ import android.content.Context
+-import android.os.Build
++// import android.os.Build
+ import androidx.annotation.VisibleForTesting
+ import androidx.annotation.VisibleForTesting.Companion.PRIVATE
+ import kotlin.time.Duration.Companion.milliseconds
+@@ -90,13 +90,13 @@ class BackgroundServices(
+     // Allows executing tasks which depend on the account manager, but do not need to eagerly initialize it.
+     val accountManagerAvailableQueue = RunWhenReadyQueue()
+ 
+-    fun defaultDeviceName(context: Context): String =
+-        context.getString(
++    fun defaultDeviceName(context: Context): String = "Firefox"
++/*        context.getString(
+             R.string.default_device_name_2,
+             context.getString(R.string.app_name),
+             Build.MANUFACTURER,
+             Build.MODEL,
+-        )
++        ) */
+ 
+     val serverConfig = FxaServer.config(context)
+     private val deviceConfig =
+-- 

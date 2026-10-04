@@ -415,6 +415,13 @@ patches:
     effect: "Reduces unwanted network activity and integration with third party services."
     category: "Mozilla"
 
+  - file: "fenix-use-generic-device-name-for-sync-by-default.patch"
+    name: "Fenix - Use generic device name for Sync"
+    description: "If Firefox Sync is enabled, sets the default device name to a generic value."
+    reason: "To prevent leaking the device model/manufacturer, and the fact that the user is using IronFox, to Mozilla."
+    effect: "Improves privacy by reducing the amount of data shared with Mozilla."
+    category: "Mozilla"
+
   - file: "gecko-rs-blocker.patch"
     name: "Gecko - Remote Settings Blocker"
     description: "Prevents Remote Settings from downloading unwanted collections."
