@@ -104,9 +104,17 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_show_sponsored_suggestions, false)
 
     // Disable Firefox Sync by default
+    // When signing in to Firefox Sync, this controls the items (checkboxes) that are set to sync
+    // This allows the user to control and choose for themselves what they'd like to sync, rather than automatically syncing everything (like the default)
     prefs.setDefaultBoolPref(R.string.pref_key_addresses_sync_cards_across_devices, false)
     prefs.setDefaultBoolPref(R.string.pref_key_credit_cards_sync_cards_across_devices, false)
     prefs.setDefaultBoolPref(R.string.pref_key_enable_address_sync, false)
+    prefs.setDefaultBoolPref(R.string.pref_key_sync_address, false)
+    prefs.setDefaultBoolPref(R.string.pref_key_sync_bookmarks, false)
+    prefs.setDefaultBoolPref(R.string.pref_key_sync_credit_cards, false)
+    prefs.setDefaultBoolPref(R.string.pref_key_sync_history, false)
+    prefs.setDefaultBoolPref(R.string.pref_key_sync_logins, false)
+    prefs.setDefaultBoolPref(R.string.pref_key_sync_tabs, false)
 
     // Disable Google Lens integration
     prefs.setBoolPref(R.string.pref_key_google_lens_integration, false)

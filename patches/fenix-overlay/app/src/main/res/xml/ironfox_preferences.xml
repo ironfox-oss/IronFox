@@ -299,6 +299,14 @@
     android:title="@string/if_preferences_misc"
     app:iconSpaceReserved="false">
 
+    <!-- Whether we should enable Firefox Sync -->
+    <androidx.preference.SwitchPreference
+      android:defaultValue="true"
+      android:key="@string/pref_key_ironfox_fxa_enabled"
+      android:summary="@string/restart_required_summary"
+      android:title="@string/preference_ironfox_fxa_enabled"
+      app:iconSpaceReserved="false" />
+
     <!-- Whether we should enable Firefox Translations -->
     <androidx.preference.SwitchPreference
       android:defaultValue="true"
@@ -310,6 +318,7 @@
     <!-- Whether we should enable Firefox VPN -->
     <androidx.preference.SwitchPreference
       android:defaultValue="true"
+      android:dependency="@string/pref_key_ironfox_fxa_enabled"
       android:key="@string/pref_key_ironfox_ip_protection_enabled"
       android:summary="@string/restart_required_summary"
       android:title="@string/preference_ironfox_ip_protection_enabled"

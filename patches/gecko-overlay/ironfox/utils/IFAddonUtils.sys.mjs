@@ -64,7 +64,7 @@ export const IFAddonUtils = {
     };
 
     // If the onboarding has not been completed and the add-on we're trying to install is uBlock Origin, always allow it
-    if (!lazy.IFPrefUtils.getBoolPref("browser.ironfox.onboardingCompleted") && this.isUBlockOrigin(url)) {
+    if (!lazy.IFPrefUtils.getBoolPref("browser.ironfox.onboardingCompleted") && IFAddonUtils.isUBlockOrigin(url)) {
       return true;
     };
 
@@ -79,7 +79,7 @@ export const IFAddonUtils = {
    */
   canUninstallAddon(id) {
     // We should never try to uninstall a built-in add-on...
-    return !this.isAddonBuiltIn(id);
+    return !IFAddonUtils.isAddonBuiltIn(id);
   },
 
   /**
@@ -135,9 +135,9 @@ export const IFAddonUtils = {
    */
   async installAddon(uri) {
     // First, ensure we're allowed to install the add-on
-    if (!this.canInstallAddon(uri.spec)) {
+    if (!IFAddonUtils.canInstallAddon(uri.spec)) {
       lazy.log.error(`installAddon: Not allowed to install add-on from URL: '${uri.spec}'`);
-      await this.displayInstallDisabledPrompt();
+      await IFAddonUtils.displayInstallDisabledPrompt();
       return;
     };
     const installId = Services.uuid.generateUUID().toString();
@@ -152,7 +152,7 @@ export const IFAddonUtils = {
       });
     } else {
       lazy.log.error("installAddon: Failed to install add-on: extension is null.");
-    }
+    };
   },
 
   /**
@@ -169,7 +169,7 @@ export const IFAddonUtils = {
     };
 
     // Ensure we're allowed to uninstall the add-on
-    if (!this.canUninstallAddon(id)) {
+    if (!IFAddonUtils.canUninstallAddon(id)) {
       lazy.log.error(`uninstallAddon: Not allowed to uninstall add-on: '${id}'`);
       return;
     };
@@ -182,7 +182,7 @@ export const IFAddonUtils = {
       });
     } else {
       lazy.log.error("uninstallAddon: Failed to uninstall add-on: extension is null.");
-    }
+    };
   },
 
   /**
@@ -199,7 +199,8 @@ export const IFAddonUtils = {
     };
 
     // Check if the add-on is already enabled
-    if (this.isAddonEnabled(id)) {
+    const addonEnabled = await IFAddonUtils.isAddonEnabled(id);
+    if (addonEnabled) {
       lazy.log.debug(`enableAddon: Add-on: '${id}' is already enabled`);
       return;
     };
@@ -212,7 +213,7 @@ export const IFAddonUtils = {
       });
     } else {
       lazy.log.error("enableAddon: Failed to enable add-on: extension is null.");
-    }
+    };
   },
 
   /**
@@ -229,7 +230,8 @@ export const IFAddonUtils = {
     };
 
     // Check if the add-on is already disabled
-    if (!this.isAddonEnabled(id)) {
+    const addonEnabled = await IFAddonUtils.isAddonEnabled(id);
+    if (!addonEnabled) {
       lazy.log.debug(`disableAddon: Add-on: '${id}' is already disabled`);
       return;
     };
@@ -242,6 +244,6 @@ export const IFAddonUtils = {
       });
     } else {
       lazy.log.error("disableAddon: Failed to disable add-on: extension is null.");
-    }
+    };
   },
 };

@@ -3,8 +3,9 @@
 const lazy = {};
 
 ChromeUtils.defineESModuleGetters(lazy, {
-  IFPrefUtils: "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
-  RFPHelper:   "resource://gre/modules/RFPHelper.sys.mjs",
+  IFAddonUtils: "moz-src:///ironfox/utils/IFAddonUtils.sys.mjs",
+  IFPrefUtils:  "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+  RFPHelper:    "resource://gre/modules/RFPHelper.sys.mjs",
 });
 
 ChromeUtils.defineLazyGetter(lazy, "log", () => {
@@ -29,12 +30,14 @@ export const GeckoSettingsBridge = {
     // Some prefs require special handling, so handle those first
     if (pref == "browser.ironfox.fenix.accessibilityEnabled") {
       setAccessibilityEnabled(value);
-    } else if (pref == "browser.ironfox.fenix.ipv6Enabled") {
-      lazy.IFPrefUtils.setAndLockBoolPref("network.dns.disableIPv6", !value);
+    } else if (pref == "browser.ironfox.fenix.fxaEnabled") {
+      setFxaEnabled(value);
     } else if (pref == "browser.ironfox.fenix.geoProviderAndroidEnabled") {
       setAndroidGeoProviderEnabled(value);
     } else if (pref == "browser.ironfox.fenix.geoProviderNetworkEnabled") {
       setNetworkGeoProviderEnabled(value);
+    } else if (pref == "browser.ironfox.fenix.ipv6Enabled") {
+      lazy.IFPrefUtils.setAndLockBoolPref("network.dns.disableIPv6", !value);
     } else if (pref == "browser.ironfox.fenix.javascriptJitEnabled") {
       setJITEnabled(value);
     } else if (pref == "browser.ironfox.fenix.safeBrowsingEnabled") {
@@ -285,6 +288,30 @@ function setAndroidGeoProviderEnabled(value) {
       : lazy.IFPrefUtils.setAndLockBoolPref
 
   setPref("geo.provider.use_mls", !value);
+};
+
+/**
+ * Control Firefox Sync
+ *
+ * @param {boolean} value - Whether Firefox Sync should be enabled or disabled
+ */
+function setFxaEnabled(value) {
+  // If Sync is enabled, the pref should be unlocked,
+  // because users may prefer to enable/disable extension storage sync individually
+  const setPref =
+    value === true
+      ? lazy.IFPrefUtils.setAndUnlockBoolPref
+      : lazy.IFPrefUtils.setAndLockBoolPref
+
+  setPref("webextensions.storage.sync.enabled", value);
+
+  // Depending on the value, we also need to enable/disable the extension
+  const setAddon =
+    value === true
+      ? lazy.IFAddonUtils.enableAddon
+      : lazy.IFAddonUtils.disableAddon
+
+  setAddon("fxa@mozac.org");
 };
 
 /**
@@ -579,6 +606,7 @@ function boolPrefHasUISetting(pref) {
     "browser.cache.disk.enable",
     "browser.ipProtection.enabled",
     "browser.ironfox.fenix.accessibilityEnabled",
+    "browser.ironfox.fenix.fxaEnabled",
     "browser.ironfox.fenix.geoProviderAndroidEnabled",
     "browser.ironfox.fenix.geoProviderNetworkEnabled",
     "browser.ironfox.fenix.ipv6Enabled",

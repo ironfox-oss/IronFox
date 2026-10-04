@@ -147,7 +147,7 @@ index bafe4f957dfe..2a73dc0f856f 100644
                      isPrivate = false,
                      onWebCompatReporterClick = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 39ef4d3125c57..81886ba1695ff 100644
+index 39ef4d3125c5..5c35039ac4fb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 @@ -539,7 +539,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
@@ -164,7 +164,7 @@ index 39ef4d3125c57..81886ba1695ff 100644
                                          isDownloadHighlighted = isDownloadHighlighted,
                                          webExtensionMenuCount = webExtensionsCount,
 +                                        isPasswordManagerEnabled = settings.shouldPromptToSaveLogins,
-+                                        isFxaSignedIn = settings.signedInFxaAccount,
++                                        isFxaSignedIn = settings.ironfox.fxaEnabled && settings.signedInFxaAccount,
                                          isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
                                          showIPProtection = components.ipProtection.store.state.isEligible,
                                          ipProtectionMenuState = ipProtectionMenuState,
@@ -180,4 +180,241 @@ index 39ef4d3125c57..81886ba1695ff 100644
                                                  summarizationMenuState = summarizationMenuState,
                                                  onWebCompatReporterClick = {
                                                      menuStore.dispatch(MenuAction.Navigate.WebCompatReporter)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/Page.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/Page.kt
+index 500ba6b8f5cba..9b37e37a058a9 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/Page.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/Page.kt
+@@ -25,12 +25,12 @@ enum class Page {
+          *
+          * @param shouldShowTabGroupsPage Whether the tab groups page should be included.
+          */
+-        fun visiblePages(shouldShowTabGroupsPage: Boolean): List<Page> =
++        fun visiblePages(shouldShowTabGroupsPage: Boolean, showFxa: Boolean, showNormalTabs: Boolean): List<Page> =
+             listOfNotNull(
+                 PrivateTabs,
+-                NormalTabs,
++                NormalTabs.takeIf { showNormalTabs },
+                 TabGroups.takeIf { shouldShowTabGroupsPage },
+-                SyncedTabs,
++                SyncedTabs.takeIf { showFxa },
+             )
+ 
+         /**
+@@ -39,12 +39,13 @@ enum class Page {
+          * @param position The index of the page.
+          * @param shouldShowTabGroupsPage Whether the tab groups page should be included.
+          */
+-        fun positionToPage(position: Int, shouldShowTabGroupsPage: Boolean = false): Page {
++        fun positionToPage(position: Int, shouldShowTabGroupsPage: Boolean = false, showFxa: Boolean = false, showNormalTabs: Boolean = true): Page {
+             return when {
+                 position == 0 -> PrivateTabs
+-                position == 1 -> NormalTabs
++                showNormalTabs && position == 1 -> NormalTabs
+                 shouldShowTabGroupsPage && position == 2 -> TabGroups
+-                else -> SyncedTabs
++                showFxa && position == 3 -> SyncedTabs
++                else -> PrivateTabs
+             }
+         }
+ 
+@@ -54,12 +55,12 @@ enum class Page {
+          * @param page The [Page] whose visual index is being looked-up.
+          * @param shouldShowTabGroupsPage Whether the tab groups page should be included.
+          */
+-        fun pageToPosition(page: Page, shouldShowTabGroupsPage: Boolean = false): Int {
++        fun pageToPosition(page: Page, shouldShowTabGroupsPage: Boolean = false, showFxa: Boolean = false, showNormalTabs: Boolean = true): Int {
+             return when (page) {
+                 PrivateTabs -> 0
+-                NormalTabs -> 1
+-                TabGroups -> if (shouldShowTabGroupsPage) 2 else 1
+-                SyncedTabs -> visiblePages(shouldShowTabGroupsPage).lastIndex
++                NormalTabs -> if (showNormalTabs) 1 else 0
++                TabGroups -> if (shouldShowTabGroupsPage) 2 else if (showNormalTabs) 1 else 0
++                SyncedTabs -> if (showFxa) visiblePages(shouldShowTabGroupsPage, showFxa, showNormalTabs).lastIndex else if (shouldShowTabGroupsPage) 2 else if (showNormalTabs) 1 else 0
+             }
+         }
+     }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/TabsTrayState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/TabsTrayState.kt
+index 55bfd4cb1de53..04671d3fb40b1 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/TabsTrayState.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/TabsTrayState.kt
+@@ -189,6 +189,8 @@ data class TabsTrayState(
+         val isInDebugMode: Boolean = false,
+         val showTabAutoCloseBanner: Boolean = false,
+         val collectionsEnabled: Boolean = true,
++        val alwaysUsePB: Boolean = false,
++        val isFxaSignedIn: Boolean = false,
+     )
+ 
+     /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/banner/TabsTrayBanner.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/banner/TabsTrayBanner.kt
+index 840dc9e1a50e8..5a2845fd05a74 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/banner/TabsTrayBanner.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/banner/TabsTrayBanner.kt
+@@ -164,6 +164,8 @@ fun TabsTrayBanner(
+                 syncedTabCount = syncedTabCount,
+                 onTabPageIndicatorClicked = onTabPageIndicatorClicked,
+                 hasTabDataLoaded = state.hasTabDataLoaded,
++                showFxa = state.config.isFxaSignedIn,
++                showNormalTabs = !state.config.alwaysUsePB,
+             )
+         }
+ 
+@@ -235,12 +237,16 @@ private fun TabPageBanner(
+     shouldShowTabGroupBadge: Boolean,
+     syncedTabCount: Int,
+     hasTabDataLoaded: Boolean,
++    showFxa: Boolean,
++    showNormalTabs: Boolean,
+     onTabPageIndicatorClicked: (Page) -> Unit,
+ ) {
+     val selectedTabIndex =
+         Page.pageToPosition(
+             page = selectedPage,
+             shouldShowTabGroupsPage = shouldShowTabGroupsPage,
++            showFxa = showFxa,
++            showNormalTabs = showNormalTabs,
+         )
+ 
+     Surface(color = MaterialTheme.colorScheme.surfaceContainerHigh) {
+@@ -277,6 +283,8 @@ private fun TabPageBanner(
+                 syncedTabCount = syncedTabCount,
+                 onTabPageIndicatorClicked = onTabPageIndicatorClicked,
+                 hasTabDataLoaded = hasTabDataLoaded,
++                showFxa = showFxa,
++                showNormalTabs = showNormalTabs,
+             )
+         }
+     }
+@@ -293,6 +301,8 @@ private fun TabPageBannerTabs(
+     shouldShowTabGroupBadge: Boolean,
+     syncedTabCount: Int,
+     hasTabDataLoaded: Boolean,
++    showFxa: Boolean,
++    showNormalTabs: Boolean,
+     onTabPageIndicatorClicked: (Page) -> Unit,
+ ) {
+     val privateTabDescription =
+@@ -326,19 +336,21 @@ private fun TabPageBannerTabs(
+         Icon(painterResource(iconsR.drawable.mozac_ic_private_mode_24), null)
+     }
+ 
+-    BannerTab(
+-        selected = selectedPage == Page.NormalTabs,
+-        testTag = TabsTrayTestTag.NORMAL_TABS_PAGE_BUTTON,
+-        contentDescription = normalTabDescription,
+-        onClick = { onTabPageIndicatorClicked(Page.NormalTabs) },
+-    ) {
+-        TabCounter(
+-            tabCount = normalTabCount,
+-            showTabCount = hasTabDataLoaded,
+-        )
++    if (showNormalTabs) {
++        BannerTab(
++            selected = selectedPage == Page.NormalTabs,
++            testTag = TabsTrayTestTag.NORMAL_TABS_PAGE_BUTTON,
++            contentDescription = normalTabDescription,
++            onClick = { onTabPageIndicatorClicked(Page.NormalTabs) },
++        ) {
++            TabCounter(
++                tabCount = normalTabCount,
++                showTabCount = hasTabDataLoaded,
++            )
++        }
+     }
+ 
+-    if (shouldShowTabGroupsPage) {
++    if (showNormalTabs && shouldShowTabGroupsPage) {
+         BannerTab(
+             selected = selectedPage == Page.TabGroups,
+             testTag = TabsTrayTestTag.TAB_GROUPS_PAGE_BUTTON,
+@@ -353,13 +365,15 @@ private fun TabPageBannerTabs(
+         }
+     }
+ 
+-    BannerTab(
+-        selected = selectedPage == Page.SyncedTabs,
+-        testTag = TabsTrayTestTag.SYNCED_TABS_PAGE_BUTTON,
+-        contentDescription = syncedTabDescription,
+-        onClick = { onTabPageIndicatorClicked(Page.SyncedTabs) },
+-    ) {
+-        Icon(painterResource(iconsR.drawable.mozac_ic_sync_tabs_24), null)
++    if (showFxa) {
++        BannerTab(
++            selected = selectedPage == Page.SyncedTabs,
++            testTag = TabsTrayTestTag.SYNCED_TABS_PAGE_BUTTON,
++            contentDescription = syncedTabDescription,
++            onClick = { onTabPageIndicatorClicked(Page.SyncedTabs) },
++        ) {
++            Icon(painterResource(iconsR.drawable.mozac_ic_sync_tabs_24), null)
++        }
+     }
+ }
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
+index fa27cc81305e3..fee9d3c770827 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
+@@ -683,6 +683,8 @@ class TabManagementFragment : Fragment() {
+                                 displayTabsInGrid = settings.gridTabView,
+                                 homepageAsNewTabEnabled = settings.enableHomepageAsNewTab,
+                                 tabGroupsEnabled = settings.tabGroupsEnabled,
++                                isFxaSignedIn = settings.ironfox.fxaEnabled && settings.signedInFxaAccount,
++                                alwaysUsePB = settings.ironfox.alwaysUsePrivateBrowsing,
+                             )
+                     ) ?: createInitialState(args, settings),
+                 middlewares =
+@@ -758,6 +760,8 @@ class TabManagementFragment : Fragment() {
+                     showTabAutoCloseBanner =
+                         settings.shouldShowAutoCloseTabsBanner && settings.canShowCfr && settings.cfrPopupsEnabled,
+                     collectionsEnabled = settings.collections,
++                    isFxaSignedIn = settings.ironfox.fxaEnabled && settings.signedInFxaAccount,
++                    alwaysUsePB = settings.ironfox.alwaysUsePrivateBrowsing,
+                 ),
+         )
+     }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/tabstray/TabsTray.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/tabstray/TabsTray.kt
+index f78a5fc4b9c9e..61ebde0e9adfe 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/tabstray/TabsTray.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/tabstray/TabsTray.kt
+@@ -160,6 +160,8 @@ fun TabsTray(
+     trackersBlockedCount: Int? = null,
+     onPrivacyReportTapped: (() -> Unit)? = null,
+ ) {
++    val showFxa = state.config.isFxaSignedIn
++    val showNormalTabs = !state.config.alwaysUsePB
+     val shouldShowTabGroupsPage = state.config.tabGroupsEnabled
+     val pagerState =
+         rememberPagerState(
+@@ -167,15 +169,19 @@ fun TabsTray(
+                 Page.pageToPosition(
+                     page = state.selectedPage,
+                     shouldShowTabGroupsPage = shouldShowTabGroupsPage,
++                    showFxa = showFxa,
++                    showNormalTabs = showNormalTabs,
+                 ),
+-            pageCount = { Page.visiblePages(shouldShowTabGroupsPage).size },
++            pageCount = { Page.visiblePages(shouldShowTabGroupsPage, showFxa, showNormalTabs).size },
+         )
+ 
+-    LaunchedEffect(state.selectedPage, shouldShowTabGroupsPage) {
++    LaunchedEffect(state.selectedPage, shouldShowTabGroupsPage, showFxa, showNormalTabs) {
+         pagerState.animateScrollToPage(
+             Page.pageToPosition(
+                 page = state.selectedPage,
+                 shouldShowTabGroupsPage = shouldShowTabGroupsPage,
++                showFxa = showFxa,
++                showNormalTabs = showNormalTabs,
+             )
+         )
+     }
+@@ -232,7 +238,7 @@ fun TabsTray(
+                 state = pagerState,
+                 userScrollEnabled = false,
+             ) { position ->
+-                when (Page.positionToPage(position, shouldShowTabGroupsPage)) {
++                when (Page.positionToPage(position, shouldShowTabGroupsPage, showFxa, showNormalTabs)) {
+                     Page.NormalTabs -> {
+                         NormalTabsPage(
+                             normalTabsState = state.normalTabsState,
 -- 

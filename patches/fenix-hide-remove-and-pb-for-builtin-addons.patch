@@ -6,7 +6,7 @@ Subject: [PATCH] Fenix - Hide the 'Remove' and 'Run in private browsing' toggles
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
-index 1ac4e1998307..4456d0ef954f 100644
+index 1ac4e1998307..0427ecd8ffda 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
 @@ -38,6 +38,7 @@ import org.mozilla.fenix.e2e.SystemInsetsPaddedFragment
@@ -17,7 +17,7 @@ index 1ac4e1998307..4456d0ef954f 100644
  
  /** An activity to show the details of a installed add-on. */
  @Suppress("LargeClass", "TooManyFunctions")
-@@ -157,6 +158,12 @@ class InstalledAddonDetailsFragment : Fragment(), SystemInsetsPaddedFragment {
+@@ -157,6 +158,15 @@ class InstalledAddonDetailsFragment : Fragment(), SystemInsetsPaddedFragment {
          bindAllowInPrivateBrowsingSwitch()
          bindRemoveButton()
          bindReportButton()
@@ -26,6 +26,9 @@ index 1ac4e1998307..4456d0ef954f 100644
 +        }
 +        if (IFAddonUtils.isAddonBuiltIn(addon)) {
 +            providePrivateBrowsingSwitch().isVisible = false
++        }
++        if (addon.id == IFAddonUtils.FXA_WEBCHANNEL.id) {
++            provideEnableSwitch().isVisible = false
 +        }
          context?.let {
              val messageBarWarningView = binding.root.findViewById<View>(addonsR.id.add_on_messagebar_warning)

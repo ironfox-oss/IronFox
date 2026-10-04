@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -14,6 +15,7 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import kotlin.system.exitProcess
+import kotlinx.coroutines.launch
 import mozilla.components.ui.widgets.withCenterAlignedButtons
 import org.ironfoxoss.core.R as ironfoxR
 import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
@@ -609,6 +611,43 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
     /*** Miscellaneous ***/
 
     /**
+     * Indicates whether or not we should enable Firefox Sync
+     * Default: true
+     * Gecko preference(s) impacted: webextensions.storage.sync.enabled
+     */
+    val fxaEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_ironfox_fxa_enabled)
+
+    fxaEnabledPreference.isChecked = IronFoxPreferences.isFxaEnabled(requireContext())
+    fxaEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, fxaEnabled ->
+      val context = requireContext()
+      val engine = requireComponents.core.engine
+
+      // First, sign-out of Sync
+      if (!fxaEnabled && requireComponents.settings.signedInFxaAccount) {
+        logoutFxa()
+      }
+
+      IronFoxPreferences.setFxaEnabled(context, fxaEnabled)
+      GeckoSettingsBridge.setFxaEnabled(context, engine)
+
+      // Ensure the IP Protection Gecko pref gets updated as well
+      GeckoSettingsBridge.setIPProtectionEnabled(context, engine)
+
+      Toast.makeText(
+        context,
+        getString(fenixR.string.quit_application),
+        Toast.LENGTH_LONG,
+      ).show()
+      Handler(Looper.getMainLooper()).postDelayed(
+        {
+          exitProcess(0)
+        },
+        DEFAULT_EXIT_DELAY,
+      )
+      true
+    }
+
+    /**
      * Indicates whether or not we should enable Firefox Translations
      * Default: true
      * Gecko preference(s) impacted:
@@ -745,6 +784,14 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
     setupAutoplayBlockingPolicy()
     setupCrossOriginRefererPolicy()
     setupWebsiteAppearance()
+  }
+
+  private fun logoutFxa() {
+    lifecycleScope
+      .launch {
+        requireComponents.backgroundServices.accountAbnormalities.userRequestedLogout()
+        requireComponents.backgroundServices.accountManager.logout()
+      }
   }
 
   /*** Autoplay blocking policy ***/

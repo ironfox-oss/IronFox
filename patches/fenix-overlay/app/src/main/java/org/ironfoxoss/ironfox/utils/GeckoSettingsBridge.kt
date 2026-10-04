@@ -42,6 +42,7 @@ object GeckoSettingsBridge {
     setSVGEnabled(context, engine)
     setWASMEnabled(context, engine)
     setWebRTCEnabled(context, engine)
+    setFxaEnabled(context, engine)
     setTranslationsEnabled(context, engine)
     setIPProtectionEnabled(context, engine)
     setIPv6Enabled(context, engine)
@@ -172,6 +173,11 @@ object GeckoSettingsBridge {
   fun setWebRTCEnabled(context: Context, engine: Engine) {
     val webrtcEnabled = IronFoxPreferences.isWebRTCEnabled(context)
     setDefaultPref(engine, "media.peerconnection.enabled", webrtcEnabled)
+  }
+
+  fun setFxaEnabled(context: Context, engine: Engine) {
+    val fxaEnabled = IronFoxPreferences.isFxaEnabled(context)
+    setDefaultPref(engine, "browser.ironfox.fenix.fxaEnabled", fxaEnabled)
   }
 
   fun setTranslationsEnabled(context: Context, engine: Engine) {

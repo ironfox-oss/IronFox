@@ -39,6 +39,9 @@
   <!-- Disk cache -->
   <string name="preference_cache_enabled">Enable disk cache</string>
 
+  <!-- Firefox Sync -->
+  <string name="preference_ironfox_fxa_enabled">Enable Firefox Sync</string>
+
   <!-- Firefox Translations -->
   <string name="preference_translations_enabled">Enable Firefox Translations</string>
 

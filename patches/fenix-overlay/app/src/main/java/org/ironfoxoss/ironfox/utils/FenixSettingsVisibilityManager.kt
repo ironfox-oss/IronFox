@@ -30,6 +30,7 @@ object FenixSettingsVisibilityManager {
     hidePreference(context, R.string.pref_key_rate, prefFragment)
     hidePreference(context, R.string.pref_key_start_profiler, prefFragment)
     hidePreference(context, R.string.pref_key_remote_debugging, prefFragment)
+    hideFxa(context, prefFragment)
     hideLocalAddonInstall(context, prefFragment)
   }
 
@@ -44,24 +45,26 @@ object FenixSettingsVisibilityManager {
     prefFragment: PreferenceFragmentCompat
   ) {
     displayPreference(context, R.string.pref_key_debug_force_weekly_privacy_report_notification, prefFragment)
-    displayPreference(context, R.string.pref_key_enable_address_sync, prefFragment)
     displayPreference(context, R.string.pref_key_enable_homepage_as_new_tab, prefFragment)
     displayPreference(context, R.string.pref_key_enable_import_bookmarks, prefFragment)
     displayPreference(context, R.string.pref_key_enable_import_passwords, prefFragment)
+    displayPreference(context, R.string.pref_key_enable_ip_protection_locations, prefFragment)
     displayPreference(context, R.string.pref_key_enable_isolated_process, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_blocking_enabled, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_feature_enabled, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_tracker_blocking_enabled, prefFragment)
+    displayPreference(context, R.string.pref_key_enable_wayback_machine, prefFragment)
     displayPreference(context, R.string.pref_key_enable_weekly_privacy_notification, prefFragment)
     displayPreference(context, R.string.pref_key_native_share_sheet, prefFragment)
     displayPreference(context, R.string.pref_key_should_show_custom_tab_extensions, prefFragment)
-    displayPreference(context, R.string.pref_key_show_voice_search_in_display_toolbar, prefFragment)
     displayPreference(context, R.string.pref_key_tab_groups, prefFragment)
     displayPreference(context, R.string.pref_key_tab_groups_drag_and_drop, prefFragment)
     displayPreference(context, R.string.pref_key_tab_groups_live_reorder, prefFragment)
     displayPreference(context, R.string.pref_key_tab_groups_strip, prefFragment)
+    displayPreference(context, R.string.pref_key_toolbar_focus_mode, prefFragment)
     displayPreference(context, R.string.pref_key_use_minimal_bottom_toolbar_while_entering_text, prefFragment)
     displayPreference(context, R.string.pref_key_use_scroll_data_for_dynamic_toolbar, prefFragment)
+    displayAddressSync(context, prefFragment)
     displayAppZygote(context, prefFragment)
 
     hidePreference(context, R.string.pref_key_crash_pull_never_show_again, prefFragment)
@@ -99,6 +102,7 @@ object FenixSettingsVisibilityManager {
   ) {
     hidePreference(context, R.string.pref_key_show_sponsored_suggestions, prefFragment)
     hidePreference(context, R.string.pref_key_show_voice_search, prefFragment)
+    hideSyncedTabsSuggestions(context, prefFragment)
   }
 
   /**
@@ -116,6 +120,24 @@ object FenixSettingsVisibilityManager {
     hidePreference(context, R.string.pref_key_tracking_protection_custom_option, prefFragment)
     hidePreference(context, R.string.pref_key_tracking_protection_standard_option, prefFragment)
     hidePreference(context, R.string.pref_key_tracking_protection_strict_default, prefFragment)
+  }
+
+  /**
+   * Display the setting to enable Firefox address sync
+   *
+   * @param context Application context
+   * @param prefFragment Preference fragment
+   */
+  internal fun displayAddressSync(
+    context: Context,
+    prefFragment: PreferenceFragmentCompat
+  ) {
+    val addressSyncKey = context.getPreferenceKey(R.string.pref_key_enable_address_sync)
+    val addressSyncPreference = prefFragment.findPreference<Preference>(addressSyncKey)
+
+    if (!IronFoxPreferences.isFxaEnabled(context)) {
+      addressSyncPreference?.isVisible = false
+    }
   }
 
   /**
@@ -145,7 +167,35 @@ object FenixSettingsVisibilityManager {
   ) {
     val emeSiteSettingKey = context.getPreferenceKey(R.string.pref_key_browser_feature_media_key_system_access)
     val emeSiteSettingPreference = prefFragment.findPreference<Preference>(emeSiteSettingKey)
-    emeSiteSettingPreference?.isVisible = IronFoxPreferences.isEMEEnabled(context)
+
+    if (!IronFoxPreferences.isEMEEnabled(context)) {
+      emeSiteSettingPreference?.isVisible = false
+    }
+  }
+
+  /**
+   * Hide Firefox Sync settings
+   *
+   * @param context Application context
+   * @param prefFragment Preference fragment
+   */
+  internal fun hideFxa(
+    context: Context,
+    prefFragment: PreferenceFragmentCompat
+  ) {
+    val fxaAccountCategoryKey = context.getPreferenceKey(R.string.pref_key_account_category)
+    val fxaDebugKey = context.getPreferenceKey(R.string.pref_key_sync_debug)
+    val fxaSignInKey = context.getPreferenceKey(R.string.pref_key_sign_in)
+
+    val fxaAccountCategoryPreference = prefFragment.findPreference<Preference>(fxaAccountCategoryKey)
+    val fxaDebugPreference = prefFragment.findPreference<Preference>(fxaDebugKey)
+    val fxaSignInPreference = prefFragment.findPreference<Preference>(fxaSignInKey)
+
+    if (!IronFoxPreferences.isFxaEnabled(context)) {
+      fxaAccountCategoryPreference?.isVisible = false
+      fxaDebugPreference?.isVisible = false
+      fxaSignInPreference?.isVisible = false
+    }
   }
 
   /**
@@ -160,7 +210,28 @@ object FenixSettingsVisibilityManager {
   ) {
     val localAddonInstallKey = context.getPreferenceKey(R.string.pref_key_install_local_addon)
     val localAddonInstallPreference = prefFragment.findPreference<Preference>(localAddonInstallKey)
-    localAddonInstallPreference?.isVisible = IronFoxPreferences.isXPInstallEnabled(context) && IronFoxPreferences.shouldShowSecretDebugMenuThisSession(context)
+
+    if (!IronFoxPreferences.isXPInstallEnabled(context)) {
+      localAddonInstallPreference?.isVisible = false
+    }
+  }
+
+  /**
+   * Hide the option to enable synced tab suggestions
+   *
+   * @param context Application context
+   * @param prefFragment Preference fragment
+   */
+  internal fun hideSyncedTabsSuggestions(
+    context: Context,
+    prefFragment: PreferenceFragmentCompat
+  ) {
+    val syncedTabSuggestionsKey = context.getPreferenceKey(R.string.pref_key_search_synced_tabs)
+    val syncedTabSuggestionsPreference = prefFragment.findPreference<Preference>(syncedTabSuggestionsKey)
+
+    if (!IronFoxPreferences.isFxaEnabled(context) && !IronFoxPreferences.isFxaSignedIn(context)) {
+      syncedTabSuggestionsPreference?.isVisible = false
+    }
   }
 
   /**

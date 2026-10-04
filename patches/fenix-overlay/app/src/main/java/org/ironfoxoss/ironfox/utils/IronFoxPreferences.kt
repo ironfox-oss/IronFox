@@ -564,6 +564,55 @@ object IronFoxPreferences {
   ): Boolean = context.components.settings.ironfox.ipProtectionEnabled
 
   /**
+   * Set whether to enable Firefox Sync
+   *
+   * @param context The application context
+   * @param isEnabled Whether to enable Firefox Sync
+   */
+  fun setFxaEnabled(
+    context: Context,
+    isEnabled: Boolean,
+  ) {
+    val settings = context.components.settings
+
+    settings.ironfox.fxaEnabled = isEnabled
+
+    if (!isEnabled) {
+      // Set this to ensure that the user's choice sticks if they disable Sync and enable it later
+      settings.ironfox.ipProtectionEnabledCachedValue = settings.ironfox.ipProtectionEnabled
+      settings.ironfox.ipProtectionEnabled = isEnabled
+
+      settings.ironfox.isAddressSyncEnabledCachedValue = settings.isAddressSyncEnabled
+      settings.isAddressSyncEnabled = isEnabled
+
+      settings.ironfox.isEmailMaskSuggestionEnabledCachedValue = settings.isEmailMaskSuggestionEnabled
+      settings.isEmailMaskSuggestionEnabled = isEnabled
+    } else {
+      settings.ironfox.ipProtectionEnabled = settings.ironfox.ipProtectionEnabledCachedValue
+      settings.isAddressSyncEnabled = settings.ironfox.isAddressSyncEnabledCachedValue
+      settings.isEmailMaskSuggestionEnabled = settings.ironfox.isEmailMaskSuggestionEnabledCachedValue
+    }
+  }
+
+  /**
+   * Check if Firefox Sync is enabled
+   *
+   * @param context The application context
+   */
+  fun isFxaEnabled(
+    context: Context
+  ): Boolean = context.components.settings.ironfox.fxaEnabled
+
+  /**
+   * Check if Firefox Sync is signed in
+   *
+   * @param context The application context
+   */
+  fun isFxaSignedIn(
+    context: Context
+  ): Boolean = context.components.settings.signedInFxaAccount
+
+  /**
    * Set whether to enable IPv6 network connectivity
    *
    * @param context The application context

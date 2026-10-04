@@ -106,6 +106,12 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
       default = true,
     )
 
+  var fxaEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_fxa_enabled),
+      default = true,
+    )
+
   var geoProviderAndroidEnabled by
     booleanPreference(
       key = context.getPreferenceKey(R.string.pref_key_ironfox_geo_provider_android_enabled),
@@ -124,10 +130,28 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
       default = true,
     )
 
+  var ipProtectionEnabledCachedValue by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_ip_protection_enabled_cached_value),
+      default = true,
+    )
+
   var ipv6Enabled by
     booleanPreference(
       key = context.getPreferenceKey(R.string.pref_key_ipv6_enabled),
       default = true,
+    )
+
+  var isAddressSyncEnabledCachedValue by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_enable_address_sync_cached_value),
+      default = true,
+    )
+
+  var isEmailMaskSuggestionEnabledCachedValue by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_email_mask_suggestion_cached_value),
+      default = false,
     )
 
   var ironFoxOnboardingCompleted by

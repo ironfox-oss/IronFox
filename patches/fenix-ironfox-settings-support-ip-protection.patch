@@ -8,7 +8,7 @@ Provides support for a UI setting to enable/disable Firefox VPN (IP Protection).
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/FenixIPProtectionEligibilityStorage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/FenixIPProtectionEligibilityStorage.kt
-index 212e6c60df3c2..f7c49753b78b5 100644
+index 212e6c60df3c..41774aa13ca0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/FenixIPProtectionEligibilityStorage.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/FenixIPProtectionEligibilityStorage.kt
 @@ -18,6 +18,9 @@ import mozilla.components.feature.ipprotection.IPProtectionEligibilityStorage
@@ -29,17 +29,18 @@ index 212e6c60df3c2..f7c49753b78b5 100644
  ) : IPProtectionEligibilityStorage {
  
      private val secretEnabled = MutableStateFlow(sharedPref.getBoolean(prefKey, false))
-@@ -42,10 +46,12 @@ class FenixIPProtectionEligibilityStorage(
+@@ -42,10 +46,13 @@ class FenixIPProtectionEligibilityStorage(
                  secretEnabled,
              ) { region, secretOverride ->
                  val nimbus = FxNimbus.features.ipProtection.value()
++                val fxaEnabled = IronFoxPreferences.isFxaEnabled(context)
 +                val fxaSignedIn = context.components.settings.signedInFxaAccount
 +                val ipProtectionEnabled = IronFoxPreferences.isIPProtectionEnabled(context)
                  val status =
                      when {
                          secretOverride -> EligibilityStatus.Eligible
 -                        !nimbus.enabled -> EligibilityStatus.Ineligible
-+                        !ipProtectionEnabled || !fxaSignedIn || !nimbus.enabled -> EligibilityStatus.Ineligible
++                        !ipProtectionEnabled || !fxaEnabled || !fxaSignedIn || !nimbus.enabled -> EligibilityStatus.Ineligible
                          region?.home in nimbus.allowedRegions -> EligibilityStatus.Eligible
                          else -> EligibilityStatus.UnsupportedRegion
                      }

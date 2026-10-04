@@ -1,0 +1,245 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 04 Oct 2026 02:44:16 +0000
+Subject: [PATCH] Fenix - IronFox Settings: Firefox Sync
+
+Provides support for a UI setting to enable/disable Firefox Sync.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index 9a1ff6febcaf..15b713d555bf 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -163,10 +163,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+         // For example, if user is signed-in, and we don't perform this call in onCreate, we'll briefly
+         // display a "Sign In" preference, which will then get replaced by the correct account information
+         // once this call is ran in onResume shortly after.
+-        accountUiView.updateAccountUIState(
+-            requireContext(),
+-            requireComponents.backgroundServices.accountManager.accountProfile(),
+-        )
++        if (requireComponents.settings.ironfox.fxaEnabled) {
++            accountUiView.updateAccountUIState(
++                requireContext(),
++                requireComponents.backgroundServices.accountManager.accountProfile(),
++            )
++        }
+ 
+         val booleanPreferenceTelemetryAllowList =
+             with(requireContext()) {
+@@ -275,7 +277,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+         // Account UI state is updated as part of `onCreate`. To not do it twice in a row, we only
+         // update it here if we're not going through the `onCreate->onStart->onResume` lifecycle chain.
+         update(
+-            shouldUpdateAccountUIState = !creatingFragment,
++            shouldUpdateAccountUIState = !creatingFragment && requireComponents.settings.ironfox.fxaEnabled,
+             settings = requireComponents.settings,
+         )
+ 
+@@ -293,18 +295,22 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+     override fun onStart() {
+         super.onStart()
+         // Observe account changes to keep the UI up-to-date.
+-        requireComponents.backgroundServices.accountManager.register(
+-            accountObserver,
+-            owner = this,
+-            autoPause = true,
+-        )
++        if (requireComponents.settings.ironfox.fxaEnabled) {
++            requireComponents.backgroundServices.accountManager.register(
++                accountObserver,
++                owner = this,
++                autoPause = true,
++            )
++        }
+     }
+ 
+     override fun onStop() {
+         super.onStop()
+         // If the screen isn't visible we don't need to show updates.
+         // Also prevent the observer registered to the FXA singleton causing memory leaks.
+-        requireComponents.backgroundServices.accountManager.unregister(accountObserver)
++        if (requireComponents.settings.ironfox.fxaEnabled) {
++            requireComponents.backgroundServices.accountManager.unregister(accountObserver)
++        }
+     }
+ 
+     override fun onDestroyView() {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
+index 7acca4ad5b249..56962e460ce4b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
+@@ -246,31 +246,33 @@ class AutofillSettingFragment : BiometricPromptPreferenceFragment(), SystemInset
+             showToolbar(getString(R.string.preferences_credit_cards_2))
+         }
+ 
+-        SyncPreferenceView(
+-            syncPreference = requirePreference(R.string.pref_key_credit_cards_sync_cards_across_devices),
+-            lifecycleOwner = viewLifecycleOwner,
+-            coroutineScope = viewLifecycleOwner.lifecycleScope,
+-            accountManager = requireComponents.backgroundServices.accountManager,
+-            syncEngine = SyncEngine.CreditCards,
+-            loggedOffTitle = requireContext().getString(R.string.preferences_credit_cards_sync_cards_across_devices),
+-            loggedInTitle = requireContext().getString(R.string.preferences_credit_cards_sync_cards),
+-            onSyncSignInClicked = {
+-                findNavController()
+-                    .navigate(
+-                        NavGraphDirections.actionGlobalTurnOnSync(entrypoint = FenixFxAEntryPoint.AutofillSetting)
+-                    )
+-            },
+-            onReconnectClicked = {
+-                findNavController()
+-                    .navigate(
+-                        AutofillSettingFragmentDirections.actionGlobalAccountProblemFragment(
+-                            entrypoint = FenixFxAEntryPoint.AutofillSetting
++        if (requireComponents.settings.ironfox.fxaEnabled) {
++            SyncPreferenceView(
++                syncPreference = requirePreference(R.string.pref_key_credit_cards_sync_cards_across_devices),
++                lifecycleOwner = viewLifecycleOwner,
++                coroutineScope = viewLifecycleOwner.lifecycleScope,
++                accountManager = requireComponents.backgroundServices.accountManager,
++                syncEngine = SyncEngine.CreditCards,
++                loggedOffTitle = requireContext().getString(R.string.preferences_credit_cards_sync_cards_across_devices),
++                loggedInTitle = requireContext().getString(R.string.preferences_credit_cards_sync_cards),
++                onSyncSignInClicked = {
++                    findNavController()
++                        .navigate(
++                            NavGraphDirections.actionGlobalTurnOnSync(entrypoint = FenixFxAEntryPoint.AutofillSetting)
+                         )
+-                    )
+-            },
+-        )
++                },
++                onReconnectClicked = {
++                    findNavController()
++                        .navigate(
++                            AutofillSettingFragmentDirections.actionGlobalAccountProblemFragment(
++                                entrypoint = FenixFxAEntryPoint.AutofillSetting
++                            )
++                        )
++                },
++            )
++        }
+ 
+-        if (requireComponents.settings.isAddressSyncEnabled) {
++        if (requireComponents.settings.ironfox.fxaEnabled && requireComponents.settings.isAddressSyncEnabled) {
+             SyncPreferenceView(
+                 syncPreference = requirePreference(R.string.pref_key_addresses_sync_cards_across_devices),
+                 lifecycleOwner = viewLifecycleOwner,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/ui/AutofillSettingsScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/ui/AutofillSettingsScreen.kt
+index dced1dc90861f..b5868523a6b22 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/ui/AutofillSettingsScreen.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/ui/AutofillSettingsScreen.kt
+@@ -92,7 +92,7 @@ internal fun AutofillSettingsScreen(
+ 
+             Spacer(modifier = Modifier.height(FirefoxTheme.layout.space.static300))
+ 
+-            AutofillSettingsCreditCardSection(store)
++            AutofillSettingsCreditCardSection(store, isAddressSyncEnabled)
+         }
+     }
+ }
+@@ -186,7 +186,7 @@ private fun AutofillSettingsAddressSection(
+ }
+ 
+ @Composable
+-private fun AutofillSettingsCreditCardSection(store: AutofillSettingsStore) {
++private fun AutofillSettingsCreditCardSection(store: AutofillSettingsStore, fxaEnabled: Boolean) {
+     val state by store.stateFlow.collectAsState()
+ 
+     SettingsSectionHeader(
+@@ -212,19 +212,21 @@ private fun AutofillSettingsCreditCardSection(store: AutofillSettingsStore) {
+ 
+     Spacer(modifier = Modifier.height(FirefoxTheme.layout.space.static100))
+ 
+-    if (state.accountAuthState == AccountAuthState.Authenticated) {
+-        SwitchListItem(
+-            label = stringResource(id = R.string.preferences_credit_cards_sync_cards),
+-            checked = state.syncCreditCards,
+-            showSwitchAfter = true,
+-        ) {
+-            store.dispatch(UpdateCreditCardsSyncStatus(!state.syncCreditCards))
++    if (fxaEnabled) {
++        if (state.accountAuthState == AccountAuthState.Authenticated) {
++            SwitchListItem(
++                label = stringResource(id = R.string.preferences_credit_cards_sync_cards),
++                checked = state.syncCreditCards,
++                showSwitchAfter = true,
++            ) {
++                store.dispatch(UpdateCreditCardsSyncStatus(!state.syncCreditCards))
++            }
++        } else {
++            TextListItem(
++                label = stringResource(id = R.string.preferences_credit_cards_sync_cards_across_devices),
++                onClick = { store.dispatch(SyncCardsAcrossDevicesClicked) },
++            )
+         }
+-    } else {
+-        TextListItem(
+-            label = stringResource(id = R.string.preferences_credit_cards_sync_cards_across_devices),
+-            onClick = { store.dispatch(SyncCardsAcrossDevicesClicked) },
+-        )
+     }
+ 
+     Spacer(modifier = Modifier.height(FirefoxTheme.layout.space.static100))
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/logins/fragment/SavedLoginsAuthFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/logins/fragment/SavedLoginsAuthFragment.kt
+index 638067e1e2b67..1c9a94fa9da85 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/logins/fragment/SavedLoginsAuthFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/logins/fragment/SavedLoginsAuthFragment.kt
+@@ -91,29 +91,31 @@ class SavedLoginsAuthFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
+             true
+         }
+ 
+-        SyncPreferenceView(
+-            syncPreference = requirePreference(R.string.pref_key_sync_logins),
+-            lifecycleOwner = viewLifecycleOwner,
+-            coroutineScope = viewLifecycleOwner.lifecycleScope,
+-            accountManager = requireComponents.backgroundServices.accountManager,
+-            syncEngine = SyncEngine.Passwords,
+-            loggedOffTitle = requireContext().getString(R.string.preferences_passwords_sync_logins_across_devices_2),
+-            loggedInTitle = requireContext().getString(R.string.preferences_passwords_sync_logins_2),
+-            onSyncSignInClicked = {
+-                val directions =
+-                    SavedLoginsAuthFragmentDirections.actionSavedLoginsAuthFragmentToTurnOnSyncFragment(
+-                        entrypoint = FenixFxAEntryPoint.SavedLogins
+-                    )
+-                findNavController().navigate(directions)
+-            },
+-            onReconnectClicked = {
+-                val directions =
+-                    SavedLoginsAuthFragmentDirections.actionGlobalAccountProblemFragment(
+-                        entrypoint = FenixFxAEntryPoint.SavedLogins
+-                    )
+-                findNavController().navigate(directions)
+-            },
+-        )
++        if (requireComponents.settings.ironfox.fxaEnabled) {
++            SyncPreferenceView(
++                syncPreference = requirePreference(R.string.pref_key_sync_logins),
++                lifecycleOwner = viewLifecycleOwner,
++                coroutineScope = viewLifecycleOwner.lifecycleScope,
++                accountManager = requireComponents.backgroundServices.accountManager,
++                syncEngine = SyncEngine.Passwords,
++                loggedOffTitle = requireContext().getString(R.string.preferences_passwords_sync_logins_across_devices_2),
++                loggedInTitle = requireContext().getString(R.string.preferences_passwords_sync_logins_2),
++                onSyncSignInClicked = {
++                    val directions =
++                        SavedLoginsAuthFragmentDirections.actionSavedLoginsAuthFragmentToTurnOnSyncFragment(
++                            entrypoint = FenixFxAEntryPoint.SavedLogins
++                        )
++                    findNavController().navigate(directions)
++                },
++                onReconnectClicked = {
++                    val directions =
++                        SavedLoginsAuthFragmentDirections.actionGlobalAccountProblemFragment(
++                            entrypoint = FenixFxAEntryPoint.SavedLogins
++                        )
++                    findNavController().navigate(directions)
++                },
++            )
++        }
+ 
+         BiometricAuthenticationManager.biometricAuthenticationNeededInfo.shouldShowAuthenticationPrompt = true
+         BiometricAuthenticationManager.biometricAuthenticationNeededInfo.authenticationStatus =
+-- 
