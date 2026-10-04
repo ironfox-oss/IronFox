@@ -9,10 +9,10 @@ readonly IRONFOX_GECKO_SHA512SUM='9f94b8a4f2097fac6911714d4e525a41048e169130fc3b
 readonly IRONFOX_GECKO_VERSION='157.0'
 
 # IronFox
-readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}"
+readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}.0.1"
 
 # This value is used for ex. producing reproducable archives, and its value should be bumped upon new releases
-readonly IRONFOX_VERSION_DATE='2026.09.29'
+readonly IRONFOX_VERSION_DATE='2026.10.04'
 
 # Application Services
 # Version: v157.0.1
@@ -26,8 +26,8 @@ readonly IRONFOX_AS_VERSION='157.0.1'
 # https://github.com/mozilla-l10n/firefox-l10n
 # NOTE: This repo is updated several times a day...
 # so I think best approach here will be for us to just update it alongside new releases
-readonly IRONFOX_L10N_CENTRAL_COMMIT='509d85dae3ae9ad53f510289f6bf8d641d3996a3'
-readonly IRONFOX_L10N_CENTRAL_SHA512SUM='7436103e7881ab8173274360221dbbf694f8014936e1b11924efe636e774b5acd5b629dcd1647443db8fe3ad5847663130545ebdf06e3dcfab604baef898347b'
+readonly IRONFOX_L10N_CENTRAL_COMMIT='a778d325a4ca93a35a8979d10afd33ca99b23539'
+readonly IRONFOX_L10N_CENTRAL_SHA512SUM='e88085235a68bca7e16c3a931b52c0f63498829118300d466a5e2f7e9b0c7cc650971089acabf78e72cc90311b294f7c531007e23fa7a299f12a11a1aa952283'
 
 # Glean
 # Version: 68.0.1

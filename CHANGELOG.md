@@ -1,5 +1,8 @@
-- Updated to Firefox [`157.0`](https://firefox.com/firefox/android/157.0/releasenotes/).
-- Updated to Phoenix [`2026.09.29.2`](https://codeberg.org/celenity/Phoenix/releases/tag/2026.09.29.2).
-- Updated to UnifiedPush-AC [`1.0.8`](https://gitlab.com/ironfox-oss/unifiedpush-ac/-/releases/1.0.8).
-- [Prevented `alt-svc` data from persisting](https://gitlab.com/ironfox-oss/IronFox/-/commit/4976f33178c40867141c5b7c242e0691083f0286) to protect against cross-session tracking.
-- Minor tweaks and fixes.
+- Fixed [a crash that occured on start-up](https://codeberg.org/ironfox-oss/bugs/issues/443) for certain users.
+  - Thanks to [Keanu Ghorbanian](https://gitlab.com/KeanuGh) 💜!
+- [Added a UI setting to enable/disable support for Firefox VPN](https://gitlab.com/ironfox-oss/IronFox/-/commit/93ad59b459116ca51053bfb1c7bf143345a986f5) *(Enabled by default)*, located at `Settings` -> `IronFox settings` -> `Miscellaneous` -> `Enable Firefox VPN`.
+- [Disabled voice search functionality](https://gitlab.com/ironfox-oss/IronFox/-/commit/8e6f9ba5da1532e7b7afc17e2b252bd04f5e7b83) to improve privacy and reduce reliance on proprietary/external services, as it depends on Google Speech Services.
+- By default, IronFox will [now use a generic device name for Firefox Sync](https://gitlab.com/ironfox-oss/IronFox/-/commit/b40b83f2e2fa9b2ba64bb08d54613dae33fedcd2), to prevent leaking the device model/manufacturer, and the fact that the user is using IronFox, to Mozilla.
+- Updated to microG [`v0.3.17.252432`](https://github.com/microg/GmsCore/releases/tag/v0.3.17.252432).
+- Updated to Rust [`1.99.0`](https://releases.rs/docs/1.99.0/).
+- Additional minor tweaks and fixes.
