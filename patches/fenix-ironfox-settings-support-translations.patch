@@ -20,6 +20,19 @@ index fb3fb7211084..e98044f2faed 100644
              translationsBinding.set(
                  feature = TranslationsBinding(
                      browserStore = rootView.context.components.core.store,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index 45a68358d157..d41bf8375662 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -393,7 +393,7 @@ class Core(
+                     scope = MainScope(),
+                     automaticallyInitialize = false,
+                     isTranslationsEnabled = {
+-                        TranslationsEnabledSettings.dataStore(context).isEnabled.first()
++                        context.components.settings.ironfox.translationsEnabled && TranslationsEnabledSettings.dataStore(context).isEnabled.first()
+                     },
+                 ),
+                 AboutHomeMiddleware(homepageTitle = context.getString(R.string.tab_tray_homepage_tab)),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/settings/TranslationSettings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/settings/TranslationSettings.kt
 index 9c560fdec7faf..e09c19e6449bb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/settings/TranslationSettings.kt
