@@ -241,7 +241,7 @@ export const IFAddonUtils = {
         extension,
       });
     } else {
-      lazy.log.error("disableAddon: Failed to enable add-on: extension is null.");
+      lazy.log.error("disableAddon: Failed to disable add-on: extension is null.");
     }
   },
 };
