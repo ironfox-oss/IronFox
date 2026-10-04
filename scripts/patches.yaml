@@ -937,6 +937,20 @@ patches:
     effect: "Unwanted UI settings are hidden, and settings that we do want to display are revealed."
     category: "User Interface"
 
+  - file: "a-c-ironfox-settings-support-browsing-history.patch"
+    name: "Android Components - IronFox Settings: Browsing history"
+    description: "Provides support for a UI setting enable/disable browsing history."
+    reason: "To allow users to enable/disable browsing history if desired."
+    effect: "Users can enable or disable browsing history, directly from the UI."
+    category: "User Interface"
+
+  - file: "fenix-ironfox-settings-support-browsing-history.patch"
+    name: "Fenix - IronFox Settings: Browsing history"
+    description: "Provides support for a UI setting enable/disable browsing history."
+    reason: "To allow users to enable/disable browsing history if desired."
+    effect: "Users can enable or disable browsing history, directly from the UI."
+    category: "User Interface"
+
   - file: "fenix-ironfox-settings-support-accessibility-services.patch"
     name: "Fenix - IronFox Settings: Accessibility services"
     description: "Provides support for a UI setting to enable/disable accessibility services."

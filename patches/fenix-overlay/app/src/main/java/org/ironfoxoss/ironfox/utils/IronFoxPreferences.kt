@@ -119,8 +119,16 @@ object IronFoxPreferences {
       // Set this to ensure that the user's choice sticks if they enable always private browsing mode and disable it later
       settings.ironfox.openLinksInAPrivateTabCachedValue = settings.openLinksInAPrivateTab
       settings.openLinksInAPrivateTab = isEnabled
+
+      settings.ironfox.historyMetadataUIFeatureCachedValue = settings.historyMetadataUIFeature
+      settings.historyMetadataUIFeature = !isEnabled
+
+      settings.ironfox.historyEnabledCachedValue = settings.ironfox.historyEnabled
+      settings.ironfox.historyEnabled = !isEnabled
     } else {
+      settings.historyMetadataUIFeature = settings.ironfox.historyMetadataUIFeatureCachedValue
       settings.openLinksInAPrivateTab = settings.ironfox.openLinksInAPrivateTabCachedValue
+      settings.ironfox.historyEnabled = settings.ironfox.historyEnabledCachedValue
     }
   }
 
@@ -228,6 +236,38 @@ object IronFoxPreferences {
   fun isFPPOverridesIronFoxTimezoneEnabled(
     context: Context
   ): Boolean = context.components.settings.ironfox.fppOverridesIronFoxTimezoneEnabled
+
+  /**
+   * Set whether to enable browsing history
+   *
+   * @param context The application context
+   * @param isEnabled Whether to enable browsing history
+   */
+  fun setHistoryEnabled(
+    context: Context,
+    isEnabled: Boolean,
+  ) {
+    val settings = context.components.settings
+
+    settings.ironfox.historyEnabled = isEnabled
+
+    if (!isEnabled) {
+      // Set this to ensure that the user's choice sticks if they disable browsing history and re-enable it later
+      settings.ironfox.historyMetadataUIFeatureCachedValue = settings.historyMetadataUIFeature
+      settings.historyMetadataUIFeature = isEnabled
+    } else {
+      settings.historyMetadataUIFeature = settings.ironfox.historyMetadataUIFeatureCachedValue
+    }
+  }
+
+  /**
+   * Check if browsing history is enabled
+   *
+   * @param context The application context
+   */
+  fun isHistoryEnabled(
+    context: Context,
+  ): Boolean = context.components.settings.ironfox.historyEnabled
 
   /**
    * Set whether to enable locale spoofing

@@ -203,6 +203,14 @@
       android:title="@string/preference_fpp_overrides_ironfox_timezone_enabled"
       app:iconSpaceReserved="false" />
 
+    <!-- Whether we should enable browsing history -->
+    <androidx.preference.SwitchPreference
+      android:defaultValue="false"
+      android:key="@string/pref_key_ironfox_history_enabled"
+      android:summary="@string/restart_required_summary"
+      android:title="@string/preference_ironfox_history_enabled"
+      app:iconSpaceReserved="false" />
+
     <!-- Whether we should spoof the user's locale to en-US -->
     <androidx.preference.SwitchPreference
       android:defaultValue="true"

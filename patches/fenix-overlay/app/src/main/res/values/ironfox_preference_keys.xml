@@ -15,6 +15,11 @@
   <string name="pref_key_always_use_private_browsing" translatable="false">pref_key_always_use_private_browsing</string>
   <string name="pref_key_open_links_in_a_private_tab_cached_value" translatable="false">pref_key_open_links_in_a_private_tab_cached_value</string>
 
+  <!-- Browsing history -->
+  <string name="pref_key_ironfox_history_enabled" translatable="false">pref_key_ironfox_history_enabled</string>
+  <string name="pref_key_ironfox_history_enabled_cached_value" translatable="false">pref_key_ironfox_history_enabled_cached_value</string>
+  <string name="pref_key_ironfox_history_metadata_feature_cached_value" translatable="false">pref_key_ironfox_history_metadata_feature_cached_value</string>
+
   <!-- Collections -->
   <string name="pref_key_collections_enabled" translatable="false">pref_key_collections_enabled</string>
   <string name="pref_key_ironfox_collections_migrated" translatable="false">pref_key_ironfox_collections_migrated</string>

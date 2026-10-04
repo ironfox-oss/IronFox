@@ -16,6 +16,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import kotlin.system.exitProcess
 import kotlinx.coroutines.launch
+import mozilla.components.feature.session.HistoryDelegate
 import mozilla.components.ui.widgets.withCenterAlignedButtons
 import org.ironfoxoss.core.R as ironfoxR
 import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
@@ -214,6 +215,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
       IronFoxPreferences.setAlwaysUsePrivateBrowsing(context, alwaysUsePrivateBrowsing)
       GeckoSettingsBridge.setAlwaysUsePrivateBrowsing(context, engine)
+      setHistoryDelegate()
 
       Toast.makeText(
         context,
@@ -358,6 +360,35 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
       GeckoSettingsBridge.setSpoofEnglishEnabled(context, engine)
 
       requireComponents.useCases.sessionUseCases.reload.invoke()
+
+      Toast.makeText(
+        context,
+        getString(fenixR.string.quit_application),
+        Toast.LENGTH_LONG,
+      ).show()
+      Handler(Looper.getMainLooper()).postDelayed(
+        {
+          exitProcess(0)
+        },
+        DEFAULT_EXIT_DELAY,
+      )
+      true
+    }
+
+    /**
+     * Indicates whether or not we should enable browsing history
+     * Default: false
+     * Gecko preference(s) impacted: N/A
+     */
+    val historyEnabledPreference = requirePreference<SwitchPreference>(fenixR.string.pref_key_ironfox_history_enabled)
+
+    historyEnabledPreference.isChecked = IronFoxPreferences.isHistoryEnabled(requireContext())
+    historyEnabledPreference.isEnabled = !IronFoxPreferences.isAlwaysUsePrivateBrowsing(requireContext())
+    historyEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, historyEnabled ->
+      val context = requireContext()
+
+      IronFoxPreferences.setHistoryEnabled(context, historyEnabled)
+      setHistoryDelegate()
 
       Toast.makeText(
         context,
@@ -784,6 +815,20 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
     setupAutoplayBlockingPolicy()
     setupCrossOriginRefererPolicy()
     setupWebsiteAppearance()
+  }
+
+  private fun setHistoryDelegate() {
+    val context = requireContext()
+    val engine = requireComponents.core.engine
+
+    val alwaysUsePB = IronFoxPreferences.isAlwaysUsePrivateBrowsing(requireContext())
+    val historyEnabled = IronFoxPreferences.isHistoryEnabled(requireContext())
+    
+    if (!historyEnabled || alwaysUsePB) {
+      engine.settings.historyTrackingDelegate = null
+    } else {
+      engine.settings.historyTrackingDelegate = HistoryDelegate(requireComponents.core.lazyHistoryStorage)
+    }
   }
 
   private fun logoutFxa() {

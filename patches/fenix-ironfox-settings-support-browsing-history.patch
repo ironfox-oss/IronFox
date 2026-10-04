@@ -1,0 +1,78 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 04 Oct 2026 19:07:03 +0000
+Subject: [PATCH] Fenix - IronFox Settings: Browsing history
+
+Provides support for a UI setting to enable/disable browsing history.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index 45a68358d157..78b1b506251d 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -174,7 +174,7 @@ class Core(
+                 remoteDebuggingEnabled = context.components.settings.isRemoteDebuggingEnabled,
+                 testingModeEnabled = false,
+                 trackingProtectionPolicy = trackingProtectionPolicyFactory.createTrackingProtectionPolicy(),
+-                historyTrackingDelegate = HistoryDelegate(lazyHistoryStorage),
++                historyTrackingDelegate = if (context.components.settings.ironfox.historyEnabled && !context.components.settings.ironfox.alwaysUsePrivateBrowsing) HistoryDelegate(lazyHistoryStorage) else null,
+                 preferredColorScheme = getPreferredColorScheme(),
+                 automaticFontSizeAdjustment = context.components.settings.shouldUseAutoSize,
+                 fontInflationEnabled = context.components.settings.shouldUseAutoSize,
+@@ -341,7 +341,7 @@ class Core(
+                 ProfileMarkerMiddleware(markerName = "BrowserStore", profiler = engine.profiler),
+                 LogMiddleware(tag = "BrowserStore", shouldIncludeDetailedData = { Config.channel.isDebug }),
+                 LastAccessMiddleware(),
+-                RecentlyClosedMiddleware(recentlyClosedTabsStorage, RECENTLY_CLOSED_MAX),
++                RecentlyClosedMiddleware(recentlyClosedTabsStorage, RECENTLY_CLOSED_MAX, context.components.settings.ironfox.historyEnabled && !context.components.settings.ironfox.alwaysUsePrivateBrowsing),
+                 DownloadMiddleware(
+                     applicationContext = context,
+                     downloadServiceClass = DownloadService::class.java,
+@@ -376,7 +376,7 @@ class Core(
+                 PromptMiddleware(),
+                 AdsTelemetryMiddleware(adsTelemetry),
+                 LastMediaAccessMiddleware(),
+-                HistoryMetadataMiddleware(historyMetadataService),
++                HistoryMetadataMiddleware(historyMetadataService, context),
+                 ProtectionsDashboardMiddleware(protectionsStorage),
+                 SessionPrioritizationMiddleware(),
+                 SaveToPDFMiddleware(context),
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/historymetadata/HistoryMetadataMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/historymetadata/HistoryMetadataMiddleware.kt
+index b09db85e02b5..45c23508bc23 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/historymetadata/HistoryMetadataMiddleware.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/historymetadata/HistoryMetadataMiddleware.kt
+@@ -20,9 +20,11 @@ import mozilla.components.feature.search.ext.parseSearchTerms
+ import mozilla.components.lib.state.Middleware
+ import mozilla.components.lib.state.Store
+ import mozilla.components.support.base.log.logger.Logger
++import android.content.Context
++import org.ironfoxoss.ironfox.utils.IronFoxPreferences
+ 
+ /** This [Middleware] reacts to various browsing events and records history metadata as needed. */
+-class HistoryMetadataMiddleware(private val historyMetadataService: HistoryMetadataService) :
++class HistoryMetadataMiddleware(private val historyMetadataService: HistoryMetadataService, private val context: Context) :
+     Middleware<BrowserState, BrowserAction> {
+ 
+     private val logger = Logger("HistoryMetadataMiddleware")
+@@ -152,6 +154,9 @@ class HistoryMetadataMiddleware(private val historyMetadataService: HistoryMetad
+         store: Store<BrowserState, BrowserAction>,
+         tab: TabSessionState,
+     ) {
++        if (!IronFoxPreferences.isHistoryEnabled(context) || IronFoxPreferences.isAlwaysUsePrivateBrowsing(context)) {
++            return
++        }
+         val tabParent = tab.getParent(store)
+         val previousUrlIndex = tab.content.history.currentIndex - 1
+         val tabMetadataHasSearchTerms = !tab.historyMetadata?.searchTerm.isNullOrBlank()
+@@ -226,6 +231,9 @@ class HistoryMetadataMiddleware(private val historyMetadataService: HistoryMetad
+     }
+ 
+     private fun updateHistoryMetadata(tab: TabSessionState) {
++        if (!IronFoxPreferences.isHistoryEnabled(context) || IronFoxPreferences.isAlwaysUsePrivateBrowsing(context)) {
++            return
++        }
+         tab.historyMetadata?.let {
+             historyMetadataService.updateMetadata(it, tab)
+         }
+-- 

@@ -124,6 +124,24 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
       default = true,
     )
 
+  var historyEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_history_enabled),
+      default = false,
+    )
+
+  var historyEnabledCachedValue by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_history_enabled_cached_value),
+      default = false,
+    )
+
+  var historyMetadataUIFeatureCachedValue by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_history_metadata_feature_cached_value),
+      default = false,
+    )
+
   var ipProtectionEnabled by
     booleanPreference(
       key = context.getPreferenceKey(R.string.pref_key_ironfox_ip_protection_enabled),
