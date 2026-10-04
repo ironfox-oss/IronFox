@@ -82,6 +82,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "dm.pl"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "dndbeyond.com"
     },
     {
