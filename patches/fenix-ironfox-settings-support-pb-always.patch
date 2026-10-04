@@ -7,6 +7,95 @@ Provides support for a UI setting to always use private browsing mode.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/ExperimentalHomepageHeader.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/ExperimentalHomepageHeader.kt
+index b1840862ca13..c0f8add3104f 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/ExperimentalHomepageHeader.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/ExperimentalHomepageHeader.kt
+@@ -104,13 +104,15 @@ fun ExperimentalHomepageHeader(
+  * @param onHomeTapped callback for when the home button is tapped.
+  */
+ @Composable
+-fun ExperimentalPrivateHomepageHeader(onHomeTapped: () -> Unit) {
++fun ExperimentalPrivateHomepageHeader(alwaysUsePB: Boolean, onHomeTapped: () -> Unit) {
+     Row(
+         modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(all = 16.dp),
+         verticalAlignment = Alignment.Top,
+         horizontalArrangement = Arrangement.End,
+     ) {
+-        HomeButton(onHomeTapped)
++        if (!alwaysUsePB) {
++            HomeButton(onHomeTapped)
++        }
+     }
+ }
+ 
+@@ -219,7 +221,7 @@ private fun HomepageHeaderPreview(@PreviewParameter(PreviewThemeProvider::class)
+ private fun PrivateHomepageHeaderPreview(@PreviewParameter(PreviewThemeProvider::class) theme: Theme) {
+     FirefoxTheme(theme) {
+         Surface {
+-            ExperimentalPrivateHomepageHeader {}
++            ExperimentalPrivateHomepageHeader(alwaysUsePB = false) {}
+         }
+     }
+ }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt
+index 612108089931..9e06be3e5818 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt
+@@ -177,12 +177,13 @@ internal fun Homepage(
+                 }
+ 
+                 is HeaderState.Experimental.Private -> {
+-                    ExperimentalPrivateHomepageHeader(onHomeTapped = { browsingModeChanged(BrowsingMode.Normal) })
++                    ExperimentalPrivateHomepageHeader(alwaysUsePB = components.settings.ironfox.alwaysUsePrivateBrowsing, onHomeTapped = { browsingModeChanged(BrowsingMode.Normal) })
+                 }
+ 
+                 is HeaderState.Normal -> {
+                     HomepageHeader(
+                         browsingMode = state.browsingMode,
++                        alwaysUsePB = components.settings.ironfox.alwaysUsePrivateBrowsing,
+                         browsingModeChanged = browsingModeChanged,
+                     )
+                 }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt
+index 28fab67918af..006de138cde4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt
+@@ -44,6 +44,7 @@ import org.mozilla.fenix.wallpapers.WallpaperTheme
+ @Composable
+ fun HomepageHeader(
+     browsingMode: BrowsingMode,
++    alwaysUsePB: Boolean,
+     browsingModeChanged: (BrowsingMode) -> Unit,
+ ) {
+     // In normal mode the wordmark and private-browsing button follow the wallpaper text color; in
+@@ -75,11 +76,13 @@ fun HomepageHeader(
+ 
+         Spacer(modifier = Modifier.weight(1f))
+ 
+-        PrivateBrowsingButton(
+-            color = privateBrowsingButtonColor,
+-            browsingMode = browsingMode,
+-            browsingModeChanged = browsingModeChanged,
+-        )
++        if (!alwaysUsePB) {
++            PrivateBrowsingButton(
++                color = privateBrowsingButtonColor,
++                browsingMode = browsingMode,
++                browsingModeChanged = browsingModeChanged,
++            )
++        }
+     }
+ }
+ 
+@@ -130,6 +133,7 @@ private fun HomepageHeaderPreview(@PreviewParameter(PreviewThemeProvider::class)
+         Surface {
+             HomepageHeader(
+                 browsingMode = BrowsingMode.Normal,
++                alwaysUsePB = false,
+                 browsingModeChanged = {},
+             )
+         }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
 index 826acce5d92d..6300f494cad8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
