@@ -588,14 +588,14 @@ function delete_file() {
 
   local -r s3_target_path="s3://${s3_bucket_name}/${s3_file}"
 
-  echo_red_text "Deleting ${s3_file_name} from S3..."
+  echo_red_text "Deleting '${s3_file_name}' from S3..."
   source "${IRONFOX_PYENV}"
   "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} rm "${s3_file}" \
     --access_key="${s3_access_key}" \
     --secret_key="${s3_secret_key}" \
     --host="${s3_endpoint}" \
     --host-bucket="${s3_endpoint}"
-  echo_green_text "SUCCESS: Deleted ${s3_file_name} from S3"
+  echo_green_text "SUCCESS: Deleted '${s3_file_name}' from S3"
 
   # Set verbosity
   set_verbosity
