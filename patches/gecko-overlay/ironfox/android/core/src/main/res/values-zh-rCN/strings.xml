@@ -9,7 +9,7 @@
     <string name="if_preferences_secret">隐蔽设置</string>
     <string name="if_preferences_security">安全</string>
     <string name="preference_accessibility_enabled">启用无障碍服务</string>
-    <string name="preference_referer_policy">引荐来源网址政策</string>
+    <string name="preference_referer_policy">跨域引用网址策略</string>
     <string name="preference_referer_policy_summary">配置跨域引用的行为</string>
     <string name="preference_referer_policy_always">始终发送跨域引用（默认）</string>
     <string name="preference_referer_policy_base_domains_match">在基础域名匹配时发送跨域引用</string>
@@ -68,4 +68,6 @@
     <string name="preference_ironfox_geo_provider_network_enabled">启用网络地理定位提供程序</string>
     <string name="preference_ironfox_geo_provider_network_summary">如果已启用且 Android 地理定位提供程序不可用，IronFox 将使用 BeaconDB 网络地理定位服务向网站提供您的位置（如果您授予网站权限）——更改此设置将重新启动浏览器</string>
     <string name="preference_ironfox_ip_protection_enabled">启用 Firefox VPN</string>
+    <string name="preference_ironfox_history_enabled">记住浏览历史</string>
+    <string name="preference_ironfox_fxa_enabled">Firefox 同步</string>
 </resources>

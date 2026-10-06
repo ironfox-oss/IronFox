@@ -67,4 +67,7 @@
     <string name="preference_ironfox_geo_provider_android_summary">Jeśli włączone, IronFox będzie próbował używać usług lokalizacji Androida, aby podawać twoją geolokalizację stronom internetowym (jeżeli udzielisz im uprawnień) - Zmiana tego ustawienia uruchomi przeglądarkę ponownie</string>
     <string name="preference_ironfox_geo_provider_network_enabled">Włącz sieciowego dostawcę geolokalizacji</string>
     <string name="preference_ironfox_geo_provider_network_summary">Jeśli włączone, i dostawca geolokalizacji Androida jest niedostępny, IronFox będzie używał sieciowych usług geolokalizacji BeaconDB, aby podawać twoją lokalizację stronom internetowym (jeżeli udzielisz im uprawnień) - Zmiana tego ustawienia uruchomi przeglądarkę ponownie</string>
+    <string name="preference_ironfox_fxa_enabled">Włącz Firefox Sync</string>
+    <string name="preference_ironfox_history_enabled">Zapamiętuj historię przeglądania</string>
+    <string name="preference_ironfox_ip_protection_enabled">Włącz Firefox VPN</string>
 </resources>

@@ -67,4 +67,7 @@
     <string name="preference_ironfox_geo_provider_android_summary">この機能を有効にすると、IronFoxはAndroid OSの位置情報サービスを使いユーザーの現在地情報をウェブサイトへ提供しようとします（サイトへの許可を付与した場合に限ります） - この設定を変更するとブラウザが再起動します</string>
     <string name="preference_ironfox_geo_provider_network_enabled">ネットワーク位置情報プロバイダを有効化</string>
     <string name="preference_ironfox_geo_provider_network_summary">この機能が有効でAndroidの位置情報プロバイダーが利用できない場合は、IronFoxはBeaconDBネットワーク位置情報サービスを使いウェブサイトへ利用者の位置情報を提供します（サイトへの許可を付与した場合に限ります） - この設定を変更するとブラウザが再起動します</string>
+    <string name="preference_ironfox_history_enabled">閲覧履歴を保存</string>
+    <string name="preference_ironfox_fxa_enabled">Firefox Syncを有効化</string>
+    <string name="preference_ironfox_ip_protection_enabled">Firefox VPNを有効化</string>
 </resources>

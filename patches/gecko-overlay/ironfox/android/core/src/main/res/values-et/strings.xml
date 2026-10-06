@@ -69,4 +69,6 @@
     <string name="preference_ironfox_geo_provider_network_enabled">Lülita Androidi võrgupõhine asukohatuvastus sisse (Network Geolocation Provider)</string>
     <string name="preference_ironfox_geo_provider_network_summary">Sisselülitamisel ja olukorras kus tavapärane Androidi asukohatuvastus pole saadaval, proovib IronFox kasutada BeaconDB võrgupõhiseid asukohatuvastusteenuseid ja jagada seda teavet veebisaitidele (sinu poolt antud loa alusel). Selle seadistuse muutmine käivitab veebibrauseri uuesti</string>
     <string name="preference_ironfox_ip_protection_enabled">Lülita Firefoxi VPN sisse</string>
+    <string name="preference_ironfox_fxa_enabled">Kasuta Firefox Synci</string>
+    <string name="preference_ironfox_history_enabled">Jäta veebisirvimise ajalugu meelde</string>
 </resources>
