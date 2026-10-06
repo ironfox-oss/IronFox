@@ -15,7 +15,7 @@ source "${IRONFOX_UTILS}" || exit 1
 
 # Produce a (reproducible) archive from a directory
 ## For reference/details on this process, see...
-## https://codeberg.org/celenity/Phoenix/issues/314
+## https://codeberg.org/celenity/bugs/issues/360
 ## https://www.gnu.org/software/tar/manual/html_node/Reproducibility.html
 ## https://wiki.debian.org/ReproducibleBuilds/TimestampsInZip
 ## https://stackoverflow.com/questions/52668432/tar-package-has-different-checksum-for-exactly-the-same-content
