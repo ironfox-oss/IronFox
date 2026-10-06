@@ -13,14 +13,11 @@ source $(dirname $0)/env.sh || exit 1
 # Include utilities
 source "${IRONFOX_UTILS}" || exit 1
 
-# Set verbosity
-set_verbosity
-
 # Push a file to S3 storage
 function push_file() {
   function print_usage() {
-    echo "Usage: push_file '/path/to/file' 'path/on/s3' '/path/to/s3_access_key_file' '/path/to/s3_bucket_name_file' '/path/to/s3_endpoint_file'
-      '/path/to/s3_secret_key_file'"
+    echo "Usage: push_file '/path/to/file' 'path/on/s3' '/path/to/s3_access_key_file' '/path/to/s3_bucket_name_file'
+      '/path/to/s3_endpoint_file' '/path/to/s3_secret_key_file'"
   }
 
   if [[ -z "${1+x}" ]]; then
@@ -130,7 +127,7 @@ function push_file() {
       local -r mime_type='application/zip'
       ;;
     *)
-      echo_red_text "ERROR: Unsupported file type: ${push_file}"
+      echo_red_text "ERROR: Unsupported file type: '${push_file}'!"
       exit 1
       ;;
   esac
@@ -149,14 +146,14 @@ function push_file() {
     local -r s3_target_path="s3://${s3_bucket_name}/${s3_full_path}"
   fi
 
-  echo_red_text "Pushing ${push_file} to S3..."
+  echo_red_text "Pushing '${push_file}' to S3..."
   source "${IRONFOX_PYENV}"
   "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} --mime-type="${mime_type}" put "${push_file}" "${s3_target_path}" \
     --access_key="${s3_access_key}" \
     --secret_key="${s3_secret_key}" \
     --host="${s3_endpoint}" \
     --host-bucket="${s3_endpoint}"
-  echo_green_text "SUCCESS: Pushed ${push_file} to S3"
+  echo_green_text "SUCCESS: Pushed '${push_file}' to S3!"
 
   # Set verbosity
   set_verbosity
@@ -310,6 +307,210 @@ function push_and_add_sha512sum() {
 
   # Create and push a SHA512sum for our file to S3 storage
   push_sha512sum "${file_in}" "${s3_path_out}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
+}
+
+# Push a directory to S3 storage
+function push_dir() {
+  function print_usage() {
+    echo "Usage: push_dir '/path/to/directory' 'path/on/s3' '/path/to/s3_access_key_file' '/path/to/s3_bucket_name_file'
+      '/path/to/s3_endpoint_file' '/path/to/s3_secret_key_file'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a directory that should be uploaded to S3 storage!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${2+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the target path on S3 storage for where the directory should be uploaded!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${3+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 access key!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${4+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 bucket name!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${5+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 endpoint!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${6+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 secret key!'
+    print_usage
+    exit 1
+  fi
+
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
+  # Ensure we have dirname
+  verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || exit 1
+
+  # Ensure we have dot_clean
+  if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    verify_exec "${IRONFOX_DOT_CLEAN}" 'IRONFOX_DOT_CLEAN' || exit 1
+  fi
+
+  # Ensure we have find
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || exit 1
+
+  local -r push_dir="$1"
+  local -r target_s3_path="$2"
+  local -r s3_access_key_file="$3"
+  local -r s3_bucket_name_file="$4"
+  local -r s3_endpoint_file="$5"
+  local -r s3_secret_key_file="$6"
+
+  # Ensure our directory to push is valid
+  if [[ ! -d "${push_dir}" ]]; then
+    echo_red_text "ERROR: Directory does not exist: '${push_dir}'!"
+    exit 1
+  fi
+
+  # Ensure our secrets are valid
+  verify_file "${s3_access_key_file}" || exit 1
+  verify_file "${s3_bucket_name_file}" || exit 1
+  verify_file "${s3_endpoint_file}" || exit 1
+  verify_file "${s3_secret_key_file}" || exit 1
+
+  # First, if necessary, clean our directory...
+  if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    "${IRONFOX_DOT_CLEAN}" -mv "${push_dir}"
+  fi
+
+  echo_red_text "Pushing '${push_dir}' to S3..."
+  for file in $("${IRONFOX_FIND}" "${push_dir}" -type f); do
+    local file_basename=$("${IRONFOX_BASENAME}" "${file}")
+    if [[ "${file_basename}" != '.DS_Store' ]]; then
+      local file_path="${file#"${push_dir}"}"
+      local target_path=$("${IRONFOX_DIRNAME}" "${file_path}")
+      if [[ "${target_s3_path}" == 'root' ]]; then
+        local s3_path='root'
+      elif [[ "${target_path}" == '/' ]]; then
+        local s3_path=$("${IRONFOX_BASENAME}" "${push_dir}")
+      else
+        local s3_path="${target_s3_path}${target_path}"
+      fi
+      push_file "${file}" "${s3_path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
+    else
+      echo "Skipping upload of file: '${file}'"
+    fi
+  done
+  echo_green_text "SUCCESS: Pushed '${push_dir}' to S3!"
+}
+
+# Push a directory to S3 storage and add SHA512sums for each of its files
+function push_dir_and_add_sha512sum() {
+  function print_usage() {
+    echo "Usage: push_dir_and_add_sha512sum '/path/to/directory' 'path/on/s3' '/path/to/s3_access_key_file' '/path/to/s3_bucket_name_file'
+      '/path/to/s3_endpoint_file' '/path/to/s3_secret_key_file'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a directory that should be uploaded to S3 storage!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${2+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the target path on S3 storage for where the directory should be uploaded!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${3+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 access key!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${4+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 bucket name!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${5+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 endpoint!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${6+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a file containing the S3 secret key!'
+    print_usage
+    exit 1
+  fi
+
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
+  # Ensure we have dirname
+  verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || exit 1
+
+  # Ensure we have dot_clean
+  if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    verify_exec "${IRONFOX_DOT_CLEAN}" 'IRONFOX_DOT_CLEAN' || exit 1
+  fi
+
+  # Ensure we have find
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || exit 1
+
+  local -r push_dir="$1"
+  local -r target_s3_path="$2"
+  local -r s3_access_key_file="$3"
+  local -r s3_bucket_name_file="$4"
+  local -r s3_endpoint_file="$5"
+  local -r s3_secret_key_file="$6"
+
+  # Ensure our directory to push is valid
+  if [[ ! -d "${push_dir}" ]]; then
+    echo_red_text "ERROR: Directory does not exist: '${push_dir}'!"
+    exit 1
+  fi
+
+  # Ensure our secrets are valid
+  verify_file "${s3_access_key_file}" || exit 1
+  verify_file "${s3_bucket_name_file}" || exit 1
+  verify_file "${s3_endpoint_file}" || exit 1
+  verify_file "${s3_secret_key_file}" || exit 1
+
+  # First, if necessary, clean our directory...
+  if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    "${IRONFOX_DOT_CLEAN}" -mv "${push_dir}"
+  fi
+
+  echo_red_text "Pushing '${push_dir}' to S3..."
+  for file in $("${IRONFOX_FIND}" "${push_dir}" -type f); do
+    local file_basename=$("${IRONFOX_BASENAME}" "${file}")
+    if [[ "${file_basename}" != '.DS_Store' ]]; then
+      local file_path="${file#"${push_dir}"}"
+      local target_path=$("${IRONFOX_DIRNAME}" "${file_path}")
+      if [[ "${target_s3_path}" == 'root' ]]; then
+        local s3_path='root'
+      elif [[ "${target_path}" == '/' ]]; then
+        local s3_path=$("${IRONFOX_BASENAME}" "${push_dir}")
+      else
+        local s3_path="${target_s3_path}${target_path}"
+      fi
+      push_and_add_sha512sum "${file}" "${s3_path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
+    else
+      echo "Skipping upload of file: '${file}'"
+    fi
+  done
+  echo_green_text "SUCCESS: Pushed '${push_dir}' to S3!"
 }
 
 # Delete a file from S3 storage
