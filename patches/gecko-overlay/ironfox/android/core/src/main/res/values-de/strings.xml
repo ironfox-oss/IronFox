@@ -69,4 +69,5 @@
     <string name="preference_ironfox_geo_provider_network_summary">Wenn diese Option aktiviert ist und der Android-Standortdienst nicht verfügbar ist, nutzt IronFox den Standortdienst BeaconDB, um Websites Ihren Standort mitzuteilen (sofern Sie der Website die entsprechende Berechtigung erteilen). Das Ändern dieser Einstellung startet den Browser neu</string>
     <string name="preference_ironfox_fxa_enabled">Firefox Sync aktivieren</string>
     <string name="preference_ironfox_ip_protection_enabled">Firefox-VPN aktivieren</string>
+    <string name="preference_ironfox_history_enabled">Browserverlauf speichern</string>
 </resources>

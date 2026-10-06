@@ -69,4 +69,5 @@
     <string name="preference_ironfox_geo_provider_network_enabled">Netwerkgeolocatie-provider inschakelen</string>
     <string name="preference_ironfox_geo_provider_network_summary">Als deze optie is ingeschakeld en de geolocatie-provider van Android niet beschikbaar is, zal IronFox gebruikmaken van de BeaconDB-netwerkdienst om de locatie aan websites door te geven (mits de website daarvoor toestemming krijgt) - Na wijziging zal de browser opnieuw opstarten</string>
     <string name="preference_ironfox_fxa_enabled">Firefox Sync inschakelen</string>
+    <string name="preference_ironfox_history_enabled">Browsegeschiedenis onthouden</string>
 </resources>
