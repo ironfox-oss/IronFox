@@ -54,15 +54,15 @@ fi
 readonly IRONFOX_AR_DOWN_FENIX
 readonly IRONFOX_AR_DOWN_GECKOVIEW
 
-if [[ "${down_arch}" != 'arm64' ]] && [[ "${down_arch}" != 'arm' ]] && [[ "${down_arch}" != 'x86_64' ]] && [[ "${down_arch}" != 'bundle' ]]; then
-  echo_red_text "ERROR: Invalid target architecture: ${down_arch}\n You must enter one of the following:"
+if [[ "${target_arch}" != 'arm64' ]] && [[ "${target_arch}" != 'arm' ]] && [[ "${target_arch}" != 'x86_64' ]] && [[ "${target_arch}" != 'bundle' ]]; then
+  echo_red_text "ERROR: Invalid target architecture: ${target_arch}\n You must enter one of the following:"
   echo 'ARM64:      arm64'
   echo 'ARM:        arm'
   echo 'x86_64:     x86_64'
   echo 'Bundle:     bundle'
   return 1
 fi
-readonly IRONFOX_AR_DOWN_ARCH="${down_arch}"
+readonly IRONFOX_AR_DOWN_ARCH="${target_arch}"
 
 # Constants
 
