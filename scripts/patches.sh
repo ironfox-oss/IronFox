@@ -2,23 +2,20 @@
 
 set -euo pipefail
 
-# Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh || exit 1
-fi
-source $(dirname $0)/env.sh || exit 1
-
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
-
-# Ensure we have dirname
-verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || exit 1
-
-# Ensure we have yq
-verify_exec "${IRONFOX_YQ}" 'IRONFOX_YQ' || exit 1
-
 # Set verbosity
 set_verbosity
+
+# Ensure we have dirname
+verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || return 1
+
+# Ensure we have GNU patch
+verify_exec "${IRONFOX_PATCH}" 'IRONFOX_PATCH' || return 1
+
+# Ensure we have yq
+verify_exec "${IRONFOX_YQ}" 'IRONFOX_YQ' || return 1
+
+# Ensure we have `IRONFOX_PATCHES`
+verify_dir_with_env "${IRONFOX_PATCHES}" 'IRONFOX_PATCHES' || return 1
 
 readonly RED="\033[0;31m"
 readonly GREEN="\033[0;32m"
@@ -43,7 +40,7 @@ readonly UP_AC_PATCH_FILES=($("${IRONFOX_YQ}" '.patches[].file' "${IRONFOX_UP_AC
 
 function check_patch() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   local -r patch="${IRONFOX_PATCHES}/$1"
   if [[ ! -f "${patch}" ]]; then
@@ -61,7 +58,7 @@ function check_patch() {
 
 function up_ac_check_patch() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   local -r patch="${IRONFOX_UP_AC}/patches/$1"
   if [[ ! -f "${patch}" ]]; then
@@ -111,7 +108,7 @@ function up_ac_check_patches() {
 
 function test_patches() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   for patch in "${PATCH_FILES[@]}"; do
     if ! check_patch "${patch}" > /dev/null 2>&1; then
@@ -124,7 +121,7 @@ function test_patches() {
 
 function a-s_test_patches() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   for patch in "${AS_PATCH_FILES[@]}"; do
     if ! check_patch "${patch}" > /dev/null 2>&1; then
@@ -137,7 +134,7 @@ function a-s_test_patches() {
 
 function glean_test_patches() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   for patch in "${GLEAN_PATCH_FILES[@]}"; do
     if ! check_patch "${patch}" > /dev/null 2>&1; then
@@ -150,7 +147,7 @@ function glean_test_patches() {
 
 function up_ac_test_patches() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   for patch in "${UP_AC_PATCH_FILES[@]}"; do
     if ! up_ac_check_patch "${patch}" > /dev/null 2>&1; then
@@ -179,7 +176,7 @@ function up_ac_apply_patch() {
 
 function apply_patches() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   for patch in "${PATCH_FILES[@]}"; do
     if ! apply_patch "${patch}"; then
@@ -192,7 +189,7 @@ function apply_patches() {
 
 function a-s_apply_patches() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   for patch in "${AS_PATCH_FILES[@]}"; do
     if ! apply_patch "${patch}"; then
@@ -205,7 +202,7 @@ function a-s_apply_patches() {
 
 function glean_apply_patches() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   for patch in "${GLEAN_PATCH_FILES[@]}"; do
     if ! apply_patch "${patch}"; then
@@ -218,7 +215,7 @@ function glean_apply_patches() {
 
 function up_ac_apply_patches() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   for patch in "${UP_AC_PATCH_FILES[@]}"; do
     if ! up_ac_apply_patch "${patch}"; then
@@ -255,10 +252,10 @@ function up_ac_list_patches() {
 
 function slugify() {
   # Ensure we have GNU sed
-  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
 
   # Ensure we have tr
-  verify_exec "${IRONFOX_TR}" 'IRONFOX_TR' || exit 1
+  verify_exec "${IRONFOX_TR}" 'IRONFOX_TR' || return 1
 
   local -r input="$1"
   echo "${input}" |
@@ -271,25 +268,25 @@ function slugify() {
 # Usage: rebase_patch <compatible_tag> <target_tag> <patch_file_path>
 function rebase_patch() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   # Ensure we have git
-  verify_exec "${IRONFOX_GIT}" 'IRONFOX_GIT' || exit 1
+  verify_exec "${IRONFOX_GIT}" 'IRONFOX_GIT' || return 1
 
   # Ensure we have grep
-  verify_exec "${IRONFOX_GREP}" 'IRONFOX_GREP' || exit 1
+  verify_exec "${IRONFOX_GREP}" 'IRONFOX_GREP' || return 1
 
   # Ensure we have mktemp
-  verify_exec "${IRONFOX_MKTEMP}" 'IRONFOX_MKTEMP' || exit 1
+  verify_exec "${IRONFOX_MKTEMP}" 'IRONFOX_MKTEMP' || return 1
 
   # Ensure we have mv
-  verify_exec "${IRONFOX_MV}" 'IRONFOX_MV' || exit 1
+  verify_exec "${IRONFOX_MV}" 'IRONFOX_MV' || return 1
 
   # Ensure we have rm
-  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   # Ensure we have wc
-  verify_exec "${IRONFOX_WC}" 'IRONFOX_WC' || exit 1
+  verify_exec "${IRONFOX_WC}" 'IRONFOX_WC' || return 1
 
   local -r compatible_tag="$1"
   local -r target_tag="$2"
@@ -470,7 +467,7 @@ function rebase_patch() {
 # Usage: rebase_patches <compatible_tag> <target_tag> <patch_file1> [patch_file2] [...]
 function rebase_patches() {
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   local -r compatible_tag="$1"
   local -r target_tag="$2"

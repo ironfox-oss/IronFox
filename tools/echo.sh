@@ -1,2 +1,2 @@
 #!/bin/bash
-exec /bin/bash -c "echo $@"
+exec "${IRONFOX_BASH}" -c "echo $@"

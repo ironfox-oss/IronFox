@@ -5,70 +5,77 @@ set -euo pipefail
 
 # Ensure our external variables are set correctly...
 
-if [[ -z "${IRONFOX_CHANNEL+x}" ]]; then
-  echo 'ERROR: IRONFOX_CHANNEL is missing!'
-  exit 1
+if [[ -z "${IRONFOX_CHANNEL+x}" ]] || [[ "${IRONFOX_CHANNEL}" == "" ]] || [[ "${IRONFOX_CHANNEL}" == "null" ]]; then
+  echo "ERROR: 'IRONFOX_CHANNEL' is missing!"
+  return 1
 fi
 
-if [[ -z "${IRONFOX_RELEASE+x}" ]]; then
-  echo 'ERROR: IRONFOX_RELEASE is missing!'
-  exit 1
+if [[ -z "${IRONFOX_GECKO+x}" ]] || [[ "${IRONFOX_GECKO}" == "" ]] || [[ "${IRONFOX_GECKO}" == "null" ]]; then
+  echo "ERROR: 'IRONFOX_GECKO' is missing!"
+  return 1
 fi
 
-if [[ -z "${IRONFOX_MACH_TARGET_ARCH+x}" ]]; then
-  echo 'ERROR: IRONFOX_MACH_TARGET_ARCH is missing!'
-  exit 1
+if [[ -z "${IRONFOX_RELEASE+x}" ]] || [[ "${IRONFOX_RELEASE}" == "" ]] || [[ "${IRONFOX_RELEASE}" == "null" ]]; then
+  echo "ERROR: 'IRONFOX_RELEASE' is missing!"
+  return 1
+fi
+
+if [[ -z "${IRONFOX_MACH_TARGET_ARCH+x}" ]] || [[ "${IRONFOX_MACH_TARGET_ARCH}" == "" ]] || [[ "${IRONFOX_MACH_TARGET_ARCH}" == "null" ]]; then
+  echo "ERROR: 'IRONFOX_MACH_TARGET_ARCH' is missing!"
+  return 1
 fi
 
 if [[ "${IRONFOX_MACH_TARGET_ARCH}" != 'arm64' ]] && [[ "${IRONFOX_MACH_TARGET_ARCH}" != 'arm' ]] &&
   [[ "${IRONFOX_MACH_TARGET_ARCH}" != 'x86_64' ]] && [[ "${IRONFOX_MACH_TARGET_ARCH}" != 'bundle' ]]; then
-  echo "ERROR: Invalid Mach target architecture: ${IRONFOX_MACH_TARGET_ARCH}"
-  exit 1
+  echo "ERROR: Invalid Mach target architecture: '${IRONFOX_MACH_TARGET_ARCH}'!"
+  return 1
 fi
 
-if [[ -z "${IRONFOX_MACH_TARGET_PROJECT+x}" ]]; then
-  echo 'ERROR: IRONFOX_MACH_TARGET_PROJECT is missing!'
-  exit 1
+if [[ -z "${IRONFOX_MACH_TARGET_PROJECT+x}" ]] || [[ "${IRONFOX_MACH_TARGET_PROJECT}" == "" ]] ||
+  [[ "${IRONFOX_MACH_TARGET_PROJECT}" == "null" ]]; then
+  echo "ERROR: 'IRONFOX_MACH_TARGET_PROJECT' is missing!"
+  return 1
 fi
 
 if [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'gecko' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'geckoview' ]] &&
   [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'ac-core' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'android-components' ]] &&
   [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'ironfox-core' ]] && [[ "${IRONFOX_MACH_TARGET_PROJECT}" != 'fenix' ]]; then
-  echo "ERROR: Invalid Mach target project: ${IRONFOX_MACH_TARGET_PROJECT}"
-  exit 1
+  echo "ERROR: Invalid Mach target project: '${IRONFOX_MACH_TARGET_PROJECT}'!"
+  return 1
 fi
 
-if [[ -z "${IRONFOX_MOZCONFIGS+x}" ]]; then
-  echo 'ERROR: IRONFOX_MOZCONFIGS is missing!'
-  exit 1
+if [[ -z "${IRONFOX_MOZCONFIGS+x}" ]] || [[ "${IRONFOX_MOZCONFIGS}" == "" ]] || [[ "${IRONFOX_MOZCONFIGS}" == "null" ]]; then
+  echo "ERROR: 'IRONFOX_MOZCONFIGS' is missing!"
+  return 1
 fi
 
 # Check project-specific variables (so we can fail early)
 if [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'gecko' ]]; then
-  if [[ -z "${IRONFOX_CI+x}" ]]; then
-    echo 'ERROR: IRONFOX_CI is missing!'
-    exit 1
+  if [[ -z "${IRONFOX_CI+x}" ]] || [[ "${IRONFOX_CI}" == "" ]] || [[ "${IRONFOX_CI}" == "null" ]]; then
+    echo "ERROR: 'IRONFOX_CI' is missing!"
+    return 1
   fi
 
-  if [[ -z "${IRONFOX_MACH_GECKO_STAGE+x}" ]]; then
-    echo 'ERROR: IRONFOX_MACH_GECKO_STAGE is missing!'
-    exit 1
+  if [[ -z "${IRONFOX_MACH_GECKO_STAGE+x}" ]] || [[ "${IRONFOX_MACH_GECKO_STAGE}" == "" ]] || [[ "${IRONFOX_MACH_GECKO_STAGE}" == "null" ]]; then
+    echo "ERROR: 'IRONFOX_MACH_GECKO_STAGE' is missing!"
+    return 1
   fi
 
   if [[ "${IRONFOX_MACH_GECKO_STAGE}" != 'build' ]] && [[ "${IRONFOX_MACH_GECKO_STAGE}" != 'package' ]]; then
-    echo "ERROR: Invalid Gecko build stage: ${IRONFOX_MACH_GECKO_STAGE}"
-    exit 1
+    echo "ERROR: Invalid Gecko build stage: '${IRONFOX_MACH_GECKO_STAGE}'!"
+    return 1
   fi
 
-  if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
-    echo 'ERROR: IRONFOX_SB_GAPI_KEY_FILE is missing!'
-    exit 1
+  if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]] || [[ "${IRONFOX_SB_GAPI_KEY_FILE}" == "" ]]; then
+    echo "ERROR: 'IRONFOX_SB_GAPI_KEY_FILE' is missing!"
+    return 1
   fi
 elif [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'geckoview' ]]; then
   # (IRONFOX_MACH_GECKOVIEW_CREATE_AAR is used by `geckoview.mozconfig`)
-  if [[ -z "${IRONFOX_MACH_GECKOVIEW_CREATE_AAR+x}" ]]; then
-    echo 'ERROR: IRONFOX_MACH_GECKOVIEW_CREATE_AAR is missing!'
-    exit 1
+  if [[ -z "${IRONFOX_MACH_GECKOVIEW_CREATE_AAR+x}" ]] || [[ "${IRONFOX_MACH_GECKOVIEW_CREATE_AAR}" == "" ]] ||
+    [[ "${IRONFOX_MACH_GECKOVIEW_CREATE_AAR}" == "null" ]]; then
+    echo "ERROR: 'IRONFOX_MACH_GECKOVIEW_CREATE_AAR' is missing!"
+    return 1
   fi
 fi
 

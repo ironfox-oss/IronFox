@@ -22,44 +22,49 @@
 
 set -euo pipefail
 
-# Set-up our environment
-source $(dirname $0)/env.sh || exit 1
-
-if [[ -n "${FDROID_BUILD+x}" ]]; then
-  source "${IRONFOX_ENV_FDROID}" || exit 1
-fi
-
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
-
 # Set verbosity
 set_verbosity
 
+# Ensure we have `IRONFOX_SCRIPTS`
+verify_dir_with_env "${IRONFOX_SCRIPTS}" 'IRONFOX_SCRIPTS' || return 1
+
+# Include de-Glean utilities
+verify_file "${IRONFOX_SCRIPTS}/deglean.sh" || return 1
+source "${IRONFOX_SCRIPTS}/deglean.sh" || return 1
+
+# Include noop endpoint utilities
+verify_file "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" || return 1
+source "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" || return 1
+
 # Include patch utilities
-source "${IRONFOX_SCRIPTS}/patches.sh" || exit 1
+verify_file "${IRONFOX_SCRIPTS}/patches.sh" || return 1
+source "${IRONFOX_SCRIPTS}/patches.sh" || return 1
 
 if [[ -z "${IRONFOX_FROM_PREBUILD+x}" ]]; then
   echo_red_text "ERROR: Do not call 'prebuild-if.sh' directly! Instead, use 'prebuild.sh'." >&1
-  exit 1
+  return 1
 fi
 
 # Ensure we have rm
-verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
 # Ensure we have touch
-verify_exec "${IRONFOX_TOUCH}" 'IRONFOX_TOUCH' || exit 1
+verify_exec "${IRONFOX_TOUCH}" 'IRONFOX_TOUCH' || return 1
+
+# Ensure we have `IRONFOX_BUILD`
+verify_env "${IRONFOX_BUILD}" 'IRONFOX_BUILD' || return 1
 
 # Ensure we have `IRONFOX_VERSION`
-if [[ -z "${IRONFOX_VERSION+x}" ]] || [[ "${IRONFOX_VERSION}" == "" ]]; then
-  echo_red_text "ERROR: 'IRONFOX_VERSION' is missing!"
-  exit 1
-fi
+verify_env "${IRONFOX_VERSION}" 'IRONFOX_VERSION' || return 1
 
 if [[ -f "${IRONFOX_BUILD}/finished-prebuild" ]]; then
   "${IRONFOX_RM}" -f "${IRONFOX_BUILD}/finished-prebuild"
 fi
 
-readonly target="$1"
+verify_env "${prebuild_target}" 'prebuild_target' || {
+  echo_red_text "ERROR: Missing prebuild target!"
+  return 1
+}
 
 # Set-up target parameters
 IRONFOX_PREPARE_AC=0
@@ -74,40 +79,40 @@ IRONFOX_PREPARE_MICROG=0
 IRONFOX_PREPARE_RUST=0
 IRONFOX_PREPARE_PREBUILDS=0
 
-if [[ "${target}" == 'ac' ]]; then
+if [[ "${prebuild_target}" == 'ac' ]]; then
   # Prepare Android Components
   IRONFOX_PREPARE_AC=1
-elif [[ "${target}" == 'android-sdk' ]]; then
+elif [[ "${prebuild_target}" == 'android-sdk' ]]; then
   # Prepare Android SDK
   IRONFOX_PREPARE_ANDROID_SDK=1
-elif [[ "${target}" == 'as' ]]; then
+elif [[ "${prebuild_target}" == 'as' ]]; then
   # Prepare Application Services
   IRONFOX_PREPARE_AS=1
-elif [[ "${target}" == 'bundletool' ]]; then
+elif [[ "${prebuild_target}" == 'bundletool' ]]; then
   # Prepare Bundletool
   IRONFOX_PREPARE_BUNDLETOOL=1
-elif [[ "${target}" == 'fenix' ]]; then
+elif [[ "${prebuild_target}" == 'fenix' ]]; then
   # Prepare Fenix
   IRONFOX_PREPARE_FENIX=1
-elif [[ "${target}" == 'firefox' ]]; then
+elif [[ "${prebuild_target}" == 'firefox' ]]; then
   # Prepare Firefox (Gecko/mozilla-central)
   IRONFOX_PREPARE_GECKO=1
-elif [[ "${target}" == 'glean' ]]; then
+elif [[ "${prebuild_target}" == 'glean' ]]; then
   # Prepare Glean
   IRONFOX_PREPARE_GLEAN=1
-elif [[ "${target}" == 'llvm' ]]; then
+elif [[ "${prebuild_target}" == 'llvm' ]]; then
   # Prepare LLVM
   IRONFOX_PREPARE_LLVM=1
-elif [[ "${target}" == 'microg' ]]; then
+elif [[ "${prebuild_target}" == 'microg' ]]; then
   # Prepare microG
   IRONFOX_PREPARE_MICROG=1
-elif [[ "${target}" == 'rust' ]]; then
+elif [[ "${prebuild_target}" == 'rust' ]]; then
   # Prepare rust/cargo
   IRONFOX_PREPARE_RUST=1
-elif [[ "${target}" == 'prebuilds' ]]; then
+elif [[ "${prebuild_target}" == 'prebuilds' ]]; then
   # Prepare IronFox prebuilds
   IRONFOX_PREPARE_PREBUILDS=1
-elif [[ "${target}" == 'all' ]]; then
+elif [[ "${prebuild_target}" == 'all' ]]; then
   # If no argument is specified (or argument is set to "all"), just prepare everything
   IRONFOX_PREPARE_AC=1
   IRONFOX_PREPARE_ANDROID_SDK=1
@@ -128,7 +133,7 @@ elif [[ "${target}" == 'all' ]]; then
     fi
   fi
 else
-  echo_red_text "ERROR: Invalid target: ${target}\n You must enter one of the following:"
+  echo_red_text "ERROR: Invalid target: '${prebuild_target}'\n You must enter one of the following:"
   echo 'All:                              all (Default)'
   echo 'Android Components:               ac'
   echo 'Android SDK:                      android-sdk'
@@ -141,7 +146,7 @@ else
   echo 'microG:                           microg'
   echo 'Rust:                             rust'
   echo 'Prebuilds:                        prebuilds'
-  exit 1
+  return 1
 fi
 readonly IRONFOX_PREPARE_AC
 readonly IRONFOX_PREPARE_ANDROID_SDK
@@ -155,15 +160,12 @@ readonly IRONFOX_PREPARE_MICROG
 readonly IRONFOX_PREPARE_RUST
 readonly IRONFOX_PREPARE_PREBUILDS
 
-# Include version info
-source "${IRONFOX_VERSIONS}" || exit 1
-
 function localize_gradle() {
   # Ensure we have chmod
-  verify_exec "${IRONFOX_CHMOD}" 'IRONFOX_CHMOD' || exit 1
+  verify_exec "${IRONFOX_CHMOD}" 'IRONFOX_CHMOD' || return 1
 
   # Ensure we have find
-  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || exit 1
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || return 1
 
   "${IRONFOX_FIND}" ./* -name gradlew -type f | while read -r gradlew; do
     echo -e "#!/bin/sh\n\""'${IRONFOX_GRADLE}'"\" \${IRONFOX_GRADLE_FLAGS} \""'$@'"\"" > "${gradlew}"
@@ -173,10 +175,10 @@ function localize_gradle() {
 
 function localize_maven() {
   # Ensure we have find
-  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || exit 1
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || return 1
 
   # Ensure we have Python
-  verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' || exit 1
+  verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' || return 1
 
   # Replace custom Maven repositories with mavenLocal()
   "${IRONFOX_FIND}" ./* -name '*.gradle' -type f -exec "${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
@@ -186,16 +188,16 @@ function localize_maven() {
 # to the current directory
 function apply_overlay() {
   # Ensure we have cp
-  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || exit 1
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
 
   # Ensure we have dirname
-  verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || exit 1
+  verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || return 1
 
   # Ensure we have find
-  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || exit 1
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || return 1
 
   # Ensure we have mkdir
-  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
 
   local -r source_dir="$1"
   "${IRONFOX_FIND}" "${source_dir}" -type f | while read -r src; do
@@ -207,16 +209,16 @@ function apply_overlay() {
 
 function prepare_ac() {
   # Ensure we have GNU sed
-  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
 
   # Ensure we have rm
-  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   echo_red_text 'Preparing Android Components...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC' || exit 1
-  verify_dir_with_env "${IRONFOX_AC_OVERLAY}" 'IRONFOX_AC_OVERLAY' || exit 1
+  verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC' || return 1
+  verify_dir_with_env "${IRONFOX_AC_OVERLAY}" 'IRONFOX_AC_OVERLAY' || return 1
 
   pushd "${IRONFOX_AC}"
 
@@ -260,7 +262,7 @@ function prepare_ac() {
   "${IRONFOX_RM}" -v "${IRONFOX_AC}/components/feature/search/src/main/assets/search/search_telemetry_v2.json"
 
   # Nuke undesired Mozilla endpoints
-  /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'ac'
+  noop_ac_endpoints || return 1
 
   # Remove unused/unwanted sample libraries
   ## Since we remove the Glean Service and Web Compat Reporter dependencies, the existence of these files causes build issues
@@ -304,30 +306,24 @@ function prepare_ac() {
 
 function prepare_android_sdk() {
   # Ensure we have ln
-  verify_exec "${IRONFOX_LN}" 'IRONFOX_LN' || exit 1
+  verify_exec "${IRONFOX_LN}" 'IRONFOX_LN' || return 1
 
   # Ensure we have mkdir
-  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
 
   # Ensure we have `IRONFOX_ANDROID_NDK_REVISION`
-  if [[ -z "${IRONFOX_ANDROID_NDK_REVISION+x}" ]] || [[ "${IRONFOX_ANDROID_NDK_REVISION}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ANDROID_NDK_REVISION' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ANDROID_NDK_REVISION}" 'IRONFOX_ANDROID_NDK_REVISION' || return 1
 
   # Ensure we have `IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING`
-  if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING+x}" ]] || [[ "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING' || return 1
 
   echo_red_text 'Preparing Android SDK...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_ANDROID_NDK}" 'IRONFOX_ANDROID_NDK' || exit 1
-  verify_dir_with_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK' || exit 1
-  verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS' || exit 1
-  verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" 'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS' || exit 1
+  verify_dir_with_env "${IRONFOX_ANDROID_NDK}" 'IRONFOX_ANDROID_NDK' || return 1
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK' || return 1
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS' || return 1
+  verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" 'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS' || return 1
 
   # Create Android NDK symlink
   if [[ ! -d "${IRONFOX_ANDROID_SDK}/ndk/${IRONFOX_ANDROID_NDK_REVISION}" ]]; then
@@ -356,29 +352,26 @@ function prepare_android_sdk() {
 
 function prepare_as() {
   # Ensure we have GNU sed
-  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
 
   # Ensure we have rm
-  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   # Ensure we have `IRONFOX_RUST_VERSION`
-  if [[ -z "${IRONFOX_RUST_VERSION+x}" ]] || [[ "${IRONFOX_RUST_VERSION}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RUST_VERSION' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RUST_VERSION}" 'IRONFOX_RUST_VERSION' || return 1
 
   echo_red_text 'Preparing Application Services...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS' || exit 1
-  verify_dir_with_env "${IRONFOX_AS_OVERLAY}" 'IRONFOX_AS_OVERLAY' || exit 1
+  verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS' || return 1
+  verify_dir_with_env "${IRONFOX_AS_OVERLAY}" 'IRONFOX_AS_OVERLAY' || return 1
 
   pushd "${IRONFOX_AS}"
 
   # Check patches
   if ! a-s_check_patches; then
     echo_red_text 'ERROR: Patch validation failed. Please check the patch files and try again.'
-    exit 1
+    return 1
   fi
 
   # Apply patches
@@ -414,10 +407,10 @@ function prepare_as() {
   "${IRONFOX_RM}" -vr "${IRONFOX_AS}"/components/remote_settings/dumps/main/attachments/search-config-icons/*
 
   # Remove Glean
-  /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'as'
+  deglean_as || return 1
 
   # Nuke undesired Mozilla endpoints
-  /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'as'
+  noop_as_endpoints || return 1
 
   # Remove the AI summarizer models configuration collection
   "${IRONFOX_RM}" -v "${IRONFOX_AS}/components/remote_settings/dumps/main/summarizer-models-config.json"
@@ -461,7 +454,7 @@ function prepare_bundletool() {
   echo_red_text 'Preparing Bundletool...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_BUNDLETOOL_DIR}" 'IRONFOX_BUNDLETOOL_DIR' || exit 1
+  verify_dir_with_env "${IRONFOX_BUNDLETOOL_DIR}" 'IRONFOX_BUNDLETOOL_DIR' || return 1
 
   pushd "${IRONFOX_BUNDLETOOL_DIR}"
 
@@ -478,24 +471,24 @@ function prepare_bundletool() {
 
 function prepare_fenix() {
   # Ensure we have cp
-  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || exit 1
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
 
   # Ensure we have GNU sed
-  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
 
   # Ensure we have mkdir
-  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
 
   # Ensure we have rm
-  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   echo_red_text 'Preparing Fenix...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_FENIX}" 'IRONFOX_FENIX' || exit 1
-  verify_dir_with_env "${IRONFOX_FENIX_OVERLAY}" 'IRONFOX_FENIX_OVERLAY' || exit 1
-  verify_dir_with_env "${IRONFOX_UP_AC}" 'IRONFOX_UP_AC' || exit 1
-  verify_dir "${IRONFOX_UP_AC}/fenix-overlay" || exit 1
+  verify_dir_with_env "${IRONFOX_FENIX}" 'IRONFOX_FENIX' || return 1
+  verify_dir_with_env "${IRONFOX_FENIX_OVERLAY}" 'IRONFOX_FENIX_OVERLAY' || return 1
+  verify_dir_with_env "${IRONFOX_UP_AC}" 'IRONFOX_UP_AC' || return 1
+  verify_dir "${IRONFOX_UP_AC}/fenix-overlay" || return 1
 
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/fenix/app/src/main/res"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/fenix/app/src/release/res/values"
@@ -646,10 +639,10 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/TopSitesRefresher.kt"
 
   # Remove Glean
-  /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'fenix'
+  deglean_fenix || return 1
 
   # Nuke undesired Mozilla endpoints
-  /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'fenix'
+  noop_fenix_endpoints || return 1
 
   # Let it be IronFox
   # shellcheck disable=SC1112
@@ -751,28 +744,25 @@ function prepare_fenix() {
 
 function prepare_firefox() {
   # Ensure we have cp
-  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || exit 1
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
 
   # Ensure we have GNU sed
-  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
 
   # Ensure we have mkdir
-  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
 
   # Ensure we have rm
-  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   # Ensure we have `IRONFOX_RUST_VERSION`
-  if [[ -z "${IRONFOX_RUST_VERSION+x}" ]] || [[ "${IRONFOX_RUST_VERSION}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RUST_VERSION' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RUST_VERSION}" 'IRONFOX_RUST_VERSION' || return 1
 
   echo_red_text 'Preparing Firefox...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO' || exit 1
-  verify_dir_with_env "${IRONFOX_GECKO_OVERLAY}" 'IRONFOX_GECKO_OVERLAY' || exit 1
+  verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO' || return 1
+  verify_dir_with_env "${IRONFOX_GECKO_OVERLAY}" 'IRONFOX_GECKO_OVERLAY' || return 1
 
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/gecko/ironfox"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages"
@@ -786,14 +776,14 @@ function prepare_firefox() {
   # Check patches
   if ! check_patches; then
     echo_red_text 'ERROR: Patch validation failed. Please check the patch files and try again.'
-    exit 1
+    return 1
   fi
 
   ## For UnifiedPush-AC
   if [[ -d "${IRONFOX_UP_AC}" ]]; then
     if ! up_ac_check_patches; then
       echo_red_text 'ERROR: Patch validation failed. Please check the patch files and try again.'
-      exit 1
+      return 1
     fi
   fi
 
@@ -964,16 +954,16 @@ function prepare_firefox() {
   "${IRONFOX_SED}" -i 's|sentry|# sentry|g' "${IRONFOX_GECKO}/gradle/libs.versions.toml"
 
   # Remove Glean
-  /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'firefox'
+  deglean_firefox || return 1
 
   "${IRONFOX_SED}" -i 's/5bc8c9bbe8c0eabe408d9a7cd7a8e6e09eee0ead817607643882b38a36d07c91/421348ae534a24692c35bd49dbc6dc70103b43772a531868283265d6f6e246e9/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
   "${IRONFOX_SED}" -i 's/c20989b1aa336b0849e96ec1b2beea1eab825ffd192c2c3a636e20f830b811d0/fa3887e2a0e1efdb355f61c8e801922dc6f5decfa6cccd4a6b7ad247c5918c81/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
 
   ## We also need to de-glean Android Components here, as not doing so appears to cause build failures for ex. GeckoView
-  /bin/bash "${IRONFOX_SCRIPTS}/deglean.sh" 'ac'
+  deglean_ac || return 1
 
   # Nuke undesired Mozilla endpoints
-  /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'firefox'
+  noop_firefox_endpoints || return 1
 
   # Fail on use of prebuilt binary
   "${IRONFOX_SED}" -i 's|https://github.com|hxxps://github.com|g' "${IRONFOX_GECKO}/python/mozboot/mozboot/android.py"
@@ -1021,26 +1011,23 @@ function prepare_glean() {
   echo_red_text 'Preparing Glean...'
 
   # Ensure we have cp
-  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || exit 1
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
 
   # Ensure we have GNU sed
-  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
 
   # Ensure we have ln
-  verify_exec "${IRONFOX_LN}" 'IRONFOX_LN' || exit 1
+  verify_exec "${IRONFOX_LN}" 'IRONFOX_LN' || return 1
 
   # Ensure we have rm
-  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   # Ensure we have `IRONFOX_RUST_VERSION`
-  if [[ -z "${IRONFOX_RUST_VERSION+x}" ]] || [[ "${IRONFOX_RUST_VERSION}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RUST_VERSION' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RUST_VERSION}" 'IRONFOX_RUST_VERSION' || return 1
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN' || exit 1
-  verify_dir_with_env "${IRONFOX_GLEAN_OVERLAY}" 'IRONFOX_GLEAN_OVERLAY' || exit 1
+  verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN' || return 1
+  verify_dir_with_env "${IRONFOX_GLEAN_OVERLAY}" 'IRONFOX_GLEAN_OVERLAY' || return 1
 
   "${IRONFOX_MKDIR}" -p "${IRONFOX_GLEAN_PYENV}/bootstrap-24.3.0-0"
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/glean"
@@ -1062,7 +1049,7 @@ function prepare_glean() {
   # Check patches
   if ! glean_check_patches; then
     echo_red_text 'ERROR: Patch validation failed. Please check the patch files and try again.'
-    exit 1
+    return 1
   fi
 
   # Apply patches
@@ -1110,7 +1097,7 @@ function prepare_glean() {
   "${IRONFOX_RM}" -v "${IRONFOX_GLEAN}/glean-core/android/metrics.yaml"
 
   # Nuke undesired Mozilla endpoints
-  /bin/bash "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'glean'
+  noop_glean_endpoints || return 1
 
   # Ensure we're building for release
   "${IRONFOX_SED}" -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' "${IRONFOX_GLEAN}/build.gradle"
@@ -1138,7 +1125,7 @@ function prepare_glean() {
 
 function prepare_llvm() {
   # Ensure we have Python
-  verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' || exit 1
+  verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' || return 1
 
   echo_red_text 'Preparing LLVM...'
 
@@ -1157,30 +1144,21 @@ function prepare_llvm() {
 
 function prepare_microg() {
   # Ensure we have GNU sed
-  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
 
   # Ensure we have `IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING`
-  if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING+x}" ]] || [[ "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING' || return 1
 
   # Ensure we have `IRONFOX_ANDROID_SDK_TARGET`
-  if [[ -z "${IRONFOX_ANDROID_SDK_TARGET+x}" ]] || [[ "${IRONFOX_ANDROID_SDK_TARGET}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ANDROID_SDK_TARGET' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ANDROID_SDK_TARGET}" 'IRONFOX_ANDROID_SDK_TARGET' || return 1
 
   # Ensure we have `IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION`
-  if [[ -z "${IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION+x}" ]] || [[ "${IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION}" 'IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION' || return 1
 
   echo_red_text 'Preparing microG...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_GMSCORE}" 'IRONFOX_GMSCORE' || exit 1
+  verify_dir_with_env "${IRONFOX_GMSCORE}" 'IRONFOX_GMSCORE' || return 1
 
   pushd "${IRONFOX_GMSCORE}"
 
@@ -1200,7 +1178,7 @@ function prepare_microg() {
   ## (This matches what we're using for the browser itself, as well as Mozilla's various components/dependencies)
   "${IRONFOX_SED}" -i -e 's|ext.androidMinSdk = .*|ext.androidMinSdk = 26|g' "${IRONFOX_GMSCORE}/build.gradle"
 
-  # Bump Android target SDK
+  # Bump Android prebuild_target SDK
   "${IRONFOX_SED}" -i -e "s|ext.androidTargetSdk = .*|ext.androidTargetSdk = ${IRONFOX_ANDROID_SDK_TARGET}|g" "${IRONFOX_GMSCORE}/build.gradle"
 
   popd
@@ -1211,11 +1189,14 @@ function prepare_microg() {
 function prepare_prebuilds() {
   echo_red_text 'Preparing IronFox prebuilds...'
 
+  # Ensure we have bash
+  verify_exec "${IRONFOX_BASH}" 'IRONFOX_BASH' || return 1
+
   # Verify directories
-  verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS' || exit 1
+  verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS' || return 1
 
   pushd "${IRONFOX_PREBUILDS}"
-  /bin/bash "${IRONFOX_PREBUILDS}/scripts/prebuild.sh" || exit 1
+  "${IRONFOX_BASH}" "${IRONFOX_PREBUILDS}/scripts/prebuild.sh" || return 1
   popd
 
   echo_green_text 'SUCCESS: Prepared IronFox prebuilds!'
@@ -1223,19 +1204,19 @@ function prepare_prebuilds() {
 
 function prepare_rust() {
   # Ensure we have ln
-  verify_exec "${IRONFOX_LN}" 'IRONFOX_LN' || exit 1
+  verify_exec "${IRONFOX_LN}" 'IRONFOX_LN' || return 1
 
   # Ensure we have mkdir
-  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
 
   echo_red_text 'Preparing Rust...'
 
   # Verify directories
-  verify_dir_with_env "${IRONFOX_CONFIGS}" 'IRONFOX_CONFIGS' || exit 1
-  verify_dir "${IRONFOX_CONFIGS}/cargo" || exit 1
+  verify_dir_with_env "${IRONFOX_CONFIGS}" 'IRONFOX_CONFIGS' || return 1
+  verify_dir "${IRONFOX_CONFIGS}/cargo" || return 1
 
   # Verify files
-  verify_file "${IRONFOX_CONFIGS}/cargo/config.toml" || exit 1
+  verify_file "${IRONFOX_CONFIGS}/cargo/config.toml" || return 1
 
   # Create Cargo home directory
   "${IRONFOX_MKDIR}" -p "${IRONFOX_CARGO_HOME}"
@@ -1248,7 +1229,7 @@ function prepare_rust() {
   echo_green_text 'SUCCESS: Prepared Rust!'
 }
 
-echo_red_text "Preparing to build IronFox ${IRONFOX_VERSION}..."
+echo_red_text "Preparing to build IronFox '${IRONFOX_VERSION}'..."
 
 # This needs to run before we prepare Android Components, to ensure that ex. patches apply properly
 if [[ "${IRONFOX_PREPARE_GECKO}" == 1 ]]; then
@@ -1295,5 +1276,5 @@ if [[ "${IRONFOX_PREPARE_RUST}" == 1 ]]; then
   prepare_rust
 fi
 
-echo_green_text "SUCCESS: Prepared to build IronFox ${IRONFOX_VERSION}!"
+echo_green_text "SUCCESS: Prepared to build IronFox '${IRONFOX_VERSION}'!"
 "${IRONFOX_TOUCH}" "${IRONFOX_BUILD}/finished-prebuild"

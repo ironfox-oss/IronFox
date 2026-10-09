@@ -4,15 +4,6 @@ set -euo pipefail
 
 # Download utility functions
 
-# Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh || exit 1
-fi
-source $(dirname $0)/env.sh || exit 1
-
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
-
 # Download a file
 function download() {
   function print_usage() {
@@ -22,35 +13,32 @@ function download() {
   if [[ -z "${1+x}" ]]; then
     echo_red_text 'ERROR: Please provide the URL for the file to download!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${2+x}" ]]; then
     echo_red_text 'ERROR: Please provide the output file path!'
     print_usage
-    exit 1
+    return 1
   fi
 
   # Ensure we have basename
-  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
 
   # Ensure we have curl
-  verify_exec "${IRONFOX_CURL}" 'IRONFOX_CURL' || exit 1
+  verify_exec "${IRONFOX_CURL}" 'IRONFOX_CURL' || return 1
 
   # Ensure we have dirname
-  verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || exit 1
+  verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || return 1
 
   # Ensure we have mkdir
-  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
 
   # Ensure we have rm
-  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   # Ensure we have our curl flags
-  if [[ -z "${IRONFOX_CURL_FLAGS+x}" ]] || [[ "${IRONFOX_CURL_FLAGS}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_CURL_FLAGS' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_CURL_FLAGS}" 'IRONFOX_CURL_FLAGS' || return 1
 
   local -r url="$1"
   local -r output_file="$2"
@@ -58,9 +46,9 @@ function download() {
   local -r file_dir=$("${IRONFOX_DIRNAME}" "${output_file}")
 
   # Ensure the URL is valid
-  if [[ "${url}" == "" ]]; then
+  if [[ "${url}" == "" ]] || [[ "${url}" == "null" ]]; then
     echo_red_text "ERROR: URL is required (file: '${output_file}')!"
-    exit 1
+    return 1
   fi
 
   # Enforce HTTPS
@@ -68,7 +56,7 @@ function download() {
     https://*) ;;
     *)
       echo_red_text "ERROR: URL must use HTTPS (URL: '${url}')!"
-      exit 1
+      return 1
       ;;
   esac
 
@@ -127,26 +115,26 @@ function clone_git_repo() {
   if [[ -z "${1+x}" ]]; then
     echo_red_text 'ERROR: Please provide the URL for the repo to clone!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${2+x}" ]]; then
     echo_red_text 'ERROR: Please provide the output directory!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${3+x}" ]]; then
     echo_red_text 'ERROR: Please specify the revision to clone the repo at!'
     print_usage
-    exit 1
+    return 1
   fi
 
   # Ensure we have git
-  verify_exec "${IRONFOX_GIT}" 'IRONFOX_GIT' || exit 1
+  verify_exec "${IRONFOX_GIT}" 'IRONFOX_GIT' || return 1
 
   # Ensure we have rm
-  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   local url="$1"
   local -r path="$2"
@@ -167,11 +155,11 @@ function clone_git_repo() {
         local depth="$5"
       else
         echo_red_text "ERROR: Missing value for '--depth'!"
-        exit 1
+        return 1
       fi
     else
       echo_red_text "ERROR: Unknown argument: '$4'!"
-      exit 1
+      return 1
     fi
   fi
 
@@ -185,11 +173,11 @@ function clone_git_repo() {
         local depth="$6"
       else
         echo_red_text "ERROR: Missing value for '--depth'!"
-        exit 1
+        return 1
       fi
     else
       echo_red_text "ERROR: Unknown argument: '$5'!"
-      exit 1
+      return 1
     fi
   fi
 
@@ -200,7 +188,7 @@ function clone_git_repo() {
       local submodules=1
     else
       echo_red_text "ERROR: Unknown argument: '$6'!"
-      exit 1
+      return 1
     fi
   fi
 
@@ -211,14 +199,14 @@ function clone_git_repo() {
       local submodules=1
     else
       echo_red_text "ERROR: Unknown argument: '$7'!"
-      exit 1
+      return 1
     fi
   fi
 
   # Ensure the URL is valid
-  if [[ "${url}" == "" ]]; then
+  if [[ "${url}" == "" ]] || [[ "${url}" == "null" ]]; then
     echo_red_text "ERROR: Missing URL for repo to clone!"
-    exit 1
+    return 1
   fi
 
   # Ensure the URL scheme is HTTPS or SSH
@@ -226,7 +214,7 @@ function clone_git_repo() {
     https://* | ssh://*) ;;
     *)
       echo_red_text "ERROR: URL must use HTTPS or SSH (URL: '${url}')!"
-      exit 1
+      return 1
       ;;
   esac
 
@@ -243,19 +231,19 @@ function clone_git_repo() {
   # Ensure the target path is valid
   if [[ "${path}" == "" ]]; then
     echo_red_text "ERROR: Path is required for cloning '${url}'!"
-    exit 1
+    return 1
   fi
 
   # Ensure the revision is valid
   if [[ "${revision}" == "" ]]; then
     echo_red_text "ERROR: Revision is required for cloning '${url}'!"
-    exit 1
+    return 1
   fi
 
   # Ensure the target path doesn't already exist as a file
   if [[ -f "${path}" ]]; then
     echo_red_text "ERROR: Path exists and is not a directory: '${path}'!"
-    exit 1
+    return 1
   fi
 
   # Check if the target directory already exists

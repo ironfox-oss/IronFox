@@ -3,13 +3,63 @@
 set -euo pipefail
 
 # Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh || exit 1
-fi
-source $(dirname $0)/env.sh || exit 1
+function setup_env() {
+  if [[ -z "${IRONFOX_SET_ENVS+x}" ]] || [[ "${IRONFOX_SET_ENVS}" != 1 ]]; then
+    # Find dirname
+    if [[ -n "${IRONFOX_DIRNAME+x}" ]] && [[ -x "${IRONFOX_DIRNAME}" ]]; then
+      local -r dirname="${IRONFOX_DIRNAME}"
+    elif [[ -x '/bin/dirname' ]]; then
+      local -r dirname='/bin/dirname'
+    elif [[ -x '/usr/bin/dirname' ]]; then
+      local -r dirname='/usr/bin/dirname'
+    else
+      if ! command -v dirname > /dev/null 2>&1; then
+        echo "ERROR: Missing dirname!" >&2
+        exit 1
+      fi
+      # It isn't a known location, so we sadly have to just fall-back to the PATH
+      local -r dirname="$(dirname)"
+    fi
 
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
+    # Set-up our environment
+    readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
+    if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
+      echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
+      exit 1
+    fi
+    source "${IRONFOX_ENV_SH}" || exit 1
+  fi
+}
+
+# Set-up our environment
+setup_env
+
+# Ensure we have GNU awk
+verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || exit 1
+
+# Ensure we have `IRONFOX_LOG_BUILD`
+verify_env "${IRONFOX_LOG_BUILD}" 'IRONFOX_LOG_BUILD' || exit 1
+
+# Ensure we have `IRONFOX_LOG_SIGN`
+verify_env "${IRONFOX_LOG_SIGN}" 'IRONFOX_LOG_SIGN' || exit 1
+
+# Ensure we have `IRONFOX_SIGN`
+verify_env "${IRONFOX_SIGN}" 'IRONFOX_SIGN' || exit 1
+
+# Ensure we have `IRONFOX_SIGN_SKIP_ADB`
+verify_env "${IRONFOX_SIGN_SKIP_ADB}" 'IRONFOX_SIGN_SKIP_ADB' || exit 1
+
+# Ensure we have `IRONFOX_SCRIPTS`
+verify_dir_with_env "${IRONFOX_SCRIPTS}" 'IRONFOX_SCRIPTS' || exit 1
+
+# Ensure we have our target scripts
+readonly IRONFOX_BUILD_SH="${IRONFOX_SCRIPTS}/build-if.sh"
+verify_file "${IRONFOX_BUILD_SH}" || exit 1
+
+readonly IRONFOX_SIGN_SH="${IRONFOX_SCRIPTS}/sign.sh"
+if [[ "${IRONFOX_SIGN}" == 1 ]]; then
+  verify_file "${IRONFOX_SIGN_SH}" || exit 1
+fi
 
 # Set-up target parameters
 if [[ -z "${1+x}" ]]; then
@@ -17,19 +67,33 @@ if [[ -z "${1+x}" ]]; then
   exit 1
 fi
 
-readonly target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+readonly build_target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
 if [[ -z "${2+x}" ]]; then
-  readonly project='fenix'
+  readonly build_project='fenix'
 else
-  readonly project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+  readonly build_project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 fi
+
+pushd "${IRONFOX_ROOT}"
 
 # Build IronFox
 readonly IRONFOX_FROM_BUILD=1
 export IRONFOX_FROM_BUILD
 if [[ "${IRONFOX_LOG_BUILD}" == 1 ]]; then
-  readonly BUILD_LOG_FILE="${IRONFOX_LOG_DIR}/build-${target}.log"
+  # Ensure we have mkdir
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+
+  # Ensure we have tee
+  verify_exec "${IRONFOX_TEE}" 'IRONFOX_TEE' || exit 1
+
+  # Ensure we have `IRONFOX_LOG_DIR`
+  verify_env "${IRONFOX_LOG_DIR}" 'IRONFOX_LOG_DIR' || exit 1
+
+  readonly BUILD_LOG_FILE="${IRONFOX_LOG_DIR}/build-${build_target}.log"
 
   # If the log file already exists, remove it
   if [[ -f "${BUILD_LOG_FILE}" ]]; then
@@ -39,27 +103,29 @@ if [[ "${IRONFOX_LOG_BUILD}" == 1 ]]; then
   # Ensure our log directory exists
   "${IRONFOX_MKDIR}" -vp "${IRONFOX_LOG_DIR}"
 
-  /bin/bash "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}" > >("${IRONFOX_TEE}" -a "${BUILD_LOG_FILE}") 2>&1 || exit 1
+  source "${IRONFOX_BUILD_SH}" "${build_target}" "${build_project}" > >("${IRONFOX_TEE}" -a "${BUILD_LOG_FILE}") 2>&1 || exit 1
 else
-  /bin/bash "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}" || exit 1
+  source "${IRONFOX_BUILD_SH}" "${build_target}" "${build_project}" || exit 1
 fi
 
-# We should only try to sign IronFox if we actually built Fenix, so check that first
-## (All `rebuild-` targets eventually build Fenix, because eventually Fenix consumes everything...)
-if [[ "${project}" == 'fenix' ]] || [[ "${project}" == 'rebuild-ac-core' ]] || [[ "${project}" == 'rebuild-ac' ]] ||
-  [[ "${project}" == 'rebuild-as' ]] || [[ "${project}" == 'rebuild-fenix' ]] || [[ "${project}" == 'rebuild-gecko' ]] ||
-  [[ "${project}" == 'rebuild-geckoview' ]] || [[ "${project}" == 'rebuild-glean' ]] || [[ "${project}" == 'rebuild-ironfox-core' ]] ||
-  [[ "${project}" == 'rebuild-llvm' ]] || [[ "${project}" == 'rebuild-microg' ]] || [[ "${project}" == 'rebuild-nimbus-fml' ]] ||
-  [[ "${project}" == 'rebuild-phoenix' ]] || [[ "${project}" == 'rebuild-uniffi' ]] || [[ "${project}" == 'rebuild-up-ac' ]] ||
-  [[ "${project}" == 'rebuild-wasi' ]]; then
-  readonly IRONFOX_BUILT_FENIX=1
-else
-  readonly IRONFOX_BUILT_FENIX=0
-fi
+# Ensure we have `IRONFOX_BUILT_FENIX`
+verify_env "${IRONFOX_BUILT_FENIX}" 'IRONFOX_BUILT_FENIX' || exit 1
 
 # Sign IronFox
-if [[ "${IRONFOX_SIGN}" == 1 ]] && [[ "${IRONFOX_BUILT_FENIX}" == 1 ]]; then
+if [[ "${IRONFOX_BUILT_FENIX}" == 1 ]] && [[ "${IRONFOX_SIGN}" == 1 ]]; then
   if [[ "${IRONFOX_LOG_SIGN}" == 1 ]]; then
+    # Ensure we have mkdir
+    verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+
+    # Ensure we have rm
+    verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+
+    # Ensure we have tee
+    verify_exec "${IRONFOX_TEE}" 'IRONFOX_TEE' || exit 1
+
+    # Ensure we have `IRONFOX_LOG_DIR`
+    verify_env "${IRONFOX_LOG_DIR}" 'IRONFOX_LOG_DIR' || exit 1
+
     readonly SIGN_LOG_FILE="${IRONFOX_LOG_DIR}/sign.log"
 
     # If the log file already exists, remove it
@@ -70,39 +136,44 @@ if [[ "${IRONFOX_SIGN}" == 1 ]] && [[ "${IRONFOX_BUILT_FENIX}" == 1 ]]; then
     # Ensure our log directory exists
     "${IRONFOX_MKDIR}" -vp "${IRONFOX_LOG_DIR}"
 
-    /bin/bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >("${IRONFOX_TEE}" -a "${SIGN_LOG_FILE}") 2>&1 || exit 1
+    source "${IRONFOX_SIGN_SH}" "${build_target}" > >("${IRONFOX_TEE}" -a "${SIGN_LOG_FILE}") 2>&1 || exit 1
   else
-    /bin/bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" || exit 1
+    source "${IRONFOX_SIGN_SH}" "${build_target}" || exit 1
   fi
 fi
 
+# Ensure we have adb and sleep
+if [[ "${IRONFOX_BUILT_FENIX}" == 1 ]] && [[ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]]; then
+  verify_exec "${IRONFOX_ADB}" 'IRONFOX_ADB' || exit 1
+  verify_exec "${IRONFOX_SLEEP}" 'IRONFOX_SLEEP' || exit 1
+fi
+
 # Offer to install IronFox via ADB
-if [[ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]]; then
+if [[ "${IRONFOX_BUILT_FENIX}" == 1 ]] && [[ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]]; then
   echo_red_text 'Would you like to install IronFox to a connected device?'
   read -p "If you'd like to install IronFox, please ensure your device is connected before proceeding. [y/N] " -n 1 -r
   echo
   if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
     # Ensure we have ADB
-    verify_exec "${IRONFOX_ADB}" 'IRONFOX_ADB' || exit 1
     "${IRONFOX_ADB}" devices
     if [[ "${IRONFOX_OS}" == 'osx' ]]; then
       # On OS X, the user may need to accept a prompt to allow their device to connect,
       ## so wait to ensure we allow them to accept it
       "${IRONFOX_SLEEP}" 6
     fi
-    if [[ "${target}" == 'bundle' ]]; then
+    if [[ "${build_target}" == 'bundle' ]]; then
       # If we built a bundle, install the universal APK
       verify_file_with_env "${IRONFOX_OUTPUTS_UNIVERSAL}" 'IRONFOX_OUTPUTS_UNIVERSAL' || exit 1
       "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_UNIVERSAL}"
-    elif [[ "${target}" == 'arm64' ]]; then
+    elif [[ "${build_target}" == 'arm64' ]]; then
       # Install the ARM64 APK
       verify_file_with_env "${IRONFOX_OUTPUTS_ARM64}" 'IRONFOX_OUTPUTS_ARM64' || exit 1
       "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM64}"
-    elif [[ "${target}" == 'arm' ]]; then
+    elif [[ "${build_target}" == 'arm' ]]; then
       # Install the ARM APK
       verify_file_with_env "${IRONFOX_OUTPUTS_ARM}" 'IRONFOX_OUTPUTS_ARM' || exit 1
       "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM}"
-    elif [[ "${target}" == 'x86_64' ]]; then
+    elif [[ "${build_target}" == 'x86_64' ]]; then
       # Install the x86_64 APK
       verify_file_with_env "${IRONFOX_OUTPUTS_X86_64}" 'IRONFOX_OUTPUTS_X86_64' || exit 1
       "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_X86_64}"
@@ -113,3 +184,5 @@ if [[ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]]; then
     exit 0
   fi
 fi
+
+popd

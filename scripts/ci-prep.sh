@@ -6,13 +6,39 @@ set -euo pipefail
 set +x || exit 1
 
 # Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh || exit 1
-fi
-source $(dirname $0)/env.sh || exit 1
+function setup_env() {
+  if [[ -z "${IRONFOX_SET_ENVS+x}" ]] || [[ "${IRONFOX_SET_ENVS}" != 1 ]]; then
+    # Find dirname
+    if [[ -n "${IRONFOX_DIRNAME+x}" ]] && [[ -x "${IRONFOX_DIRNAME}" ]]; then
+      local -r dirname="${IRONFOX_DIRNAME}"
+    elif [[ -x '/bin/dirname' ]]; then
+      local -r dirname='/bin/dirname'
+    elif [[ -x '/usr/bin/dirname' ]]; then
+      local -r dirname='/usr/bin/dirname'
+    else
+      if ! command -v dirname > /dev/null 2>&1; then
+        echo "ERROR: Missing dirname!" >&2
+        exit 1
+      fi
+      # It isn't a known location, so we sadly have to just fall-back to the PATH
+      local -r dirname="$(dirname)"
+    fi
 
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
+    # Set-up our environment
+    readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
+    if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
+      echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
+      exit 1
+    fi
+    source "${IRONFOX_ENV_SH}" || exit 1
+  fi
+}
+
+# Set-up our environment
+setup_env
+
+# Ensure we have `IRONFOX_CI`
+verify_env "${IRONFOX_CI}" 'IRONFOX_CI' || exit 1
 
 if [[ "${IRONFOX_CI}" != 1 ]]; then
   echo_red_text "ERROR: '$0' should only be called from CI!"
@@ -221,67 +247,36 @@ function prep_android_keystore() {
   verify_exec "${IRONFOX_CURL}" 'IRONFOX_CURL' || exit 1
 
   # Ensure we have our curl flags
-  if [[ -z "${IRONFOX_CURL_FLAGS+x}" ]] || [[ "${IRONFOX_CURL_FLAGS}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_CURL_FLAGS' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_CURL_FLAGS}" 'IRONFOX_CURL_FLAGS' || exit 1
 
   echo_red_text 'Preparing Android keystore...'
 
   # First, check environment variables specified externally (via CI)
 
   # Ensure we have `IRONFOX_ANDROID_KEYSTORE_KEY_PASS`
-  if [[ -z "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS+x}" ]] || [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS}" == "" ]] ||
-    [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ANDROID_KEYSTORE_KEY_PASS' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS}" 'IRONFOX_ANDROID_KEYSTORE_KEY_PASS' || exit 1
 
   # Ensure we have `IRONFOX_ANDROID_KEYSTORE_PASS`
-  if [[ -z "${IRONFOX_ANDROID_KEYSTORE_PASS+x}" ]] || [[ "${IRONFOX_ANDROID_KEYSTORE_PASS}" == "" ]] ||
-    [[ "${IRONFOX_ANDROID_KEYSTORE_PASS}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ANDROID_KEYSTORE_PASS' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ANDROID_KEYSTORE_PASS}" 'IRONFOX_ANDROID_KEYSTORE_PASS' || exit 1
 
   # Ensure we have `IRONFOX_ANDROID_KEYSTORE_URL`
-  if [[ -z "${IRONFOX_ANDROID_KEYSTORE_URL+x}" ]] || [[ "${IRONFOX_ANDROID_KEYSTORE_URL}" == "" ]] ||
-    [[ "${IRONFOX_ANDROID_KEYSTORE_URL}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ANDROID_KEYSTORE_URL' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ANDROID_KEYSTORE_URL}" 'IRONFOX_ANDROID_KEYSTORE_URL' || exit 1
 
-  ## Job token
+  # Ensure we have `CI_JOB_TOKEN`
   ### (We need this to download the Android Keystore)
-  if [[ -z "${CI_JOB_TOKEN+x}" ]] || [[ "${CI_JOB_TOKEN}" == "" ]]; then
-    echo_red_text "ERROR: Missing job token! Please set 'CI_JOB_TOKEN'."
-    exit 1
-  else
-    readonly IRONFOX_CI_JOB_TOKEN="${CI_JOB_TOKEN}"
-  fi
+  verify_env "${CI_JOB_TOKEN}" 'CI_JOB_TOKEN' || exit 1
+  readonly IRONFOX_CI_JOB_TOKEN="${CI_JOB_TOKEN}"
 
   # Now, check environment variables specified directly (via `env_ci.sh`/`env_common.sh`)
 
   # Ensure we have `IRONFOX_ANDROID_KEYSTORE`
-  if [[ -z "${IRONFOX_ANDROID_KEYSTORE+x}" ]] || [[ "${IRONFOX_ANDROID_KEYSTORE}" == "" ]] ||
-    [[ "${IRONFOX_ANDROID_KEYSTORE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ANDROID_KEYSTORE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ANDROID_KEYSTORE}" 'IRONFOX_ANDROID_KEYSTORE' || exit 1
 
   # Ensure we have `IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE`
-  if [[ -z "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE+x}" ]] || [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" == "" ]] ||
-    [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" 'IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE' || exit 1
 
   # Ensure we have `IRONFOX_ANDROID_KEYSTORE_PASS_FILE`
-  if [[ -z "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE+x}" ]] || [[ "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" == "" ]] ||
-    [[ "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ANDROID_KEYSTORE_PASS_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" 'IRONFOX_ANDROID_KEYSTORE_PASS_FILE' || exit 1
 
   # Download the Android keystore
   "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --location \
@@ -308,62 +303,30 @@ function prep_s3_artifacts() {
   # First, check environment variables specified externally (via CI)
 
   # Ensure we have `IRONFOX_ARTIFACTS_S3_ACCESS_KEY`
-  if [[ -z "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY+x}" ]] || [[ "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY}" == "" ]] ||
-    [[ "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ARTIFACTS_S3_ACCESS_KEY' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY}" 'IRONFOX_ARTIFACTS_S3_ACCESS_KEY' || exit 1
 
   # Ensure we have `IRONFOX_ARTIFACTS_S3_BUCKET_NAME`
-  if [[ -z "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME+x}" ]] || [[ "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME}" == "" ]] ||
-    [[ "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ARTIFACTS_S3_BUCKET_NAME' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME}" 'IRONFOX_ARTIFACTS_S3_BUCKET_NAME' || exit 1
 
   # Ensure we have `IRONFOX_ARTIFACTS_S3_ENDPOINT`
-  if [[ -z "${IRONFOX_ARTIFACTS_S3_ENDPOINT+x}" ]] || [[ "${IRONFOX_ARTIFACTS_S3_ENDPOINT}" == "" ]] ||
-    [[ "${IRONFOX_ARTIFACTS_S3_ENDPOINT}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ARTIFACTS_S3_ENDPOINT' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ARTIFACTS_S3_ENDPOINT}" 'IRONFOX_ARTIFACTS_S3_ENDPOINT' || exit 1
 
   # Ensure we have `IRONFOX_ARTIFACTS_S3_SECRET_KEY`
-  if [[ -z "${IRONFOX_ARTIFACTS_S3_SECRET_KEY+x}" ]] || [[ "${IRONFOX_ARTIFACTS_S3_SECRET_KEY}" == "" ]] ||
-    [[ "${IRONFOX_ARTIFACTS_S3_SECRET_KEY}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ARTIFACTS_S3_SECRET_KEY' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ARTIFACTS_S3_SECRET_KEY}" 'IRONFOX_ARTIFACTS_S3_SECRET_KEY' || exit 1
 
   # Now, check environment variables specified directly (via `env_ci.sh`/`env_common.sh`)
 
   # Ensure we have `IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE`
-  if [[ -z "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE+x}" ]] || [[ "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" == "" ]] ||
-    [[ "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" 'IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE' || exit 1
 
   # Ensure we have `IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE`
-  if [[ -z "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE+x}" ]] || [[ "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" == "" ]] ||
-    [[ "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" 'IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE' || exit 1
 
   # Ensure we have `IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE`
-  if [[ -z "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE+x}" ]] || [[ "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" == "" ]] ||
-    [[ "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" 'IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE' || exit 1
 
   # Ensure we have `IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE`
-  if [[ -z "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE+x}" ]] || [[ "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" == "" ]] ||
-    [[ "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}" 'IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE' || exit 1
 
   # Prepare our secrets
   prep_s3 "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY}" "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME}" "${IRONFOX_ARTIFACTS_S3_ENDPOINT}" "${IRONFOX_ARTIFACTS_S3_SECRET_KEY}" "${IRONFOX_ARTIFACTS_S3_ACCESS_KEY_FILE}" "${IRONFOX_ARTIFACTS_S3_BUCKET_NAME_FILE}" "${IRONFOX_ARTIFACTS_S3_ENDPOINT_FILE}" "${IRONFOX_ARTIFACTS_S3_SECRET_KEY_FILE}"
@@ -378,62 +341,30 @@ function prep_s3_releases() {
   # First, check environment variables specified externally (via CI)
 
   # Ensure we have `IRONFOX_RELEASES_S3_ACCESS_KEY`
-  if [[ -z "${IRONFOX_RELEASES_S3_ACCESS_KEY+x}" ]] || [[ "${IRONFOX_RELEASES_S3_ACCESS_KEY}" == "" ]] ||
-    [[ "${IRONFOX_RELEASES_S3_ACCESS_KEY}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RELEASES_S3_ACCESS_KEY' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RELEASES_S3_ACCESS_KEY}" 'IRONFOX_RELEASES_S3_ACCESS_KEY' || exit 1
 
   # Ensure we have `IRONFOX_RELEASES_S3_BUCKET_NAME`
-  if [[ -z "${IRONFOX_RELEASES_S3_BUCKET_NAME+x}" ]] || [[ "${IRONFOX_RELEASES_S3_BUCKET_NAME}" == "" ]] ||
-    [[ "${IRONFOX_RELEASES_S3_BUCKET_NAME}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RELEASES_S3_BUCKET_NAME' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RELEASES_S3_BUCKET_NAME}" 'IRONFOX_RELEASES_S3_BUCKET_NAME' || exit 1
 
   # Ensure we have `IRONFOX_RELEASES_S3_ENDPOINT`
-  if [[ -z "${IRONFOX_RELEASES_S3_ENDPOINT+x}" ]] || [[ "${IRONFOX_RELEASES_S3_ENDPOINT}" == "" ]] ||
-    [[ "${IRONFOX_RELEASES_S3_ENDPOINT}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RELEASES_S3_ENDPOINT' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RELEASES_S3_ENDPOINT}" 'IRONFOX_RELEASES_S3_ENDPOINT' || exit 1
 
   # Ensure we have `IRONFOX_RELEASES_S3_SECRET_KEY`
-  if [[ -z "${IRONFOX_RELEASES_S3_SECRET_KEY+x}" ]] || [[ "${IRONFOX_RELEASES_S3_SECRET_KEY}" == "" ]] ||
-    [[ "${IRONFOX_RELEASES_S3_SECRET_KEY}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RELEASES_S3_SECRET_KEY' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RELEASES_S3_SECRET_KEY}" 'IRONFOX_RELEASES_S3_SECRET_KEY' || exit 1
 
   # Now, check environment variables specified directly (via `env_ci.sh`/`env_common.sh`)
 
   # Ensure we have `IRONFOX_RELEASES_S3_ACCESS_KEY_FILE`
-  if [[ -z "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE+x}" ]] || [[ "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" == "" ]] ||
-    [[ "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RELEASES_S3_ACCESS_KEY_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" 'IRONFOX_RELEASES_S3_ACCESS_KEY_FILE' || exit 1
 
   # Ensure we have `IRONFOX_RELEASES_S3_BUCKET_NAME_FILE`
-  if [[ -z "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE+x}" ]] || [[ "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" == "" ]] ||
-    [[ "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RELEASES_S3_BUCKET_NAME_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" 'IRONFOX_RELEASES_S3_BUCKET_NAME_FILE' || exit 1
 
   # Ensure we have `IRONFOX_RELEASES_S3_ENDPOINT_FILE`
-  if [[ -z "${IRONFOX_RELEASES_S3_ENDPOINT_FILE+x}" ]] || [[ "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" == "" ]] ||
-    [[ "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RELEASES_S3_ENDPOINT_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" 'IRONFOX_RELEASES_S3_ENDPOINT_FILE' || exit 1
 
   # Ensure we have `IRONFOX_RELEASES_S3_SECRET_KEY_FILE`
-  if [[ -z "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE+x}" ]] || [[ "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" == "" ]] ||
-    [[ "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_RELEASES_S3_SECRET_KEY_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" 'IRONFOX_RELEASES_S3_SECRET_KEY_FILE' || exit 1
 
   # Prepare our secrets
   prep_s3 "${IRONFOX_RELEASES_S3_ACCESS_KEY}" "${IRONFOX_RELEASES_S3_BUCKET_NAME}" "${IRONFOX_RELEASES_S3_ENDPOINT}" "${IRONFOX_RELEASES_S3_SECRET_KEY}" "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
@@ -448,20 +379,12 @@ function prep_sb_gapi_key() {
   # First, check environment variables specified externally (via CI)
 
   # Ensure we have `IRONFOX_SB_GAPI_KEY`
-  if [[ -z "${IRONFOX_SB_GAPI_KEY+x}" ]] || [[ "${IRONFOX_SB_GAPI_KEY}" == "" ]] ||
-    [[ "${IRONFOX_SB_GAPI_KEY}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_SB_GAPI_KEY' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_SB_GAPI_KEY}" 'IRONFOX_SB_GAPI_KEY' || exit 1
 
   # Now, check environment variables specified directly (via `env_ci.sh`/`env_common.sh`)
 
   # Ensure we have `IRONFOX_SB_GAPI_KEY_FILE`
-  if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]] || [[ "${IRONFOX_SB_GAPI_KEY_FILE}" == "" ]] ||
-    [[ "${IRONFOX_SB_GAPI_KEY_FILE}" == "null" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_SB_GAPI_KEY_FILE' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_SB_GAPI_KEY_FILE}" 'IRONFOX_SB_GAPI_KEY_FILE' || exit 1
 
   # Create the Safe Browsing API key file
   create_key_file "${IRONFOX_SB_GAPI_KEY}" "${IRONFOX_SB_GAPI_KEY_FILE}"

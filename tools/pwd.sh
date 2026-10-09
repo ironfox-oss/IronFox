@@ -1,2 +1,2 @@
 #!/bin/bash
-exec /bin/bash -c 'pwd'
+exec "${IRONFOX_BASH}" -c 'pwd'

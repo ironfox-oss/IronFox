@@ -2,58 +2,57 @@
 
 set -euo pipefail
 
-# Set-up our environment
-source $(dirname $0)/env.sh || exit 1
-
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
-
 # Set verbosity
 set_verbosity
 
 # Include download utilities
-source "${IRONFOX_DOWNLOAD_UTILS}" || exit 1
-
-# Include version info
-source "${IRONFOX_VERSIONS}" || exit 1
+verify_file_with_env "${IRONFOX_DOWNLOAD_UTILS}" 'IRONFOX_DOWNLOAD_UTILS' || return 1
+source "${IRONFOX_DOWNLOAD_UTILS}" || return 1
 
 if [[ -z "${IRONFOX_FROM_AR_DOWN+x}" ]]; then
   echo_red_text "ERROR: Do not call 'ci-download-artifacts-if.sh' directly! Instead, use 'ci-download-artifacts.sh'." >&1
-  exit 1
+  return 1
 fi
+
+# Ensure we have `IRONFOX_CI`
+verify_env "${IRONFOX_CI}" 'IRONFOX_CI' || return 1
 
 if [[ "${IRONFOX_CI}" != 1 ]]; then
   echo_red_text "ERROR: '$0' should only be called from CI!"
-  exit 1
+  return 1
 fi
 
-if [[ -z "${IRONFOX_CI_ID+x}" ]]; then
-  echo_red_text "ERROR: Missing CI ID! Please set 'IRONFOX_CI_ID'."
-  exit 1
-fi
+# Ensure we have `IRONFOX_CI_ID`
+verify_env "${IRONFOX_CI_ID}" 'IRONFOX_CI_ID' || return 1
 
-readonly down_artifact="$1"
+verify_env "${target_artifact}" 'target_artifact' || {
+  echo_red_text "ERROR: Missing target artifact!"
+  return 1
+}
+
+verify_env "${target_arch}" 'target_arch' || {
+  echo_red_text "ERROR: Missing target architecture!"
+  return 1
+}
 
 # Set-up target parameters
 IRONFOX_AR_DOWN_FENIX=0
 IRONFOX_AR_DOWN_GECKOVIEW=0
 
-if [[ "${down_artifact}" == 'fenix' ]]; then
+if [[ "${target_artifact}" == 'fenix' ]]; then
   # Download Fenix
   IRONFOX_AR_DOWN_FENIX=1
-elif [[ "${down_artifact}" == 'geckoview' ]]; then
+elif [[ "${target_artifact}" == 'geckoview' ]]; then
   # Push GeckoView
   IRONFOX_AR_DOWN_GECKOVIEW=1
 else
-  echo_red_text "ERROR: Invalid artifact: ${down_artifact}\n You must enter one of the following:"
+  echo_red_text "ERROR: Invalid target: '${target_artifact}'\n You must enter one of the following:"
   echo 'Fenix:      fenix'
   echo 'GeckoView:  geckoview'
-  exit 1
+  return 1
 fi
 readonly IRONFOX_AR_DOWN_FENIX
 readonly IRONFOX_AR_DOWN_GECKOVIEW
-
-readonly down_arch="$2"
 
 if [[ "${down_arch}" != 'arm64' ]] && [[ "${down_arch}" != 'arm' ]] && [[ "${down_arch}" != 'x86_64' ]] && [[ "${down_arch}" != 'bundle' ]]; then
   echo_red_text "ERROR: Invalid target architecture: ${down_arch}\n You must enter one of the following:"
@@ -61,7 +60,7 @@ if [[ "${down_arch}" != 'arm64' ]] && [[ "${down_arch}" != 'arm' ]] && [[ "${dow
   echo 'ARM:        arm'
   echo 'x86_64:     x86_64'
   echo 'Bundle:     bundle'
-  exit 1
+  return 1
 fi
 readonly IRONFOX_AR_DOWN_ARCH="${down_arch}"
 
@@ -79,59 +78,50 @@ function download_artifact() {
   if [[ -z "${1+x}" ]]; then
     echo_red_text 'ERROR: Please provide the pipeline ID to download the artifact from!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${2+x}" ]]; then
     echo_red_text 'ERROR: Please provide the name of the artifact to download!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${3+x}" ]]; then
     echo_red_text 'ERROR: Please provide the path to download the artifact to!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${4+x}" ]]; then
     echo_red_text 'ERROR: Please provide the architecture of the artifact to download!'
     print_usage
-    exit 1
+    return 1
   fi
 
   # Ensure we have cat
-  verify_exec "${IRONFOX_CAT}" 'IRONFOX_CAT' || exit 1
+  verify_exec "${IRONFOX_CAT}" 'IRONFOX_CAT' || return 1
 
   # Ensure we have GNU awk
-  verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || exit 1
+  verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || return 1
 
   # Ensure we have rm
-  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   # Ensure we have shasum
-  verify_exec "${IRONFOX_SHASUM}" 'IRONFOX_SHASUM' || exit 1
+  verify_exec "${IRONFOX_SHASUM}" 'IRONFOX_SHASUM' || return 1
 
   # Ensure we have xargs
-  verify_exec "${IRONFOX_XARGS}" 'IRONFOX_XARGS' || exit 1
+  verify_exec "${IRONFOX_XARGS}" 'IRONFOX_XARGS' || return 1
 
   # Ensure we have `IRONFOX_CHANNEL`
-  if [[ -z "${IRONFOX_CHANNEL+x}" ]] || [[ "${IRONFOX_CHANNEL}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_CHANNEL' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_CHANNEL}" 'IRONFOX_CHANNEL' || return 1
 
   # Ensure we have `IRONFOX_VERSION`
-  if [[ -z "${IRONFOX_VERSION+x}" ]] || [[ "${IRONFOX_VERSION}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_VERSION' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_VERSION}" 'IRONFOX_VERSION' || return 1
 
   # Ensure we have `IRONFOX_ARTIFACTS_URL`
-  if [[ -z "${IRONFOX_ARTIFACTS_URL+x}" ]] || [[ "${IRONFOX_ARTIFACTS_URL}" == "" ]]; then
-    echo_red_text "ERROR: 'IRONFOX_ARTIFACTS_URL' is missing!"
-    exit 1
-  fi
+  verify_env "${IRONFOX_ARTIFACTS_URL}" 'IIRONFOX_ARTIFACTS_URL' || return 1
 
   local -r pipeline_id="$1"
   local -r artifact="$2"
@@ -148,18 +138,14 @@ function download_artifact() {
     local -r arch_suffix='universal'
   elif [[ "${arch}" != 'bundle' ]]; then
     echo_red_text "ERROR: Unknown architecture: '${arch}'!"
-    exit 1
+    return 1
   fi
 
   if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     local -r if_version="${IRONFOX_VERSION}"
   else
-    if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "null" ]] || [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "" ]]; then
-      echo_red_text "ERROR: Missing IronFox Nightly timestamp! Please set 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE'."
-      exit 1
-    else
-      local -r if_version="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
-    fi
+    verify_env "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE' || return 1
+    local -r if_version="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
   fi
 
   if [[ "${artifact}" == 'fenix' ]]; then
@@ -180,7 +166,7 @@ function download_artifact() {
     local -r target_file="geckoview-${arch_suffix}.zip"
   else
     echo_red_text "ERROR: Unknown artifact: '${artifact}'!"
-    exit 1
+    return 1
   fi
 
   local -r target_expected_sha512sum="${target_file}-sha512sum.txt"
@@ -205,13 +191,21 @@ function download_artifact() {
     # If checksum validation fails, also just clean-up the files
     "${IRONFOX_RM}" -f "${output_file}"
     "${IRONFOX_RM}" -f "${output_expected_sha512sum}"
-    exit 1
+    return 1
   fi
   echo_green_text "SUCCESS: Validated checksum for file: '${target_file}'!"
   echo "SHA512sum: '${local_sha512sum}'"
 }
 
 if [[ "${IRONFOX_AR_DOWN_FENIX}" == 1 ]]; then
+  # Ensure we have `IRONFOX_APK_ARTIFACTS`
+  verify_env "${IRONFOX_APK_ARTIFACTS}" 'IRONFOX_APK_ARTIFACTS' || return 1
+
+  # Ensure we have `IRONFOX_APKS_ARTIFACTS`
+  if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'bundle' ]]; then
+    verify_env "${IRONFOX_APKS_ARTIFACTS}" 'IRONFOX_APKS_ARTIFACTS' || return 1
+  fi
+
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm64' ]]; then
     download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'arm64'
   fi
@@ -231,6 +225,9 @@ if [[ "${IRONFOX_AR_DOWN_FENIX}" == 1 ]]; then
 fi
 
 if [[ "${IRONFOX_AR_DOWN_GECKOVIEW}" == 1 ]]; then
+  # Ensure we have `IRONFOX_AAR_ARTIFACTS`
+  verify_env "${IRONFOX_AAR_ARTIFACTS}" 'IRONFOX_AAR_ARTIFACTS' || return 1
+
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm64' ]]; then
     download_artifact "${IRONFOX_CI_ID}" 'geckoview' "${IRONFOX_AAR_ARTIFACTS}" 'arm64'
   fi

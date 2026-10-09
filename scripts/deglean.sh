@@ -2,63 +2,36 @@
 
 set -euo pipefail
 
-# Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh || exit 1
-fi
-source $(dirname $0)/env.sh || exit 1
-
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
-
 # Set verbosity
 set_verbosity
 
-# Set-up target parameters
-if [[ -z "${1+x}" ]]; then
-  readonly deglean_target='all'
-else
-  readonly deglean_target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
-fi
-
-IRONFOX_DEGLEAN_AC=0
-IRONFOX_DEGLEAN_AS=0
-IRONFOX_DEGLEAN_FENIX=0
-IRONFOX_DEGLEAN_GECKO=0
-
-if [[ "${deglean_target}" == 'ac' ]]; then
-  # De-glean Android Components
-  IRONFOX_DEGLEAN_AC=1
-elif [[ "${deglean_target}" == 'as' ]]; then
-  # De-glean Application Services
-  IRONFOX_DEGLEAN_AS=1
-elif [[ "${deglean_target}" == 'fenix' ]]; then
-  # De-glean Fenix
-  IRONFOX_DEGLEAN_FENIX=1
-elif [[ "${deglean_target}" == 'firefox' ]]; then
-  # De-glean Firefox (Gecko/mozilla-central)
-  IRONFOX_DEGLEAN_GECKO=1
-elif [[ "${deglean_target}" == 'all' ]]; then
-  # If no argument is specified (or argument is set to "all"), just de-glean everything
-  IRONFOX_DEGLEAN_AC=1
-  IRONFOX_DEGLEAN_AS=1
-  IRONFOX_DEGLEAN_FENIX=1
-  IRONFOX_DEGLEAN_GECKO=1
-else
-  echo_red_text "ERROR: Invalid target: ${deglean_target}\n You must enter one of the following:"
-  echo 'All:                              all (Default)'
-  echo 'Android Components:               ac'
-  echo 'Application Services:             as'
-  echo 'Fenix:                            fenix'
-  echo 'Firefox (Gecko/mozilla-central):  firefox'
-  exit 1
-fi
-readonly IRONFOX_DEGLEAN_AC
-readonly IRONFOX_DEGLEAN_AS
-readonly IRONFOX_DEGLEAN_FENIX
-readonly IRONFOX_DEGLEAN_GECKO
-
+# De-glean a project directory
 function deglean() {
+  function print_usage() {
+    echo "Usage: deglean '/path/to/directory'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a directory that should be de-gleaned!'
+    print_usage
+    return 1
+  fi
+
+  # Ensure we have find
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || return 1
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
+
+  # Ensure we have grep
+  verify_exec "${IRONFOX_GREP}" 'IRONFOX_GREP' || return 1
+
+  # Ensure we have Python
+  verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' || return 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
+
   local -r dir="$1"
   local -r gradle_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.gradle")
   local -r kt_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.kt")
@@ -134,7 +107,27 @@ function deglean() {
   fi
 }
 
+# De-glean a Fenix directory
 function fenix_deglean() {
+  function print_usage() {
+    echo "Usage: fenix_deglean '/path/to/directory'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to a Fenix directory that should be de-gleaned!'
+    print_usage
+    return 1
+  fi
+
+  # Ensure we have find
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || return 1
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
+
+  # Ensure we have grep
+  verify_exec "${IRONFOX_GREP}" 'IRONFOX_GREP' || return 1
+
   local -r dir="$1"
   local -r gradle_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.gradle")
 
@@ -161,8 +154,18 @@ function fenix_deglean() {
   fi
 }
 
+# De-glean Android Components
 function deglean_ac() {
   echo_red_text 'De-gleaning Android Components...'
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
+
+  # Ensure we have `IRONFOX_AC`
+  verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC' || return 1
 
   deglean "${IRONFOX_AC}"
 
@@ -183,8 +186,18 @@ function deglean_ac() {
   echo_green_text 'SUCCESS: De-gleaned Android Components'
 }
 
+# De-glean Application Services
 function deglean_as() {
   echo_red_text 'De-gleaning Application Services...'
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
+
+  # Ensure we have `IRONFOX_AS`
+  verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS' || return 1
 
   deglean "${IRONFOX_AS}"
   "${IRONFOX_SED}" -i 's|mozilla-glean|# mozilla-glean|g' "${IRONFOX_AS}/gradle/libs.versions.toml"
@@ -202,8 +215,18 @@ function deglean_as() {
   echo_green_text 'SUCCESS: De-gleaned Application Services'
 }
 
+# De-glean Fenix
 function deglean_fenix() {
   echo_red_text 'De-gleaning Fenix...'
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
+
+  # Ensure we have `IRONFOX_FENIX`
+  verify_dir_with_env "${IRONFOX_FENIX}" 'IRONFOX_FENIX' || return 1
 
   deglean "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko"
   fenix_deglean "${IRONFOX_FENIX}"
@@ -220,8 +243,15 @@ function deglean_fenix() {
   echo_green_text 'SUCCESS: De-gleaned Fenix'
 }
 
+# De-glean Firefox (Gecko)
 function deglean_firefox() {
   echo_red_text 'De-gleaning Firefox...'
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
+
+  # Ensure we have `IRONFOX_GECKO`
+  verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO' || return 1
 
   deglean "${IRONFOX_GECKO}/mobile/android/geckoview"
   deglean "${IRONFOX_GECKO}/mobile/android/gradle"
@@ -230,19 +260,3 @@ function deglean_firefox() {
 
   echo_green_text 'SUCCESS: De-gleaned Firefox'
 }
-
-if [[ "${IRONFOX_DEGLEAN_AC}" == 1 ]]; then
-  deglean_ac
-fi
-
-if [[ "${IRONFOX_DEGLEAN_AS}" == 1 ]]; then
-  deglean_as
-fi
-
-if [[ "${IRONFOX_DEGLEAN_FENIX}" == 1 ]]; then
-  deglean_fenix
-fi
-
-if [[ "${IRONFOX_DEGLEAN_GECKO}" == 1 ]]; then
-  deglean_firefox
-fi

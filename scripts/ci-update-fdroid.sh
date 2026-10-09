@@ -10,21 +10,96 @@ set -euo pipefail
 set +x || exit 1
 
 # Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash "$(realpath $(dirname "$0"))/env.sh" || exit 1
-fi
-source "$(realpath $(dirname "$0"))/env.sh" || exit 1
+function setup_env() {
+  if [[ -z "${IRONFOX_SET_ENVS+x}" ]] || [[ "${IRONFOX_SET_ENVS}" != 1 ]]; then
+    # Find dirname
+    if [[ -n "${IRONFOX_DIRNAME+x}" ]] && [[ -x "${IRONFOX_DIRNAME}" ]]; then
+      local -r dirname="${IRONFOX_DIRNAME}"
+    elif [[ -x '/bin/dirname' ]]; then
+      local -r dirname='/bin/dirname'
+    elif [[ -x '/usr/bin/dirname' ]]; then
+      local -r dirname='/usr/bin/dirname'
+    else
+      if ! command -v dirname > /dev/null 2>&1; then
+        echo "ERROR: Missing dirname!" >&2
+        exit 1
+      fi
+      # It isn't a known location, so we sadly have to just fall-back to the PATH
+      local -r dirname="$(dirname)"
+    fi
 
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
+    # Set-up our environment
+    readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
+    if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
+      echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
+      exit 1
+    fi
+    source "${IRONFOX_ENV_SH}" || exit 1
+  fi
+}
+
+# Set-up our environment
+setup_env
 
 # Include download utilities
+verify_file_with_env "${IRONFOX_DOWNLOAD_UTILS}" 'IRONFOX_DOWNLOAD_UTILS' || exit 1
 source "${IRONFOX_DOWNLOAD_UTILS}" || exit 1
+
+# Ensure we have `IRONFOX_CI`
+verify_env "${IRONFOX_CI}" 'IRONFOX_CI' || exit 1
 
 if [[ "${IRONFOX_CI}" != 1 ]]; then
   echo_red_text "ERROR: '$0' should only be called from CI!"
   exit 1
 fi
+
+# Ensure we have basename
+verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || exit 1
+
+# Ensure we have cat
+verify_exec "${IRONFOX_CAT}" 'IRONFOX_CAT' || exit 1
+
+# Ensure we have git
+verify_exec "${IRONFOX_GIT}" 'IRONFOX_GIT' || exit 1
+
+# Ensure we have git-lfs
+verify_exec "${IRONFOX_GIT_LFS}" 'IRONFOX_GIT_LFS' || exit 1
+
+# Ensure we have GNU sed
+verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || exit 1
+
+# Ensure we have ls
+verify_exec "${IRONFOX_LS}" 'IRONFOX_LS' || exit 1
+
+# Ensure we have mkdir
+verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+
+# Ensure we have Python
+verify_exec "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' || exit 1
+
+# Ensure we have rm
+verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+
+# Ensure we have touch
+verify_exec "${IRONFOX_TOUCH}" 'IRONFOX_TOUCH' || exit 1
+
+# Ensure we have xargs
+verify_exec "${IRONFOX_XARGS}" 'IRONFOX_XARGS' || exit 1
+
+# Ensure we have `IRONFOX_EXTERNAL`
+verify_env "${IRONFOX_EXTERNAL}" 'IRONFOX_EXTERNAL' || exit 1
+
+# Ensure we have `IRONFOX_TEMP`
+verify_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP' || exit 1
+
+# Ensure we have `IRONFOX_VERSION`
+verify_env "${IRONFOX_VERSION}" 'IRONFOX_VERSION' || exit 1
+
+# Ensure we have `IRONFOX_SCRIPTS`
+verify_dir_with_env "${IRONFOX_SCRIPTS}" 'IRONFOX_SCRIPTS' || exit 1
+
+# Ensure we can source our Python environment
+verify_file_with_env "${IRONFOX_PYENV}" 'IRONFOX_PYENV' || exit 1
 
 # Constants
 
@@ -65,21 +140,23 @@ readonly IRONFOX_GIT_USERNAME='ironfox-ci'
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
   readonly IRONFOX_APK_VERSION="${IRONFOX_VERSION}"
 else
-  if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "null" ]] || [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "" ]]; then
-    echo_red_text "ERROR: Missing IronFox Nightly timestamp! Please set 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE'."
-    exit 1
-  else
-    readonly IRONFOX_APK_VERSION="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
-  fi
+  verify_env "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE' || exit 1
+  readonly IRONFOX_APK_VERSION="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
 fi
 
 # Configure Git
 function configure_git() {
   # Ensure we have a push token...
-  if [[ -z "${IRONFOX_GITLAB_CI_PUSH_TOKEN+x}" ]]; then
-    echo_red_text 'ERROR: Missing GitLab CI Push Token! Please set IRONFOX_GITLAB_CI_PUSH_TOKEN.'
-    exit 1
-  fi
+  verify_env "${IRONFOX_GITLAB_CI_PUSH_TOKEN}" 'IRONFOX_GITLAB_CI_PUSH_TOKEN' || exit 1
+
+  # Ensure we have `IRONFOX_GIT_EMAIL`
+  verify_env "${IRONFOX_GIT_EMAIL}" 'IRONFOX_GIT_EMAIL' || exit 1
+
+  # Ensure we have `IRONFOX_GIT_NAME`
+  verify_env "${IRONFOX_GIT_NAME}" 'IRONFOX_GIT_NAME' || exit 1
+
+  # Ensure we have `IRONFOX_GIT_USERNAME`
+  verify_env "${IRONFOX_GIT_USERNAME}" 'IRONFOX_GIT_USERNAME' || exit 1
 
   echo_red_text 'Configuring Git...'
   "${IRONFOX_GIT}" config --global user.email "${IRONFOX_GIT_EMAIL}"
@@ -90,6 +167,34 @@ function configure_git() {
 
 # Function to download an APK for a desired release
 function download_release() {
+  function print_usage() {
+    echo "Usage: download_release 'version' 'architecture' 'path/to/output/dir'"
+  }
+
+  if [[ -z "${1+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the version to download!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${2+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the architecture to download!'
+    print_usage
+    exit 1
+  fi
+
+  if [[ -z "${3+x}" ]]; then
+    echo_red_text 'ERROR: Please specify the path to the output directory!'
+    print_usage
+    exit 1
+  fi
+
+  # Ensure we have GNU awk
+  verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || exit 1
+
+  # Ensure we have shasum
+  verify_exec "${IRONFOX_SHASUM}" 'IRONFOX_SHASUM' || exit 1
+
   local -r version="$1"
   local -r arch="$2"
   local -r output_dir="$3"
@@ -256,7 +361,7 @@ for sha_txt in "${IRONFOX_FDROID_REPO}"/*-sha512sum.txt; do
   fi
 done
 
-source "${IRONFOX_PYENV}"
+source "${IRONFOX_PYENV}" || exit 1
 IFS=":" read -r vercode vername <<< "$("${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/get_latest_version.py" $("${IRONFOX_LS}" "${IRONFOX_FDROID_REPO}"/*.apk))"
 
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then

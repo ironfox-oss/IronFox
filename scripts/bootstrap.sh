@@ -5,19 +5,45 @@
 set -euo pipefail
 
 # Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh || exit 1
-fi
-source $(dirname $0)/env.sh || exit 1
+function setup_env() {
+  if [[ -z "${IRONFOX_SET_ENVS+x}" ]] || [[ "${IRONFOX_SET_ENVS}" != 1 ]]; then
+    # Find dirname
+    if [[ -n "${IRONFOX_DIRNAME+x}" ]] && [[ -x "${IRONFOX_DIRNAME}" ]]; then
+      local -r dirname="${IRONFOX_DIRNAME}"
+    elif [[ -x '/bin/dirname' ]]; then
+      local -r dirname='/bin/dirname'
+    elif [[ -x '/usr/bin/dirname' ]]; then
+      local -r dirname='/usr/bin/dirname'
+    else
+      if ! command -v dirname > /dev/null 2>&1; then
+        echo "ERROR: Missing dirname!" >&2
+        exit 1
+      fi
+      # It isn't a known location, so we sadly have to just fall-back to the PATH
+      local -r dirname="$(dirname)"
+    fi
 
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
+    # Set-up our environment
+    readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
+    if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
+      echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
+      exit 1
+    fi
+    source "${IRONFOX_ENV_SH}" || exit 1
+  fi
+}
+
+# Set-up our environment
+setup_env
 
 # Set verbosity
 set_verbosity
 
-# Get our platform, OS, and architecture
-source "${IRONFOX_ENV_HELPERS}" || exit 1
+# Ensure we have sleep
+verify_exec "${IRONFOX_SLEEP}" 'IRONFOX_SLEEP' || exit 1
+
+# Ensure we have `IRONFOX_OS`
+verify_env "${IRONFOX_OS}" 'IRONFOX_OS' || exit 1
 
 function error_fn() {
   echo
@@ -29,18 +55,18 @@ function error_fn() {
 
 # Install dependencies
 echo_green_text "Installing dependencies..."
-echo_green_text "Detected operating system: ${IRONFOX_OS}"
+echo_green_text "Detected operating system: '${IRONFOX_OS}'"
 
 # macOS, secureblue
 ## (Both use Homebrew)
 if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
   # Ensure Homebrew is installed
-  if [[ -z "${HOMEBREW_PREFIX+x}" ]]; then
+  verify_env "${HOMEBREW_PREFIX}" 'HOMEBREW_PREFIX' || {
     echo_red_text "Homebrew is not installed! Aborting..."
     echo_red_text "Please install Homebrew and try again..."
     echo_green_text "https://brew.sh/"
     exit 1
-  fi
+  }
 
   export HOMEBREW_NO_ASK=1
 

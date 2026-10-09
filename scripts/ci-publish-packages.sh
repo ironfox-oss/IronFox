@@ -6,30 +6,76 @@
 set -euo pipefail
 
 # Ensure this is never ran with xtrace...
-set +x || exit 1
+set +x || return 1
 
 # Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash "$(realpath $(dirname "$0"))/env.sh" || exit 1
-fi
-source "$(realpath $(dirname "$0"))/env.sh" || exit 1
+function setup_env() {
+  if [[ -z "${IRONFOX_SET_ENVS+x}" ]] || [[ "${IRONFOX_SET_ENVS}" != 1 ]]; then
+    # Find dirname
+    if [[ -n "${IRONFOX_DIRNAME+x}" ]] && [[ -x "${IRONFOX_DIRNAME}" ]]; then
+      local -r dirname="${IRONFOX_DIRNAME}"
+    elif [[ -x '/bin/dirname' ]]; then
+      local -r dirname='/bin/dirname'
+    elif [[ -x '/usr/bin/dirname' ]]; then
+      local -r dirname='/usr/bin/dirname'
+    else
+      if ! command -v dirname > /dev/null 2>&1; then
+        echo "ERROR: Missing dirname!" >&2
+        exit 1
+      fi
+      # It isn't a known location, so we sadly have to just fall-back to the PATH
+      local -r dirname="$(dirname)"
+    fi
 
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
+    # Set-up our environment
+    readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
+    if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
+      echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
+      exit 1
+    fi
+    source "${IRONFOX_ENV_SH}" || exit 1
+  fi
+}
+
+# Set-up our environment
+setup_env
 
 # Include download utilities
-source "${IRONFOX_DOWNLOAD_UTILS}" || exit 1
+verify_file_with_env "${IRONFOX_DOWNLOAD_UTILS}" 'IRONFOX_DOWNLOAD_UTILS' || return 1
+source "${IRONFOX_DOWNLOAD_UTILS}" || return 1
 
 # Include S3 utilities
-source "${IRONFOX_S3_UTILS}" || exit 1
+verify_file_with_env "${IRONFOX_S3_UTILS}" 'IRONFOX_S3_UTILS' || return 1
+source "${IRONFOX_S3_UTILS}" || return 1
+
+# Ensure we have `IRONFOX_CI`
+verify_env "${IRONFOX_CI}" 'IRONFOX_CI' || return 1
 
 if [[ "${IRONFOX_CI}" != 1 ]]; then
   echo_red_text "ERROR: '$0' should only be called from CI!"
-  exit 1
+  return 1
 fi
 
 # Ensure we have GNU awk
-verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || exit 1
+verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || return 1
+
+# Ensure we have shasum
+verify_exec "${IRONFOX_SHASUM}" 'IRONFOX_SHASUM' || return 1
+
+# Ensure we have `IRONFOX_CHANNEL`
+verify_env "${IRONFOX_CHANNEL}" 'IRONFOX_CHANNEL' || return 1
+
+# Ensure we have `IRONFOX_VERSION`
+verify_env "${IRONFOX_VERSION}" 'IRONFOX_VERSION' || return 1
+
+# Ensure we have `IRONFOX_ARTIFACTS`
+verify_env "${IRONFOX_ARTIFACTS}" 'IRONFOX_ARTIFACTS' || return 1
+
+# Ensure we have `IRONFOX_APK_ARTIFACTS`
+verify_dir_with_env "${IRONFOX_APK_ARTIFACTS}" 'IRONFOX_APK_ARTIFACTS' || return 1
+
+# Ensure we have `IRONFOX_APKS_ARTIFACTS`
+verify_dir_with_env "${IRONFOX_APKS_ARTIFACTS}" 'IRONFOX_APKS_ARTIFACTS' || return 1
 
 # Set-up target parameters
 if [[ -z "${1+x}" ]]; then
@@ -50,16 +96,16 @@ else
   echo_red_text "ERROR: Invalid target: ${target}\n You must enter one of the following:"
   echo 'Release: release (Default)'
   echo 'Nightly: nightly'
-  exit 1
+  return 1
 fi
 readonly IRONFOX_PUBLISH_NIGHTLY
 readonly IRONFOX_PUBLISH_RELEASE
 
 # Verify secrets
-verify_file_with_env "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" 'IRONFOX_RELEASES_S3_ACCESS_KEY_FILE' || exit 1
-verify_file_with_env "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" 'IRONFOX_RELEASES_S3_BUCKET_NAME_FILE' || exit 1
-verify_file_with_env "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" 'IRONFOX_RELEASES_S3_ENDPOINT_FILE' || exit 1
-verify_file_with_env "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" 'IRONFOX_RELEASES_S3_SECRET_KEY_FILE' || exit 1
+verify_file_with_env "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" 'IRONFOX_RELEASES_S3_ACCESS_KEY_FILE' || return 1
+verify_file_with_env "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" 'IRONFOX_RELEASES_S3_BUCKET_NAME_FILE' || return 1
+verify_file_with_env "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" 'IRONFOX_RELEASES_S3_ENDPOINT_FILE' || return 1
+verify_file_with_env "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" 'IRONFOX_RELEASES_S3_SECRET_KEY_FILE' || return 1
 
 # Constants
 
@@ -76,14 +122,12 @@ readonly IRONFOX_GITLAB_GENERIC_PACKAGES_URL="${IRONFOX_GITLAB_API_URL}/projects
 # Final release notes file
 readonly IRONFOX_RELEASE_NOTES="${IRONFOX_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-release-notes.md"
 
-# Ensure we have the Nightly version
+# Set the Nightly version
 if [[ "${IRONFOX_PUBLISH_NIGHTLY}" == 1 ]]; then
-  if [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "null" ]] || [[ "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" == "" ]]; then
-    echo_red_text "ERROR: Missing IronFox Nightly timestamp! Please set 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE'."
-    exit 1
-  else
-    readonly IRONFOX_NIGHTLY_VERSION="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
-  fi
+  # Ensure we have `IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE`
+  verify_env "${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}" 'IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE' || return 1
+
+  readonly IRONFOX_NIGHTLY_VERSION="${IRONFOX_VERSION}.${IRONFOX_NIGHTLY_TIMESTAMP_OVERRIDE}"
 fi
 
 # Artifacts
@@ -103,35 +147,23 @@ readonly IRONFOX_APKSET="${IRONFOX_APKS_ARTIFACTS}/${IRONFOX_APK_NAME}-${IRONFOX
 # Set our external CI environment variables
 
 ## Commit SHA
-if [[ -z "${CI_COMMIT_SHA+x}" ]]; then
-  echo_red_text "ERROR: Missing commit SHA! Please set 'CI_COMMIT_SHA'."
-  exit 1
-else
-  readonly IRONFOX_CI_COMMIT="${CI_COMMIT_SHA}"
-fi
+verify_env "${CI_COMMIT_SHA}" 'CI_COMMIT_SHA' || return 1
+readonly IRONFOX_CI_COMMIT="${CI_COMMIT_SHA}"
 
 ## Short commit SHA
-if [[ -z "${CI_COMMIT_SHORT_SHA+x}" ]]; then
-  echo_red_text "ERROR: Missing short commit SHA! Please set 'CI_COMMIT_SHORT_SHA'."
-  exit 1
-else
-  readonly IRONFOX_CI_COMMIT_SHORT="${CI_COMMIT_SHORT_SHA}"
-fi
+verify_env "${CI_COMMIT_SHORT_SHA}" 'CI_COMMIT_SHORT_SHA' || return 1
+readonly IRONFOX_CI_COMMIT_SHORT="${CI_COMMIT_SHORT_SHA}"
 
 ## Job ID
-if [[ -z "${CI_JOB_ID+x}" ]]; then
-  echo_red_text "ERROR: Missing job ID! Please set 'CI_JOB_ID'."
-  exit 1
-else
-  readonly IRONFOX_CI_JOB_ID="${CI_JOB_ID}"
-fi
+verify_env "${CI_JOB_ID}" 'CI_JOB_ID' || return 1
+readonly IRONFOX_CI_JOB_ID="${CI_JOB_ID}"
 
 # Ensure we have our artifacts
-verify_file "${IRONFOX_APK_ARM64}" || exit 1
-verify_file "${IRONFOX_APK_ARM}" || exit 1
-verify_file "${IRONFOX_APK_X86_64}" || exit 1
-verify_file "${IRONFOX_APK_UNIVERSAL}" || exit 1
-verify_file "${IRONFOX_APKSET}" || exit 1
+verify_file "${IRONFOX_APK_ARM64}" || return 1
+verify_file "${IRONFOX_APK_ARM}" || return 1
+verify_file "${IRONFOX_APK_X86_64}" || return 1
+verify_file "${IRONFOX_APK_UNIVERSAL}" || return 1
+verify_file "${IRONFOX_APKSET}" || return 1
 
 # Artifact SHA512sums
 readonly IRONFOX_ARM64_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_ARM64}" | "${IRONFOX_AWK}" '{print $1}')
@@ -149,13 +181,13 @@ function push_to_s3() {
   if [[ -z "${1+x}" ]]; then
     echo_red_text 'ERROR: Please specify the path to a file that should be uploaded to S3 storage!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${2+x}" ]]; then
     echo_red_text 'ERROR: Please specify the target path on S3 storage for where the file should be uploaded!'
     print_usage
-    exit 1
+    return 1
   fi
 
   local -r push_file="$1"
@@ -167,7 +199,7 @@ function push_to_s3() {
   local -r s3_secret_key_file="${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
 
   # Ensure our file to push is valid
-  verify_file "${push_file}" || exit 1
+  verify_file "${push_file}" || return 1
 
   # Create and push a SHA512sum for our file to S3 storage
   push_and_add_sha512sum "${push_file}" "${s3_path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
@@ -175,13 +207,37 @@ function push_to_s3() {
 
 # Create release notes
 function create_release_notes() {
+  # Ensure we have cat
+  verify_exec "${IRONFOX_CAT}" 'IRONFOX_CAT' || return 1
+
+  # Ensure we have cp
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
+
+  # Ensure we have mkdir
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
+
+  # Ensure we have xargs
+  verify_exec "${IRONFOX_XARGS}" 'IRONFOX_XARGS' || return 1
+
+  # Ensure we have `IRONFOX_RELEASES_URL`
+  verify_env "${IRONFOX_RELEASES_URL}" 'IRONFOX_RELEASES_URL' || return 1
+
+  # Ensure we have `IRONFOX_TEMPLATES`
+  verify_env "${IRONFOX_TEMPLATES}" 'IRONFOX_TEMPLATES' || return 1
+
   # Ensure our changelog (for release-specific changes) exists
   local -r IRONFOX_CHANGELOG_FILE="${IRONFOX_ROOT}/CHANGELOG.md"
-  verify_file "${IRONFOX_CHANGELOG_FILE}" || exit 1
+  verify_file "${IRONFOX_CHANGELOG_FILE}" || return 1
 
   # Ensure our release template exists
   local -r IRONFOX_RELEASE_TEMPLATE="${IRONFOX_TEMPLATES}/release-notes.md"
-  verify_file "${IRONFOX_RELEASE_TEMPLATE}" || exit 1
+  verify_file "${IRONFOX_RELEASE_TEMPLATE}" || return 1
 
   local -r IRONFOX_RELEASE_NOTES_TEMP="${IRONFOX_TEMP}/ironfox-${IRONFOX_VERSION}-release-notes-temp.md"
   "${IRONFOX_RM}" -f "${IRONFOX_RELEASE_NOTES}" "${IRONFOX_RELEASE_NOTES_TEMP}"
@@ -224,7 +280,10 @@ function create_release_notes() {
 
   "${IRONFOX_RM}" -f "${IRONFOX_RELEASE_NOTES_TEMP}"
 
-  echo_green_text "SUCCESS: Created release notes for IronFox: ${IRONFOX_VERSION}"
+  # Ensure our release notes were successfully created
+  verify_file "${IRONFOX_RELEASE_NOTES}" || return 1
+
+  echo_green_text "SUCCESS: Created release notes for IronFox: '${IRONFOX_VERSION}'!"
 }
 
 # Upload a release to GitLab's package registry
@@ -236,27 +295,36 @@ function upload_to_gitlab_package_registry() {
   if [[ -z "${1+x}" ]]; then
     echo_red_text 'ERROR: Please specify the path to a file that should be uploaded to the GitLab package registry!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${2+x}" ]]; then
     echo_red_text 'ERROR: Please specify the desired package name!'
     print_usage
-    exit 1
+    return 1
   fi
 
   # Ensure we have an API token...
-  if [[ -z "${IRONFOX_GITLAB_CI_API_TOKEN+x}" ]]; then
-    echo_red_text 'ERROR: Missing GitLab CI API Token! Please set IRONFOX_GITLAB_CI_API_TOKEN.'
-    exit 1
-  fi
+  verify_env "${IRONFOX_GITLAB_CI_API_TOKEN}" 'IRONFOX_GITLAB_CI_API_TOKEN' || return 1
+
+  # Ensure we have basename
+  verify_exec "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' || return 1
+
+  # Ensure we have curl
+  verify_exec "${IRONFOX_CURL}" 'IRONFOX_CURL' || return 1
+
+  # Ensure we have our curl flags
+  verify_env "${IRONFOX_CURL_FLAGS}" 'IRONFOX_CURL_FLAGS' || return 1
+
+  # Ensure we have `IRONFOX_GITLAB_GENERIC_PACKAGES_URL`
+  verify_env "${IRONFOX_GITLAB_GENERIC_PACKAGES_URL}" 'IRONFOX_GITLAB_GENERIC_PACKAGES_URL' || return 1
 
   local -r upload_file="$1"
   local -r upload_package_name="$2"
   local -r upload_file_name="$("${IRONFOX_BASENAME}" "${upload_file}")"
 
   # Ensure our file to upload is valid
-  verify_file "${upload_file}" || exit 1
+  verify_file "${upload_file}" || return 1
 
   "${IRONFOX_CURL}" ${IRONFOX_CURL_FLAGS} --no-verbose --header "PRIVATE-TOKEN: ${IRONFOX_GITLAB_CI_API_TOKEN}" \
     --upload-file "${upload_file}" \
@@ -265,16 +333,35 @@ function upload_to_gitlab_package_registry() {
 
 # Publish a release to GitLab
 function publish_to_gitlab() {
-  if [[ ! -f "${IRONFOX_RELEASE_NOTES}" ]]; then
-    echo_red_text "ERROR: Missing release notes! (${IRONFOX_RELEASE_NOTES})"
-    exit 1
-  fi
+  # Ensure we have our release notes
+  verify_file "${IRONFOX_RELEASE_NOTES}" || return 1
 
   # Ensure we have an API token...
-  if [[ -z "${IRONFOX_GITLAB_CI_API_TOKEN+x}" ]]; then
-    echo_red_text 'ERROR: Missing GitLab CI API Token! Please set IRONFOX_GITLAB_CI_API_TOKEN.'
-    exit 1
-  fi
+  verify_env "${IRONFOX_GITLAB_CI_API_TOKEN}" 'IRONFOX_GITLAB_CI_API_TOKEN' || return 1
+
+  # Ensure we have cat
+  verify_exec "${IRONFOX_CAT}" 'IRONFOX_CAT' || return 1
+
+  # Ensure we have curl
+  verify_exec "${IRONFOX_CURL}" 'IRONFOX_CURL' || return 1
+
+  # Ensure we have jq
+  verify_exec "${IRONFOX_JQ}" 'IRONFOX_JQ' || return 1
+
+  # Ensure we have our curl flags
+  verify_env "${IRONFOX_CURL_FLAGS}" 'IRONFOX_CURL_FLAGS' || return 1
+
+  # Ensure we have `IRONFOX_GITLAB_API_URL`
+  verify_env "${IRONFOX_GITLAB_API_URL}" 'IRONFOX_GITLAB_API_URL' || return 1
+
+  # Ensure we have `IRONFOX_GITLAB_BRANCH`
+  verify_env "${IRONFOX_GITLAB_BRANCH}" 'IRONFOX_GITLAB_BRANCH' || return 1
+
+  # Ensure we have `IRONFOX_GITLAB_PROJECT_ID`
+  verify_env "${IRONFOX_GITLAB_PROJECT_ID}" 'PIRONFOX_GITLAB_PROJECT_ID' || return 1
+
+  # Ensure we have `IRONFOX_RELEASES_BASE_URL`
+  verify_env "${IRONFOX_RELEASES_BASE_URL}" 'IRONFOX_RELEASES_BASE_URL' || return 1
 
   local -r ironfox_release_desc=$("${IRONFOX_CAT}" "${IRONFOX_RELEASE_NOTES}")
 
@@ -411,12 +498,27 @@ function publish_to_gitlab() {
     "${IRONFOX_GITLAB_API_URL}/projects/${IRONFOX_GITLAB_PROJECT_ID}/releases"
 
   # We're done! :)
-  echo_green_text "SUCCESS: Published IronFox: ${IRONFOX_VERSION} to GitLab"
+  echo_green_text "SUCCESS: Published IronFox: '${IRONFOX_VERSION}' to GitLab!"
 }
 
 # Create the universal updates.json for IronFox - Release
 ## (ex. used by Obtainium)
 function create_release_json() {
+  # Ensure we have cp
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
+
+  # Ensure we have mkdir
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
+
+  # Ensure we have `IRONFOX_TEMP`
+  verify_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP' || return 1
+
   local -r s3_path='ironfox/releases'
 
   "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates.json"
@@ -437,6 +539,24 @@ function create_release_json() {
 # Create the universal updates.json for IronFox - Nightly
 ## (ex. used by Obtainium)
 function create_nightly_json() {
+  # Ensure we have cp
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
+
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
+
+  # Ensure we have mkdir
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
+
+  # Ensure we have `IRONFOX_CI_COMMIT`
+  verify_env "${IRONFOX_CI_COMMIT}" 'IRONFOX_CI_COMMIT' || return 1
+
+  # Ensure we have `IRONFOX_TEMP`
+  verify_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP' || return 1
+
   local -r s3_path='ironfox/nightly'
 
   "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates.json"
@@ -458,6 +578,24 @@ function create_nightly_json() {
 # Create our universal updates.json
 ## (ex. used by Obtainium)
 function create_universal_json() {
+  # Ensure we have cat
+  verify_exec "${IRONFOX_CAT}" 'IRONFOX_CAT' || return 1
+
+  # Ensure we have cp
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
+
+  # Ensure we have jq
+  verify_exec "${IRONFOX_JQ}" 'IRONFOX_JQ' || return 1
+
+  # Ensure we have rm
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
+
+  # Ensure we have xargs
+  verify_exec "${IRONFOX_XARGS}" 'IRONFOX_XARGS' || return 1
+
+  # Ensure we have `IRONFOX_TEMP`
+  verify_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP' || return 1
+
   # Clean-up
   "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates-temp.json"
   "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates-temp.json-sha512sum.txt"
@@ -487,7 +625,7 @@ function create_universal_json() {
     # If checksum validation fails, also just clean-up the files
     "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates-temp.json"
     "${IRONFOX_RM}" -f "${IRONFOX_TEMP}/updates-temp.json-sha512sum.txt"
-    exit 1
+    return 1
   fi
   echo_green_text "SUCCESS: Validated checksum for file: '${json_file_name}'!"
   echo "SHA512sum: '${local_sha512sum}'"
@@ -514,8 +652,11 @@ function _push_ironfox() {
   if [[ -z "${1+x}" ]]; then
     echo_red_text 'ERROR: Please specify the architecture you wou would like to push IronFox for'
     print_usage
-    exit 1
+    return 1
   fi
+
+  # Ensure we have cp
+  verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
 
   local -r ironfox_arch="$1"
 
@@ -545,6 +686,18 @@ function _push_ironfox() {
 
 # Push IronFox to S3 storage
 function push_ironfox() {
+  # Ensure we have mkdir
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
+
+  # Ensure we have touch
+  verify_exec "${IRONFOX_TOUCH}" 'IRONFOX_TOUCH' || return 1
+
+  # Ensure we have `IRONFOX_RELEASES_URL`
+  verify_env "${IRONFOX_RELEASES_URL}" 'IRONFOX_RELEASES_URL' || return 1
+
+  # Ensure we have `IRONFOX_TEMP`
+  verify_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP' || return 1
+
   # ARM64
   _push_ironfox 'arm64-v8a'
 

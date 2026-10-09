@@ -17,17 +17,45 @@ set -euo pipefail
 
 # Set-up our environment
 readonly IRONFOX_LINTING=1
-export IRONFOX_LINTING
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-  /bin/bash $(dirname $0)/env.sh || exit 1
-fi
-source $(dirname $0)/env.sh || exit 1
+function setup_env() {
+  if [[ -z "${IRONFOX_SET_ENVS+x}" ]] || [[ "${IRONFOX_SET_ENVS}" != 1 ]]; then
+    # Find dirname
+    if [[ -n "${IRONFOX_DIRNAME+x}" ]] && [[ -x "${IRONFOX_DIRNAME}" ]]; then
+      local -r dirname="${IRONFOX_DIRNAME}"
+    elif [[ -x '/bin/dirname' ]]; then
+      local -r dirname='/bin/dirname'
+    elif [[ -x '/usr/bin/dirname' ]]; then
+      local -r dirname='/usr/bin/dirname'
+    else
+      if ! command -v dirname > /dev/null 2>&1; then
+        echo "ERROR: Missing dirname!" >&2
+        exit 1
+      fi
+      # It isn't a known location, so we sadly have to just fall-back to the PATH
+      local -r dirname="$(dirname)"
+    fi
 
-# Include utilities
-source "${IRONFOX_UTILS}" || exit 1
+    # Set-up our environment
+    readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
+    if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
+      echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
+      exit 1
+    fi
+    source "${IRONFOX_ENV_SH}" || exit 1
+  fi
+}
+
+# Set-up our environment
+setup_env
 
 # Set verbosity
 set_verbosity
+
+# Ensure we have shellcheck
+verify_exec "${IRONFOX_SHELLCHECK}" 'IRONFOX_SHELLCHECK' || exit 1
+
+# Ensure we have shfmt
+verify_exec "${IRONFOX_SHFMT}" 'IRONFOX_SHFMT' || exit 1
 
 # Resolve and move to the repo root so relative paths and config discovery
 # (.shellcheckrc, .editorconfig) work regardless of the caller's cwd.
@@ -42,10 +70,16 @@ fi
 # gitignored files (e.g. scripts/env_local.sh, scripts/env_build.sh).
 declare -a targets=()
 if [[ "${mode}" == 'staged' ]]; then
+  # Ensure we have git
+  verify_exec "${IRONFOX_GIT}" 'IRONFOX_GIT' || exit 1
+
   while IFS= read -r file; do
     [[ -n "${file}" ]] && targets+=("${file}")
   done < <("${IRONFOX_GIT}" diff --cached --name-only --diff-filter=ACM -- 'scripts/*.sh' 'configs/mozconfigs/*.mozconfig' 'configs/mozconfigs/**/*.mozconfig')
 else
+  # Ensure we have ls
+  verify_exec "${IRONFOX_LS}" 'IRONFOX_LS' || exit 1
+
   while IFS= read -r file; do
     targets+=("${file}")
   done < <("${IRONFOX_LS}" scripts/*.sh configs/mozconfigs/*.mozconfig configs/mozconfigs/**/*.mozconfig)
