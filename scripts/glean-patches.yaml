@@ -13,6 +13,20 @@ categories:
 
 patches:
   # Build System
+  - file: "glean-bump-android-sdk.patch"
+    name: "Glean - Bump Android SDK"
+    description: "Bump Android SDK."
+    reason: "Updates the version of the Android SDK."
+    effect: "Resolves build issues."
+    category: "Build System"
+
+  - file: "glean-bump-parser.patch"
+    name: "Glean - Bump Parser"
+    description: "Bump Glean Parser."
+    reason: "Updates the version of the Glean Parser."
+    effect: "Resolves build issues."
+    category: "Build System"
+
   - file: "glean-localize-maven.patch"
     name: "Glean - Localize Maven"
     description: "Replaces Mozilla Maven repositories with local maven repositories."

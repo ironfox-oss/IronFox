@@ -995,12 +995,10 @@
               "enabled": true,
               "value": {
                 "sections-enabled": {
-                    "bookmarks": false,
                     "jump-back-in": false,
                     "pocket": false,
                     "pocket-sponsored-stories": false,
-                    "privacy-report": false,
-                    "recent-explorations": false
+                    "privacy-report": false
                 }
               }
             }
@@ -1015,12 +1013,10 @@
               "enabled": true,
               "value": {
                 "sections-enabled": {
-                    "bookmarks": true,
                     "jump-back-in": true,
                     "pocket": false,
                     "pocket-sponsored-stories": false,
-                    "privacy-report": true,
-                    "recent-explorations": true
+                    "privacy-report": true
                 }
               }
             }

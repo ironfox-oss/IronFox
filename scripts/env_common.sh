@@ -262,6 +262,13 @@ if [[ -z "${IRONFOX_ANDROID_SDK+x}" ]] || [[ "${IRONFOX_ANDROID_SDK}" == "" ]] |
 fi
 readonly IRONFOX_ANDROID_SDK
 
+# android (CLI)
+readonly IRONFOX_ANDROID_DEFAULT="${IRONFOX_ANDROID_SDK}/cmdline-tools/${IRONFOX_ANDROID_SDK_VERSION}/bin/android"
+if [[ -z "${IRONFOX_ANDROID+x}" ]] || [[ "${IRONFOX_ANDROID}" == "" ]] || [[ "${IRONFOX_ANDROID}" == "null" ]]; then
+  IRONFOX_ANDROID="${IRONFOX_ANDROID_DEFAULT}"
+fi
+readonly IRONFOX_ANDROID
+
 # Android SDK Build Tools (Latest)
 readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-build-tools"
 if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS+x}" ]] || [[ "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" == "" ]] ||
@@ -284,6 +291,12 @@ if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35+x}" ]] || [[ "${IRONFOX_ANDROID_S
   IRONFOX_ANDROID_SDK_BUILD_TOOLS_35="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_DEFAULT}"
 fi
 readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35
+
+# Android SDK Platform (Latest)
+readonly IRONFOX_ANDROID_SDK_PLATFORM="${IRONFOX_ANDROID_SDK}/platforms/${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}"
+
+# Android SDK Platform (36)
+readonly IRONFOX_ANDROID_SDK_PLATFORM_36_DEFAULT="${IRONFOX_ANDROID_SDK}/platforms/36"
 
 # Android SDK Platform Tools
 readonly IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-platform-tools"
@@ -382,13 +395,13 @@ readonly IRONFOX_GLEAN
 ## Glean overlay
 readonly IRONFOX_GLEAN_OVERLAY="${IRONFOX_PATCHES}/glean-overlay"
 
-# Glean Parser wheels
-readonly IRONFOX_GLEAN_PARSER_WHEELS_DEFAULT="${IRONFOX_EXTERNAL}/glean_parser-wheels"
-if [[ -z "${IRONFOX_GLEAN_PARSER_WHEELS+x}" ]] || [[ "${IRONFOX_GLEAN_PARSER_WHEELS}" == "" ]] ||
-  [[ "${IRONFOX_GLEAN_PARSER_WHEELS}" == "null" ]]; then
-  IRONFOX_GLEAN_PARSER_WHEELS="${IRONFOX_GLEAN_PARSER_WHEELS_DEFAULT}"
+# Glean Parser
+readonly IRONFOX_GLEAN_PARSER_DIR_DEFAULT="${IRONFOX_EXTERNAL}/glean_parser"
+if [[ -z "${IRONFOX_GLEAN_PARSER_DIR+x}" ]] || [[ "${IRONFOX_GLEAN_PARSER_DIR}" == "" ]] ||
+  [[ "${IRONFOX_GLEAN_PARSER_DIR}" == "null" ]]; then
+  IRONFOX_GLEAN_PARSER_DIR="${IRONFOX_GLEAN_PARSER_DIR_DEFAULT}"
 fi
-readonly IRONFOX_GLEAN_PARSER_WHEELS
+readonly IRONFOX_GLEAN_PARSER_DIR
 
 # ar
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
@@ -731,11 +744,11 @@ fi
 readonly IRONFOX_GREP
 
 # GYP
-readonly IRONFOX_GYP_DEFAULT="${IRONFOX_EXTERNAL}/gyp-next"
-if [[ -z "${IRONFOX_GYP+x}" ]] || [[ "${IRONFOX_GYP}" == "" ]] || [[ "${IRONFOX_GYP}" == "null" ]]; then
-  IRONFOX_GYP="${IRONFOX_GYP_DEFAULT}"
+readonly IRONFOX_GYP_DIR_DEFAULT="${IRONFOX_EXTERNAL}/gyp-next"
+if [[ -z "${IRONFOX_GYP_DIR+x}" ]] || [[ "${IRONFOX_GYP_DIR}" == "" ]] || [[ "${IRONFOX_GYP_DIR}" == "null" ]]; then
+  IRONFOX_GYP_DIR="${IRONFOX_GYP_DIR_DEFAULT}"
 fi
-readonly IRONFOX_GYP
+readonly IRONFOX_GYP_DIR
 
 # gzip
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
@@ -1104,6 +1117,17 @@ if [[ -z "${IRONFOX_SYSCTL+x}" ]] || [[ "${IRONFOX_SYSCTL}" == "" ]] || [[ "${IR
 fi
 readonly IRONFOX_SYSCTL
 
+# sysroot
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+  readonly IRONFOX_SYSROOT_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/sysroot"
+else
+  readonly IRONFOX_SYSROOT_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/musl/sysroot"
+fi
+if [[ -z "${IRONFOX_SYSROOT+x}" ]] || [[ "${IRONFOX_SYSROOT}" == "" ]] || [[ "${IRONFOX_SYSROOT}" == "null" ]]; then
+  IRONFOX_SYSROOT="${IRONFOX_SYSROOT_DEFAULT}"
+fi
+readonly IRONFOX_SYSROOT
+
 # nproc
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
   readonly IRONFOX_NPROC_DEFAULT="${IRONFOX_SYSCTL} -n hw.logicalcpu"
@@ -1314,6 +1338,8 @@ if [[ -z "${IRONFOX_PYENV_DIR+x}" ]] || [[ "${IRONFOX_PYENV_DIR}" == "" ]] || [[
 fi
 readonly IRONFOX_PYENV_DIR
 readonly IRONFOX_ANDROGUARD="${IRONFOX_PYENV_DIR}/bin/androguard"
+readonly IRONFOX_GLEAN_PARSER="${IRONFOX_PYENV_DIR}/bin/glean_parser"
+readonly IRONFOX_GYP="${IRONFOX_PYENV_DIR}/bin/gyp"
 readonly IRONFOX_PIP="${IRONFOX_PYENV_DIR}/bin/pip"
 readonly IRONFOX_PYENV="${IRONFOX_PYENV_DIR}/bin/activate"
 readonly IRONFOX_PYTHON="${IRONFOX_PYENV_DIR}/bin/python"
@@ -1339,6 +1365,7 @@ readonly IRONFOX_CARGO_ENV="${IRONFOX_CARGO_HOME}/env"
 readonly IRONFOX_CBINDGEN="${IRONFOX_CARGO_HOME}/bin/cbindgen"
 readonly IRONFOX_RUSTC="${IRONFOX_CARGO_HOME}/bin/rustc"
 readonly IRONFOX_RUSTDOC="${IRONFOX_CARGO_HOME}/bin/rustdoc"
+readonly IRONFOX_RUSTFMT="${IRONFOX_CARGO_HOME}/bin/rustfmt"
 readonly IRONFOX_RUSTUP="${IRONFOX_CARGO_HOME}/bin/rustup"
 
 ## Display progress bars
@@ -1388,7 +1415,13 @@ readonly IRONFOX_S3CMD_DIR
 readonly IRONFOX_S3CMD="${IRONFOX_PYENV_DIR}/bin/s3cmd"
 
 # uniffi-bindgen
-readonly IRONFOX_UNIFFI_DEFAULT="${IRONFOX_EXTERNAL}/uniffi"
+readonly IRONFOX_UNIFFI_DIR_DEFAULT="${IRONFOX_EXTERNAL}/uniffi"
+if [[ -z "${IRONFOX_UNIFFI_DIR+x}" ]] || [[ "${IRONFOX_UNIFFI_DIR}" == "" ]] || [[ "${IRONFOX_UNIFFI_DIR}" == "null" ]]; then
+  IRONFOX_UNIFFI_DIR="${IRONFOX_UNIFFI_DIR_DEFAULT}"
+fi
+readonly IRONFOX_UNIFFI_DIR
+
+readonly IRONFOX_UNIFFI_DEFAULT="${IRONFOX_UNIFFI_DIR}/target/release/uniffi-bindgen"
 if [[ -z "${IRONFOX_UNIFFI+x}" ]] || [[ "${IRONFOX_UNIFFI}" == "" ]] || [[ "${IRONFOX_UNIFFI}" == "null" ]]; then
   IRONFOX_UNIFFI="${IRONFOX_UNIFFI_DEFAULT}"
 fi
@@ -1522,7 +1555,7 @@ fi
 readonly IRONFOX_GRADLE_FLAGS_OVERRIDE
 
 # Gradle flags
-readonly IRONFOX_GRADLE_FLAGS_DEFAULT="-Dhttps.protocols=TLSv1.3,TLSv1.2 -Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.configureondemand=true -Dorg.gradle.console=verbose -Dorg.gradle.daemon=false -Dorg.gradle.debug=false -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.java.installations.auto-download=false --no-build-cache --no-configuration-cache --no-daemon"
+readonly IRONFOX_GRADLE_FLAGS_DEFAULT="-Dandroid.builder.sdkDownload=false -Dgradle.user.home=${IRONFOX_GRADLE_HOME} -Dhttps.protocols=TLSv1.3,TLSv1.2 -Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dndk.dir=${IRONFOX_ANDROID_NDK} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.configureondemand=true -Dorg.gradle.console=verbose -Dorg.gradle.daemon=false -Dorg.gradle.debug=false -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.java.installations.auto-download=false -Dorg.gradle.welcome=never -Dsdk.dir=${IRONFOX_ANDROID_SDK} --no-build-cache --no-configuration-cache --no-daemon"
 if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]] || [[ "${IRONFOX_GRADLE_FLAGS}" == "" ]] || [[ "${IRONFOX_GRADLE_FLAGS}" == "null" ]]; then
   IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_GRADLE_FLAGS_OVERRIDE}" == 1 ]]; then

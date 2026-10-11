@@ -60,4 +60,9 @@ object MetricsUtils {
     encodeToString: (data: ByteArray, flag: Int) -> String,
     customSalt: String? = null,
   ): String? = null
+
+  enum class TabGroupAccessPoint {
+    TABS_TRAY,
+    BROWSER_MENU,
+  }
 }

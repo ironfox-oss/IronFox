@@ -1,0 +1,44 @@
+diff --git a/build.gradle b/build.gradle
+index fa83f350..28b2c0d0 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -8,9 +8,10 @@
+ 
+ buildscript {
+     ext.build = [
+-        ndkVersion: "29.0.14206865", // Keep it in sync in TC Dockerfile.
+-        compileSdkVersion: 36,
+-        targetSdkVersion: 36,
++        ndkVersion: "30.0.16248370", // Keep it in sync in TC Dockerfile.
++        compileSdkMajorVersion: 37,
++        compileSdkMinorVersion: 2,
++        targetSdkVersion: 37,
+         minSdkVersion: 26,
+         jvmTargetCompatibility: 17,
+     ]
+diff --git a/glean-core/android/build.gradle b/glean-core/android/build.gradle
+index 5966a1b6..8b97c18c 100644
+--- a/glean-core/android/build.gradle
++++ b/glean-core/android/build.gradle
+@@ -39,7 +39,7 @@ android {
+     namespace = "mozilla.telemetry.glean"
+ 
+     ndkVersion rootProject.ext.build.ndkVersion
+-    compileSdkVersion rootProject.ext.build.compileSdkVersion
++    compileSdk {version = release(rootProject.ext.build.compileSdkMajorVersion) { minorApiLevel = rootProject.ext.build.compileSdkMinorVersion } }
+ 
+     defaultConfig {
+         minSdkVersion rootProject.ext.build['minSdkVersion']
+diff --git a/glean-core/android-native/build.gradle b/glean-core/android-native/build.gradle
+index 53716d52..a2a71ece 100644
+--- a/glean-core/android-native/build.gradle
++++ b/glean-core/android-native/build.gradle
+@@ -19,7 +19,7 @@ android {
+     namespace = "mozilla.telemetry.glean_native"
+ 
+     ndkVersion = rootProject.ext.build.ndkVersion
+-    compileSdkVersion = rootProject.ext.build.compileSdkVersion
++    compileSdk {version = release(rootProject.ext.build.compileSdkMajorVersion) { minorApiLevel = rootProject.ext.build.compileSdkMinorVersion } }
+ 
+     defaultConfig {
+         minSdkVersion rootProject.ext.build['minSdkVersion']

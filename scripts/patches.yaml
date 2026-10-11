@@ -399,13 +399,6 @@ patches:
     effect: "Cleaner interface without promotional content or third-party integrations."
     category: "Mozilla"
 
-  - file: "fenix-disable-sync-engines-by-default.patch"
-    name: "Fenix - Disable Firefox Sync engines by default"
-    description: "Disables Firefox Sync engines by default."
-    reason: "To prevent automatic sync of browser data to Mozilla servers."
-    effect: "No data is synchronized with Mozilla unless explicitly enabled by user."
-    category: "Mozilla"
-
   - file: "fenix-disable-sync-avatar-fetching.patch"
     name: "Fenix - Disable Firefox Sync Avatar Fetching"
     description: "Prevents the browser from downloading the user's profile picture from Mozilla if Firefox Sync is enabled."
@@ -573,20 +566,6 @@ patches:
     description: "Prevents GeckoView from generating speculative/predictive connections."
     reason: "To prevent unwanted/unsolicited network traffic (In Fenix, this is currently used for certain URL bar suggestions)."
     effect: "Prevents the browser from connecting to third parties without explicit user consent, and provides users with more control over their network activity."
-    category: "Privacy"
-
-  - file: "gecko-stub-beacon.patch"
-    name: "Gecko - Stub navigator.sendBeacon()"
-    description: |
-     Stubs the Beacon API to prevent tracking and the submission of analytics, without aiding fingerprinting and causing undesired breakage.
-    reason: | 
-     The Beacon API (navigator.sendBeacon)'s explicit, stated purpose/use case is for analytics/tracking
-     (https://developer.mozilla.org/docs/Web/API/Beacon_API). However, disabling it entirely (like standard Firefox allows) is undesired, as it
-     causes breakage, aids fingerprinting, and can allow trackers to fallback to other mechanisms for submitting data
-     (as they can tell it's disabled/unavailable). Stubbing the API instead fixes these issues.
-    effect: |
-     Users are protected against tracking, and benefit from added attack surface reduction, without causing breakage and having to deal with the
-     usual side effects that appear when the Beacon API is disabled.
     category: "Privacy"
 
   - file: "gecko-prevent-alt-svc-tracking.patch"

@@ -13,6 +13,11 @@ source "${IRONFOX_DOWNLOAD_UTILS}" || return 1
 verify_file_with_env "${IRONFOX_FILE_UTILS}" 'IRONFOX_FILE_UTILS' || return 1
 source "${IRONFOX_FILE_UTILS}" || return 1
 
+# Include patch utilities
+## (For Glean Parser)
+verify_file "${IRONFOX_SCRIPTS}/patches.sh" || return 1
+source "${IRONFOX_SCRIPTS}/patches.sh" || return 1
+
 if [[ -z "${IRONFOX_FROM_SOURCES+x}" ]]; then
   echo_red_text "ERROR: Do not call 'get_sources-if.sh' directly! Instead, use 'get_sources.sh'." >&1
   return 1
@@ -208,6 +213,7 @@ elif [[ "${source_target}" == 'all' ]]; then
   IRONFOX_GET_SOURCE_PIP=1
   IRONFOX_GET_SOURCE_PYTHON=1
   IRONFOX_GET_SOURCE_RUST=1
+  IRONFOX_GET_SOURCE_UNIFFI=1
   IRONFOX_GET_SOURCE_UP_AC=1
   IRONFOX_GET_SOURCE_UV=1
 
@@ -224,7 +230,6 @@ elif [[ "${source_target}" == 'all' ]]; then
     IRONFOX_GET_SOURCE_PREBUILDS=1
   else
     # Otherwise,by default, we can just download the prebuilds directly
-    IRONFOX_GET_SOURCE_UNIFFI=1
     IRONFOX_GET_SOURCE_WASI=1
   fi
 else
@@ -957,29 +962,42 @@ function get_android_sdk() {
     echo_red_text 'Downloading Android SDK (Linux)...'
     download_file "${base_url}/commandlinetools-linux-${IRONFOX_ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${IRONFOX_ANDROID_SDK_VERSION}" "${IRONFOX_ANDROID_SDK_SHA512SUM_LINUX}"
 
-    echo_red_text 'Downloading Android SDK (OS X)...'
-    download_file "${base_url}/commandlinetools-mac-${IRONFOX_ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${IRONFOX_ANDROID_SDK_VERSION}" "${IRONFOX_ANDROID_SDK_SHA512SUM_OSX}"
-  else
-    # Set our platform
-    if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local -r IRONFOX_ANDROID_SDK_PLATFORM='mac'
-    else
-      local -r IRONFOX_ANDROID_SDK_PLATFORM='linux'
-    fi
+    echo_red_text 'Downloading Android SDK (OS X - ARM64)...'
+    download_file "${base_url}/commandlinetools-mac_arm64-${IRONFOX_ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${IRONFOX_ANDROID_SDK_VERSION}" "${IRONFOX_ANDROID_SDK_SHA512SUM_OSX_ARM64}"
 
-    # Set our checksum to verify
+    echo_red_text 'Downloading Android SDK (OS X - x86_64)...'
+    download_file "${base_url}/commandlinetools-mac_x86_64-${IRONFOX_ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${IRONFOX_ANDROID_SDK_VERSION}" "${IRONFOX_ANDROID_SDK_SHA512SUM_OSX_X86_64}"
+  else
+    # Set our platform + checksum to verify
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-      local -r IRONFOX_ANDROID_SDK_SHA512SUM="${IRONFOX_ANDROID_SDK_SHA512SUM_OSX}"
-    else
+      if [[ "${IRONFOX_PLATFORM_ARCH}" == 'arm64' ]]; then
+        local -r IRONFOX_ANDROID_SDK_PLAT='mac_arm64'
+        local -r IRONFOX_ANDROID_SDK_SHA512SUM="${IRONFOX_ANDROID_SDK_SHA512SUM_OSX_ARM64}"
+      elif [[ "${IRONFOX_PLATFORM_ARCH}" == 'x86_64' ]]; then
+        local -r IRONFOX_ANDROID_SDK_PLAT='mac_x86_64'
+        local -r IRONFOX_ANDROID_SDK_SHA512SUM="${IRONFOX_ANDROID_SDK_SHA512SUM_OSX_X86_64}"
+      else
+        echo_red_text "ERROR: Unsupported architecture for Android SDK on OS X: '${IRONFOX_PLATFORM_ARCH}'!"
+        return 1
+      fi
+    elif [[ "${IRONFOX_PLATFORM}" == 'linux' ]]; then
+      local -r IRONFOX_ANDROID_SDK_PLAT='linux'
       local -r IRONFOX_ANDROID_SDK_SHA512SUM="${IRONFOX_ANDROID_SDK_SHA512SUM_LINUX}"
+    else
+      echo_red_text "ERROR: Unsupported platform for Android SDK: '${IRONFOX_PLATFORM}'!"
+      return 1
     fi
 
     echo_red_text "Downloading Android SDK to path: '${IRONFOX_ANDROID_SDK}'..."
-    download_and_extract "${base_url}/commandlinetools-${IRONFOX_ANDROID_SDK_PLATFORM}-${IRONFOX_ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${IRONFOX_ANDROID_SDK_VERSION}" "${IRONFOX_ANDROID_SDK_SHA512SUM}"
+    download_and_extract "${base_url}/commandlinetools-${IRONFOX_ANDROID_SDK_PLAT}-${IRONFOX_ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${IRONFOX_ANDROID_SDK_VERSION}" "${IRONFOX_ANDROID_SDK_SHA512SUM}"
 
     if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
       # Accept Android SDK licenses
-      { "${IRONFOX_YES}" || true; } | "${IRONFOX_ANDROID_SDK}/cmdline-tools/${IRONFOX_ANDROID_SDK_VERSION}/bin/sdkmanager" --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
+      "${IRONFOX_MKDIR}" -p "${IRONFOX_ANDROID_SDK}/licenses"
+      if [[ -f "${IRONFOX_ANDROID_SDK}/licenses/android-sdk-license" ]]; then
+        "${IRONFOX_RM}" "${IRONFOX_ANDROID_SDK}/licenses/android-sdk-license"
+      fi
+      echo -n '24333f8a63b6825ea9c5514f83c2829b004d1fee' > "${IRONFOX_ANDROID_SDK}/licenses/android-sdk-license"
 
       echo_green_text "SUCCESS: Set-up Android SDK at path: '${IRONFOX_ANDROID_SDK}'!"
     fi
@@ -1004,18 +1022,16 @@ function get_android_sdk_build_tools() {
     echo_red_text 'Downloading Android SDK Build Tools (latest) (OS X)...'
     download_file "${base_url}/build-tools_${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION}_macosx.zip" "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM_OSX}"
   else
-    # Set our platform
+    # Set our platform + checksum to verify
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
       local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_PLATFORM='macosx'
-    else
-      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_PLATFORM='linux'
-    fi
-
-    # Set our checksum to verify
-    if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
       local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM_OSX}"
-    else
+    elif [[ "${IRONFOX_PLATFORM}" == 'linux' ]]; then
+      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_PLATFORM='linux'
       local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_SHA512SUM_LINUX}"
+    else
+      echo_red_text "ERROR: Unsupported platform for Android SDK Build Tools: '${IRONFOX_PLATFORM}'!"
+      return 1
     fi
 
     echo_red_text "Downloading Android SDK Build Tools (latest) to path: '${IRONFOX_ANDROID_SDK_BUILD_TOOLS}'..."
@@ -1044,18 +1060,16 @@ function get_android_sdk_build_tools_35() {
     echo_red_text 'Downloading Android SDK Build Tools (35.0.0) (OS X)...'
     download_file "${base_url}/build-tools_r35_macosx.zip" "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}" "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX}"
   else
-    # Set our platform
+    # Set our platform + checksum to verify
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
       local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_PLATFORM='macosx'
-    else
-      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_PLATFORM='linux'
-    fi
-
-    # Set our checksum to verify
-    if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
       local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX}"
-    else
+    elif [[ "${IRONFOX_PLATFORM}" == 'linux' ]]; then
+      local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_PLATFORM='linux'
       local -r IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_LINUX}"
+    else
+      echo_red_text "ERROR: Unsupported platform for Android SDK Build Tools (35.0.0): '${IRONFOX_PLATFORM}'!"
+      return 1
     fi
 
     echo_red_text "Downloading Android SDK Build Tools (35.0.0) to path: '${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}'..."
@@ -1068,51 +1082,24 @@ function get_android_sdk_build_tools_35() {
 
 # Get Android SDK Platform (latest)
 function get_android_sdk_platform() {
-  # Ensure we have `IRONFOX_ANDROID_SDK_PLATFORM_VERSION`
-  verify_env "${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}" 'IRONFOX_ANDROID_SDK_PLATFORM_VERSION' || return 1
-
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
     echo_red_text "ERROR: Unsupported project."
     return 1
-  else
-    # Ensure we have `IRONFOX_ANDROID_SDK`
-    verify_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK' || return 1
+  fi
 
-    if [[ ! -d "${IRONFOX_ANDROID_SDK}" ]]; then
-      echo_red_text "ERROR: You tried to download the Android SDK Platform (latest), but you don't have the Android SDK set-up yet!"
-      return 1
-    fi
+  # Ensure we have android
+  verify_exec "${IRONFOX_ANDROID}" 'IRONFOX_ANDROID' || return 1
 
-    if [[ -d "${IRONFOX_ANDROID_SDK}/platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}" ]]; then
-      echo_red_text "Found existing installation at path: '${IRONFOX_ANDROID_SDK}/platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}'!"
-      echo 'Continuing will remove this installation and related data'
-      read -p "Do you still want to continue? [y/N] " -n 1 -r
-      echo
-      if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
-        # Back-up (in case something goes wrong - ex. checksum validation fails) and remove our directory
-        echo_red_text "Removing path: '${IRONFOX_ANDROID_SDK}/platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}'..."
-        backup_dir "${IRONFOX_ANDROID_SDK}/platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}"
-        echo_green_text "SUCCESS: Removed path: '${IRONFOX_ANDROID_SDK}/platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}'!"
-      else
-        return 0
-      fi
-    fi
+  # Ensure we have `IRONFOX_ANDROID_SDK_PLATFORM`
+  verify_env "${IRONFOX_ANDROID_SDK_PLATFORM}" 'IRONFOX_ANDROID_SDK_PLATFORM' || return 1
 
-    # By default, we know the download hasn't failed...
-    local IRONFOX_DOWNLOAD_FAILED=0
+  # Ensure we have `IRONFOX_ANDROID_SDK_PLATFORM_VERSION`
+  verify_env "${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}" 'IRONFOX_ANDROID_SDK_PLATFORM_VERSION' || return 1
 
-    echo_red_text "Downloading Android SDK Platform (latest) to path: '${IRONFOX_ANDROID_SDK}/platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}'..."
-    "${IRONFOX_ANDROID_SDK}/cmdline-tools/${IRONFOX_ANDROID_SDK_VERSION}/bin/sdkmanager" "platforms;android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}" || local IRONFOX_DOWNLOAD_FAILED=1
-
-    # If the download failed, restore our back-up, clean-up, and exit
-    if [[ "${IRONFOX_DOWNLOAD_FAILED}" == 1 ]]; then
-      echo_red_text 'ERROR: Download failed! Exiting...'
-      restore_dir "${IRONFOX_ANDROID_SDK}/platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}"
-      "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
-      return 1
-    else
-      echo_green_text "SUCCESS: Set-up Android SDK Platform (latest) at path: '${IRONFOX_ANDROID_SDK}/platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}'!"
-    fi
+  echo_red_text "Downloading Android SDK Platform (latest) to path: '${IRONFOX_ANDROID_SDK_PLATFORM}'..."
+  "${IRONFOX_ANDROID}" sdk install "platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}" --no-metrics --sdk="${IRONFOX_ANDROID_SDK}"
+  if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
+    echo_green_text "SUCCESS: Set-up Android SDK Platform (latest) at path: '${IRONFOX_ANDROID_SDK_PLATFORM}'!"
   fi
 }
 
@@ -1124,45 +1111,18 @@ function get_android_sdk_platform_36() {
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
     echo_red_text "ERROR: Unsupported project."
     return 1
-  else
-    # Ensure we have `IRONFOX_ANDROID_SDK`
-    verify_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK' || return 1
+  fi
 
-    if [[ ! -d "${IRONFOX_ANDROID_SDK}" ]]; then
-      echo_red_text "ERROR: You tried to download the Android SDK Platform (36), but you don't have the Android SDK set-up yet!"
-      return 1
-    fi
+  # Ensure we have android
+  verify_exec "${IRONFOX_ANDROID}" 'IRONFOX_ANDROID' || return 1
 
-    if [[ -d "${IRONFOX_ANDROID_SDK}/platforms/android-36" ]]; then
-      echo_red_text "Found existing installation at path: '${IRONFOX_ANDROID_SDK}/platforms/android-36'!"
-      echo 'Continuing will remove this installation and related data'
-      read -p "Do you still want to continue? [y/N] " -n 1 -r
-      echo
-      if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
-        # Back-up (in case something goes wrong - ex. checksum validation fails) and remove our directory
-        echo_red_text "Removing path: '${IRONFOX_ANDROID_SDK}/platforms/android-36'..."
-        backup_dir "${IRONFOX_ANDROID_SDK}/platforms/android-36"
-        echo_green_text "SUCCESS: Removed path: '${IRONFOX_ANDROID_SDK}/platforms/android-36'!"
-      else
-        return 0
-      fi
-    fi
+  # Ensure we have `IRONFOX_ANDROID_SDK_PLATFORM_36`
+  verify_env "${IRONFOX_ANDROID_SDK_PLATFORM}" 'IRONFOX_ANDROID_SDK_PLATFORM' || return 1
 
-    # By default, we know the download hasn't failed...
-    local IRONFOX_DOWNLOAD_FAILED=0
-
-    echo_red_text "Downloading Android SDK Platform (36) to path: '${IRONFOX_ANDROID_SDK}/platforms/android-36'..."
-    "${IRONFOX_ANDROID_SDK}/cmdline-tools/${IRONFOX_ANDROID_SDK_VERSION}/bin/sdkmanager" 'platforms;android-36' || local IRONFOX_DOWNLOAD_FAILED=1
-
-    # If the download failed, restore our back-up, clean-up, and exit
-    if [[ "${IRONFOX_DOWNLOAD_FAILED}" == 1 ]]; then
-      echo_red_text 'ERROR: Download failed! Exiting...'
-      restore_dir "${IRONFOX_ANDROID_SDK}/platforms/android-36"
-      "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp"
-      return 1
-    else
-      echo_green_text "SUCCESS: Set-up Android SDK Platform (36) at path: '${IRONFOX_ANDROID_SDK}/platforms/android-36'!"
-    fi
+  echo_red_text "Downloading Android SDK Platform (36) to path: '${IRONFOX_ANDROID_SDK_PLATFORM_36}'..."
+  "${IRONFOX_ANDROID}" sdk install "platforms/android-36" --no-metrics --sdk="${IRONFOX_ANDROID_SDK}"
+  if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
+    echo_green_text "SUCCESS: Set-up Android SDK Platform (36) at path: '${IRONFOX_ANDROID_SDK_PLATFORM_36}'!"
   fi
 }
 
@@ -1184,18 +1144,16 @@ function get_android_sdk_platform_tools() {
     echo_red_text 'Downloading Android SDK Platform Tools (OS X)...'
     download_file "${base_url}/platform-tools_r${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_VERSION}-darwin.zip" "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX}"
   else
-    # Set our platform
+    # Set our platform + checksum to verify
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
       local -r IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_PLATFORM='darwin'
-    else
-      local -r IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_PLATFORM='linux'
-    fi
-
-    # Set our checksum to verify
-    if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
       local -r IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX}"
-    else
+    elif [[ "${IRONFOX_PLATFORM}" == 'linux' ]]; then
+      local -r IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_PLATFORM='linux'
       local -r IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX}"
+    else
+      echo_red_text "ERROR: Unsupported platform for Android SDK Platform Tools: '${IRONFOX_PLATFORM}'!"
+      return 1
     fi
 
     echo_red_text "Downloading Android SDK Platform Tools to path: '${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}'..."
@@ -1375,88 +1333,72 @@ function get_glean() {
 
 # Get Glean Parser
 function get_glean_parser() {
-  # Ensure we have `IRONFOX_GLEAN_PARSER_VERSION`
-  verify_env "${IRONFOX_GLEAN_PARSER_VERSION}" 'IRONFOX_GLEAN_PARSER_VERSION' || return 1
+  # Ensure we have `IRONFOX_GLEAN_PARSER`
+  verify_env "${IRONFOX_GLEAN_PARSER}" 'IRONFOX_GLEAN_PARSER' || return 1
 
-  # Ensure we have `IRONFOX_GLEAN_PARSER_WHEELS`
-  verify_env "${IRONFOX_GLEAN_PARSER_WHEELS}" 'IRONFOX_GLEAN_PARSER_WHEELS' || return 1
+  # Ensure we have `IRONFOX_GLEAN_PARSER_COMMIT`
+  verify_env "${IRONFOX_GLEAN_PARSER_COMMIT}" 'IRONFOX_GLEAN_PARSER_COMMIT' || return 1
+
+  # Ensure we have `IRONFOX_GLEAN_PARSER_DIR`
+  verify_env "${IRONFOX_GLEAN_PARSER_DIR}" 'IRONFOX_GLEAN_PARSER_DIR' || return 1
 
   # Ensure we have `IRONFOX_GLEAN_PARSER_SHA512SUM`
   verify_env "${IRONFOX_GLEAN_PARSER_SHA512SUM}" 'IRONFOX_GLEAN_PARSER_SHA512SUM' || return 1
 
-  # Ensure we have mkdir
-  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
+  # If all we're doing is updating the checksum, we don't care if the environment is prepared
+  if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]]; then
+    # Ensure we have uv
+    verify_exec "${IRONFOX_UV}" 'IRONFOX_UV' || {
+      echo_red_text "ERROR: Unable to download and install GYP without uv!"
+      return 1
+    }
 
-  # Ensure we have uv
-  verify_exec "${IRONFOX_UV}" 'IRONFOX_UV' || {
-    echo_red_text "ERROR: Unable to download Glean parser without uv!"
-    return 1
-  }
+    # Ensure we have `IRONFOX_PYENV_DIR`
+    verify_dir_with_env "${IRONFOX_PYENV_DIR}" 'IRONFOX_PYENV_DIR' || return 1
 
-  # Ensure we have `IRONFOX_EXTERNAL`
-  verify_env "${IRONFOX_EXTERNAL}" 'IRONFOX_EXTERNAL' || return 1
+    # Ensure we have `IRONFOX_PYENV`
+    verify_file_with_env "${IRONFOX_PYENV}" 'IRONFOX_PYENV' || return 1
 
-  # Ensure we have `IRONFOX_PYENV`
-  verify_file_with_env "${IRONFOX_PYENV}" 'IRONFOX_PYENV' || return 1
+    # Ensure we have `IRONFOX_UV_DIR`
+    verify_dir_with_env "${IRONFOX_UV_DIR}" 'IRONFOX_UV_DIR' || return 1
 
-  # Ensure we have `IRONFOX_UV_DIR`
-  verify_dir_with_env "${IRONFOX_UV_DIR}" 'IRONFOX_UV_DIR' || return 1
+    # By default, we have not sourced the Python environment
+    local pyenv_sourced=0
 
-  # Ensure we have pip
-  verify_exec "${IRONFOX_PIP}" 'IRONFOX_PIP' || {
-    echo_red_text "ERROR: Unable to download Glean parser without pip!"
-    return 1
-  }
-
-  if [[ ! -d "${IRONFOX_PIP_DIR}" ]]; then
-    echo_red_text "ERROR: You tried to download Glean Parser, but you don't have pip set-up yet!"
-    return 1
-  fi
-
-  # Set our Glean Parser wheels directory
-  if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
-    local -r glean_parser_wheels="${IRONFOX_EXTERNAL}/temp/chksm/glean_parser-wheels"
-  else
-    local -r glean_parser_wheels="${IRONFOX_GLEAN_PARSER_WHEELS}"
-  fi
-
-  # By default, we have not sourced the Python environment
-  local pyenv_sourced=0
-
-  if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]] && [[ -d "${IRONFOX_PYENV_DIR}/bin/glean_parser" ]]; then
-    echo_red_text "Glean Parser is already installed at path: '${IRONFOX_PYENV_DIR}/bin/glean_parser'!"
-    read -p "Do you want to re-download it? [y/N] " -n 1 -r
-    echo
-    if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
-      return 0
-    else
-      if [[ "${pyenv_sourced}" != 1 ]]; then
-        source "${IRONFOX_PYENV}" || return 1
-        local pyenv_sourced=1
+    if [[ -f "${IRONFOX_GLEAN_PARSER}" ]]; then
+      echo_red_text "Glean Parser is already installed at path: '${IRONFOX_GLEAN_PARSER}'!"
+      read -p "Do you want to re-download it? [y/N] " -n 1 -r
+      echo
+      if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
+        return 0
+      else
+        if [[ "${pyenv_sourced}" != 1 ]]; then
+          source "${IRONFOX_PYENV}" || return 1
+          local pyenv_sourced=1
+        fi
+        "${IRONFOX_UV}" pip uninstall glean_parser
       fi
-      "${IRONFOX_UV}" pip uninstall glean-parser
-
-      # Back-up (in case something goes wrong - ex. checksum validation fails) and remove our directory
-      backup_dir "${glean_parser_wheels}"
     fi
   fi
 
-  "${IRONFOX_MKDIR}" -p "${glean_parser_wheels}"
-  if [[ "${pyenv_sourced}" != 1 ]]; then
-    source "${IRONFOX_PYENV}" || return 1
-    local pyenv_sourced=1
-  fi
-  echo_red_text 'Downloading Glean Parser wheels...'
-  pushd "${IRONFOX_GLEAN_PARSER_WHEELS}"
-  "${IRONFOX_PIP}" download glean-parser=="${IRONFOX_GLEAN_PARSER_VERSION}"
-  popd
+  echo_red_text "Downloading Glean Parser to path: '${IRONFOX_GLEAN_PARSER_DIR}'..."
+  download_and_extract "https://github.com/mozilla/glean_parser/archive/${IRONFOX_GLEAN_PARSER_COMMIT}.tar.gz" "${IRONFOX_GLEAN_PARSER_DIR}" "${IRONFOX_GLEAN_PARSER_SHA512SUM}"
 
-  # Validate SHA512sum
-  validate_checksum "${IRONFOX_GLEAN_PARSER_SHA512SUM}" "${IRONFOX_GLEAN_PARSER_WHEELS}/glean_parser-${IRONFOX_GLEAN_PARSER_VERSION}-py3-none-any.whl" 'sha512sum'
+  if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
+    if [[ "${pyenv_sourced}" != 1 ]]; then
+      source "${IRONFOX_PYENV}" || return 1
+      local pyenv_sourced=1
+    fi
 
-  # Clean-up
-  if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
-    "${IRONFOX_RM}" -rf "${IRONFOX_EXTERNAL}/temp/chksm"
+    # Patch Glean Parser
+    ## (This is necessary to support installing it without it being checked out as a Git repo)
+    pushd "${IRONFOX_GLEAN_PARSER_DIR}"
+    apply_patch 'glean-parser-version.patch'
+    popd
+
+    echo_red_text "Installing Glean Parser to path: '${IRONFOX_GLEAN_PARSER}'..."
+    "${IRONFOX_UV}" pip install --no-editable --strict "${IRONFOX_GLEAN_PARSER_DIR}"
+    echo_green_text "SUCCESS: Set-up Glean Parser at path: '${IRONFOX_GLEAN_PARSER}'!"
   fi
 }
 
@@ -1486,6 +1428,9 @@ function get_gyp() {
   # Ensure we have `IRONFOX_GYP_COMMIT`
   verify_env "${IRONFOX_GYP_COMMIT}" 'IRONFOX_GYP_COMMIT' || return 1
 
+  # Ensure we have `IRONFOX_GYP_DIR`
+  verify_env "${IRONFOX_GYP_DIR}" 'IRONFOX_GYP_DIR' || return 1
+
   # Ensure we have `IRONFOX_GYP_SHA512SUM`
   verify_env "${IRONFOX_GYP_SHA512SUM}" 'IRONFOX_GYP_SHA512SUM' || return 1
 
@@ -1509,8 +1454,8 @@ function get_gyp() {
     # By default, we have not sourced the Python environment
     local pyenv_sourced=0
 
-    if [[ -d "${IRONFOX_PYENV_DIR}/bin/gyp" ]]; then
-      echo_red_text "GYP is already installed at path: '${IRONFOX_PYENV_DIR}/bin/gyp'!"
+    if [[ -f "${IRONFOX_GYP}" ]]; then
+      echo_red_text "GYP is already installed at path: '${IRONFOX_GYP}'!"
       read -p "Do you want to re-download it? [y/N] " -n 1 -r
       echo
       if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
@@ -1525,17 +1470,17 @@ function get_gyp() {
     fi
   fi
 
-  echo_red_text "Downloading GYP to path: '${IRONFOX_GYP}'..."
-  download_and_extract "https://github.com/nodejs/gyp-next/archive/${IRONFOX_GYP_COMMIT}.tar.gz" "${IRONFOX_GYP}" "${IRONFOX_GYP_SHA512SUM}"
+  echo_red_text "Downloading GYP to path: '${IRONFOX_GYP_DIR}'..."
+  download_and_extract "https://github.com/nodejs/gyp-next/archive/${IRONFOX_GYP_COMMIT}.tar.gz" "${IRONFOX_GYP_DIR}" "${IRONFOX_GYP_SHA512SUM}"
 
   if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
     if [[ "${pyenv_sourced}" != 1 ]]; then
       source "${IRONFOX_PYENV}" || return 1
       local pyenv_sourced=1
     fi
-    echo_red_text "Installing GYP to path: '${IRONFOX_PYENV_DIR}/bin/gyp'..."
-    "${IRONFOX_UV}" pip install --no-editable --strict "${IRONFOX_GYP}"
-    echo_green_text "SUCCESS: Set-up GYP at path: '${IRONFOX_PYENV_DIR}/bin/gyp'!"
+    echo_red_text "Installing GYP to path: '${IRONFOX_GYP}'..."
+    "${IRONFOX_UV}" pip install --no-editable --strict "${IRONFOX_GYP_DIR}"
+    echo_green_text "SUCCESS: Set-up GYP at path: '${IRONFOX_GYP}'!"
   fi
 }
 
@@ -2341,7 +2286,7 @@ function get_s3cmd() {
     # By default, we have not sourced the Python environment
     local pyenv_sourced=0
 
-    if [[ -d "${IRONFOX_S3CMD}" ]]; then
+    if [[ -f "${IRONFOX_S3CMD}" ]]; then
       echo_red_text "s3cmd is already installed at path: '${IRONFOX_S3CMD}'!"
       read -p "Do you want to re-download it? [y/N] " -n 1 -r
       echo
@@ -2540,37 +2485,21 @@ function get_shfmt() {
   fi
 }
 
-# Get Tor's no-op UniFFi binding generator
+# Get uniffi-rs
 function get_uniffi() {
-  # Ensure we have `IRONFOX_PREBUILDS_COMMIT`
-  verify_env "${IRONFOX_PREBUILDS_COMMIT}" 'IRONFOX_PREBUILDS_COMMIT' || return 1
+  # Ensure we have `IRONFOX_UNIFFI_COMMIT`
+  verify_env "${IRONFOX_UNIFFI_COMMIT}" 'IRONFOX_UNIFFI_COMMIT' || return 1
 
-  # Ensure we have `IRONFOX_UNIFFI`
-  verify_env "${IRONFOX_UNIFFI}" 'IRONFOX_UNIFFI' || return 1
+  # Ensure we have `IRONFOX_UNIFFI_DIR`
+  verify_env "${IRONFOX_UNIFFI_DIR}" 'IRONFOX_UNIFFI_DIR' || return 1
 
-  # Ensure we have `IRONFOX_UNIFFI_IRONFOX_REVISION`
-  verify_env "${IRONFOX_UNIFFI_IRONFOX_REVISION}" 'IRONFOX_UNIFFI_IRONFOX_REVISION' || return 1
+  # Ensure we have `IRONFOX_UNIFFI_SHA512SUM`
+  verify_env "${IRONFOX_UNIFFI_SHA512SUM}" 'IRONFOX_UNIFFI_SHA512SUM' || return 1
 
-  # Ensure we have `IRONFOX_UNIFFI_VERSION`
-  verify_env "${IRONFOX_UNIFFI_VERSION}" 'IRONFOX_UNIFFI_VERSION' || return 1
-
-  # Base download URL
-  local -r base_url="https://gitlab.com/ironfox-oss/prebuilds/-/raw/${IRONFOX_PREBUILDS_COMMIT}/uniffi-bindgen/${IRONFOX_UNIFFI_VERSION}"
-
-  # Get uniffi-bindgen for Linux
-  if [[ "${IRONFOX_PLATFORM}" == 'linux' ]] || [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
-    echo_red_text 'Downloading prebuilt uniffi-bindgen (Linux)...'
-    download_and_extract "${base_url}/linux/uniffi-bindgen-${IRONFOX_UNIFFI_VERSION}-${IRONFOX_UNIFFI_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_UNIFFI}" "${IRONFOX_UNIFFI_LINUX_IRONFOX_SHA512SUM}"
-  fi
-
-  # Get uniffi-bindgen for OS X
-  if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]] || [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
-    echo_red_text 'Downloading prebuilt uniffi-bindgen (OS X)...'
-    download_and_extract "${base_url}/osx/uniffi-bindgen-${IRONFOX_UNIFFI_VERSION}-${IRONFOX_UNIFFI_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_UNIFFI}" "${IRONFOX_UNIFFI_OSX_IRONFOX_SHA512SUM}"
-  fi
-
+  echo_red_text "Downloading uniffi-rs to path: '${IRONFOX_UNIFFI}'..."
+  download_and_extract "https://github.com/mozilla/uniffi-rs/archive/${IRONFOX_UNIFFI_COMMIT}.tar.gz" "${IRONFOX_UNIFFI_DIR}" "${IRONFOX_UNIFFI_SHA512SUM}"
   if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
-    echo_green_text "SUCCESS: Set-up the prebuilt uniffi-bindgen at path: '${IRONFOX_UNIFFI}'!"
+    echo_green_text "SUCCESS: Set-up uniffi-rs at path: '${IRONFOX_UNIFFI_DIR}'!"
   fi
 }
 

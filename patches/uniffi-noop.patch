@@ -1,0 +1,1022 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Sun, 11 Oct 2026 05:46:46 +0000
+Subject: [PATCH] uniffi-rs - No-op uniffi-bindgen
+
+No-ops the Kotlin uniffi binding generator, for use with Glean (so that we can stub its functionality).
+
+Adapted from the Tor Project: https://gitlab.torproject.org/tpo/applications/uniffi-rs
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/uniffi_bindgen/src/bindings/kotlin/gen_kotlin/mod.rs b/uniffi_bindgen/src/bindings/kotlin/gen_kotlin/mod.rs
+index bd64ced5..4b08c7a6 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/gen_kotlin/mod.rs
++++ b/uniffi_bindgen/src/bindings/kotlin/gen_kotlin/mod.rs
+@@ -1062,6 +1062,79 @@ mod filters {
+         let spaces = usize::try_from(*spaces).unwrap_or_default();
+         Ok(textwrap::indent(&wrapped, &" ".repeat(spaces)))
+     }
++
++    /// Get a Kotlin default value for each supported type.
++    fn default_value_impl(
++        type_variant: &impl AsType,
++        ci: &ComponentInterface,
++        config: &Config,
++    ) -> Result<String, askama::Error> {
++        let type_variant = type_variant.as_type();
++
++        match type_variant {
++            Type::UInt8 => Ok("0.toUByte()".to_string()),
++            Type::Int8 => Ok("0.toByte()".to_string()),
++            Type::UInt16 => Ok("0.toUShort()".to_string()),
++            Type::Int16 => Ok("0.toShort()".to_string()),
++            Type::UInt32 => Ok("0u".to_string()),
++            Type::Int32 => Ok("0".to_string()),
++            Type::UInt64 => Ok("0uL".to_string()),
++            Type::Int64 => Ok("0L".to_string()),
++
++            Type::Float32 => Ok("0f".to_string()),
++            Type::Float64 => Ok("0.0".to_string()),
++            Type::Boolean => Ok("false".to_string()),
++            Type::String => Ok("\"\"".to_string()),
++            Type::Bytes => Ok("byteArrayOf()".to_string()),
++            Type::Timestamp => Ok("Instant.EPOCH".to_string()),
++            Type::Duration => Ok("Duration.ZERO".to_string()),
++
++            Type::Enum { name, .. } => Ok(format!(
++                "{}.__NOOP",
++                enum_::EnumCodeType::new(name).type_label(ci)
++            )),
++            Type::CallbackInterface { name, .. } => Ok(format!(
++                "{}Impl()",
++                callback_interface::CallbackInterfaceCodeType::new(name).type_label(ci)
++            )),
++            Type::Object { name, imp, .. } => {
++                let ct = object::ObjectCodeType::new(name, imp);
++                if imp.has_callback_interface() {
++                    Ok(format!("{}Impl()", ct.type_label(ci)))
++                } else {
++                    Ok(format!("{}()", ct.type_label(ci)))
++                }
++            }
++
++            Type::Optional { .. } => Ok("null".to_string()),
++            Type::Sequence { .. } => Ok("emptyList()".to_string()),
++            Type::Map { .. } => Ok("emptyMap()".to_string()),
++
++            Type::Custom { name, builtin, .. } => {
++                let default_builtin_value = default_value_impl(&builtin, ci, config)?;
++
++                match config.custom_types.get(&name) {
++                    Some(custom_type_config) => {
++                        Ok(custom_type_config.lift(&default_builtin_value))
++                    }
++                    None => Ok(default_builtin_value),
++                }
++            }
++
++            other => Ok(format!("{}()", other.as_codetype().type_label(ci))),
++        }
++    }
++
++    /// Askama filter used by the Kotlin templates.
++    #[askama::filter_fn]
++    pub fn default_value(
++        type_variant: &impl AsType,
++        _: &dyn askama::Values,
++        ci: &ComponentInterface,
++        config: &Config,
++    ) -> Result<String, askama::Error> {
++        default_value_impl(type_variant, ci, config)
++    }
+ }
+ 
+ #[cfg(test)]
+diff --git a/uniffi_bindgen/src/bindings/kotlin/templates/CallbackInterfaceTemplate.kt b/uniffi_bindgen/src/bindings/kotlin/templates/CallbackInterfaceTemplate.kt
+index 87b5eac3..77cdce61 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/templates/CallbackInterfaceTemplate.kt
++++ b/uniffi_bindgen/src/bindings/kotlin/templates/CallbackInterfaceTemplate.kt
+@@ -7,11 +7,17 @@
+ {%- let vtable_methods = cbi.vtable_methods() %}
+ 
+ {% include "Interface.kt" %}
+-{% include "CallbackInterfaceImpl.kt" %}
+ 
+ /**
+  * The ffiConverter which transforms the Callbacks in to handles to pass to Rust.
+  *
+  * @suppress
+  */
+-public object {{ ffi_converter_name }}: FfiConverterCallbackInterface<{{ interface_name }}>()
++open class {{ interface_name }}Impl(): {{ interface_name }} {
++    {% for meth in methods -%}
++    {%- call kt::func_decl("override", meth, 4) %}
++    {% endcall %}
++    {% endfor %}
++
++    companion object
++}
+diff --git a/uniffi_bindgen/src/bindings/kotlin/templates/CustomTypeTemplate.kt b/uniffi_bindgen/src/bindings/kotlin/templates/CustomTypeTemplate.kt
+index 57575781..e1d2941c 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/templates/CustomTypeTemplate.kt
++++ b/uniffi_bindgen/src/bindings/kotlin/templates/CustomTypeTemplate.kt
+@@ -4,12 +4,9 @@
+ {#- Define the type using typealiases to the builtin #}
+ {%- call kt::docstring_value(docstring, 0) %}{% endcall %}
+ public typealias {{ type_name }} = {{ builtin|type_name(ci) }}
+-public typealias {{ ffi_converter_name }} = {{ builtin|ffi_converter_name }}
+ 
+ {%- when Some(config) %}
+ 
+-{%- let ffi_type_name=builtin|ffi_type|ref|ffi_type_name_by_value(ci) %}
+-
+ {# When the config specifies a different type name, create a typealias for it #}
+ {%- match config.type_name %}
+ {%- when Some(concrete_type_name) %}
+@@ -26,33 +23,4 @@ public typealias {{ type_name }} = {{ concrete_type_name }}
+ {%- else %}
+ {%- endmatch %}
+ 
+-/**
+- * @suppress
+- */
+-public object {{ ffi_converter_name }}: FfiConverter<{{ type_name }}, {{ ffi_type_name }}> {
+-    override fun lift(value: {{ ffi_type_name }}): {{ type_name }} {
+-        val builtinValue = {{ builtin|lift_fn }}(value)
+-        return {{ config.lift("builtinValue") }}
+-    }
+-
+-    override fun lower(value: {{ type_name }}): {{ ffi_type_name }} {
+-        val builtinValue = {{ config.lower("value") }}
+-        return {{ builtin|lower_fn }}(builtinValue)
+-    }
+-
+-    override fun read(buf: ByteBuffer): {{ type_name }} {
+-        val builtinValue = {{ builtin|read_fn }}(buf)
+-        return {{ config.lift("builtinValue") }}
+-    }
+-
+-    override fun allocationSize(value: {{ type_name }}): ULong {
+-        val builtinValue = {{ config.lower("value") }}
+-        return {{ builtin|allocation_size_fn }}(builtinValue)
+-    }
+-
+-    override fun write(value: {{ type_name }}, buf: ByteBuffer) {
+-        val builtinValue = {{ config.lower("value") }}
+-        {{ builtin|write_fn }}(builtinValue, buf)
+-    }
+-}
+ {%- endmatch %}
+diff --git a/uniffi_bindgen/src/bindings/kotlin/templates/EnumTemplate.kt b/uniffi_bindgen/src/bindings/kotlin/templates/EnumTemplate.kt
+index 287a5b43..d0aa507b 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/templates/EnumTemplate.kt
++++ b/uniffi_bindgen/src/bindings/kotlin/templates/EnumTemplate.kt
+@@ -13,8 +13,9 @@
+ enum class {{ type_name }} {
+     {% for variant in e.variants() -%}
+     {%- call kt::docstring(variant, 4) %}{% endcall %}
+-    {{ variant|variant_name }}{% if loop.last %};{% else %},{% endif %}
++    {{ variant|variant_name }},
+     {%- endfor %}
++    __NOOP;
+ 
+     {% for meth in e.methods() -%}
+     {%- call kt::func_decl("", meth, 4) %}{% endcall %}
+@@ -29,8 +30,9 @@ enum class {{ type_name }} {
+ enum class {{ type_name }}(val value: {{ variant_discr_type|type_name(ci) }}) {
+     {% for variant in e.variants() -%}
+     {%- call kt::docstring(variant, 4) %}{% endcall %}
+-    {{ variant|variant_name }}({{ e|variant_discr_literal(loop.index0) }}){% if loop.last %};{% else %},{% endif %}
++    {{ variant|variant_name }}({{ e|variant_discr_literal(loop.index0) }}),
+     {%- endfor %}
++    __NOOP({{ variant_discr_type|default_value(ci, config) }});
+ 
+     {% for meth in e.methods() -%}
+     {%- call kt::func_decl("", meth, 4) %}{% endcall %}
+@@ -43,27 +45,6 @@ enum class {{ type_name }}(val value: {{ variant_discr_type|type_name(ci) }}) {
+ }
+ {% endmatch %}
+ 
+-/**
+- * @suppress
+- */
+-public object {{ e|ffi_converter_name }}: FfiConverterRustBuffer<{{ type_name }}> {
+-    override fun read(buf: ByteBuffer) = try {
+-        {% if config.use_enum_entries() %}
+-        {{ type_name }}.entries[buf.getInt() - 1]
+-        {% else -%}
+-        {{ type_name }}.values()[buf.getInt() - 1]
+-        {%- endif %}
+-    } catch (e: IndexOutOfBoundsException) {
+-        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+-    }
+-
+-    override fun allocationSize(value: {{ type_name }}) = 4UL
+-
+-    override fun write(value: {{ type_name }}, buf: ByteBuffer) {
+-        buf.putInt(value.ordinal + 1)
+-    }
+-}
+-
+ {% else %}
+ 
+ {%- call kt::docstring(e, 0) %}{% endcall %}
+@@ -80,7 +61,7 @@ sealed class {{ type_name }}{% if contains_object_references %}: Disposable {% e
+     data class {{ variant|type_name(ci) }}(
+         {%- for field in variant.fields() -%}
+         {%- call kt::docstring(field, 8) %}{% endcall %}
+-        val {% call kt::field_name(field, loop.index) %}{% endcall %}: {{ field|qualified_type_name(ci, config) }}
++        val {% call kt::field_name(field, loop.index) %}{% endcall %}: {{ field|qualified_type_name(ci, config) }} = {{ field|default_value(ci, config) }}
+         {%- if let Some(default) = field.default_value() %} = {{ default|render_default(field, ci) }} {% endif %}
+         {%- if loop.last %}{% else %}, {% endif %}
+         {%- endfor -%}
+@@ -96,22 +77,10 @@ sealed class {{ type_name }}{% if contains_object_references %}: Disposable {% e
+     }
+     {%- endif %}
+     {% endfor %}
++    object __NOOP : {{ type_name }}()
+ 
+     {% if contains_object_references %}
+-    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+-    override fun destroy() {
+-        when(this) {
+-            {%- for variant in e.variants() %}
+-            is {{ type_name }}.{{ variant|type_name(ci) }} -> {
+-                {%- if variant.has_fields() %}
+-                {% call kt::destroy_fields(variant) %}{% endcall %}
+-                {% else -%}
+-                // Nothing to destroy
+-                {%- endif %}
+-            }
+-            {%- endfor %}
+-        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+-    }
++    override fun destroy() {}
+     {% endif %}
+ 
+     {# We also need to put methods on the object to support variants with no data.
+@@ -125,50 +94,4 @@ sealed class {{ type_name }}{% if contains_object_references %}: Disposable {% e
+     companion object
+ }
+ 
+-/**
+- * @suppress
+- */
+-public object {{ e|ffi_converter_name }} : FfiConverterRustBuffer<{{ type_name }}>{
+-    override fun read(buf: ByteBuffer): {{ type_name }} {
+-        return when(buf.getInt()) {
+-            {%- for variant in e.variants() %}
+-            {{ loop.index }} -> {{ type_name }}.{{ variant|type_name(ci) }}{% if variant.has_fields() %}(
+-                {% for field in variant.fields() -%}
+-                {{ field|read_fn }}(buf),
+-                {% endfor -%}
+-            ){%- endif -%}
+-            {%- endfor %}
+-            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+-        }
+-    }
+-
+-    override fun allocationSize(value: {{ type_name }}): ULong = when(value) {
+-        {%- for variant in e.variants() %}
+-        is {{ type_name }}.{{ variant|type_name(ci) }} -> {
+-            // Add the size for the Int that specifies the variant plus the size needed for all fields
+-            (
+-                4UL
+-                {%- for field in variant.fields() %}
+-                + {{ field|allocation_size_fn }}(value.{%- call kt::field_name(field, loop.index) %}{% endcall -%})
+-                {%- endfor %}
+-            )
+-        }
+-        {%- endfor %}
+-    }
+-
+-    override fun write(value: {{ type_name }}, buf: ByteBuffer) {
+-        when(value) {
+-            {%- for variant in e.variants() %}
+-            is {{ type_name }}.{{ variant|type_name(ci) }} -> {
+-                buf.putInt({{ loop.index }})
+-                {%- for field in variant.fields() %}
+-                {{ field|write_fn }}(value.{%- call kt::field_name(field, loop.index) %}{% endcall -%}, buf)
+-                {%- endfor %}
+-                Unit
+-            }
+-            {%- endfor %}
+-        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+-    }
+-}
+-
+ {% endif %}
+diff --git a/uniffi_bindgen/src/bindings/kotlin/templates/ErrorTemplate.kt b/uniffi_bindgen/src/bindings/kotlin/templates/ErrorTemplate.kt
+index 57aec8e5..4909d6c3 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/templates/ErrorTemplate.kt
++++ b/uniffi_bindgen/src/bindings/kotlin/templates/ErrorTemplate.kt
+@@ -1,22 +1,17 @@
+ {%- let type_name = type_|type_name(ci) %}
+-{%- let ffi_converter_name = type_|ffi_converter_name %}
+ {%- let canonical_type_name = type_|canonical_name %}
+ 
+ {% if e.is_flat() %}
+ {%- call kt::docstring(e, 0) %}{% endcall %}
+-sealed class {{ type_name }}(message: String): kotlin.Exception(message){% if contains_object_references %}, Disposable {% endif %}
++sealed class {{ type_name }}(message: String = ""): kotlin.Exception(message){% if contains_object_references %}, Disposable {% endif %}
+ {%- let uniffi_trait_methods = e.uniffi_trait_methods() -%}
+ {%- if uniffi_trait_methods.ord_cmp.is_some() -%}
+ {% if contains_object_references %}, {% else %}, {% endif %}Comparable<{{ type_name }}>
+ {%- endif %} {
+         {% for variant in e.variants() -%}
+         {%- call kt::docstring(variant, 4) %}{% endcall %}
+-        class {{ variant|error_variant_name }}(message: String) : {{ type_name }}(message)
++        class {{ variant|error_variant_name }}(message: String = "") : {{ type_name }}(message)
+         {% endfor %}
+-
+-    companion object ErrorHandler : UniffiRustCallStatusErrorHandler<{{ type_name }}> {
+-        override fun lift(error_buf: RustBuffer.ByValue): {{ type_name }} = {{ ffi_converter_name }}.lift(error_buf)
+-    }
+ }
+ {%- else %}
+ {%- call kt::docstring(e, 0) %}{% endcall %}
+@@ -31,7 +26,7 @@ sealed class {{ type_name }}: kotlin.Exception(){% if contains_object_references
+     class {{ variant_name }}(
+         {% for field in variant.fields() -%}
+         {%- call kt::docstring(field, 8) %}{% endcall %}
+-        val {% call kt::field_name(field, loop.index) %}{% endcall %}: {{ field|type_name(ci) }}{% if loop.last %}{% else %}, {% endif %}
++        val {% call kt::field_name(field, loop.index) %}{% endcall %}: {{ field|type_name(ci) }} = {{ field|default_value(ci, config) }}{% if loop.last %}{% else %}, {% endif %}
+         {% endfor -%}
+     ) : {{ type_name }}() {
+         override val message
+@@ -45,86 +40,8 @@ sealed class {{ type_name }}: kotlin.Exception(){% if contains_object_references
+ 
+     {%- call kt::uniffi_trait_impls(uniffi_trait_methods) %}{% endcall %}
+ 
+-    companion object ErrorHandler : UniffiRustCallStatusErrorHandler<{{ type_name }}> {
+-        override fun lift(error_buf: RustBuffer.ByValue): {{ type_name }} = {{ ffi_converter_name }}.lift(error_buf)
+-    }
+-
+     {% if contains_object_references %}
+-    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+-    override fun destroy() {
+-        when(this) {
+-            {%- for variant in e.variants() %}
+-            is {{ type_name }}.{{ variant|error_variant_name }} -> {
+-                {%- if variant.has_fields() %}
+-                {% call kt::destroy_fields(variant) %}{% endcall %}
+-                {% else -%}
+-                // Nothing to destroy
+-                {%- endif %}
+-            }
+-            {%- endfor %}
+-        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+-    }
++    override fun destroy() {}
+     {% endif %}
+ }
+ {%- endif %}
+-
+-/**
+- * @suppress
+- */
+-public object {{ e|ffi_converter_name }} : FfiConverterRustBuffer<{{ type_name }}> {
+-    override fun read(buf: ByteBuffer): {{ type_name }} {
+-        {% if e.is_flat() %}
+-            return when(buf.getInt()) {
+-            {%- for variant in e.variants() %}
+-            {{ loop.index }} -> {{ type_name }}.{{ variant|error_variant_name }}({{ Type::String.borrow()|read_fn }}(buf))
+-            {%- endfor %}
+-            else -> throw RuntimeException("invalid error enum value, something is very wrong!!")
+-        }
+-        {% else %}
+-
+-        return when(buf.getInt()) {
+-            {%- for variant in e.variants() %}
+-            {{ loop.index }} -> {{ type_name }}.{{ variant|error_variant_name }}({% if variant.has_fields() %}
+-                {% for field in variant.fields() -%}
+-                {{ field|read_fn }}(buf),
+-                {% endfor -%}
+-            {%- endif -%})
+-            {%- endfor %}
+-            else -> throw RuntimeException("invalid error enum value, something is very wrong!!")
+-        }
+-        {%- endif %}
+-    }
+-
+-    override fun allocationSize(value: {{ type_name }}): ULong {
+-        {%- if e.is_flat() %}
+-        return 4UL
+-        {%- else %}
+-        return when(value) {
+-            {%- for variant in e.variants() %}
+-            is {{ type_name }}.{{ variant|error_variant_name }} -> (
+-                // Add the size for the Int that specifies the variant plus the size needed for all fields
+-                4UL
+-                {%- for field in variant.fields() %}
+-                + {{ field|allocation_size_fn }}(value.{% call kt::field_name(field, loop.index) %}{% endcall %})
+-                {%- endfor %}
+-            )
+-            {%- endfor %}
+-        }
+-        {%- endif %}
+-    }
+-
+-    override fun write(value: {{ type_name }}, buf: ByteBuffer) {
+-        when(value) {
+-            {%- for variant in e.variants() %}
+-            is {{ type_name }}.{{ variant|error_variant_name }} -> {
+-                buf.putInt({{ loop.index }})
+-                {%- for field in variant.fields() %}
+-                {{ field|write_fn }}(value.{% call kt::field_name(field, loop.index) %}{% endcall %}, buf)
+-                {%- endfor %}
+-                Unit
+-            }
+-            {%- endfor %}
+-        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+-    }
+-
+-}
+diff --git a/uniffi_bindgen/src/bindings/kotlin/templates/ExternalTypeTemplate.kt b/uniffi_bindgen/src/bindings/kotlin/templates/ExternalTypeTemplate.kt
+index 3203d70d..540366ba 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/templates/ExternalTypeTemplate.kt
++++ b/uniffi_bindgen/src/bindings/kotlin/templates/ExternalTypeTemplate.kt
+@@ -1,13 +1,9 @@
+ {%- let namespace = ci.namespace_for_module_path(module_path)? %}
+ {%- let package_name=self.external_type_package_name(module_path, namespace) %}
+ {%- let fully_qualified_type_name = "{}.{}"|format(package_name, name|class_name(ci)) %}
+-{%- let fully_qualified_ffi_converter_name = "{}.FfiConverterType{}"|format(package_name, name) %}
+-{%- let fully_qualified_rustbuffer_name = "{}.RustBuffer"|format(package_name) %}
+-{%- let local_rustbuffer_name = "RustBuffer{}"|format(name) %}
++{%- let local_rustbuffer_name = "{}" %}
+ 
+ {{- self.add_import(fully_qualified_type_name) }}
+-{{- self.add_import(fully_qualified_ffi_converter_name) }}
+-{{ self.add_import_as(fully_qualified_rustbuffer_name, local_rustbuffer_name) }}
+ 
+ {%- if ci.is_name_used_as_error(name) %}
+ {%- let class_name = name|class_name(ci) %}
+diff --git a/uniffi_bindgen/src/bindings/kotlin/templates/macros.kt b/uniffi_bindgen/src/bindings/kotlin/templates/macros.kt
+index c657d62d..d30bf384 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/templates/macros.kt
++++ b/uniffi_bindgen/src/bindings/kotlin/templates/macros.kt
+@@ -47,25 +47,16 @@
+     @Throws({{ throwable|type_name(ci) }}::class)
+     {%-     else -%}
+     {%- endmatch -%}
+-    {%- if callable.is_async() %}
+-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+-    {{ func_decl }} suspend fun {{ callable.name()|fn_name }}(
+-        {%- call arg_list(callable, callable.self_type().is_none()) %}{% endcall -%}
+-    ){% match callable.return_type() %}{% when Some(return_type) %} : {{ return_type|type_name(ci) }}{% when None %}{%- endmatch %} {
+-        return {% call call_async(callable) %}{% endcall %}
+-    }
+-    {%- else -%}
+-    {{ func_decl }} fun {{ callable.name()|fn_name }}(
++    {{ func_decl }} {%- if callable.is_async() %} suspend {% endif %} fun {{ callable.name()|fn_name }}(
+         {%- call arg_list(callable, callable.self_type().is_none()) %}{% endcall -%}
+     ){%- match callable.return_type() -%}
+     {%-         when Some(return_type) -%}
+         : {{ return_type|type_name(ci) }} {
+-            return {{ return_type|lift_fn }}({% call to_ffi_call(callable) %}{% endcall %})
++            return {{ return_type|default_value(ci, config) }}
+     }
+     {%-         when None %}
+-        = {% call to_ffi_call(callable) %}{% endcall %}
++        {}
+     {%-     endmatch %}
+-    {% endif %}
+ {% endmacro %}
+ 
+ {%- macro call_async(callable) -%}
+@@ -190,20 +181,20 @@ v{{- field_num -}}
+ {%- if let Some(fmt) = uniffi_trait_methods.display_fmt.or(uniffi_trait_methods.debug_fmt.clone()) %}
+     // The local Rust `Display`/`Debug` implementation.
+     override fun toString(): String {
+-        return {{ fmt.return_type().unwrap()|lift_fn }}({% call to_ffi_call(fmt) %}{% endcall %})
++        return ""
+     }
+ {%- endif %}
+ {%- if let Some(eq) = uniffi_trait_methods.eq_eq %}
+     // The local Rust `Eq` implementation - only `eq` is used.
+     override fun equals(other: Any?): Boolean {
+         if (other !is {{ eq.object_name()|class_name(ci) }}) return false
+-        return {{ eq.return_type().unwrap()|lift_fn }}({% call to_ffi_call(eq) %}{% endcall %})
++        return true
+     }
+ {%- endif %}
+ {%- if let Some(hash) = uniffi_trait_methods.hash_hash %}
+     // The local Rust `Hash` implementation
+     override fun hashCode(): Int {
+-        return {{ hash.return_type().unwrap()|lift_fn }}({%- call to_ffi_call(hash) %}{% endcall %}).toInt()
++        return 0xdeadc0de.toInt()
+     }
+ {%- endif %}
+ {%- if let Some(cmp) = uniffi_trait_methods.ord_cmp %}
+diff --git a/uniffi_bindgen/src/bindings/kotlin/templates/ObjectTemplate.kt b/uniffi_bindgen/src/bindings/kotlin/templates/ObjectTemplate.kt
+index 08e54acc..fd2b9c01 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/templates/ObjectTemplate.kt
++++ b/uniffi_bindgen/src/bindings/kotlin/templates/ObjectTemplate.kt
+@@ -1,3 +1,4 @@
++{#
+ // This template implements a class for working with a Rust struct via a handle
+ // to the live Rust struct on the other side of the FFI.
+ //
+@@ -92,7 +93,7 @@
+ // [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+ //
+ 
+-{{ self.add_import("java.util.concurrent.atomic.AtomicBoolean") }}
++#}
+ 
+ {%- let obj = ci.get_object_definition(name).unwrap() %}
+ {%- let interface_name = self::object_interface_name(ci, obj) %}
+@@ -101,7 +102,6 @@
+ {%- let uniffi_trait_methods = obj.uniffi_trait_methods() %}
+ {%- let interface_docstring = obj.docstring() %}
+ {%- let is_error = ci.is_name_used_as_error(name) %}
+-{%- let ffi_converter_name = obj|ffi_converter_name %}
+ 
+ {%- include "Interface.kt" %}
+ 
+@@ -109,7 +109,17 @@
+ {% if (is_error) %}
+ open class {{ impl_class_name }} : kotlin.Exception, Disposable, AutoCloseable, {{ interface_name }} {
+ {% else -%}
+-open class {{ impl_class_name }}: Disposable, AutoCloseable, {{ interface_name }}
++open class {{ impl_class_name }} (
++{%- match obj.primary_constructor() %}
++{%- when Some(cons) %}
++{%- for arg in cons.arguments() -%}
++private val {{ arg.name()|var_name }}: {{ arg|type_name(ci) }} = {{ arg|default_value(ci, config) }}
++    {%-     if !loop.last %}, {% endif -%}
++{%- endfor %}
++{%- when None %}
++
++{%- endmatch %}
++): AutoCloseable, Disposable, {{ interface_name }}
+ {%- for t in obj.trait_impls() %}
+ , {{ self::trait_interface_name(ci, t.trait_ty)? }}
+ {% endfor %}
+@@ -119,115 +129,13 @@ open class {{ impl_class_name }}: Disposable, AutoCloseable, {{ interface_name }
+ {
+ {%- endif %}
+ 
+-    @Suppress("UNUSED_PARAMETER")
+-    /**
+-     * @suppress
+-     */
+-    constructor(withHandle: UniffiWithHandle, handle: Long) {
+-        this.handle = handle
+-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(handle))
+-    }
+-
+-    /**
+-     * @suppress
+-     *
+-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+-     * attempt to actually use an object constructed this way will fail as there is no
+-     * connected Rust object.
+-     */
+-    @Suppress("UNUSED_PARAMETER")
+-    constructor(noHandle: NoHandle) {
+-        this.handle = 0
+-        this.cleanable = null
+-    }
+-
+-    {%- if let Some(cons) = obj.primary_constructor() %}
+-    {%- call kt::docstring(cons, 4) %}{% endcall %}
+-    constructor({% call kt::arg_list(cons, true) -%}{% endcall -%}) :
+-        this(UniffiWithHandle, {% call kt::to_ffi_call(cons) %}{% endcall %})
+-    {%- endif %}
+-
+-    protected val handle: Long
+-    protected val cleanable: UniffiCleaner.Cleanable?
+-
+-    private val wasDestroyed = AtomicBoolean(false)
+-    private val callCounter = AtomicLong(1)
+-
+-    /**
+-     * Whether the current object has been destroyed and its reference is gone in the Rust side.
+-     */
+-    val uniffiIsDestroyed: Boolean get() = wasDestroyed.get()
+-
+-    override fun destroy() {
+-        // Only allow a single call to this method.
+-        // TODO: maybe we should log a warning if called more than once?
+-        if (this.wasDestroyed.compareAndSet(false, true)) {
+-            // This decrement always matches the initial count of 1 given at creation time.
+-            if (this.callCounter.decrementAndGet() == 0L) {
+-                cleanable?.clean()
+-            }
+-        }
+-    }
+-
+-    @Synchronized
+-    override fun close() {
+-        this.destroy()
+-    }
+-
+-    internal inline fun <R> callWithHandle(block: (handle: Long) -> R): R {
+-        // Check and increment the call counter, to keep the object alive.
+-        // This needs a compare-and-set retry loop in case of concurrent updates.
+-        do {
+-            val c = this.callCounter.get()
+-            if (c == 0L) {
+-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+-            }
+-            if (c == Long.MAX_VALUE) {
+-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+-            }
+-        } while (! this.callCounter.compareAndSet(c, c + 1L))
+-        // Now we can safely do the method call without the handle being freed concurrently.
+-        try {
+-            return block(this.uniffiCloneHandle())
+-        } finally {
+-            // This decrement always matches the increment we performed above.
+-            if (this.callCounter.decrementAndGet() == 0L) {
+-                cleanable?.clean()
+-            }
+-        }
+-    }
+-
+-    // Use a static inner class instead of a closure so as not to accidentally
+-    // capture `this` as part of the cleanable's action.
+-    private class UniffiCleanAction(private val handle: Long) : Runnable {
+-        override fun run() {
+-            if (handle == 0.toLong()) {
+-                // Fake object created with `NoHandle`, don't try to free.
+-                return;
+-            }
+-            uniffiRustCall { status ->
+-                UniffiLib.{{ obj.ffi_object_free().name() }}(handle, status)
+-            }
+-        }
+-    }
+-
+-    /**
+-     * @suppress
+-     */
+-    fun uniffiCloneHandle(): Long {
+-        if (handle == 0.toLong()) {
+-            throw InternalException("uniffiCloneHandle() called on NoHandle object");
+-        }
+-        return uniffiRustCall() { status ->
+-            UniffiLib.{{ obj.ffi_object_clone().name() }}(handle, status)
+-        }
+-    }
+-
+     {% for meth in methods -%}
+     {%- call kt::func_decl("override", meth, 4) %}{% endcall %}
+     {% endfor %}
+ 
+     {% call kt::uniffi_trait_impls(uniffi_trait_methods) %}{% endcall %}
++    override fun close() {}
++    override fun destroy() {}
+ 
+     {# XXX - "companion object" confusion? How to have alternate constructors *and* be an error? #}
+     {% if !obj.alternate_constructors().is_empty() -%}
+@@ -236,17 +144,6 @@ open class {{ impl_class_name }}: Disposable, AutoCloseable, {{ interface_name }
+         {% call kt::func_decl("", cons, 4) %}{% endcall %}
+         {% endfor %}
+     }
+-    {% else if is_error %}
+-    companion object ErrorHandler : UniffiRustCallStatusErrorHandler<{{ impl_class_name }}> {
+-        override fun lift(error_buf: RustBuffer.ByValue): {{ impl_class_name }} {
+-            // Due to some mismatches in the ffi converter mechanisms, errors are a RustBuffer.
+-            val bb = error_buf.asByteBuffer()
+-            if (bb == null) {
+-                throw InternalException("?")
+-            }
+-            return {{ ffi_converter_name }}.read(bb)
+-        }
+-    }
+     {% else %}
+     /**
+      * @suppress
+@@ -254,78 +151,3 @@ open class {{ impl_class_name }}: Disposable, AutoCloseable, {{ interface_name }
+     companion object
+     {% endif %}
+ }
+-
+-{%- if !obj.has_callback_interface() %}
+-{# Simple case: the interface can only be implemented in Rust #}
+-
+-/**
+- * @suppress
+- */
+-public object {{ ffi_converter_name }}: FfiConverter<{{ type_name }}, Long> {
+-    override fun lower(value: {{ type_name }}): Long {
+-        return value.uniffiCloneHandle()
+-    }
+-
+-    override fun lift(value: Long): {{ type_name }} {
+-        return {{ impl_class_name }}(UniffiWithHandle, value)
+-    }
+-
+-    override fun read(buf: ByteBuffer): {{ type_name }} {
+-        return lift(buf.getLong())
+-    }
+-
+-    override fun allocationSize(value: {{ type_name }}) = 8UL
+-
+-    override fun write(value: {{ type_name }}, buf: ByteBuffer) {
+-        buf.putLong(lower(value))
+-    }
+-}
+-{%- else %}
+-{# 
+- # The interface can be implemented in Rust or Kotlin
+- # * Generate a callback interface implementation to handle the Kotlin side
+- # * In the FfiConverter, check which side a handle came from to know how to handle correctly.
+-#}
+-{%- let vtable = obj.vtable().expect("trait interface should have a vtable") %}
+-{%- let vtable_methods = obj.vtable_methods() %}
+-{%- let ffi_init_callback = obj.ffi_init_callback() %}
+-{% include "CallbackInterfaceImpl.kt" %}
+-
+-/**
+- * @suppress
+- */
+-public object {{ ffi_converter_name }}: FfiConverter<{{ type_name }}, Long> {
+-    internal val handleMap = UniffiHandleMap<{{ type_name }}>()
+-
+-    override fun lower(value: {{ type_name }}): Long {
+-        if (value is {{ impl_class_name }}) {
+-             // Rust-implemented object.  Clone the handle and return it
+-            return value.uniffiCloneHandle()
+-         } else {
+-            // Kotlin object, generate a new vtable handle and return that.
+-            return handleMap.insert(value)
+-         }
+-    }
+-
+-    override fun lift(value: Long): {{ type_name }} {
+-        if ((value and 1.toLong()) == 0.toLong()) {
+-            // Rust-generated handle, construct a new class that uses the handle to implement the
+-            // interface
+-            return {{ impl_class_name }}(UniffiWithHandle, value)
+-        } else {
+-            // Kotlin-generated handle, get the object from the handle map
+-            return handleMap.remove(value)
+-        }
+-    }
+-
+-    override fun read(buf: ByteBuffer): {{ type_name }} {
+-        return lift(buf.getLong())
+-    }
+-
+-    override fun allocationSize(value: {{ type_name }}) = 8UL
+-
+-    override fun write(value: {{ type_name }}, buf: ByteBuffer) {
+-        buf.putLong(lower(value))
+-    }
+-}
+-{%- endif %}
+diff --git a/uniffi_bindgen/src/bindings/kotlin/templates/RecordTemplate.kt b/uniffi_bindgen/src/bindings/kotlin/templates/RecordTemplate.kt
+index 1307587b..4e61a69d 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/templates/RecordTemplate.kt
++++ b/uniffi_bindgen/src/bindings/kotlin/templates/RecordTemplate.kt
+@@ -5,8 +5,7 @@
+ data class {{ type_name }} (
+     {%- for field in rec.fields() %}
+     {%- call kt::docstring(field, 4) %}{% endcall %}
+-    {% if config.is_record_immutable(name) %}val{% else %}var{% endif %} {{ field.name()|var_name }}: {{ field|type_name(ci) -}}
+-    {%- if let Some(default) = field.default_value() %} = {{ default|render_default(field, ci) }} {% endif %}
++    {% if config.is_record_immutable(name) %}val{% else %}var{% endif %} {{ field.name()|var_name }}: {{ field|type_name(ci) }} = {{ field|default_value(ci, config) }}
+     {% if !loop.last %}, {% endif %}
+     {%- endfor %}
+     {%- let uniffi_trait_methods = rec.uniffi_trait_methods() %}
+@@ -23,10 +22,7 @@ data class {{ type_name }} (
+ 
+     {% call kt::uniffi_trait_impls(uniffi_trait_methods) %}{% endcall %}
+     {% if contains_object_references %}
+-    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+-    override fun destroy() {
+-        {% call kt::destroy_fields(rec) %}{% endcall %}
+-    }
++    override fun destroy() {}
+     {% endif %}
+     companion object
+ }
+@@ -44,32 +40,3 @@ class {{ type_name }} {
+     companion object
+ }
+ {%- endif %}
+-
+-/**
+- * @suppress
+- */
+-public object {{ rec|ffi_converter_name }}: FfiConverterRustBuffer<{{ type_name }}> {
+-    override fun read(buf: ByteBuffer): {{ type_name }} {
+-        {%- if rec.has_fields() %}
+-        return {{ type_name }}(
+-        {%- for field in rec.fields() %}
+-            {{ field|read_fn }}(buf),
+-        {%- endfor %}
+-        )
+-        {%- else %}
+-        return {{ type_name }}()
+-        {%- endif %}
+-    }
+-
+-    override fun allocationSize(value: {{ type_name }}) = {%- if rec.has_fields() %} (
+-        {%- for field in rec.fields() %}
+-            {{ field|allocation_size_fn }}(value.{{ field.name()|var_name }}){% if !loop.last %} +{% endif %}
+-        {%- endfor %}
+-    ) {%- else %} 0UL {%- endif %}
+-
+-    override fun write(value: {{ type_name }}, buf: ByteBuffer) {
+-        {%- for field in rec.fields() %}
+-            {{ field|write_fn }}(value.{{ field.name()|var_name }}, buf)
+-        {%- endfor %}
+-    }
+-}
+diff --git a/uniffi_bindgen/src/bindings/kotlin/templates/Types.kt b/uniffi_bindgen/src/bindings/kotlin/templates/Types.kt
+index 408225ca..ac7b6d12 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/templates/Types.kt
++++ b/uniffi_bindgen/src/bindings/kotlin/templates/Types.kt
+@@ -58,32 +58,6 @@ inline fun <T : Disposable?, R> T.use(block: (T) -> R) =
+         }
+     }
+ 
+-/** 
+- * Placeholder object used to signal that we're constructing an interface with a FFI handle.
+- *
+- * This is the first argument for interface constructors that input a raw handle. It exists is that
+- * so we can avoid signature conflicts when an interface has a regular constructor than inputs a
+- * Long.
+- *
+- * @suppress
+- * */
+-object UniffiWithHandle
+-
+-/** 
+- * Used to instantiate an interface without an actual pointer, for fakes in tests, mostly.
+- *
+- * @suppress
+- * */
+-object NoHandle
+-
+-{%- if ci.has_callback_definitions() %}
+-{%- include "CallbackInterfaceRuntime.kt" %}
+-{%- endif %}
+-
+-{%- if ci.has_object_definitions() %}
+-{%- include "ObjectCleanerHelper.kt" %}
+-{%- endif %}
+-
+ {%- for type_ in ci.iter_local_types() %}
+ {%- let type_name = type_|type_name(ci) %}
+ {%- let ffi_converter_name = type_|ffi_converter_name %}
+@@ -101,45 +75,6 @@ object NoHandle
+  #}
+ {%- match type_ %}
+ 
+-{%- when Type::Boolean %}
+-{%- include "BooleanHelper.kt" %}
+-
+-{%- when Type::Int8 %}
+-{%- include "Int8Helper.kt" %}
+-
+-{%- when Type::Int16 %}
+-{%- include "Int16Helper.kt" %}
+-
+-{%- when Type::Int32 %}
+-{%- include "Int32Helper.kt" %}
+-
+-{%- when Type::Int64 %}
+-{%- include "Int64Helper.kt" %}
+-
+-{%- when Type::UInt8 %}
+-{%- include "UInt8Helper.kt" %}
+-
+-{%- when Type::UInt16 %}
+-{%- include "UInt16Helper.kt" %}
+-
+-{%- when Type::UInt32 %}
+-{%- include "UInt32Helper.kt" %}
+-
+-{%- when Type::UInt64 %}
+-{%- include "UInt64Helper.kt" %}
+-
+-{%- when Type::Float32 %}
+-{%- include "Float32Helper.kt" %}
+-
+-{%- when Type::Float64 %}
+-{%- include "Float64Helper.kt" %}
+-
+-{%- when Type::String %}
+-{%- include "StringHelper.kt" %}
+-
+-{%- when Type::Bytes %}
+-{%- include "ByteArrayHelper.kt" %}
+-
+ {%- when Type::Enum { name, module_path } %}
+ {%- let e = ci.get_enum_definition(name).unwrap() %}
+ {%- if !ci.is_name_used_as_error(name) %}
+@@ -154,27 +89,9 @@ object NoHandle
+ {%- when Type::Record { name, module_path } %}
+ {% include "RecordTemplate.kt" %}
+ 
+-{%- when Type::Optional { inner_type } %}
+-{% include "OptionalTemplate.kt" %}
+-
+-{%- when Type::Sequence { inner_type } %}
+-{% include "SequenceTemplate.kt" %}
+-
+-{%- when Type::Map { key_type, value_type } %}
+-{% include "MapTemplate.kt" %}
+-
+-{%- when Type::Set { inner_type } %}
+-{% include "SetTemplate.kt" %}
+-
+ {%- when Type::CallbackInterface { module_path, name } %}
+ {% include "CallbackInterfaceTemplate.kt" %}
+ 
+-{%- when Type::Timestamp %}
+-{% include "TimestampHelper.kt" %}
+-
+-{%- when Type::Duration %}
+-{% include "DurationHelper.kt" %}
+-
+ {%- when Type::Custom { module_path, name, builtin } %}
+ {%- if ci.is_external(type_) %}
+ {% include "ExternalTypeTemplate.kt" %}
+@@ -191,14 +108,3 @@ object NoHandle
+ {%- let module_path = type_.module_path().unwrap() %}
+ {% include "ExternalTypeTemplate.kt" %}
+ {%- endfor %}
+-
+-{%- if ci.has_async_fns() %}
+-{# Import types needed for async support #}
+-{{ self.add_import("kotlin.coroutines.resume") }}
+-{{ self.add_import("kotlinx.coroutines.launch") }}
+-{{ self.add_import("kotlinx.coroutines.suspendCancellableCoroutine") }}
+-{{ self.add_import("kotlinx.coroutines.CancellableContinuation") }}
+-{{ self.add_import("kotlinx.coroutines.DelicateCoroutinesApi") }}
+-{{ self.add_import("kotlinx.coroutines.Job") }}
+-{{ self.add_import("kotlinx.coroutines.GlobalScope") }}
+-{%- endif %}
+diff --git a/uniffi_bindgen/src/bindings/kotlin/templates/wrapper.kt b/uniffi_bindgen/src/bindings/kotlin/templates/wrapper.kt
+index 05c14315..284dd455 100644
+--- a/uniffi_bindgen/src/bindings/kotlin/templates/wrapper.kt
++++ b/uniffi_bindgen/src/bindings/kotlin/templates/wrapper.kt
+@@ -1,55 +1,18 @@
+ // This file was autogenerated by some hot garbage in the `uniffi` crate.
+ // Trust me, you don't want to mess with it!
+ 
+-{%- call kt::docstring_value(ci.namespace_docstring(), 0) %}{% endcall %}
+-
+-@file:Suppress("NAME_SHADOWING")
++@file:Suppress("UNUSED_PARAMETER")
+ 
+ package {{ config.package_name() }}
+ 
+-// Common helper code.
+-//
+-// Ideally this would live in a separate .kt file where it can be unittested etc
+-// in isolation, and perhaps even published as a re-useable package.
+-//
+-// However, it's important that the details of how this helper code works (e.g. the
+-// way that different builtin types are passed across the FFI) exactly match what's
+-// expected by the Rust code on the other side of the interface. In practice right
+-// now that means coming from the exact some version of `uniffi` that was used to
+-// compile the Rust component. The easiest way to ensure this is to bundle the Kotlin
+-// helpers directly inline like we're doing here.
+-
+-import com.sun.jna.Library
+-import com.sun.jna.IntegerType
+-import com.sun.jna.Native
+-import com.sun.jna.Pointer
+-import com.sun.jna.Structure
+-import com.sun.jna.Callback
+-import com.sun.jna.ptr.*
+-import java.nio.ByteBuffer
+-import java.nio.ByteOrder
+-import java.nio.CharBuffer
+-import java.nio.charset.CodingErrorAction
+-import java.util.concurrent.atomic.AtomicLong
+-import java.util.concurrent.ConcurrentHashMap
+-
+ {%- for req in self.imports() %}
+ {{ req.render() }}
+ {%- endfor %}
+ 
+-{% include "RustBufferTemplate.kt" %}
+-{% include "FfiConverterTemplate.kt" %}
+-{% include "Helpers.kt" %}
+-{% include "HandleMap.kt" %}
+-
+-// Contains loading, initialization code,
+-// and the FFI Function declarations in a com.sun.jna.Library.
+-{% include "NamespaceLibraryTemplate.kt" %}
+-
+-// Async support
+-{%- if ci.has_async_fns() %}
+-{% include "Async.kt" %}
+-{%- endif %}
++// This is originally defined in Helpers.kt.
++// We don't need all the stuff in there, just this one definition,
++// so we define it here to keep things simpler.
++class InternalException(message: String) : kotlin.Exception(message)
+ 
+ // Public interface members begin here.
+ {{ type_helper_code }}
+-- 

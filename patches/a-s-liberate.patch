@@ -67,10 +67,10 @@ index eec97ee42..7e4684542 100644
      path: components/fxa-client/android
      artifactId: fxaclient
 diff --git a/megazords/full/src/lib.rs b/megazords/full/src/lib.rs
-index c76ecbef6..70e1fed80 100644
+index 4d64374e7..7c105509b 100644
 --- a/megazords/full/src/lib.rs
 +++ b/megazords/full/src/lib.rs
-@@ -8,10 +8,10 @@
+@@ -8,11 +8,11 @@
  use std::ffi::CString;
  use std::os::raw::c_char;
  
@@ -78,10 +78,11 @@ index c76ecbef6..70e1fed80 100644
 +// pub use ads_client;
  pub use autofill;
 -pub use crashtest;
--pub use error_support;
 +// pub use crashtest;
+ pub use db_crypto;
+-pub use error_support;
 +// pub use error_support;
  pub use fxa_client;
+ pub use fxcontainers;
  pub use init_rust_components;
- pub use logins;
 -- 

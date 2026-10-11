@@ -9,7 +9,6 @@ import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
 
-@Suppress("TooManyFunctions")
 internal class MetricsPingScheduler(
   private val applicationContext: Context,
   private val buildInfo: Any?,
@@ -25,6 +24,7 @@ internal class MetricsPingScheduler(
     const val LAST_METRICS_PING_SENT_DATETIME = "last_metrics_ping_iso_datetime"
     const val DUE_HOUR_OF_THE_DAY = 4
     const val LAST_VERSION_OF_APP_USED = "last_version_of_app_used"
+    internal var clockOverride: (() -> Calendar)? = null
   }
 
   init {}

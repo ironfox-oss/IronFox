@@ -8,15 +8,22 @@ No-ops the Glean SDK.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/glean-core/android/build.gradle b/glean-core/android/build.gradle
-index b1d4b8cd..cf27a872 100644
+index 5966a1b6..a29fd8e5 100644
 --- a/glean-core/android/build.gradle
 +++ b/glean-core/android/build.gradle
-@@ -207,7 +207,7 @@ def generateUniffiBindings = tasks.register("generateUniffiBindings") {
+@@ -207,12 +207,13 @@ def generateUniffiBindings = tasks.register("generateUniffiBindings") {
  
          exec {
              workingDir project.rootDir
--            commandLine 'cargo', 'uniffi-bindgen', 'generate', '--no-format', '--library', libraryPath, '--language', 'kotlin', '--out-dir', UNIFFI_OUT_DIR.get()
-+            commandLine '{IRONFOX_UNIFFI}/uniffi-bindgen', 'generate', '--no-format', '--library', libraryPath, '--language', 'kotlin', '--out-dir', UNIFFI_OUT_DIR.get(), '--config', "${project.projectDir}/../uniffi.toml", '--crate', 'glean_core'
+-            commandLine 'cargo', 'uniffi-bindgen', 'generate',
++            commandLine '{IRONFOX_UNIFFI}', 'generate',
+               '--no-format',
+               '--library', libraryPath,
+               '--language', 'kotlin',
+               '--config', "${project.projectDir}/../uniffi.toml",
+-              '--out-dir', UNIFFI_OUT_DIR.get()
++              '--out-dir', UNIFFI_OUT_DIR.get(),
++              '--crate', 'glean_core'
          }
      }
  

@@ -1,0 +1,28 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 84d4fbc..a7781c0 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,6 +1,6 @@
+ [project]
+ name = "glean-parser"
+-dynamic = ["version"]
++version = "20.2.0"
+ authors = [
+     { name = "The Glean Team", email = "glean-team@mozilla.com" }
+ ]
+@@ -59,11 +59,11 @@ include = [
+   "/tests",
+ ]
+ 
+-[tool.hatch.version]
+-source = "vcs"
++# [tool.hatch.version]
++# source = "vcs"
+ 
+-[tool.hatch.version.raw-options]
+-version_scheme = "no-guess-dev"
++# [tool.hatch.version.raw-options]
++# version_scheme = "no-guess-dev"
+ 
+ [tool.pytest.ini_options]
+ markers = [

@@ -197,13 +197,13 @@ index 5a7aaab55..2b900c888 100644
  
      // The exposure event should be recorded when the expected treatment (or no-treatment, such as
 diff --git a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-index c9078a52f..87f4e5078 100644
+index f8a9f86b1..b29d2d6dc 100644
 --- a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
 +++ b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-@@ -13,9 +13,9 @@ package mozilla.appservices.logins
-  * on version updates.
+@@ -14,9 +14,9 @@ package mozilla.appservices.logins
   */
  
+ import mozilla.appservices.db_crypto.KeyManager
 -import mozilla.telemetry.glean.private.CounterMetricType
 +/* import mozilla.telemetry.glean.private.CounterMetricType
  import mozilla.telemetry.glean.private.LabeledMetricType
@@ -212,7 +212,7 @@ index c9078a52f..87f4e5078 100644
  
  /**
   * An artifact of the uniffi conversion - a thin-ish wrapper around a
-@@ -124,13 +124,13 @@ class DatabaseLoginsStorage(dbPath: String, keyManager: KeyManager) : AutoClosea
+@@ -135,13 +135,13 @@ class DatabaseLoginsStorage(dbPath: String, keyManager: KeyManager) : AutoClosea
  
      @Throws(LoginsApiException::class)
      fun deleteUndecryptableLoginsAndRecordMetrics() {
@@ -228,7 +228,7 @@ index c9078a52f..87f4e5078 100644
      }
  }
  
-@@ -140,12 +140,12 @@ enum class KeyRegenerationEventReason {
+@@ -151,12 +151,12 @@ enum class KeyRegenerationEventReason {
  
  fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
      // Avoid the deprecation warning when calling  `record()` without the optional EventExtras param
@@ -243,7 +243,7 @@ index c9078a52f..87f4e5078 100644
  }
  
  /**
-@@ -158,8 +158,8 @@ fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
+@@ -169,8 +169,8 @@ fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
   * This is a convenience wrapper to measure the two in one shot.
   */
  class LoginsStoreCounterMetrics(
@@ -254,7 +254,7 @@ index c9078a52f..87f4e5078 100644
  ) {
      inline fun <U> measure(callback: () -> U): U {
          return measureIgnoring({ false }, callback)
-@@ -170,7 +170,7 @@ class LoginsStoreCounterMetrics(
+@@ -181,7 +181,7 @@ class LoginsStoreCounterMetrics(
          shouldIgnore: (Exception) -> Boolean,
          callback: () -> U,
      ): U {
@@ -263,127 +263,209 @@ index c9078a52f..87f4e5078 100644
          try {
              return callback()
          } catch (e: Exception) {
-@@ -179,19 +179,19 @@ class LoginsStoreCounterMetrics(
+@@ -190,19 +190,19 @@ class LoginsStoreCounterMetrics(
              }
              when (e) {
                  is LoginsApiException.NoSuchRecord -> {
 -                    errCount["no_such_record"].add()
-+                     // no-op
++                    // no-op
                  }
                  is LoginsApiException.Interrupted -> {
 -                    errCount["interrupted"].add()
-+                     // no-op
++                    // no-op
                  }
                  is LoginsApiException.InvalidRecord -> {
 -                    errCount["invalid_record"].add()
-+                     // no-op
++                    // no-op
                  }
                  is LoginsApiException -> {
 -                    errCount["storage_error"].add()
-+                     // no-op
++                    // no-op
                  }
                  else -> {
 -                    errCount["__other__"].add()
-+                     // no-op
++                    // no-op
                  }
              }
              throw e
 diff --git a/components/places/build.rs b/components/places/build.rs
-index fa4b5578a..6faab0f2e 100644
+index 3a29758ef..b865f01be 100644
 --- a/components/places/build.rs
 +++ b/components/places/build.rs
-@@ -2,7 +2,7 @@
-  * License, v. 2.0. If a copy of the MPL was not distributed with this
-  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
- 
--use glean_build::Builder;
-+// use glean_build::Builder;
+@@ -4,10 +4,10 @@
  
  fn main() {
      uniffi::generate_scaffolding("./src/places.udl").unwrap();
-@@ -11,10 +11,10 @@ fn main() {
-         .as_ref()
-         .map(String::as_str)
-     {
--        Builder::default()
-+/*        Builder::default()
-             .file("metrics.yaml")
-             .format("rust_sym")
-             .generate()
--            .expect("Error generating Glean Rust bindings");
-+            .expect("Error generating Glean Rust bindings"); */
-     }
+-    build_metrics();
++//    build_metrics();
  }
+ 
+-fn build_metrics() {
++/* fn build_metrics() {
+     let format = if cfg!(feature = "glean-fog") {
+         "rust"
+     } else {
+@@ -19,4 +19,4 @@ fn build_metrics() {
+         .format(format)
+         .generate()
+         .expect("Error generating Glean Rust bindings");
+-}
++} */
 diff --git a/components/places/Cargo.toml b/components/places/Cargo.toml
-index 76341ae2d..bb649a4fe 100644
+index c8a720743..6f9d618c7 100644
 --- a/components/places/Cargo.toml
 +++ b/components/places/Cargo.toml
-@@ -7,9 +7,9 @@ license = "MPL-2.0"
- exclude = ["/android", "/ios"]
- 
+@@ -9,7 +9,7 @@ exclude = ["/android", "/ios"]
  [features]
--default = ["glean-sym"]
-+# default = ["glean-sym"]
- # Enable metric recording through glean-sym (Android only)
--glean-sym = ["dep:glean-sym"]
-+# glean-sym = ["dep:glean-sym"]
+ # Use Firefox-on-Glean to publish metrics (Desktop)
+ # Note: if set, we will not use `glean-sym`
+-glean-fog = ["dep:glean"]
++# glean-fog = ["dep:glean"]
  
  [dependencies]
  sync15 = { path = "../sync15" }
-@@ -37,7 +37,7 @@ uniffi = { version = "0.31" }
- 
- # glean-sym is only used on Android and iOS.
- [target.'cfg(any(target_os = "android", target_os = "ios"))'.dependencies]
--glean-sym = { git = "https://github.com/mozilla/glean", tag = "v68.0.0", optional = true }
-+# glean-sym = { git = "https://github.com/mozilla/glean", tag = "v68.0.0", optional = true }
+@@ -34,8 +34,8 @@ sync-guid = { path = "../support/guid", features = ["rusqlite_support", "random"
+ thiserror = "2"
+ anyhow = "1.0"
+ uniffi = { version = "0.32" }
+-glean = { version = "70", optional = true }
+-glean-sym = "70"
++# glean = { version = "70", optional = true }
++# glean-sym = "70"
  
  [dev-dependencies]
  error-support = { path = "../support/error", features = ["testing"] }
-@@ -46,4 +46,4 @@ sql-support = { path = "../support/sql" }
+@@ -44,4 +44,4 @@ sql-support = { path = "../support/sql" }
  
  [build-dependencies]
- uniffi = { version = "0.31", features=["build"]}
--glean-build = { git = "https://github.com/mozilla/glean", tag = "v68.0.0" }
-+# glean-build = { git = "https://github.com/mozilla/glean", tag = "v68.0.0" }
+ uniffi = { version = "0.32", features=["build"]}
+-glean-build = { git = "https://github.com/mozilla/glean", tag = "v70.0.0" }
++# glean-build = { git = "https://github.com/mozilla/glean", tag = "v70.0.0" }
+diff --git a/components/places/src/ffi.rs b/components/places/src/ffi.rs
+index cf69997e5..016082bd7 100644
+--- a/components/places/src/ffi.rs
++++ b/components/places/src/ffi.rs
+@@ -8,7 +8,7 @@ use crate::api::matcher::{self, search_frecent, SearchParams};
+ pub use crate::api::places_api::places_api_new;
+ pub use crate::error::{warn, Result};
+ pub use crate::error::{ApiResult, PlacesApiError};
+-use crate::glean_metrics;
++// use crate::glean_metrics;
+ pub use crate::import::common::HistoryMigrationResult;
+ use crate::import::import_ios_history;
+ use crate::storage;
+@@ -347,44 +347,44 @@ impl PlacesConnection {
+ 
+     #[handle_error(crate::Error)]
+     pub fn run_maintenance(&self, options: PlacesRunMaintenanceOptions) -> ApiResult<()> {
+-        let timer_id = glean_metrics::places_manager::run_maintenance_time.start();
++//        let timer_id = glean_metrics::places_manager::run_maintenance_time.start();
+ 
+         self.run_maintenance_prune(options.db_size_limit, options.prune_limit)?;
+         self.run_maintenance_vacuum()?;
+         self.run_maintenance_optimize()?;
+         self.run_maintenance_checkpoint()?;
+ 
+-        glean_metrics::places_manager::run_maintenance_time.stop_and_accumulate(timer_id);
++//        glean_metrics::places_manager::run_maintenance_time.stop_and_accumulate(timer_id);
+ 
+         Ok(())
+     }
+ 
+     fn run_maintenance_prune(&self, db_size_limit: u32, prune_limit: u32) -> Result<()> {
+-        let timer_id = glean_metrics::places_manager::run_maintenance_prune_time.start();
++//        let timer_id = glean_metrics::places_manager::run_maintenance_prune_time.start();
+         let res =
+             self.with_conn(|conn| storage::run_maintenance_prune(conn, db_size_limit, prune_limit));
+-        glean_metrics::places_manager::run_maintenance_prune_time.stop_and_accumulate(timer_id);
++//        glean_metrics::places_manager::run_maintenance_prune_time.stop_and_accumulate(timer_id);
+         res
+     }
+ 
+     fn run_maintenance_vacuum(&self) -> Result<()> {
+-        let timer_id = glean_metrics::places_manager::run_maintenance_vacuum_time.start();
++//        let timer_id = glean_metrics::places_manager::run_maintenance_vacuum_time.start();
+         let res = self.with_conn(storage::run_maintenance_vacuum);
+-        glean_metrics::places_manager::run_maintenance_vacuum_time.stop_and_accumulate(timer_id);
++//        glean_metrics::places_manager::run_maintenance_vacuum_time.stop_and_accumulate(timer_id);
+         res
+     }
+ 
+     fn run_maintenance_optimize(&self) -> Result<()> {
+-        let timer_id = glean_metrics::places_manager::run_maintenance_optimize_time.start();
++//        let timer_id = glean_metrics::places_manager::run_maintenance_optimize_time.start();
+         self.with_conn(storage::run_maintenance_optimize)?;
+-        glean_metrics::places_manager::run_maintenance_optimize_time.stop_and_accumulate(timer_id);
++//        glean_metrics::places_manager::run_maintenance_optimize_time.stop_and_accumulate(timer_id);
+         Ok(())
+     }
+ 
+     fn run_maintenance_checkpoint(&self) -> Result<()> {
+-        let timer_id = glean_metrics::places_manager::run_maintenance_chk_pnt_time.start();
++//        let timer_id = glean_metrics::places_manager::run_maintenance_chk_pnt_time.start();
+         let res = self.with_conn(storage::run_maintenance_checkpoint);
+-        glean_metrics::places_manager::run_maintenance_chk_pnt_time.stop_and_accumulate(timer_id);
++//        glean_metrics::places_manager::run_maintenance_chk_pnt_time.stop_and_accumulate(timer_id);
+         res
+     }
+ 
+diff --git a/components/places/src/lib.rs b/components/places/src/lib.rs
+index 1c95dd898..6bcb4e8dc 100644
+--- a/components/places/src/lib.rs
++++ b/components/places/src/lib.rs
+@@ -38,9 +38,9 @@ pub use crate::types::*;
+ 
+ pub use ffi::*;
+ 
+-pub mod glean_metrics {
++/* pub mod glean_metrics {
+     include!(concat!(env!("OUT_DIR"), "/glean_metrics.rs"));
+-}
++} */
+ 
+ uniffi::custom_type!(Guid, String, {
+     remote,
+diff --git a/components/places/src/storage/mod.rs b/components/places/src/storage/mod.rs
+index 42bacacf5..eb1cd3795 100644
+--- a/components/places/src/storage/mod.rs
++++ b/components/places/src/storage/mod.rs
+@@ -15,7 +15,7 @@ use crate::error::{Error, InvalidPlaceInfo, Result};
+ use crate::ffi::HistoryVisitInfo;
+ use crate::ffi::TopFrecentSiteInfo;
+ use crate::frecency::{calculate_frecency, DEFAULT_FRECENCY_SETTINGS};
+-use crate::glean_metrics;
++// use crate::glean_metrics;
+ use crate::types::{SyncStatus, UnknownFields, VisitType};
+ use interrupt_support::SqlInterruptScope;
+ use rusqlite::types::{FromSql, FromSqlResult, ToSql, ToSqlOutput, ValueRef};
+@@ -247,8 +247,8 @@ pub fn run_maintenance_prune(conn: &PlacesDb, db_size_limit: u32, prune_limit: u
+     if should_prune {
+         history::prune_older_visits(conn, prune_limit)?;
+     }
+-    glean_metrics::places_manager::db_size_after_maintenance
+-        .accumulate((conn.get_db_size()? / 1024) as i64);
++//    glean_metrics::places_manager::db_size_after_maintenance
++//        .accumulate((conn.get_db_size()? / 1024) as i64);
+     Ok(())
+ }
+ 
 diff --git a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
-index 4dfc3178f..89816d107 100644
+index 3c8140348..434012fb9 100644
 --- a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
 +++ b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
-@@ -29,12 +29,12 @@ import mozilla.appservices.places.uniffi.VisitObservation
+@@ -29,9 +29,9 @@ import mozilla.appservices.places.uniffi.TopFrecentSiteInfo
+ import mozilla.appservices.places.uniffi.VisitObservation
  import mozilla.appservices.places.uniffi.VisitType
  import mozilla.appservices.places.uniffi.placesApiNew
- import mozilla.appservices.sync15.SyncTelemetryPing
--import mozilla.telemetry.glean.private.CounterMetricType
+-import mozilla.appservices.sync15.SyncTelemetryPing
++/* import mozilla.appservices.sync15.SyncTelemetryPing
+ import mozilla.telemetry.glean.private.CounterMetricType
 -import mozilla.telemetry.glean.private.LabeledMetricType
-+// import mozilla.telemetry.glean.private.CounterMetricType
-+// import mozilla.telemetry.glean.private.LabeledMetricType
++import mozilla.telemetry.glean.private.LabeledMetricType */
  import java.lang.ref.WeakReference
  import mozilla.appservices.places.uniffi.PlacesApi as UniffiPlacesApi
  import mozilla.appservices.places.uniffi.PlacesConnection as UniffiPlacesConnection
--import org.mozilla.appservices.places.GleanMetrics.PlacesManager as PlacesManagerMetrics
-+// import org.mozilla.appservices.places.GleanMetrics.PlacesManager as PlacesManagerMetrics
- 
- typealias Url = String
- typealias Guid = String
-@@ -312,7 +312,7 @@ class PlacesWriterConnection internal constructor(conn: UniffiPlacesConnection,
- 
-     @Suppress("MagicNumber")
-     override fun runMaintenance(dbSizeLimit: UInt) {
--        val pruneMetrics = PlacesManagerMetrics.runMaintenanceTime.measure {
-+/*        val pruneMetrics = PlacesManagerMetrics.runMaintenanceTime.measure {
-             val pruneMetrics = PlacesManagerMetrics.runMaintenancePruneTime.measure {
-                 this.conn.runMaintenancePrune(dbSizeLimit, 12U)
-             }
-@@ -330,7 +330,7 @@ class PlacesWriterConnection internal constructor(conn: UniffiPlacesConnection,
-             }
-             pruneMetrics
-         }
--        PlacesManagerMetrics.dbSizeAfterMaintenance.accumulateSamples(listOf(pruneMetrics.dbSizeAfter.toLong() / 1024))
-+        PlacesManagerMetrics.dbSizeAfterMaintenance.accumulateSamples(listOf(pruneMetrics.dbSizeAfter.toLong() / 1024)) */
-     }
- 
-     override fun deleteEverything() {
-@@ -872,13 +872,13 @@ data class HistoryMetadataKey(
+@@ -791,13 +791,13 @@ data class HistoryMetadataKey(
   * This is a convenience wrapper to measure the two in one shot.
   */
  class PlacesManagerCounterMetrics(
@@ -402,7 +484,7 @@ index 4dfc3178f..89816d107 100644
              return callback()
          } catch (e: Exception) {
              when (e) {
-@@ -905,6 +905,6 @@ class PlacesManagerCounterMetrics(
+@@ -824,6 +824,6 @@ class PlacesManagerCounterMetrics(
                  }
              }
              throw e

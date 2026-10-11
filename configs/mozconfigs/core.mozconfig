@@ -152,6 +152,9 @@ ac_add_options --with-android-sdk="${IRONFOX_ANDROID_SDK}"
 ## Set Bundletool path
 export ANDROID_BUNDLETOOL_PATH="${IRONFOX_BUNDLETOOL_JAR}"
 
+# Set the Glean Parser Python environment
+ac_add_options --with-ironfox-glean-parser-pyenv="${IRONFOX_PYENV_DIR}"
+
 ## Set Gradle path
 ac_add_options --with-gradle="${IRONFOX_GRADLE}"
 
@@ -165,6 +168,7 @@ export NODEJS="${IRONFOX_NODEJS}"
 export CARGO="${IRONFOX_CARGO}"
 export RUSTC="${IRONFOX_RUSTC}"
 export RUSTDOC="${IRONFOX_RUSTDOC}"
+export RUSTFMT="${IRONFOX_RUSTFMT}"
 
 ## Set Gradle flags
 export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Pofficial -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME}"

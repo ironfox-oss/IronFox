@@ -86,7 +86,6 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_continuous_onboarding_enabled, false)
 
     // Disable crash reporting
-    prefs.setBoolPref(R.string.pref_key_crash_reporter, false)
     prefs.setStringPref(R.string.pref_key_crash_reporting_choice, CrashReportOption.Never.toString())
     prefs.setBoolPref(R.string.pref_key_crash_pull_never_show_again, true)
 
@@ -245,6 +244,7 @@ object IFPrefs {
     // https://searchfox.org/firefox-main/rev/d5171e9e/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt#233
     prefs.setBoolPref(R.string.pref_key_is_user_meta_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_moloco_attributed, false) // [DEFAULT]
+    prefs.setBoolPref(R.string.pref_key_is_user_pairing_campaign_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_rakuten_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_reddit_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_skyflag_attributed, false) // [DEFAULT]

@@ -77,7 +77,8 @@ IRONFOX_PREPARE_GLEAN=0
 IRONFOX_PREPARE_LLVM=0
 IRONFOX_PREPARE_MICROG=0
 IRONFOX_PREPARE_RUST=0
-IRONFOX_PREPARE_PREBUILDS=0
+IRONFOX_PREPARE_UNIFFI=0
+IRONFOX_PREPARE_WASI=0
 
 if [[ "${prebuild_target}" == 'ac' ]]; then
   # Prepare Android Components
@@ -109,9 +110,12 @@ elif [[ "${prebuild_target}" == 'microg' ]]; then
 elif [[ "${prebuild_target}" == 'rust' ]]; then
   # Prepare rust/cargo
   IRONFOX_PREPARE_RUST=1
-elif [[ "${prebuild_target}" == 'prebuilds' ]]; then
-  # Prepare IronFox prebuilds
-  IRONFOX_PREPARE_PREBUILDS=1
+elif [[ "${prebuild_target}" == 'uniffi' ]]; then
+  # Prepare uniffi
+  IRONFOX_PREPARE_UNIFFI=1
+elif [[ "${prebuild_target}" == 'wasi' ]]; then
+  # Prepare WASI SDK
+  IRONFOX_PREPARE_WASI=1
 elif [[ "${prebuild_target}" == 'all' ]]; then
   # If no argument is specified (or argument is set to "all"), just prepare everything
   IRONFOX_PREPARE_AC=1
@@ -122,11 +126,12 @@ elif [[ "${prebuild_target}" == 'all' ]]; then
   IRONFOX_PREPARE_GLEAN=1
   IRONFOX_PREPARE_MICROG=1
   IRONFOX_PREPARE_RUST=1
+  IRONFOX_PREPARE_UNIFFI=1
 
   # Respect IRONFOX_NO_PREBUILDS...
   if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
     IRONFOX_PREPARE_BUNDLETOOL=1
-    IRONFOX_PREPARE_PREBUILDS=1
+    IRONFOX_PREPARE_WASI=1
 
     if [[ -n "${FDROID_BUILD+x}" ]]; then
       IRONFOX_PREPARE_LLVM=1
@@ -145,7 +150,8 @@ else
   echo 'LLVM:                             llvm'
   echo 'microG:                           microg'
   echo 'Rust:                             rust'
-  echo 'Prebuilds:                        prebuilds'
+  echo 'uniffi-bindgen:                   uniffi'
+  echo 'WASI SDK:                         wasi'
   return 1
 fi
 readonly IRONFOX_PREPARE_AC
@@ -158,7 +164,8 @@ readonly IRONFOX_PREPARE_GLEAN
 readonly IRONFOX_PREPARE_LLVM
 readonly IRONFOX_PREPARE_MICROG
 readonly IRONFOX_PREPARE_RUST
-readonly IRONFOX_PREPARE_PREBUILDS
+readonly IRONFOX_PREPARE_UNIFFI
+readonly IRONFOX_PREPARE_WASI
 
 function localize_gradle() {
   # Ensure we have chmod
@@ -258,9 +265,6 @@ function prepare_ac() {
   "${IRONFOX_RM}" -v "${IRONFOX_AC}/components/feature/search/src/main/java/mozilla/components/feature/search/middleware/AdsTelemetryMiddleware.kt"
   "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry"
 
-  # Remove the 'search telemetry' config
-  "${IRONFOX_RM}" -v "${IRONFOX_AC}/components/feature/search/src/main/assets/search/search_telemetry_v2.json"
-
   # Nuke undesired Mozilla endpoints
   noop_ac_endpoints || return 1
 
@@ -324,6 +328,7 @@ function prepare_android_sdk() {
   verify_dir_with_env "${IRONFOX_ANDROID_SDK}" 'IRONFOX_ANDROID_SDK' || return 1
   verify_dir_with_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS' || return 1
   verify_dir_with_env "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" 'IRONFOX_ANDROID_SDK_PLATFORM_TOOLS' || return 1
+  verify_dir_with_env "${IRONFOX_SYSROOT}" 'IRONFOX_SYSROOT' || return 1
 
   # Create Android NDK symlink
   if [[ ! -d "${IRONFOX_ANDROID_SDK}/ndk/${IRONFOX_ANDROID_NDK_REVISION}" ]]; then
@@ -346,6 +351,11 @@ function prepare_android_sdk() {
   if [[ ! -d "${IRONFOX_ANDROID_SDK}/platform-tools" ]]; then
     "${IRONFOX_LN}" -s "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" "${IRONFOX_ANDROID_SDK}/platform-tools"
   fi
+
+  # Work-around "error: Unversioned target triples are not supported!" error for Application Services
+  pushd "${IRONFOX_SYSROOT}"
+  apply_patch 'android-ndk-fix-target-triples.patch'
+  popd
 
   echo_green_text 'SUCCESS: Prepared Android SDK!'
 }
@@ -603,6 +613,7 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingLifecycleObserver.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingMetricsService.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/GrowthDataWorker.kt"
+  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/InstallAge.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerClientWrapper.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerHandlingService.kt"
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt"
@@ -830,6 +841,9 @@ function prepare_firefox() {
   # Ensure we're building for release
   "${IRONFOX_SED}" -i -e 's/variant=variant(.*)/variant=variant("release")/' "${IRONFOX_GECKO}/mobile/android/gradle.configure"
 
+  # Use our own Glean Parser Python environment
+  "${IRONFOX_SED}" -i -e 's/set_config("GRADLE_GLEAN_PARSER_VENV"/# set_config("GRADLE_GLEAN_PARSER_VENV"/' "${IRONFOX_GECKO}/mobile/android/gradle.configure"
+
   # Fail on use of prebuilt nimbus-fml
   "${IRONFOX_SED}" -i 's|https://|hxxps://|g' "${IRONFOX_GECKO}/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt"
 
@@ -956,8 +970,8 @@ function prepare_firefox() {
   # Remove Glean
   deglean_firefox || return 1
 
-  "${IRONFOX_SED}" -i 's/5bc8c9bbe8c0eabe408d9a7cd7a8e6e09eee0ead817607643882b38a36d07c91/421348ae534a24692c35bd49dbc6dc70103b43772a531868283265d6f6e246e9/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
-  "${IRONFOX_SED}" -i 's/c20989b1aa336b0849e96ec1b2beea1eab825ffd192c2c3a636e20f830b811d0/fa3887e2a0e1efdb355f61c8e801922dc6f5decfa6cccd4a6b7ad247c5918c81/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
+  "${IRONFOX_SED}" -i 's/1753c69b71ae24a9b339d98e9b71166740a15506cfc46245251eb63c0222568f/0414411ba8ef1580ccd812794c5f843e9726d2af28e916cdd2359ce55d0215de/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
+  "${IRONFOX_SED}" -i 's/ada8f059f0fa8a3a82315606318429d3a70200bbb2886d1a1bcaad2856a6303b/9e2f2f22f500be3e80638131fb0921c47702d377aaa13f4662d51dae57c21155/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json"
 
   ## We also need to de-glean Android Components here, as not doing so appears to cause build failures for ex. GeckoView
   deglean_ac || return 1
@@ -1066,6 +1080,13 @@ function prepare_glean() {
   "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/build/Cargo.toml"
   "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/rlb/Cargo.toml"
 
+  # Bump Glean Parser
+  "${IRONFOX_SED}" -i -e "s|glean_parser~=.*|glean_parser~=${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/Makefile"
+  "${IRONFOX_SED}" -i -e "s|glean_parser~=.*|glean_parser~=${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/pyproject.toml"
+  "${IRONFOX_SED}" -i -e "s|glean-parser = .*|glean-parser = \""${IRONFOX_GLEAN_PARSER_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|GLEAN_PARSER_VERSION = .*|GLEAN_PARSER_VERSION = \""${IRONFOX_GLEAN_PARSER_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/python/glean/__init__.py"
+  "${IRONFOX_SED}" -i -e "s|GLEAN_PARSER_VERSION = .*|GLEAN_PARSER_VERSION = \""${IRONFOX_GLEAN_PARSER_VERSION}\""|g" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
+
   # Disable debug
   "${IRONFOX_SED}" -i -e "s|debug = .*|debug = false|g" "${IRONFOX_GLEAN}/Cargo.toml"
 
@@ -1074,7 +1095,6 @@ function prepare_glean() {
   "${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" "${IRONFOX_GLEAN}/Cargo.toml"
 
   # Ensure that the Glean gradle plug-in/glean_parser always runs offline
-  "${IRONFOX_SED}" -i "s|(isOffline)|(true)|g" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
   "${IRONFOX_SED}" -i "s|pypi.python.org|noop.invalid|g" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
 
   # No-op Glean
@@ -1186,8 +1206,28 @@ function prepare_microg() {
   echo_green_text 'SUCCESS: Prepared microG!'
 }
 
-function prepare_prebuilds() {
-  echo_red_text 'Preparing IronFox prebuilds...'
+function prepare_uniffi() {
+  # Ensure we have GNU sed
+  verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
+
+  echo_red_text 'Preparing uniffi-bindgen...'
+
+  # Verify directories
+  verify_dir_with_env "${IRONFOX_UNIFFI_DIR}" 'IRONFOX_UNIFFI_DIR' || return 1
+
+  # Apply patches
+  pushd "${IRONFOX_UNIFFI_DIR}"
+  apply_patch 'uniffi-noop.patch'
+  popd
+
+  # Break the dependency on older Rust
+  "${IRONFOX_SED}" -i -e "s|channel = .*|channel = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_UNIFFI_DIR}/rust-toolchain.toml"
+
+  echo_green_text 'SUCCESS: Prepared uniffi-bindgen!'
+}
+
+function prepare_wasi() {
+  echo_red_text 'Preparing WASI SDK...'
 
   # Ensure we have bash
   verify_exec "${IRONFOX_BASH}" 'IRONFOX_BASH' || return 1
@@ -1196,10 +1236,10 @@ function prepare_prebuilds() {
   verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS' || return 1
 
   pushd "${IRONFOX_PREBUILDS}"
-  "${IRONFOX_BASH}" "${IRONFOX_PREBUILDS}/scripts/prebuild.sh" || return 1
+  "${IRONFOX_BASH}" "${IRONFOX_PREBUILDS}/scripts/prebuild.sh" 'wasi' || return 1
   popd
 
-  echo_green_text 'SUCCESS: Prepared IronFox prebuilds!'
+  echo_green_text 'SUCCESS: Prepared WASI SDK!'
 }
 
 function prepare_rust() {
@@ -1268,12 +1308,16 @@ if [[ "${IRONFOX_PREPARE_MICROG}" == 1 ]]; then
   prepare_microg
 fi
 
-if [[ "${IRONFOX_PREPARE_PREBUILDS}" == 1 ]]; then
-  prepare_prebuilds
-fi
-
 if [[ "${IRONFOX_PREPARE_RUST}" == 1 ]]; then
   prepare_rust
+fi
+
+if [[ "${IRONFOX_PREPARE_UNIFFI}" == 1 ]]; then
+  prepare_uniffi
+fi
+
+if [[ "${IRONFOX_PREPARE_WASI}" == 1 ]]; then
+  prepare_wasi
 fi
 
 echo_green_text "SUCCESS: Prepared to build IronFox '${IRONFOX_VERSION}'!"

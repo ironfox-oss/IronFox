@@ -1,18 +1,37 @@
+diff --git a/build.gradle b/build.gradle
+index 4610b3d68..c5188f2bc 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -3,9 +3,9 @@
+ buildscript {
+     ext.build = [
+         // These must be kept in sync with the android components in mozilla-central.
+-        compileSdkMajorVersion: 36,
+-        compileSdkMinorVersion: 1,
+-        targetSdkVersion: 36,
++        compileSdkMajorVersion: 37,
++        compileSdkMinorVersion: 2,
++        targetSdkVersion: 37,
+         minSdkVersion: 26,
+         jvmTargetCompatibility: 17,
+     ]
 diff --git a/settings.gradle b/settings.gradle
-index 5fedb0250..b2a7f3116 100644
+index a5f588255..54a61f62e 100644
 --- a/settings.gradle
 +++ b/settings.gradle
-@@ -182,10 +182,10 @@ gradle.projectsLoaded { ->
+@@ -200,11 +200,11 @@ gradle.projectsLoaded { ->
              calcVersion(buildconfig), // version,
              calcGroupId(buildconfig), // componentsGroupId
              17, // jvmTargetCompatibility,
 -            36, // compileSdkMajorVersion,
 -            1,  // compileSdkMinorVersion,
 +            37, // compileSdkMajorVersion,
-+            0,  // compileSdkMinorVersion,
++            2,  // compileSdkMinorVersion,
              26, // minSdkVersion,
 -            36, // targetSdkVersion,
+-            "29.0.14206865", // ndkVersion - Keep it in sync in TC Dockerfile.
 +            37, // targetSdkVersion,
-             "29.0.14206865", // ndkVersion - Keep it in sync in TC Dockerfile.
++            "30.0.16248370", // ndkVersion - Keep it in sync in TC Dockerfile.
          )
      }
+ }

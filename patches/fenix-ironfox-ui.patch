@@ -147,39 +147,39 @@ index bafe4f957dfe..2a73dc0f856f 100644
                      isPrivate = false,
                      onWebCompatReporterClick = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 39ef4d3125c5..5c35039ac4fb 100644
+index 2d14245b95f4..c5be8a74d5d3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -539,7 +539,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
-                                         accessPoint = args.accesspoint,
-                                         account = account,
-                                         accountState = accountState,
--                                        showQuitMenu = settings.shouldDeleteBrowsingDataOnQuit,
-+                                        showQuitMenu = true,
-                                         isBottomToolbar = settings.shouldUseBottomToolbar,
-                                         isExpandedToolbarEnabled = settings.shouldUseExpandedToolbar,
-                                         isSiteLoading = isSiteLoading,
-@@ -560,6 +560,8 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
-                                         showBanner = shouldShowMenuBanner && !defaultBrowser,
-                                         isDownloadHighlighted = isDownloadHighlighted,
-                                         webExtensionMenuCount = webExtensionsCount,
-+                                        isPasswordManagerEnabled = settings.shouldPromptToSaveLogins,
-+                                        isFxaSignedIn = settings.ironfox.fxaEnabled && settings.signedInFxaAccount,
-                                         isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
-                                         showIPProtection = components.ipProtection.store.state.isEligible,
-                                         ipProtectionMenuState = ipProtectionMenuState,
-@@ -672,9 +674,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
-                                                 externalAppName = appLinksRedirect?.appName ?: "",
-                                                 isOpenInAppMenuHighlighted = isOpenInAppMenuHighlighted,
-                                                 translationInfo = translationInfo,
--                                                showShortcuts = settings.showTopSitesFeature,
-+                                                showShortcuts = settings.showTopSitesFeature && !settings.ironfox.alwaysUsePrivateBrowsing,
-                                                 showSaveToCollection = settings.collections,
-                                                 isAndroidAutomotiveAvailable = context.isAndroidAutomotiveAvailable(),
-+                                                isPrintDisabled = !settings.ironfox.printEnabled,
-                                                 summarizationMenuState = summarizationMenuState,
-                                                 onWebCompatReporterClick = {
-                                                     menuStore.dispatch(MenuAction.Navigate.WebCompatReporter)
+@@ -532,7 +532,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                                 accessPoint = args.accesspoint,
+                                 account = account,
+                                 accountState = accountState,
+-                                showQuitMenu = settings.shouldDeleteBrowsingDataOnQuit,
++                                showQuitMenu = true,
+                                 isBottomToolbar = settings.shouldUseBottomToolbar,
+                                 isExpandedToolbarEnabled = settings.shouldUseExpandedToolbar,
+                                 isSiteLoading = isSiteLoading,
+@@ -552,6 +552,8 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                                 showBanner = shouldShowMenuBanner && !defaultBrowser,
+                                 isDownloadHighlighted = isDownloadHighlighted,
+                                 webExtensionMenuCount = webExtensionsCount,
++                                isPasswordManagerEnabled = settings.shouldPromptToSaveLogins,
++                                isFxaSignedIn = settings.ironfox.fxaEnabled && settings.signedInFxaAccount,
+                                 isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
+                                 showIPProtection = components.ipProtection.store.state.isEligible,
+                                 ipProtectionMenuState = ipProtectionMenuState,
+@@ -662,9 +664,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                                         externalAppName = appLinksRedirect?.appName ?: "",
+                                         isOpenInAppMenuHighlighted = isOpenInAppMenuHighlighted,
+                                         translationInfo = translationInfo,
+-                                        showShortcuts = settings.showTopSitesFeature,
++                                        showShortcuts = settings.showTopSitesFeature && !settings.ironfox.alwaysUsePrivateBrowsing,
+                                         showSaveToCollection = settings.collections,
+                                         isAndroidAutomotiveAvailable = context.isAndroidAutomotiveAvailable(),
++                                        isPrintDisabled = !settings.ironfox.printEnabled,
+                                         summarizationMenuState = summarizationMenuState,
+                                         onWebCompatReporterClick = {
+                                             menuStore.dispatch(MenuAction.Navigate.WebCompatReporter)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/Page.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/Page.kt
 index 500ba6b8f5cba..9b37e37a058a9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/Page.kt

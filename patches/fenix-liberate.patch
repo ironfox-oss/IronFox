@@ -51,34 +51,37 @@ index 70cf6e8802..451cc94e79 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index c1173b2ceb..86c4a698ea 100644
+index 50d5ce2ac8..58338736a0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -25,9 +25,9 @@ import mozilla.components.feature.summarize.settings.SummarizationSettings
+@@ -28,10 +28,10 @@ import mozilla.components.feature.tabdata.coordinator.TabDataCoordinator
  import mozilla.components.lib.ai.controls.AIFeatureBlockStorage
  import mozilla.components.lib.ai.controls.dataStore
  import mozilla.components.lib.ai.controls.default
 -import mozilla.components.lib.crash.store.CrashAction
 +/* import mozilla.components.lib.crash.store.CrashAction
  import mozilla.components.lib.crash.store.CrashMiddleware
--import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient
-+import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient */
+ import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient
+-import mozilla.components.lib.integrity.googleplay.IntegrityConsumer
++import mozilla.components.lib.integrity.googleplay.IntegrityConsumer*/
  import mozilla.components.lib.llm.mlpa.MlpaTokenStorage
  import mozilla.components.lib.publicsuffixlist.PublicSuffixList
  import mozilla.components.service.fxrelay.eligibility.RelayEligibilityStore
-@@ -60,9 +60,9 @@ import org.mozilla.fenix.components.ipprotection.IPProtection
- import org.mozilla.fenix.components.ipprotection.IPProtectionAuthSources
+@@ -66,10 +66,10 @@ import org.mozilla.fenix.components.lens.LensImageSearch
+ import org.mozilla.fenix.components.listentopage.ListenToPage
  import org.mozilla.fenix.components.llm.Llm
  import org.mozilla.fenix.components.llm.ext.accessTokenProvider
 -import org.mozilla.fenix.components.metrics.MetricsMiddleware
-+/* import org.mozilla.fenix.components.metrics.MetricsMiddleware
- import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
++// import org.mozilla.fenix.components.metrics.MetricsMiddleware
+ import org.mozilla.fenix.components.tabs.DefaultTabRepository
+-import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
 -import org.mozilla.fenix.crashes.SettingsCrashReportCache
-+import org.mozilla.fenix.crashes.SettingsCrashReportCache */
++// import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
++// import org.mozilla.fenix.crashes.SettingsCrashReportCache
  import org.mozilla.fenix.datastore.pocketStoriesSelectedCategoriesDataStore
  import org.mozilla.fenix.distributions.DefaultDistributionBrowserStoreProvider
  import org.mozilla.fenix.distributions.DefaultDistributionProviderChecker
-@@ -72,18 +72,18 @@ import org.mozilla.fenix.ext.asRecentTabs
+@@ -79,18 +79,18 @@ import org.mozilla.fenix.ext.asRecentTabs
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.filterState
  import org.mozilla.fenix.ext.sort
@@ -102,7 +105,7 @@ index c1173b2ceb..86c4a698ea 100644
  import org.mozilla.fenix.nimbus.FxNimbus
  import org.mozilla.fenix.onboarding.FenixOnboarding
  import org.mozilla.fenix.perf.AppLinkIntentLaunchTypeProvider
-@@ -92,7 +92,7 @@ import org.mozilla.fenix.perf.StartupActivityLog
+@@ -99,7 +99,7 @@ import org.mozilla.fenix.perf.StartupActivityLog
  import org.mozilla.fenix.perf.StartupStateProvider
  import org.mozilla.fenix.perf.StrictModeManager
  import org.mozilla.fenix.perf.lazyMonitored
@@ -111,7 +114,7 @@ index c1173b2ceb..86c4a698ea 100644
  import org.mozilla.fenix.search.VoiceSearchAIControlFeature
  import org.mozilla.fenix.settings.emailmasks.middleware.DefaultEmailMasksRepository
  import org.mozilla.fenix.settings.emailmasks.middleware.EmailMasksRepository
-@@ -320,7 +320,7 @@ class Components(
+@@ -336,7 +336,7 @@ class Components(
                          ProfileMarkerMiddleware(markerName = "AppStore", profiler = core.engine.profiler),
                          LogMiddleware(tag = "AppStore", shouldIncludeDetailedData = { Config.channel.isDebug }),
                          BlocklistMiddleware(blocklistHandler),
@@ -120,7 +123,7 @@ index c1173b2ceb..86c4a698ea 100644
                              lazyMonitored { core.pocketStoriesService },
                              context.pocketStoriesSelectedCategoriesDataStore,
                              SettingsBackedPocketSettings(settings),
-@@ -341,9 +341,9 @@ class Components(
+@@ -357,9 +357,9 @@ class Components(
                                  currentTimeInMillis = currentTimeMillis,
                              )
                          ),
@@ -128,11 +131,11 @@ index c1173b2ceb..86c4a698ea 100644
 +                        HomeTelemetryMiddleware(), */
                          SetupChecklistPreferencesMiddleware(DefaultSetupChecklistRepository(context, settings)),
 -                        SetupChecklistTelemetryMiddleware(),
-+/*                        SetupChecklistTelemetryMiddleware(),
++ /*                       SetupChecklistTelemetryMiddleware(),
                          ReviewPromptMiddleware(
                                  continuousOnboardingInProgress = {
                                      val continuousOnboardingCompleted =
-@@ -359,7 +359,7 @@ class Components(
+@@ -375,7 +375,7 @@ class Components(
                              )
                              .also {
                                  settings.migrateLastReviewPromptTimePrefIfNeeded(nimbus.events)
@@ -193,7 +196,7 @@ index 979e420aa7..36061cd0c1 100644
                  utmMedium: ${settings.utmMedium}
                  utmSource: ${settings.utmSource}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-index f9c8241279..540929ffd7 100644
+index 4a007fc83e..220b46f35d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 @@ -8,7 +8,7 @@ import androidx.annotation.StringRes
@@ -205,7 +208,7 @@ index f9c8241279..540929ffd7 100644
  import mozilla.components.concept.storage.CreditCardsAddressesStorage
  import mozilla.components.concept.storage.LoginsStorage
  import mozilla.components.feature.ipprotection.store.IPProtectionStore
-@@ -19,19 +19,19 @@ import org.mozilla.fenix.debugsettings.addons.ui.AddonsDebugToolsScreen
+@@ -20,19 +20,19 @@ import org.mozilla.fenix.debugsettings.addons.ui.AddonsDebugToolsScreen
  import org.mozilla.fenix.debugsettings.addresses.AddressesDebugRegionRepository
  import org.mozilla.fenix.debugsettings.addresses.AddressesTools
  import org.mozilla.fenix.debugsettings.autofill.AutofillTools
@@ -279,7 +282,7 @@ index f9c8241279..540929ffd7 100644
 @@ -145,7 +145,7 @@ enum class DebugDrawerRoute(
              addressesDebugRegionRepository: AddressesDebugRegionRepository,
              creditCardsAddressesStorage: CreditCardsAddressesStorage,
-             clientUUID: ClientUUID,
+             clientUUID: ClientUuid,
 -            integrityClient: IntegrityClient,
 +            integrityClient: Unit?,
              inactiveTabsEnabled: Boolean,
@@ -373,10 +376,10 @@ index ead961f23e..42a92606e1 100644
                  navController.navigate(route = DebugDrawerRoute.IPProtectionLocationTools.route)
              is DebugDrawerAction.NavigateTo.ListenToPageTools ->
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-index 70523695b8..bfd32bf53a 100644
+index 92aa7c8b30..83d177e018 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-@@ -26,14 +26,14 @@ import kotlinx.coroutines.flow.map
+@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.map
  import mozilla.components.browser.state.state.BrowserState
  import mozilla.components.browser.state.state.createTab
  import mozilla.components.browser.state.store.BrowserStore
@@ -385,13 +388,14 @@ index 70523695b8..bfd32bf53a 100644
  import mozilla.components.concept.storage.CreditCardsAddressesStorage
  import mozilla.components.concept.storage.LoginsStorage
  import mozilla.components.feature.ipprotection.store.IPProtectionStore
- import mozilla.components.feature.listentopage.ListenState
- import mozilla.components.feature.listentopage.ListenStore
- import mozilla.components.feature.listentopage.listenReducer
+@@ -36,7 +36,7 @@ import mozilla.components.feature.listentopage.listenReducer
+ import mozilla.components.feature.tabgroups.storage.data.TabGroup
+ import mozilla.components.feature.tabgroups.storage.data.TabGroupData
+ import mozilla.components.feature.tabgroups.storage.repository.TabGroupRepository
 -import mozilla.telemetry.glean.Glean
 +// import mozilla.telemetry.glean.Glean
  import org.mozilla.fenix.R
- import org.mozilla.fenix.components.ClientUUID
+ import org.mozilla.fenix.components.ClientUuid
  import org.mozilla.fenix.components.components
 @@ -110,8 +110,8 @@ fun FenixOverlay(
              GleanDebugToolsStore(
@@ -407,7 +411,7 @@ index 70523695b8..bfd32bf53a 100644
 @@ -173,7 +173,7 @@ private fun FenixOverlay(
      addressesDebugRegionRepository: AddressesDebugRegionRepository,
      creditCardsAddressesStorage: CreditCardsAddressesStorage,
-     clientUUID: ClientUUID,
+     clientUUID: ClientUuid,
 -    integrityClient: IntegrityClient,
 +    integrityClient: Unit?,
      tabGroupRepository: TabGroupRepository,
@@ -416,7 +420,7 @@ index 70523695b8..bfd32bf53a 100644
 @@ -306,7 +306,7 @@ private fun FenixOverlayPreview() {
          addressesDebugRegionRepository = FakeAddressesDebugRegionRepository(),
          creditCardsAddressesStorage = FakeCreditCardsAddressesStorage(),
-         clientUUID = FakeClientUUID(),
+         clientUUID = FakeClientUuid(),
 -        integrityClient = IntegrityClient.testSuccess,
 +        integrityClient = null,
          tabGroupRepository = mockTabGroupRepository,

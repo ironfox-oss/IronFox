@@ -1,0 +1,13 @@
+diff --git a/glean-core/build/src/lib.rs b/glean-core/build/src/lib.rs
+index 1be411d8..19871c80 100644
+--- a/glean-core/build/src/lib.rs
++++ b/glean-core/build/src/lib.rs
+@@ -39,7 +39,7 @@ use std::{env, path::PathBuf};
+ 
+ use xshell_venv::{Result, Shell, VirtualEnv};
+ 
+-const GLEAN_PARSER_VERSION: &str = "20.1.0";
++const GLEAN_PARSER_VERSION: &str = "20.2.0";
+ 
+ /// A Glean Rust bindings generator.
+ pub struct Builder {

@@ -362,10 +362,8 @@ fi
 
 # Build direct dependencies of Glean
 if [[ "${IRONFOX_BUILD_GLEAN_DEPS}" == 1 ]]; then
-  if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
-    # uniffi-bindgen
-    IRONFOX_BUILD_UNIFFI=1
-  fi
+  # uniffi-bindgen
+  IRONFOX_BUILD_UNIFFI=1
 fi
 
 # Build direct dependencies of Android Components
@@ -557,8 +555,13 @@ if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
   verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN' || return 1
 fi
 
+# uniffi-rs
+if [[ "${IRONFOX_BUILD_UNIFFI}" == 1 ]]; then
+  verify_dir_with_env "${IRONFOX_UNIFFI_DIR}" 'IRONFOX_UNIFFI_DIR' || return 1
+fi
+
 # Prebuilds repo
-if [[ "${IRONFOX_BUILD_UNIFFI}" == 1 ]] || [[ "${IRONFOX_BUILD_WASI}" == 1 ]]; then
+if [[ "${IRONFOX_BUILD_WASI}" == 1 ]]; then
   verify_dir_with_env "${IRONFOX_PREBUILDS}" 'IRONFOX_PREBUILDS' || return 1
 fi
 
@@ -1196,14 +1199,9 @@ function build_phoenix() {
 # uniffi-bindgen
 function build_uniffi() {
   echo_red_text 'Building uniffi-bindgen...'
-
-  # Ensure we have bash
-  verify_exec "${IRONFOX_BASH}" 'IRONFOX_BASH' || return 1
-
-  pushd "${IRONFOX_PREBUILDS}"
-  "${IRONFOX_BASH}" "${IRONFOX_PREBUILDS}/scripts/build.sh" 'uniffi'
+  pushd "${IRONFOX_UNIFFI_DIR}"
+  "${IRONFOX_CARGO}" build --release
   popd
-
   echo_green_text 'SUCCESS: Built uniffi-bindgen'
 }
 
@@ -1242,7 +1240,7 @@ function build_glean() {
 
   pushd "${IRONFOX_GLEAN}"
   "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
-  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x createGleanPythonVirtualEnv
+  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x Bootstrap_CONDA
   popd
 
   echo_green_text 'SUCCESS: Built Glean'
@@ -1971,6 +1969,11 @@ fi
 # Build Android Components
 if [[ "${IRONFOX_BUILD_AC}" == 1 ]]; then
   build_ac
+fi
+
+# Build uniffi-bindgen
+if [[ "${IRONFOX_BUILD_UNIFFI}" == 1 ]]; then
+  build_uniffi
 fi
 
 # Build Glean

@@ -8,15 +8,18 @@ Provides support for core IronFox functionality.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/moz.build b/moz.build
-index bd4e5d2b9075..2fa61710b3ed 100644
+index 291f569259..b5bfc19af4 100644
 --- a/moz.build
 +++ b/moz.build
-@@ -250,3 +250,5 @@ SPHINX_TREES["jsloader"] = "docs/jsloader"
- SPHINX_TREES["ai-agent-tools"] = "docs/ai-agent-tools"
+@@ -363,6 +363,8 @@ SPHINX_TREES["ai-agent-tools"] = "docs/ai-agent-tools"
  
  include("build/templates.mozbuild")
-+
+ 
 +DIRS += ["ironfox"]
++
+ if CONFIG["MOZ_GENERATE_SBOM"]:
+     # The document covers the whole tree rather than any one directory, and it
+     # reads the licenses.json the backend writes from the tree-wide LICENSES
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
 index 79a1b7c25b..917d5b8d16 100644
 --- a/mobile/android/moz.configure

@@ -39,10 +39,10 @@ index b1840862ca13..c0f8add3104f 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt
-index 612108089931..9e06be3e5818 100644
+index 14dc9a752170..c1e7d1b53790 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt
-@@ -177,12 +177,13 @@ internal fun Homepage(
+@@ -174,13 +174,14 @@ internal fun Homepage(
                  }
  
                  is HeaderState.Experimental.Private -> {
@@ -53,49 +53,50 @@ index 612108089931..9e06be3e5818 100644
                  is HeaderState.Normal -> {
                      HomepageHeader(
                          browsingMode = state.browsingMode,
+                         showStoriesButton = headerState.showStoriesButton,
 +                        alwaysUsePB = components.settings.ironfox.alwaysUsePrivateBrowsing,
                          browsingModeChanged = browsingModeChanged,
+                         onStoriesTapped = { interactor.onDiscoverMoreClicked() },
                      )
-                 }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt
-index 28fab67918af..006de138cde4 100644
+index 552548656d85..f664bfd82321 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt
-@@ -44,6 +44,7 @@ import org.mozilla.fenix.wallpapers.WallpaperTheme
- @Composable
+@@ -52,6 +52,7 @@ import org.mozilla.fenix.wallpapers.WallpaperTheme
  fun HomepageHeader(
      browsingMode: BrowsingMode,
+     showStoriesButton: Boolean,
 +    alwaysUsePB: Boolean,
      browsingModeChanged: (BrowsingMode) -> Unit,
+     onStoriesTapped: () -> Unit,
  ) {
-     // In normal mode the wordmark and private-browsing button follow the wallpaper text color; in
-@@ -75,11 +76,13 @@ fun HomepageHeader(
+@@ -92,11 +93,13 @@ fun HomepageHeader(
  
-         Spacer(modifier = Modifier.weight(1f))
+             Spacer(modifier = Modifier.weight(1f))
  
--        PrivateBrowsingButton(
--            color = privateBrowsingButtonColor,
--            browsingMode = browsingMode,
--            browsingModeChanged = browsingModeChanged,
--        )
-+        if (!alwaysUsePB) {
-+            PrivateBrowsingButton(
-+                color = privateBrowsingButtonColor,
-+                browsingMode = browsingMode,
-+                browsingModeChanged = browsingModeChanged,
-+            )
-+        }
-     }
- }
+-            PrivateBrowsingButton(
+-                color = privateBrowsingButtonColor,
+-                browsingMode = browsingMode,
+-                browsingModeChanged = browsingModeChanged,
+-            )
++            if (!alwaysUsePB) {
++                PrivateBrowsingButton(
++                    color = privateBrowsingButtonColor,
++                    browsingMode = browsingMode,
++                    browsingModeChanged = browsingModeChanged,
++                )
++            }
+         }
  
-@@ -130,6 +133,7 @@ private fun HomepageHeaderPreview(@PreviewParameter(PreviewThemeProvider::class)
-         Surface {
+         if (!browsingMode.isPrivate) {
+@@ -162,6 +165,7 @@ private fun HomepageHeaderPreview(@PreviewParameter(PreviewThemeProvider::class)
              HomepageHeader(
                  browsingMode = BrowsingMode.Normal,
+                 showStoriesButton = true,
 +                alwaysUsePB = false,
                  browsingModeChanged = {},
+                 onStoriesTapped = {},
              )
-         }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
 index 826acce5d92d..6300f494cad8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt

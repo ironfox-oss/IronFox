@@ -8,16 +8,16 @@ Disables integration with Pocket.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
-index 9911655fa067..607e9a6f6c80 100644
+index 5a16d189988d..f12c82ff8ce8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
-@@ -39,7 +39,7 @@ object ContentRecommendationsFeatureHelper {
+@@ -21,7 +21,7 @@ object ContentRecommendationsFeatureHelper {
       * otherwise.
       */
      fun isContentRecommendationsFeatureEnabled(context: Context): Boolean {
--        val langTag = LocaleManager.getCurrentLocale(context)?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
--        return CONTENT_RECOMMENDATIONS_SUPPORTED_LOCALE.contains(langTag)
-+//        val langTag = LocaleManager.getCurrentLocale(context)?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
+-        val locale = LocaleManager.getCurrentLocale(context) ?: getSystemDefault()
+-        return isContentRecommendationsLocaleSupported(locale)
++//        val locale = LocaleManager.getCurrentLocale(context) ?: getSystemDefault()
 +        return false
      }
  }

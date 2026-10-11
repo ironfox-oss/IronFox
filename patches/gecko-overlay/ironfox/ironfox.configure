@@ -213,3 +213,17 @@ def nimbus_fml_path(value):
     return value[0]
 
 set_config("NIMBUS_FML", nimbus_fml_path)
+
+# This allows us to replace the Glean Parser Python environment with our own
+option(
+  "--with-ironfox-glean-parser-pyenv",
+  nargs="?",
+  help="Set the path to the Glean Parser Python environment",
+)
+
+@depends("--with-ironfox-glean-parser-pyenv")
+def glean_parser_pyenv(value):
+  if value:
+    return value[0]
+
+set_config("GRADLE_GLEAN_PARSER_VENV", glean_parser_pyenv)
