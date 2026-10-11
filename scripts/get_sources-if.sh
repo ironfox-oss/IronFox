@@ -1098,9 +1098,13 @@ function get_android_sdk_platform() {
   # Ensure we have `IRONFOX_ANDROID_SDK_PLATFORM_VERSION`
   verify_env "${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}" 'IRONFOX_ANDROID_SDK_PLATFORM_VERSION' || return 1
 
+  # By default, we know the download has not failed...
+  local IRONFOX_DOWNLOAD_FAILED=0
+
   echo_red_text "Downloading Android SDK Platform (latest) to path: '${IRONFOX_ANDROID_SDK_PLATFORM}'..."
-  "${IRONFOX_ANDROID}" sdk install "platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}" --no-metrics --sdk="${IRONFOX_ANDROID_SDK}"
-  if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
+  "${IRONFOX_ANDROID}" sdk install "platforms/android-${IRONFOX_ANDROID_SDK_PLATFORM_VERSION}" --no-metrics --sdk="${IRONFOX_ANDROID_SDK}" || local IRONFOX_DOWNLOAD_FAILED=1
+
+  if [[ "${IRONFOX_DOWNLOAD_FAILED}" != 1 ]]; then
     echo_green_text "SUCCESS: Set-up Android SDK Platform (latest) at path: '${IRONFOX_ANDROID_SDK_PLATFORM}'!"
   fi
 }
@@ -1121,9 +1125,13 @@ function get_android_sdk_platform_36() {
   # Ensure we have `IRONFOX_ANDROID_SDK_PLATFORM_36`
   verify_env "${IRONFOX_ANDROID_SDK_PLATFORM}" 'IRONFOX_ANDROID_SDK_PLATFORM' || return 1
 
+  # By default, we know the download has not failed...
+  local IRONFOX_DOWNLOAD_FAILED=0
+
   echo_red_text "Downloading Android SDK Platform (36) to path: '${IRONFOX_ANDROID_SDK_PLATFORM_36}'..."
-  "${IRONFOX_ANDROID}" sdk install "platforms/android-36" --no-metrics --sdk="${IRONFOX_ANDROID_SDK}"
-  if [[ "${IRONFOX_PERFORM_POST_DOWNLOAD}" == 1 ]]; then
+  "${IRONFOX_ANDROID}" sdk install "platforms/android-36" --no-metrics --sdk="${IRONFOX_ANDROID_SDK}" || local IRONFOX_DOWNLOAD_FAILED=1
+
+  if [[ "${IRONFOX_DOWNLOAD_FAILED}" != 1 ]]; then
     echo_green_text "SUCCESS: Set-up Android SDK Platform (36) at path: '${IRONFOX_ANDROID_SDK_PLATFORM_36}'!"
   fi
 }
