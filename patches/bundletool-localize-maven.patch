@@ -1,0 +1,20 @@
+diff --git a/build.gradle b/build.gradle
+index 613e984..376b406 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+ 
+ buildscript {
+     repositories {
++        mavenLocal()
+         mavenCentral()
+         maven {
+             url "https://plugins.gradle.org/m2/"
+@@ -19,6 +20,7 @@ apply plugin: "java"
+ apply plugin: "maven-publish"
+ 
+ repositories {
++    mavenLocal()
+     mavenCentral()
+     google()
+ }

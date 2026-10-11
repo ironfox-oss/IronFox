@@ -522,11 +522,11 @@ function prepare_bundletool() {
 
   pushd "${IRONFOX_BUNDLETOOL_DIR}"
 
+  # Apply patches
+  apply_patch 'bundletool-localize-maven.patch'
+
   # Always use our Gradle wrapper with our Gradle flags/configuration
   localize_gradle
-
-  # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
-  localize_maven
 
   popd
 
@@ -1270,6 +1270,7 @@ function prepare_microg() {
 
   # Apply patches
   apply_patch 'microg-gradle-project-resolution.patch'
+  apply_patch 'microg-localize-maven.patch'
 
   # Always use our Gradle wrapper with our Gradle flags/configuration
   localize_gradle

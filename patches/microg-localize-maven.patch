@@ -1,0 +1,20 @@
+diff --git a/build.gradle b/build.gradle
+index a42ad58..3b31bda 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -58,6 +58,7 @@ buildscript {
+     }
+ 
+     repositories {
++        mavenLocal()
+         mavenCentral()
+         google()
+     }
+@@ -121,6 +122,7 @@ allprojects {
+ 
+ subprojects {
+     repositories {
++        mavenLocal()
+         mavenCentral()
+         google()
+         if (hasModule("hms", false)) maven {url 'https://developer.huawei.com/repo/'}
