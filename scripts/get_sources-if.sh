@@ -13,11 +13,6 @@ source "${IRONFOX_DOWNLOAD_UTILS}" || return 1
 verify_file_with_env "${IRONFOX_FILE_UTILS}" 'IRONFOX_FILE_UTILS' || return 1
 source "${IRONFOX_FILE_UTILS}" || return 1
 
-# Include patch utilities
-## (For Glean Parser)
-verify_file "${IRONFOX_SCRIPTS}/patches.sh" || return 1
-source "${IRONFOX_SCRIPTS}/patches.sh" || return 1
-
 if [[ -z "${IRONFOX_FROM_SOURCES+x}" ]]; then
   echo_red_text "ERROR: Do not call 'get_sources-if.sh' directly! Instead, use 'get_sources.sh'." >&1
   return 1
@@ -323,6 +318,13 @@ elif [[ "${mode}" != 'download' ]]; then
   return 1
 fi
 readonly IRONFOX_GET_SOURCE_CHECKSUM_UPDATE
+
+# Include patch utilities
+## (For Glean Parser)
+if [[ "${IRONFOX_GET_SOURCE_GLEAN_PARSER}" == 1 ]]; then
+  verify_file "${IRONFOX_SCRIPTS}/patches.sh" || return 1
+  source "${IRONFOX_SCRIPTS}/patches.sh" || return 1
+fi
 
 # Back-up (and remove) a file if it exists
 function backup_file() {
