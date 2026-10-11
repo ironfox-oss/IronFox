@@ -1,22 +1,24 @@
 diff --git a/build.gradle b/build.gradle
-index 4610b3d68..c5188f2bc 100644
+index 4610b3d68..4d486cd04 100644
 --- a/build.gradle
 +++ b/build.gradle
-@@ -3,9 +3,9 @@
+@@ -3,10 +3,10 @@
  buildscript {
      ext.build = [
          // These must be kept in sync with the android components in mozilla-central.
 -        compileSdkMajorVersion: 36,
 -        compileSdkMinorVersion: 1,
 -        targetSdkVersion: 36,
-+        compileSdkMajorVersion: 37,
-+        compileSdkMinorVersion: 2,
-+        targetSdkVersion: 37,
-         minSdkVersion: 26,
+-        minSdkVersion: 26,
++        compileSdkMajorVersion: {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR},
++        compileSdkMinorVersion: {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR},
++        targetSdkVersion: {IRONFOX_ANDROID_TARGET_SDK},
++        minSdkVersion: {IRONFOX_ANDROID_MIN_SDK},
          jvmTargetCompatibility: 17,
      ]
+ 
 diff --git a/settings.gradle b/settings.gradle
-index a5f588255..54a61f62e 100644
+index a5f588255..a46b2b0ce 100644
 --- a/settings.gradle
 +++ b/settings.gradle
 @@ -200,11 +200,11 @@ gradle.projectsLoaded { ->
@@ -25,13 +27,14 @@ index a5f588255..54a61f62e 100644
              17, // jvmTargetCompatibility,
 -            36, // compileSdkMajorVersion,
 -            1,  // compileSdkMinorVersion,
-+            37, // compileSdkMajorVersion,
-+            2,  // compileSdkMinorVersion,
-             26, // minSdkVersion,
+-            26, // minSdkVersion,
 -            36, // targetSdkVersion,
 -            "29.0.14206865", // ndkVersion - Keep it in sync in TC Dockerfile.
-+            37, // targetSdkVersion,
-+            "30.0.16248370", // ndkVersion - Keep it in sync in TC Dockerfile.
++            {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}, // compileSdkMajorVersion,
++            {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR},  // compileSdkMinorVersion,
++            {IRONFOX_ANDROID_MIN_SDK}, // minSdkVersion,
++            {IRONFOX_ANDROID_TARGET_SDK}, // targetSdkVersion,
++            "{IRONFOX_ANDROID_NDK_REVISION}", // ndkVersion - Keep it in sync in TC Dockerfile.
          )
      }
  }

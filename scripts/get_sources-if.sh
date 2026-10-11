@@ -1396,6 +1396,9 @@ function get_glean_parser() {
     apply_patch 'glean-parser-version.patch'
     popd
 
+    # Set the version
+    "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN_PARSER_VERSION}|${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN_PARSER_DIR}/pyproject.toml"
+
     echo_red_text "Installing Glean Parser to path: '${IRONFOX_GLEAN_PARSER}'..."
     "${IRONFOX_UV}" pip install --no-editable --strict "${IRONFOX_GLEAN_PARSER_DIR}"
     echo_green_text "SUCCESS: Set-up Glean Parser at path: '${IRONFOX_GLEAN_PARSER}'!"

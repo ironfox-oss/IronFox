@@ -52,6 +52,10 @@ ac_add_options --enable-install-strip
 ac_add_options --enable-strip
 export STRIP_FLAGS="--strip-debug --strip-unneeded"
 
+# Set Android minimum SDK version
+## https://searchfox.org/firefox-release/rev/3c71aeacdb296402e41fb2084b13e797d1770642/build/moz.configure/android-ndk.configure#34
+ac_add_options --with-android-version="${IRONFOX_ANDROID_MIN_SDK}"
+
 # Set Android NDK path
 ac_add_options --with-android-ndk="${IRONFOX_ANDROID_NDK}"
 

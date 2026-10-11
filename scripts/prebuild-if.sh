@@ -221,6 +221,18 @@ function prepare_ac() {
   # Ensure we have rm
   verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
+  # Ensure we have `IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR`
+  verify_env "${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}" 'IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR`
+  verify_env "${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}" 'IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_MIN_SDK`
+  verify_env "${IRONFOX_ANDROID_MIN_SDK}" 'IRONFOX_ANDROID_MIN_SDK' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_TARGET_SDK`
+  verify_env "${IRONFOX_ANDROID_TARGET_SDK}" 'IRONFOX_ANDROID_TARGET_SDK' || return 1
+
   echo_red_text 'Preparing Android Components...'
 
   # Verify directories
@@ -228,6 +240,16 @@ function prepare_ac() {
   verify_dir_with_env "${IRONFOX_AC_OVERLAY}" 'IRONFOX_AC_OVERLAY' || return 1
 
   pushd "${IRONFOX_AC}"
+
+  # Set Android compile SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|g" "${IRONFOX_AC}/.config.yml"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|g" "${IRONFOX_AC}/.config.yml"
+
+  # Set Android minimum SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_MIN_SDK}|${IRONFOX_ANDROID_MIN_SDK}|g" "${IRONFOX_AC}/.config.yml"
+
+  # Set Android target SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_TARGET_SDK}|${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_AC}/.config.yml"
 
   # Remove default built-in search engines
   "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/feature/search/src/main/assets/searchplugins/"*
@@ -367,6 +389,21 @@ function prepare_as() {
   # Ensure we have rm
   verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
+  # Ensure we have `IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR`
+  verify_env "${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}" 'IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR`
+  verify_env "${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}" 'IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_MIN_SDK`
+  verify_env "${IRONFOX_ANDROID_MIN_SDK}" 'IRONFOX_ANDROID_MIN_SDK' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_NDK_REVISION`
+  verify_env "${IRONFOX_ANDROID_NDK_REVISION}" 'IRONFOX_ANDROID_NDK_REVISION' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_TARGET_SDK`
+  verify_env "${IRONFOX_ANDROID_TARGET_SDK}" 'IRONFOX_ANDROID_TARGET_SDK' || return 1
+
   # Ensure we have `IRONFOX_RUST_VERSION`
   verify_env "${IRONFOX_RUST_VERSION}" 'IRONFOX_RUST_VERSION' || return 1
 
@@ -390,9 +427,6 @@ function prepare_as() {
   # Always use our Gradle wrapper with our Gradle flags/configuration
   localize_gradle
 
-  # Break the dependency on older Rust
-  "${IRONFOX_SED}" -i -e "s|channel = .*|channel = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_AS}/rust-toolchain.toml"
-
   # Disable debug
   "${IRONFOX_SED}" -i -e 's|debug = .*|debug = false|g' "${IRONFOX_AS}/Cargo.toml"
 
@@ -405,6 +439,26 @@ function prepare_as() {
 
   # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
   localize_maven
+
+  # Set Android compile SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|g" "${IRONFOX_AS}/build.gradle"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|g" "${IRONFOX_AS}/settings.gradle"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|g" "${IRONFOX_AS}/build.gradle"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|g" "${IRONFOX_AS}/settings.gradle"
+
+  # Set Android minimum SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_MIN_SDK}|${IRONFOX_ANDROID_MIN_SDK}|g" "${IRONFOX_AS}/build.gradle"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_MIN_SDK}|${IRONFOX_ANDROID_MIN_SDK}|g" "${IRONFOX_AS}/settings.gradle"
+
+  # Set Android target SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_TARGET_SDK}|${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_AS}/build.gradle"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_TARGET_SDK}|${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_AS}/settings.gradle"
+
+  # Set Android NDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_NDK_REVISION}|${IRONFOX_ANDROID_NDK_REVISION}|g" "${IRONFOX_AS}/settings.gradle"
+
+  # Set Rust version
+  "${IRONFOX_SED}" -i -e "s|channel = .*|channel = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_AS}/rust-toolchain.toml"
 
   # No-op Nimbus (Experimentation)
   "${IRONFOX_SED}" -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' "${IRONFOX_AS}/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt"
@@ -847,7 +901,7 @@ function prepare_firefox() {
   # Fail on use of prebuilt nimbus-fml
   "${IRONFOX_SED}" -i 's|https://|hxxps://|g' "${IRONFOX_GECKO}/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt"
 
-  # Break the dependency on older Rust
+  # Set Rust version
   "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GECKO}/Cargo.toml"
   "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_capi/Cargo.toml"
   "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_segmenter_data/Cargo.toml"
@@ -1036,6 +1090,21 @@ function prepare_glean() {
   # Ensure we have rm
   verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
+  # Ensure we have `IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR`
+  verify_env "${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}" 'IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR`
+  verify_env "${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}" 'IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_MIN_SDK`
+  verify_env "${IRONFOX_ANDROID_MIN_SDK}" 'IRONFOX_ANDROID_MIN_SDK' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_NDK_REVISION`
+  verify_env "${IRONFOX_ANDROID_NDK_REVISION}" 'IRONFOX_ANDROID_NDK_REVISION' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_TARGET_SDK`
+  verify_env "${IRONFOX_ANDROID_TARGET_SDK}" 'IRONFOX_ANDROID_TARGET_SDK' || return 1
+
   # Ensure we have `IRONFOX_RUST_VERSION`
   verify_env "${IRONFOX_RUST_VERSION}" 'IRONFOX_RUST_VERSION' || return 1
 
@@ -1075,17 +1144,31 @@ function prepare_glean() {
   # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
   localize_maven
 
-  # Break the dependency on older Rust
-  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml"
-  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/build/Cargo.toml"
-  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/rlb/Cargo.toml"
+  # Set Android compile SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|g" "${IRONFOX_GLEAN}/build.gradle"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|g" "${IRONFOX_GLEAN}/build.gradle"
 
-  # Bump Glean Parser
+  # Set Android minimum SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_MIN_SDK}|${IRONFOX_ANDROID_MIN_SDK}|g" "${IRONFOX_GLEAN}/build.gradle"
+
+  # Set Android target SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_TARGET_SDK}|${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_GLEAN}/build.gradle"
+
+  # Set Android NDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_NDK_REVISION}|${IRONFOX_ANDROID_NDK_REVISION}|g" "${IRONFOX_GLEAN}/build.gradle"
+
+  # Set Glean Parser version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN_PARSER_VERSION}|${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/glean-core/build/src/lib.rs"
   "${IRONFOX_SED}" -i -e "s|glean_parser~=.*|glean_parser~=${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/Makefile"
   "${IRONFOX_SED}" -i -e "s|glean_parser~=.*|glean_parser~=${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/pyproject.toml"
   "${IRONFOX_SED}" -i -e "s|glean-parser = .*|glean-parser = \""${IRONFOX_GLEAN_PARSER_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml"
   "${IRONFOX_SED}" -i -e "s|GLEAN_PARSER_VERSION = .*|GLEAN_PARSER_VERSION = \""${IRONFOX_GLEAN_PARSER_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/python/glean/__init__.py"
   "${IRONFOX_SED}" -i -e "s|GLEAN_PARSER_VERSION = .*|GLEAN_PARSER_VERSION = \""${IRONFOX_GLEAN_PARSER_VERSION}\""|g" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy"
+
+  # Set Rust version
+  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/build/Cargo.toml"
+  "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/rlb/Cargo.toml"
 
   # Disable debug
   "${IRONFOX_SED}" -i -e "s|debug = .*|debug = false|g" "${IRONFOX_GLEAN}/Cargo.toml"
@@ -1169,8 +1252,11 @@ function prepare_microg() {
   # Ensure we have `IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING`
   verify_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING' || return 1
 
-  # Ensure we have `IRONFOX_ANDROID_SDK_TARGET`
-  verify_env "${IRONFOX_ANDROID_SDK_TARGET}" 'IRONFOX_ANDROID_SDK_TARGET' || return 1
+  # Ensure we have `IRONFOX_ANDROID_MIN_SDK`
+  verify_env "${IRONFOX_ANDROID_MIN_SDK}" 'IRONFOX_ANDROID_MIN_SDK' || return 1
+
+  # Ensure we have `IRONFOX_ANDROID_TARGET_SDK`
+  verify_env "${IRONFOX_ANDROID_TARGET_SDK}" 'IRONFOX_ANDROID_TARGET_SDK' || return 1
 
   # Ensure we have `IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION`
   verify_env "${IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION}" 'IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION' || return 1
@@ -1188,18 +1274,17 @@ function prepare_microg() {
   # Always use our Gradle wrapper with our Gradle flags/configuration
   localize_gradle
 
-  # Bump Android build tools
+  # Set Android build tools version
   "${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}'|g" "${IRONFOX_GMSCORE}/build.gradle"
 
-  # Bump Android compile SDK
+  # Set Android compile SDK version
   "${IRONFOX_SED}" -i -e "s|ext.androidCompileSdk = .*|ext.androidCompileSdk = ${IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION}|g" "${IRONFOX_GMSCORE}/build.gradle"
 
-  # Bump Android minimum SDK
-  ## (This matches what we're using for the browser itself, as well as Mozilla's various components/dependencies)
-  "${IRONFOX_SED}" -i -e 's|ext.androidMinSdk = .*|ext.androidMinSdk = 26|g' "${IRONFOX_GMSCORE}/build.gradle"
+  # Set Android minimum SDK version
+  "${IRONFOX_SED}" -i -e "s|ext.androidMinSdk = .*|ext.androidMinSdk = ${IRONFOX_ANDROID_MIN_SDK}|g" "${IRONFOX_GMSCORE}/build.gradle"
 
-  # Bump Android prebuild_target SDK
-  "${IRONFOX_SED}" -i -e "s|ext.androidTargetSdk = .*|ext.androidTargetSdk = ${IRONFOX_ANDROID_SDK_TARGET}|g" "${IRONFOX_GMSCORE}/build.gradle"
+  # Set Android target SDK version
+  "${IRONFOX_SED}" -i -e "s|ext.androidTargetSdk = .*|ext.androidTargetSdk = ${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_GMSCORE}/build.gradle"
 
   popd
 
@@ -1220,7 +1305,7 @@ function prepare_uniffi() {
   apply_patch 'uniffi-noop.patch'
   popd
 
-  # Break the dependency on older Rust
+  # Set Rust version
   "${IRONFOX_SED}" -i -e "s|channel = .*|channel = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_UNIFFI_DIR}/rust-toolchain.toml"
 
   echo_green_text 'SUCCESS: Prepared uniffi-bindgen!'

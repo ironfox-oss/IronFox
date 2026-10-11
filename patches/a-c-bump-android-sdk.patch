@@ -1,0 +1,16 @@
+diff --git a/mobile/android/android-components/.config.yml b/mobile/android/android-components/.config.yml
+index 3a8059cbcc30..70732d129360 100644
+--- a/mobile/android/android-components/.config.yml
++++ b/mobile/android/android-components/.config.yml
+@@ -3,7 +3,7 @@ componentsGroupId: "org.mozilla.components"
+ 
+ # Synchronized build configuration for all modules
+ jvmTargetCompatibility: 17
+-compileSdkMajorVersion: 37
+-compileSdkMinorVersion: 2
+-minSdkVersion: 26
+-targetSdkVersion: 37
++compileSdkMajorVersion: {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}
++compileSdkMinorVersion: {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}
++minSdkVersion: {IRONFOX_ANDROID_MIN_SDK}
++targetSdkVersion: {IRONFOX_ANDROID_TARGET_SDK}

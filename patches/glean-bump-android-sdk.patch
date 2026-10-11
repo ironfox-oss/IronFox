@@ -1,21 +1,23 @@
 diff --git a/build.gradle b/build.gradle
-index fa83f350..28b2c0d0 100644
+index fa83f350..0d25456f 100644
 --- a/build.gradle
 +++ b/build.gradle
-@@ -8,9 +8,10 @@
+@@ -8,10 +8,11 @@
  
  buildscript {
      ext.build = [
 -        ndkVersion: "29.0.14206865", // Keep it in sync in TC Dockerfile.
 -        compileSdkVersion: 36,
 -        targetSdkVersion: 36,
-+        ndkVersion: "30.0.16248370", // Keep it in sync in TC Dockerfile.
-+        compileSdkMajorVersion: 37,
-+        compileSdkMinorVersion: 2,
-+        targetSdkVersion: 37,
-         minSdkVersion: 26,
+-        minSdkVersion: 26,
++        ndkVersion: "{IRONFOX_ANDROID_NDK_REVISION}", // Keep it in sync in TC Dockerfile.
++        compileSdkMajorVersion: {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR},
++        compileSdkMinorVersion: {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR},
++        targetSdkVersion: {IRONFOX_ANDROID_TARGET_SDK},
++        minSdkVersion: {IRONFOX_ANDROID_MIN_SDK},
          jvmTargetCompatibility: 17,
      ]
+ 
 diff --git a/glean-core/android/build.gradle b/glean-core/android/build.gradle
 index 5966a1b6..8b97c18c 100644
 --- a/glean-core/android/build.gradle

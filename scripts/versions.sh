@@ -116,7 +116,9 @@ readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='991db0bbf23acd212b6be
 # Version: 37.2
 # https://developer.android.com/tools/releases/platforms
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
-readonly IRONFOX_ANDROID_SDK_PLATFORM_VERSION='37.2'
+readonly IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR='37'
+readonly IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR='2'
+readonly IRONFOX_ANDROID_SDK_PLATFORM_VERSION="${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}.${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}"
 
 # Android SDK Platform Tools
 # Version: 37.0.1
@@ -128,8 +130,11 @@ readonly IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX='e6f1cda180a629d097f95
 # This is used for setting microG's compile SDK version
 readonly IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION='36'
 
-# This is used for ex. setting microG's target SDK version
-readonly IRONFOX_ANDROID_SDK_TARGET='37'
+# Android minimum SDK
+readonly IRONFOX_ANDROID_MIN_SDK='26'
+
+# Android target SDK
+readonly IRONFOX_ANDROID_TARGET_SDK='37'
 
 # Bundletool
 # Version: 1.18.3

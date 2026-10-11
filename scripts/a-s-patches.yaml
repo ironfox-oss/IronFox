@@ -29,7 +29,7 @@ patches:
     name: "Application Services - Bump Android SDK"
     description: "Bump Android SDK."
     reason: "Updates the version of the Android SDK."
-    effect: "Resolves build issues."
+    effect: "Resolves build issues and provides more control over the build system."
     category: "Build System"
 
   - file: "a-s-localize-maven.patch"

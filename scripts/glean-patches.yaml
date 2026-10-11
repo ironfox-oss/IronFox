@@ -17,14 +17,14 @@ patches:
     name: "Glean - Bump Android SDK"
     description: "Bump Android SDK."
     reason: "Updates the version of the Android SDK."
-    effect: "Resolves build issues."
+    effect: "Resolves build issues and provides more control over the build system."
     category: "Build System"
 
   - file: "glean-bump-parser.patch"
     name: "Glean - Bump Parser"
     description: "Bump Glean Parser."
     reason: "Updates the version of the Glean Parser."
-    effect: "Resolves build issues."
+    effect: "Resolves build issues and provides more control over the build system."
     category: "Build System"
 
   - file: "glean-localize-maven.patch"

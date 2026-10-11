@@ -1,0 +1,20 @@
+diff --git a/python/mozboot/mozboot/android.py b/python/mozboot/mozboot/android.py
+index 13134b06974f..7e803dc7f64a 100644
+--- a/python/mozboot/mozboot/android.py
++++ b/python/mozboot/mozboot/android.py
+@@ -27,11 +27,11 @@ from mozboot.bootstrap import MOZCONFIG_SUGGESTION_TEMPLATE
+ # We need the NDK version in multiple different places, and it's inconvenient
+ # to pass down the NDK version to all relevant places, so we have this global
+ # variable.
+-NDK_VERSION = "r30"
+-CMDLINE_TOOLS_VERSION_STRING = "23.0"
+-CMDLINE_TOOLS_VERSION = "16111833"
++NDK_VERSION = os.environ.get("IRONFOX_ANDROID_NDK_VERSION")
++CMDLINE_TOOLS_VERSION_STRING = os.environ.get("IRONFOX_ANDROID_SDK_VERSION")
++CMDLINE_TOOLS_VERSION = os.environ.get("IRONFOX_ANDROID_SDK_REVISION")
+ 
+-BUNDLETOOL_VERSION = "1.18.3"
++BUNDLETOOL_VERSION = os.environ.get("IRONFOX_BUNDLETOOL_VERSION")
+ BUNDLETOOL_URL = f"https://github.com/google/bundletool/releases/download/{BUNDLETOOL_VERSION}/bundletool-all-{BUNDLETOOL_VERSION}.jar"
+ 
+ # We expect the emulator AVD definitions to be platform agnostic

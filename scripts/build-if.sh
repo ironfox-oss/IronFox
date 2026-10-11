@@ -997,7 +997,7 @@ function prep_fenix() {
 
   "${IRONFOX_SED}" -i -e "/android:targetPackage/s/org.mozilla.firefox/${fenix_app_id}/" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
 
-  "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" ${IRONFOX_FENIX}/app/src/*/res/values*/*strings.xml
+  "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/g" ${IRONFOX_FENIX}/app/src/*/res/values*/*strings.xml
 
   echo_green_text 'SUCCESS: Prepared Fenix'
 }
