@@ -45,6 +45,19 @@ verify_exec "${IRONFOX_SLEEP}" 'IRONFOX_SLEEP' || exit 1
 # Ensure we have `IRONFOX_OS`
 verify_env "${IRONFOX_OS}" 'IRONFOX_OS' || exit 1
 
+SUDO=''
+if [[ "$("${IRONFOX_WHOAMI}")" != 'root' ]]; then
+  if [[ -x '/usr/bin/sudo' ]]; then
+    SUDO='/usr/bin/sudo'
+  elif [[ -x '/bin/sudo' ]]; then
+    SUDO='/bin/sudo'
+  else
+    echo "ERROR: Not running as root and 'sudo' is not available." >&2
+    exit 1
+  fi
+fi
+readonly SUDO
+
 function error_fn() {
   echo
   echo -e "\033[31mSomething went wrong! The script failed.\033[0m"
@@ -137,11 +150,10 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
 # Fedora
 elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
   # Ensure we're up to date
-  sudo dnf update -y --refresh || error_fn
+  ${SUDO} /usr/bin/dnf update -y --refresh || error_fn
   echo
 
-  # Install our dependencies...
-  sudo dnf install -y \
+  ${SUDO} /usr/bin/dnf install -y \
     cmake \
     clang \
     gawk \
@@ -162,12 +174,12 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
 # Ubuntu
 elif [[ "${IRONFOX_OS}" == 'ubuntu' ]]; then
   # Ensure we're up to date
-  sudo apt update || error_fn
+  ${SUDO} /usr/bin/apt update || error_fn
   echo
-  sudo apt upgrade || error_fn
+  ${SUDO} /usr/bin/apt upgrade || error_fn
   echo
 
-  sudo apt install -y \
+  ${SUDO} /usr/bin/apt install -y \
     apt-transport-https \
     cmake \
     clang-18 \
