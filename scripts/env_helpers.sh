@@ -76,14 +76,14 @@ function set_platform() {
         local resolved_os="${ID}"
 
         case "${resolved_os}" in
-          fedora|secureblue|ubuntu) ;;
+          fedora | secureblue | ubuntu) ;;
           *)
             if [[ -n "${ID_LIKE+x}" ]]; then
               local like_id
               # shellcheck disable=SC2086
               for like_id in ${ID_LIKE}; do
                 case "${like_id}" in
-                  fedora|ubuntu)
+                  fedora | ubuntu)
                     echo "WARNING: '${PRETTY_NAME:-${ID}}' is not a directly supported OS. Using '${like_id}' configuration (based on ID_LIKE)."
                     echo "WARNING: Builds may not be fully supported on this OS."
                     resolved_os="${like_id}"
