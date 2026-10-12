@@ -70,11 +70,32 @@ function set_platform() {
       readonly IRONFOX_OS='android'
     fi
 
-    # Otherwise, we fall back to `/etc/os-release`
     if [[ -z "${IRONFOX_OS+x}" ]] && [[ -f '/etc/os-release' ]] && [[ -s '/etc/os-release' ]]; then
       source '/etc/os-release'
       if [[ -n "${ID+x}" ]]; then
-        readonly IRONFOX_OS="${ID+x}"
+        local resolved_os="${ID}"
+
+        case "${resolved_os}" in
+          fedora|secureblue|ubuntu) ;;
+          *)
+            if [[ -n "${ID_LIKE+x}" ]]; then
+              local like_id
+              # shellcheck disable=SC2086
+              for like_id in ${ID_LIKE}; do
+                case "${like_id}" in
+                  fedora|ubuntu)
+                    echo "WARNING: '${PRETTY_NAME:-${ID}}' is not a directly supported OS. Using '${like_id}' configuration (based on ID_LIKE)."
+                    echo "WARNING: Builds may not be fully supported on this OS."
+                    resolved_os="${like_id}"
+                    break
+                    ;;
+                esac
+              done
+            fi
+            ;;
+        esac
+
+        readonly IRONFOX_OS="${resolved_os}"
       fi
     fi
   fi
