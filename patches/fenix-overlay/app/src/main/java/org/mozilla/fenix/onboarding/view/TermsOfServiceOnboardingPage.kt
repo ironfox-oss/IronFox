@@ -1,9 +1,14 @@
 package org.mozilla.fenix.onboarding.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -14,16 +19,21 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import mozilla.components.compose.base.button.FilledButton
+import org.mozilla.fenix.compose.ScrollIndicator
 import org.mozilla.fenix.onboarding.view.CONTENT_WEIGHT
 import org.mozilla.fenix.onboarding.view.TITLE_TOP_SPACER_WEIGHT
 import org.mozilla.fenix.onboarding.view.OnboardingPageState
 import org.mozilla.fenix.theme.FirefoxTheme
+
+private val IF_IMAGE_HEIGHT = 176.dp
+private val IF_IMAGE_HEIGHT_SMALL_DEVICE = 130.dp
 
 /**
  * A Composable for replacing Mozilla's Terms of Service page with the IronFox welcome page.
@@ -37,13 +47,14 @@ fun TermsOfServiceOnboardingPage(
   eventHandler: Any?,
 ) {
   Card(
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
     elevation = CardDefaults.cardElevation(if (!pageState.isSmallDevice) 6.dp else 0.dp),
   ) {
+    val verticalPadding = if (pageState.isSmallDevice) 0.dp else FirefoxTheme.layout.space.static300
     Column(
       modifier = Modifier.padding(
-        horizontal = 16.dp,
-        vertical = if (pageState.isSmallDevice) 0.dp else 24.dp,
+        horizontal = FirefoxTheme.layout.space.static200,
+        vertical = verticalPadding,
       ),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -55,24 +66,35 @@ fun TermsOfServiceOnboardingPage(
         Spacer(modifier = Modifier.weight(TITLE_TOP_SPACER_WEIGHT))
       }
 
-      Column(
-        modifier = Modifier
-          .weight(CONTENT_WEIGHT)
-          .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween,
-      ) {
-        Header(pageState)
+      Box(modifier = Modifier.weight(CONTENT_WEIGHT).fillMaxWidth()) {
+        CompositionLocalProvider(LocalOverscrollFactory provides null) {
+          Column(
+            modifier =
+              Modifier.fillMaxSize()
+                .padding(end = FirefoxTheme.layout.space.static150)
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+          ) {
+            Header(pageState)
 
-        Spacer(Modifier.weight(1f))
+            Spacer(Modifier.weight(1f))
 
-        Spacer(Modifier.height(26.dp))
+            Spacer(Modifier.height(26.dp))
+          }
+
+          ScrollIndicator(
+            scrollState = scrollState,
+            modifier = Modifier.align(Alignment.CenterEnd),
+            enabled = pageState.isSmallDevice,
+          )
+        }
       }
 
       FilledButton(
         text = pageState.primaryButton.text,
-        modifier = Modifier
-          .width(width = FirefoxTheme.layout.size.maxWidth.small),
+        modifier =
+          Modifier.width(width = FirefoxTheme.layout.size.maxWidth.small)
+            .defaultMinSize(minHeight = FirefoxTheme.layout.size.static600),
         onClick = pageState.primaryButton.onClick,
       )
     }
@@ -84,9 +106,8 @@ private fun Header(pageState: OnboardingPageState) {
   Image(
     painter = painterResource(id = pageState.imageRes),
     contentDescription = null,
-    modifier = Modifier
-      .height(IconSize.heightDp)
-      .width(IconSize.widthDp),
+    modifier =
+      Modifier.height(pageState.imageHeight()),
   )
 
   Spacer(Modifier.height(20.dp))
@@ -100,7 +121,9 @@ private fun Header(pageState: OnboardingPageState) {
   Spacer(Modifier.height(10.dp))
 }
 
-private object IconSize {
-  val heightDp = 167.dp
-  val widthDp = 161.dp
-}
+private fun OnboardingPageState.imageHeight() =
+  if (isSmallDevice) {
+    IF_IMAGE_HEIGHT_SMALL_DEVICE
+  } else {
+    IF_IMAGE_HEIGHT
+  }

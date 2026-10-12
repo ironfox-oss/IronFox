@@ -3,12 +3,15 @@ package org.mozilla.fenix.onboarding.view
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,6 +35,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,15 +45,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import mozilla.components.compose.base.button.FilledButton
 import org.ironfoxoss.core.R as ironfoxR
 import org.mozilla.fenix.R as fenixR
+import org.mozilla.fenix.compose.ScrollIndicator
 import org.mozilla.fenix.ext.components
+import org.mozilla.fenix.onboarding.view.CONTENT_WEIGHT
+import org.mozilla.fenix.onboarding.view.TITLE_TOP_SPACER_WEIGHT
 import org.mozilla.fenix.onboarding.view.OnboardingPageState
 import org.mozilla.fenix.settings.doh.CustomProviderErrorState
 import org.mozilla.fenix.settings.doh.DefaultDohSettingsProvider
@@ -61,7 +66,8 @@ import org.mozilla.fenix.settings.doh.UrlValidationException
 import org.mozilla.fenix.settings.doh.root.AlertDialogAddCustomProvider
 import org.mozilla.fenix.theme.FirefoxTheme
 
-private val IF_DOH_CONTENT_IMAGE_SIZE = 150.dp
+private val IF_DOH_IMAGE_HEIGHT = 176.dp
+private val IF_DOH_IMAGE_HEIGHT_SMALL_DEVICE = 130.dp
 
 private sealed interface IfPreferenceDohContentState {
   data object ModeSelection : IfPreferenceDohContentState
@@ -73,51 +79,25 @@ fun IronFoxPreferenceDohOnboardingPage(
   pageState: OnboardingPageState,
 ) {
   Card(
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-    elevation = CardDefaults.cardElevation(if (pageState.isSmallDevice) 6.dp else 0.dp),
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+    elevation = CardDefaults.cardElevation(if (!pageState.isSmallDevice) 6.dp else 0.dp),
   ) {
-    val scrollState = rememberScrollState()
+    val verticalPadding = if (pageState.isSmallDevice) 0.dp else FirefoxTheme.layout.space.static300
     Column(
-      modifier = Modifier
-        .padding(horizontal = 16.dp, vertical = 24.dp)
-        .fillMaxSize()
-        .verticalScroll(scrollState),
-
-      verticalArrangement = Arrangement.SpaceBetween,
+      modifier =
+        Modifier.padding(
+          horizontal = FirefoxTheme.layout.space.static200,
+          vertical = verticalPadding,
+        ),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       with(pageState) {
-        Spacer(Modifier)
-
-        val size = remember { IF_DOH_CONTENT_IMAGE_SIZE }
-
-        Image(
-          painter = painterResource(id = imageRes),
-          contentDescription = null,
-          modifier = Modifier.size(size),
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        Column(
-          modifier = Modifier.padding(vertical = 8.dp),
-          verticalArrangement = Arrangement.spacedBy(24.dp),
-          horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-          Text(
-            text = title,
-            textAlign = TextAlign.Center,
-            style = FirefoxTheme.typography.headline5,
-          )
-
-          Text(
-            text = description,
-            textAlign = TextAlign.Center,
-            style = FirefoxTheme.typography.body2,
-          )
+        val scrollState = rememberScrollState()
+        if (pageState.isSmallDevice) {
+          Spacer(modifier = Modifier.height(16.dp))
+        } else {
+          Spacer(modifier = Modifier.weight(TITLE_TOP_SPACER_WEIGHT))
         }
-
-        Spacer(Modifier.height(32.dp))
 
         var contentState by remember {
           mutableStateOf<IfPreferenceDohContentState>(
@@ -188,46 +168,78 @@ fun IronFoxPreferenceDohOnboardingPage(
             }
         }
 
-        AnimatedContent(
-          targetState = contentState,
-          contentAlignment = Alignment.Center,
-        ) { currentState ->
-          when (currentState) {
-            IfPreferenceDohContentState.ModeSelection -> {
-              IronFoxPreferenceDoHModeSelection(
-                state = dohSettingsState,
-                onUpdateState = updateDohSettingsState,
-              )
-            }
+        Box(modifier = Modifier.weight(CONTENT_WEIGHT).fillMaxWidth()) {
+          CompositionLocalProvider(LocalOverscrollFactory provides null) {
+            Column(
+              modifier =
+                Modifier.fillMaxSize()
+                  .padding(end = FirefoxTheme.layout.space.static150)
+                  .verticalScroll(scrollState),
+              horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+              Header(pageState)
 
-            IfPreferenceDohContentState.ProviderSelection -> {
-              IronFoxPreferenceDoHProviderSelection(
-                state = dohSettingsState,
-                dohSettingsProvider = dohSettingsProvider,
-                onUpdateState = updateDohSettingsState,
+              Column(
+                modifier = Modifier.padding(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+              ) {
+
+                Text(
+                  text = description,
+                  textAlign = TextAlign.Center,
+                  style = FirefoxTheme.typography.body2,
+                )
+              }
+
+              Spacer(Modifier.height(32.dp))
+
+              AnimatedContent(
+                targetState = contentState,
+                contentAlignment = Alignment.Center,
+              ) { currentState ->
+                when (currentState) {
+                  IfPreferenceDohContentState.ModeSelection -> {
+                    IronFoxPreferenceDoHModeSelection(
+                      state = dohSettingsState,
+                      onUpdateState = updateDohSettingsState,
+                    )
+                  }
+
+                  IfPreferenceDohContentState.ProviderSelection -> {
+                    IronFoxPreferenceDoHProviderSelection(
+                      state = dohSettingsState,
+                      dohSettingsProvider = dohSettingsProvider,
+                      onUpdateState = updateDohSettingsState,
+                    )
+                  }
+                }
+              }
+
+              Spacer(modifier = Modifier.height(16.dp))
+
+              Text(
+                text = captionText,
+                style = FirefoxTheme.typography.caption,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
               )
             }
+            ScrollIndicator(
+              scrollState = scrollState,
+              modifier = Modifier.align(Alignment.CenterEnd),
+              enabled = pageState.isSmallDevice,
+            )
           }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-          text = captionText,
-          style = FirefoxTheme.typography.caption,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          textAlign = TextAlign.Center,
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
         FilledButton(
           text = primaryButton.text,
-          modifier = Modifier
-            .width(width = FirefoxTheme.layout.size.maxWidth.small)
-            .semantics {
-              testTag = title + "onboarding_card.positive_button"
-            },
+          modifier =
+            Modifier.width(width = FirefoxTheme.layout.size.maxWidth.small)
+              .defaultMinSize(minHeight = FirefoxTheme.layout.size.static600),
           onClick = {
             applyDohSettings(
               contentState = contentState,
@@ -469,3 +481,30 @@ private fun ColumnScope.IronFoxPreferenceDoHProviderSelection(
     }
   }
 }
+
+@Composable
+private fun Header(pageState: OnboardingPageState) {
+  Image(
+    painter = painterResource(id = pageState.imageRes),
+    contentDescription = null,
+    modifier =
+      Modifier.height(pageState.imageHeight()),
+  )
+
+  Spacer(Modifier.height(20.dp))
+
+  Text(
+    text = pageState.title,
+    textAlign = TextAlign.Center,
+    style = MaterialTheme.typography.headlineMedium,
+  )
+
+  Spacer(Modifier.height(10.dp))
+}
+
+private fun OnboardingPageState.imageHeight() =
+  if (isSmallDevice) {
+    IF_DOH_IMAGE_HEIGHT_SMALL_DEVICE
+  } else {
+    IF_DOH_IMAGE_HEIGHT
+  }

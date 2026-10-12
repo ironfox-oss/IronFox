@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,8 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -52,14 +53,18 @@ import org.ironfoxoss.core.R as ironfoxR
 import org.ironfoxoss.ironfox.utils.IFAddonUtils
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.R as fenixR
+import org.mozilla.fenix.compose.ScrollIndicator
 import org.mozilla.fenix.ext.components
+import org.mozilla.fenix.onboarding.view.CONTENT_WEIGHT
+import org.mozilla.fenix.onboarding.view.TITLE_TOP_SPACER_WEIGHT
 import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Configuration
 import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Error
 import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Progress
 import org.mozilla.fenix.onboarding.view.OnboardingPageState
 import org.mozilla.fenix.theme.FirefoxTheme
 
-private val IF_CONTENT_IMAGE_HEIGHT = 150.dp
+private val IF_CONTENT_IMAGE_HEIGHT = 176.dp
+private val IF_CONTENT_IMAGE_HEIGHT_SMALL_DEVICE = 130.dp
 
 private sealed interface IfPreferencesContentState {
   /**
@@ -94,29 +99,25 @@ fun IronFoxPreferencesOnboardingPage(
   pageState: OnboardingPageState,
 ) {
   Card(
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-    elevation = CardDefaults.cardElevation(if (pageState.isSmallDevice) 6.dp else 0.dp),
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright),
+    elevation = CardDefaults.cardElevation(if (!pageState.isSmallDevice) 6.dp else 0.dp),
   ) {
-    val scrollState = rememberScrollState()
+    val verticalPadding = if (pageState.isSmallDevice) 0.dp else FirefoxTheme.layout.space.static300
     Column(
-      modifier = Modifier
-        .padding(horizontal = 16.dp, vertical = 24.dp)
-        .fillMaxSize()
-        .verticalScroll(scrollState),
-
-      verticalArrangement = Arrangement.SpaceBetween,
+      modifier =
+        Modifier.padding(
+          horizontal = FirefoxTheme.layout.space.static200,
+          vertical = verticalPadding,
+        ),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       with(pageState) {
-        Spacer(Modifier)
-
-        Image(
-          painter = painterResource(id = imageRes),
-          contentDescription = null,
-          modifier = Modifier.height(IF_CONTENT_IMAGE_HEIGHT),
-        )
-
-        Spacer(Modifier.height(16.dp))
+        val scrollState = rememberScrollState()
+        if (pageState.isSmallDevice) {
+          Spacer(modifier = Modifier.height(16.dp))
+        } else {
+          Spacer(modifier = Modifier.weight(TITLE_TOP_SPACER_WEIGHT))
+        }
 
         val preferenceOptions = remember { ifPreferenceOptions!! }
         var currentPreferenceIndex by remember { mutableIntStateOf(0) }
@@ -175,51 +176,61 @@ fun IronFoxPreferencesOnboardingPage(
           onContentStateChange(Configuration(--currentPreferenceIndex))
         }
 
-        (contentState as? Configuration?)?.also { configuration ->
-          Text(
-            text = title,
-            textAlign = TextAlign.Center,
-            style = FirefoxTheme.typography.headline5,
-          )
+        Box(modifier = Modifier.weight(CONTENT_WEIGHT).fillMaxWidth()) {
+          CompositionLocalProvider(LocalOverscrollFactory provides null) {
+            Column(
+              modifier =
+                Modifier.fillMaxSize()
+                  .padding(end = FirefoxTheme.layout.space.static150)
+                  .verticalScroll(scrollState),
+              horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+              Header(pageState)
 
-          Spacer(Modifier.height(8.dp))
+              (contentState as? Configuration?)?.also { configuration ->
+                Text(
+                  text = preferenceOptions[configuration.optionIndex].caption,
+                  textAlign = TextAlign.Center,
+                  style = FirefoxTheme.typography.body2,
+                )
+              }
 
-          Text(
-            text = preferenceOptions[configuration.optionIndex].caption,
-            textAlign = TextAlign.Center,
-            style = FirefoxTheme.typography.body2,
-          )
-        }
+              Spacer(Modifier.height(32.dp))
 
-        Spacer(Modifier.height(32.dp))
+              AnimatedContent(
+                targetState = contentState,
+                modifier = Modifier
+                  .weight(1f)
+                  .fillMaxWidth(),
+              ) { currentState ->
+                when (currentState) {
+                  is Configuration -> IronFoxPreferenceConfiguration(
+                    option = preferenceOptions[currentState.optionIndex],
+                    modifier = Modifier.fillMaxSize(),
+                    state = switchStates,
+                    onUpdateSwitchStates = { newSwitchStates ->
+                      switchStates = newSwitchStates
+                    },
+                  )
 
-        AnimatedContent(
-          targetState = contentState,
-          modifier = Modifier
-            .weight(1f)
-            .fillMaxWidth(),
-        ) { currentState ->
-          when (currentState) {
-            is Configuration -> IronFoxPreferenceConfiguration(
-              option = preferenceOptions[currentState.optionIndex],
-              modifier = Modifier.fillMaxSize(),
-              state = switchStates,
-              onUpdateSwitchStates = { newSwitchStates ->
-                switchStates = newSwitchStates
-              },
-            )
+                  is Progress -> IronFoxPreferencesProgress(
+                    state = currentState,
+                  )
 
-            is Progress -> IronFoxPreferencesProgress(
-              state = currentState,
-            )
-
-            is Error -> IronFoxPreferencesError(
-              state = currentState,
-              onRetry = applyAction,
+                  is Error -> IronFoxPreferencesError(
+                    state = currentState,
+                    onRetry = applyAction,
+                  )
+                }
+              }
+            }
+            ScrollIndicator(
+              scrollState = scrollState,
+              modifier = Modifier.align(Alignment.CenterEnd),
+              enabled = pageState.isSmallDevice,
             )
           }
         }
-
         if (contentState is Configuration) {
           Spacer(modifier = Modifier.height(16.dp))
 
@@ -229,11 +240,9 @@ fun IronFoxPreferencesOnboardingPage(
             } else {
               stringResource(fenixR.string.nova_onboarding_continue_button)
             },
-            modifier = Modifier
-              .width(width = FirefoxTheme.layout.size.maxWidth.small)
-              .semantics {
-                testTag = title + "onboarding_card.positive_button"
-              },
+            modifier =
+              Modifier.width(width = FirefoxTheme.layout.size.maxWidth.small)
+                .defaultMinSize(minHeight = FirefoxTheme.layout.size.static600),
               onClick = applyAction,
           )
         }
@@ -443,3 +452,30 @@ private fun IronFoxPreferencesError(
     )
   }
 }
+
+@Composable
+private fun Header(pageState: OnboardingPageState) {
+  Image(
+    painter = painterResource(id = pageState.imageRes),
+    contentDescription = null,
+    modifier =
+      Modifier.height(pageState.imageHeight()),
+  )
+
+  Spacer(Modifier.height(20.dp))
+
+  Text(
+    text = pageState.title,
+    textAlign = TextAlign.Center,
+    style = MaterialTheme.typography.headlineMedium,
+  )
+
+  Spacer(Modifier.height(10.dp))
+}
+
+private fun OnboardingPageState.imageHeight() =
+  if (isSmallDevice) {
+    IF_CONTENT_IMAGE_HEIGHT_SMALL_DEVICE
+  } else {
+    IF_CONTENT_IMAGE_HEIGHT
+  }
