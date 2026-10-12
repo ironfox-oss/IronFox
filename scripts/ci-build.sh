@@ -180,9 +180,9 @@ fi
 echo_green_text 'CI - SUCCESS: Prepared sources.'
 
 # Build
-echo_red_text "CI - Building ${IRONFOX_CI_BUILD_PROJECT} (${IRONFOX_CI_BUILD_ARCH}..."
+echo_red_text "CI - Building ${IRONFOX_CI_BUILD_PROJECT} (${IRONFOX_CI_BUILD_ARCH})..."
 "${IRONFOX_BASH}" "${IRONFOX_CI_BUILD_SH}" "${IRONFOX_CI_BUILD_ARCH}" "${IRONFOX_CI_BUILD_PROJECT}" || exit 1
-echo_green_text "CI - SUCCESS: Built ${IRONFOX_CI_BUILD_PROJECT} (${IRONFOX_CI_BUILD_ARCH}"
+echo_green_text "CI - SUCCESS: Built ${IRONFOX_CI_BUILD_PROJECT} (${IRONFOX_CI_BUILD_ARCH})!"
 
 # Upload artifacts
 echo_red_text 'CI - Uploading artifacts...'
