@@ -35,8 +35,10 @@ readonly PATCH_FILES=($("${IRONFOX_YQ}" '.patches[].file' "$("${IRONFOX_DIRNAME}
 readonly AS_PATCH_FILES=($("${IRONFOX_YQ}" '.patches[].file' "$("${IRONFOX_DIRNAME}" "$0")"/a-s-patches.yaml))
 # shellcheck disable=SC2207
 readonly GLEAN_PATCH_FILES=($("${IRONFOX_YQ}" '.patches[].file' "$("${IRONFOX_DIRNAME}" "$0")"/glean-patches.yaml))
-# shellcheck disable=SC2207
-readonly UP_AC_PATCH_FILES=($("${IRONFOX_YQ}" '.patches[].file' "${IRONFOX_UP_AC}"/patches/patches.yaml))
+if [[ -d "${IRONFOX_UP_AC}" ]]; then
+  # shellcheck disable=SC2207
+  readonly UP_AC_PATCH_FILES=($("${IRONFOX_YQ}" '.patches[].file' "${IRONFOX_UP_AC}"/patches/patches.yaml))
+fi
 
 function check_patch() {
   # Ensure we have basename
