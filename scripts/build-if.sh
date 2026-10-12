@@ -500,8 +500,8 @@ fi
 
 # Verify core directories
 verify_dir_with_env "${IRONFOX_BUILD}" 'IRONFOX_BUILD' || return 1
-verify_dir_with_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP' || return 1
 verify_dir_with_env "${IRONFOX_TEMPLATES}" 'IRONFOX_TEMPLATES' || return 1
+verify_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP' || return 1
 
 # Fail early if our source directories are missing...
 
@@ -746,9 +746,6 @@ function set_build_env() {
 
   # Ensure we have `IRONFOX_MAVEN_LOCAL`
   verify_env "${IRONFOX_MAVEN_LOCAL}" 'IRONFOX_MAVEN_LOCAL' || return 1
-
-  # Ensure we have `IRONFOX_TEMP`
-  verify_env "${IRONFOX_TEMP}" 'IRONFOX_TEMP' || return 1
 
   # Create our directory
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/env"
