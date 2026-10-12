@@ -335,11 +335,15 @@ function setup_path() {
 # Set-up a minimal PATH for linting
 function setup_lint_path() {
   add_to_lint_path "${IRONFOX_BASH}" 'IRONFOX_BASH' 'bash'
-  add_to_lint_path "${IRONFOX_GIT}" 'IRONFOX_GIT' 'git'
   add_to_lint_path "${IRONFOX_LS}" 'IRONFOX_LS' 'ls'
   add_to_lint_path "${IRONFOX_SH}" 'IRONFOX_SH' 'sh'
   add_to_lint_path "${IRONFOX_SHELLCHECK}" 'IRONFOX_SHELLCHECK' 'shellcheck'
   add_to_lint_path "${IRONFOX_SHFMT}" 'IRONFOX_SHFMT' 'shfmt'
+
+  if [[ -z "${IRONFOX_CI+x}" ]] || [[ "${IRONFOX_CI}" != 1 ]]; then
+    # git is only used for linting outside of CI
+    add_to_lint_path "${IRONFOX_GIT}" 'IRONFOX_GIT' 'git'
+  fi
 
   readonly PATH="${IRONFOX_LINT_PATH}"
   export PATH
