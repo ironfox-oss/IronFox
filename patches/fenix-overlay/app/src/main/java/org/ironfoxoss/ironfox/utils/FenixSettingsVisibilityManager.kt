@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import org.ironfoxoss.core.IFDeviceUtils
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.getPreferenceKey
@@ -11,7 +12,6 @@ import org.mozilla.fenix.ext.getPreferenceKey
 // Helpers for controlling the visibility of Fenix UI settings
 
 object FenixSettingsVisibilityManager {
-
   /**
    * Control the visibility of settings at the general settings fragment
    *
@@ -22,6 +22,8 @@ object FenixSettingsVisibilityManager {
     context: Context,
     prefFragment: PreferenceFragmentCompat
   ) {
+    val isTV: Boolean = IFDeviceUtils.isTV(context)
+
     hidePreference(context, R.string.pref_key_data_choices, prefFragment)
     hidePreference(context, R.string.pref_key_firefox_labs, prefFragment)
     hidePreference(context, R.string.pref_key_link_sharing, prefFragment)
@@ -32,6 +34,11 @@ object FenixSettingsVisibilityManager {
     hidePreference(context, R.string.pref_key_remote_debugging, prefFragment)
     hideFxa(context, prefFragment)
     hideLocalAddonInstall(context, prefFragment)
+
+    if (isTV) {
+      // Hide the no-op Notifications setting
+      hidePreference(context, R.string.pref_key_notifications, prefFragment)
+    }
   }
 
   /**
@@ -75,6 +82,19 @@ object FenixSettingsVisibilityManager {
     hidePreference(context, R.string.pref_key_private_mode_and_stories_entry_point, prefFragment)
     hidePreference(context, R.string.pref_key_use_new_crash_reporter, prefFragment)
     hidePreference(context, R.string.pref_key_use_remote_search_configuration, prefFragment)
+  }
+
+  /**
+   * Control the visibility of settings at the customization settings fragment
+   *
+   * @param context Application context
+   * @param prefFragment Preference fragment
+   */
+  fun CustomizationSettingsFragment(
+    context: Context,
+    prefFragment: PreferenceFragmentCompat
+  ) {
+    hideTVSettings(context, prefFragment)
   }
 
   /**
@@ -195,6 +215,42 @@ object FenixSettingsVisibilityManager {
       fxaAccountCategoryPreference?.isVisible = false
       fxaDebugPreference?.isVisible = false
       fxaSignInPreference?.isVisible = false
+    }
+  }
+
+  /**
+   * Hide settings for TV users
+   *
+   * @param context Application context
+   * @param prefFragment Preference fragment
+   */
+  internal fun hideTVSettings(
+    context: Context,
+    prefFragment: PreferenceFragmentCompat
+  ) {
+    val isTV: Boolean = IFDeviceUtils.isTV(context)
+
+    val appIconCatKey = context.getPreferenceKey(R.string.pref_key_customization_category_app_icon)
+    val appIconKey = context.getPreferenceKey(R.string.pref_key_app_icon)
+    val dynamicToolbarKey = context.getPreferenceKey(R.string.pref_key_dynamic_toolbar)
+    val pullToRefreshKey = context.getPreferenceKey(R.string.pref_key_website_pull_to_refresh)
+    val swipeShowTabsKey = context.getPreferenceKey(R.string.pref_key_swipe_toolbar_show_tabs)
+    val swipeSwitchTabsKey = context.getPreferenceKey(R.string.pref_key_swipe_toolbar_switch_tabs)
+
+    val appIconCatPreference = prefFragment.findPreference<Preference>(appIconCatKey)
+    val appIconPreference = prefFragment.findPreference<Preference>(appIconKey)
+    val dynamicToolbarPreference = prefFragment.findPreference<Preference>(dynamicToolbarKey)
+    val pullToRefreshPreference = prefFragment.findPreference<Preference>(pullToRefreshKey)
+    val swipeShowTabsPreference = prefFragment.findPreference<Preference>(swipeShowTabsKey)
+    val swipeSwitchTabsPreference = prefFragment.findPreference<Preference>(swipeSwitchTabsKey)
+
+    if (isTV) {
+      appIconCatPreference?.isVisible = false
+      appIconPreference?.isVisible = false
+      dynamicToolbarPreference?.isVisible = false
+      pullToRefreshPreference?.isVisible = false
+      swipeShowTabsPreference?.isVisible = false
+      swipeSwitchTabsPreference?.isVisible = false
     }
   }
 

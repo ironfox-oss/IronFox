@@ -28,7 +28,8 @@ export const IFAddonUtils = {
    * @return {boolean} - Returns `true` if the add-on is built-in; `false` otherwise
    */
   isAddonBuiltIn(id) {
-    if (id === "fxa@mozac.org" || id === "icons@mozac.org" || id === "readerview@mozac.org" || id === "webcompat@mozilla.org") {
+    if (id === "cursor@ironfoxoss.org" || id === "fxa@mozac.org" || id === "icons@mozac.org" ||
+      id === "readerview@mozac.org" || id === "webcompat@mozilla.org") {
       return true;
     } else {
       return false;

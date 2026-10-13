@@ -1,0 +1,219 @@
+/* Custom properties defined by javascript settings */
+:root {
+  --wasd-cursor-color: #38bdf8;
+  --wasd-cursor-size: 18px;
+  --wasd-cursor-opacity: 0.8;
+  --wasd-cursor-glow: 0 0 10px rgba(56, 189, 248, 0.6);
+}
+
+/* Virtual Cursor styling */
+#wasd-navigator-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--wasd-cursor-size);
+  height: var(--wasd-cursor-size);
+  background-color: var(--wasd-cursor-color);
+  opacity: var(--wasd-cursor-opacity);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2147483647;
+  box-sizing: border-box;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  transition: 
+    width 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), 
+    height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), 
+    background-color 0.2s ease, 
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+/* Cursor Glow effect */
+#wasd-navigator-cursor.glow {
+  box-shadow: var(--wasd-cursor-glow), inset 0 0 4px rgba(255, 255, 255, 0.6);
+}
+
+/* Cursor Hover / Magnetized State */
+#wasd-navigator-cursor.hovering {
+  width: calc(var(--wasd-cursor-size) * 1.6);
+  height: calc(var(--wasd-cursor-size) * 1.6);
+  background-color: rgba(56, 189, 248, 0.15);
+  border-color: var(--wasd-cursor-color);
+  border-width: 3px;
+  box-shadow: none;
+}
+
+#wasd-navigator-cursor.hovering.glow {
+  box-shadow: 0 0 15px var(--wasd-cursor-color);
+}
+
+/* Ripple effect on click */
+.wasd-click-ripple {
+  position: fixed;
+  border: 2px solid var(--wasd-cursor-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2147483646;
+  transform: translate(-50%, -50%);
+  animation: wasd-ripple-effect 0.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.wasd-click-ripple.right-click {
+  border-color: #ec4899;
+}
+
+.wasd-click-ripple.middle-click {
+  border-color: #10b981;
+}
+
+@keyframes wasd-ripple-effect {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 0.8;
+  }
+  100% {
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+  }
+}
+
+/* Spatial Focus Glider */
+#wasd-navigator-spatial-focus {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 2147483645;
+  border: 2px solid var(--wasd-cursor-color);
+  box-shadow: none;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-color: transparent;
+  will-change: transform, width, height;
+  transition: 
+    transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), 
+    width 0.18s cubic-bezier(0.16, 1, 0.3, 1), 
+    height 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.18s ease;
+  opacity: 0;
+}
+
+#wasd-navigator-spatial-focus.glow {
+  background-color: color-mix(in srgb, var(--wasd-cursor-color) 5%, transparent);
+  box-shadow: var(--wasd-cursor-glow), inset 0 0 6px rgba(255,255,255,0.2);
+}
+
+#wasd-navigator-spatial-focus.active {
+  opacity: 1;
+}
+
+/* Heads Up Display (HUD) indicator in corner */
+.wasd-navigator-hud {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: #f8fafc;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 2147483640;
+  pointer-events: none;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+}
+
+.wasd-navigator-hud.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.wasd-hud-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--wasd-cursor-color);
+  box-shadow: 0 0 6px var(--wasd-cursor-color);
+  animation: wasd-pulse-dot 2s infinite alternate;
+}
+
+@keyframes wasd-pulse-dot {
+  0% { transform: scale(0.85); opacity: 0.7; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+.wasd-hud-mode {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.wasd-hud-typing-indicator {
+  background-color: #ef4444;
+  color: white;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 4px;
+}
+
+/* Custom context menu styles */
+.wasd-context-menu {
+  position: fixed;
+  z-index: 2147483647;
+  background-color: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 180px;
+  animation: wasd-context-menu-fade 0.15s ease-out;
+}
+
+.wasd-context-menu-item {
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #e2e8f0;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.wasd-context-menu-item.highlighted,
+.wasd-context-menu-item:hover {
+  background-color: var(--wasd-cursor-color);
+  color: #0f172a;
+}
+
+@keyframes wasd-context-menu-fade {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Hide default browser focus outlines when spatial navigation is active */
+.wasd-spatial-active :focus {
+  outline: none !important;
+  box-shadow: none !important;
+}

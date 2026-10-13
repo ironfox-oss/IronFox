@@ -3,6 +3,7 @@ package org.ironfoxoss.ironfox.utils
 import android.content.Context
 import mozilla.components.lib.crash.store.CrashReportOption
 import org.ironfoxoss.core.IFConstants
+import org.ironfoxoss.core.IFDeviceUtils
 import org.ironfoxoss.ironfox.utils.IFPrefUtils
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.R
@@ -23,6 +24,9 @@ object IFPrefs {
     context: Context
   ) {
     val prefs = IFPrefUtils(context)
+
+    // Whether we are on an Android TV (or Fire TV) device
+    val isTV: Boolean = IFDeviceUtils.isTV(context)
 
     // Allow zoom on all websites, even if the website tries to block it
     prefs.setDefaultBoolPref(R.string.pref_key_accessibility_force_enable_zoom, true)
@@ -218,6 +222,13 @@ object IFPrefs {
     // Disable stories
     prefs.setBoolPref(R.string.pref_key_private_mode_and_stories_entry_point, false)
 
+    // Disable swipe gestures for TV users
+    if (isTV) {
+      prefs.setBoolPref(R.string.pref_key_dynamic_toolbar, false)
+      prefs.setBoolPref(R.string.pref_key_swipe_toolbar_show_tabs, false)
+      prefs.setBoolPref(R.string.pref_key_swipe_toolbar_switch_tabs, false)
+    }
+
     // Disable telemetry
     prefs.setStringPref(R.string.pref_key_custom_glean_server_url, "data;")
     prefs.setBoolPref(R.string.pref_key_daily_usage_ping, false)
@@ -317,10 +328,26 @@ object IFPrefs {
 
     // Enable Private Browsing Lock
     /// Allows users to require authentication to access tabs in Private Browsing
-    prefs.setDefaultBoolPref(R.string.pref_key_private_browsing_locked_enabled, true)
+    if (isTV) {
+      // This is no-op on TV devices
+      prefs.setBoolPref(R.string.pref_key_private_browsing_locked_enabled, false)
+    } else {
+      prefs.setDefaultBoolPref(R.string.pref_key_private_browsing_locked_enabled, true)
+    }
 
     // Enable Pull-to-refresh by default
-    prefs.setDefaultBoolPref(R.string.pref_key_website_pull_to_refresh, true) // [DEFAULT]
+    if (isTV) {
+      // Gestures do not function on TV devices
+      prefs.setBoolPref(R.string.pref_key_website_pull_to_refresh, false)
+    } else {
+      prefs.setDefaultBoolPref(R.string.pref_key_website_pull_to_refresh, true) // [DEFAULT]
+    }
+
+    // Enable tab bar by default for TV users
+    // Improves UX and makes the most sense for our use case
+    if (isTV) {
+      prefs.setDefaultBoolPref(R.string.pref_key_tab_strip_show, true)
+    }
 
     // Skip Mozilla's Privacy Notice and Terms of Use
     val tosTime = TOU_TIME_IN_MILLIS + 1_000

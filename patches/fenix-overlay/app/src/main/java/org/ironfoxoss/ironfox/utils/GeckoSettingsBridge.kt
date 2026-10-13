@@ -10,6 +10,7 @@ import mozilla.components.concept.engine.preferences.Branch
 import mozilla.components.concept.engine.preferences.BrowserPreference
 import mozilla.components.ExperimentalAndroidComponentsApi
 import mozilla.components.concept.engine.Engine
+import org.ironfoxoss.core.IFDeviceUtils
 import org.ironfoxoss.ironfox.utils.IFPrefUtils
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.R
@@ -60,6 +61,9 @@ object GeckoSettingsBridge {
     setHttpsOnlyMode(context, engine)
     setIronFoxOnboardingCompleted(context, engine)
 
+    // Set TV preferences
+    setTVPrefs(context, engine)
+
     // We don't support EME, but, if a user enables it from `about:config`,
     // we need to expose the permision UI for it.
     // If we don't, and a user enables it, Gecko will just allow every site unconditionally to use EME...
@@ -73,6 +77,13 @@ object GeckoSettingsBridge {
           IronFoxPreferences.setEMEEnabled(context, false)
         }
     )
+  }
+
+  fun setTVPrefs(context: Context, engine: Engine) {
+    val isTV: Boolean = IFDeviceUtils.isTV(context)
+    if (isTV) {
+      setDefaultPref(engine, "browser.ironfox.fenix.isTV", isTV)
+    };
   }
 
   fun setIronFoxOnboardingCompleted(context: Context, engine: Engine) {
