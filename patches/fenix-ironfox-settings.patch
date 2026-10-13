@@ -28,25 +28,28 @@ index 75f51971cb20..b445d15c4171 100644
  
              // Allow overriding secret settings with values specified in `local.properties` at build time.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index aff32cbcd7f3..23e277590c11 100644
+index 13f9f6166f53..9e854f714f4d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -150,6 +150,7 @@ import org.mozilla.fenix.translations.TranslationsEnabledSettings
+@@ -153,6 +153,8 @@ import org.mozilla.fenix.translations.TranslationsEnabledSettings
  import org.mozilla.fenix.utils.Settings.DeleteDownloadBehavior
  import org.mozilla.fenix.utils.getUndoDelay
  import org.mozilla.geckoview.GeckoRuntime
 +import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
++import org.ironfoxoss.ironfox.utils.IFAddonUtils
  
- /** Component group for all core browser functionality. */
- @Suppress("LargeClass")
-@@ -262,6 +263,7 @@ class Core(
+ internal val ADDITIONAL_BUNDLED_SEARCH_ENGINE_IDS = listOf("reddit", "youtube")
+ 
+@@ -264,7 +266,9 @@ class Core(
                  runtime = geckoRuntime,
              )
              .also {
 +                GeckoSettingsBridge.setIronFoxPrefs(context, it)
                  WebCompatFeature.install(it)
++                IFAddonUtils.installCursorAddon(context, it)
              }
      }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 index 70b91774b0ec..2d21d2447b87 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt

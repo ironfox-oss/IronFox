@@ -38,6 +38,8 @@ export const GeckoSettingsBridge = {
       setNetworkGeoProviderEnabled(value);
     } else if (pref == "browser.ironfox.fenix.ipv6Enabled") {
       lazy.IFPrefUtils.setAndLockBoolPref("network.dns.disableIPv6", !value);
+    } else if (pref == "browser.ironfox.fenix.isTV") {
+      setTVPrefs(value);
     } else if (pref == "browser.ironfox.fenix.javascriptJitEnabled") {
       setJITEnabled(value);
     } else if (pref == "browser.ironfox.fenix.safeBrowsingEnabled") {
@@ -312,6 +314,20 @@ function setFxaEnabled(value) {
       : lazy.IFAddonUtils.disableAddon
 
   setAddon("fxa@mozac.org");
+};
+
+/**
+ * Set TV preferences
+ *
+ * @param {boolean} value - Whether the TV preferences should be applied
+ */
+function setTVPrefs(value) {
+  if (value) {
+    // For scaling/zooming (ex. to match desktop)
+    lazy.IFPrefUtils.setDefaultBoolPref("apz.drag.enabled", true);
+    lazy.IFPrefUtils.setDefaultBoolPref("dom.meta-viewport.enabled", false);
+    lazy.IFPrefUtils.setDefaultBoolPref("formhelper.autozoom", false);
+  };
 };
 
 /**
@@ -610,6 +626,7 @@ function boolPrefHasUISetting(pref) {
     "browser.ironfox.fenix.geoProviderAndroidEnabled",
     "browser.ironfox.fenix.geoProviderNetworkEnabled",
     "browser.ironfox.fenix.ipv6Enabled",
+    "browser.ironfox.fenix.isTV",
     "browser.ironfox.fenix.javascriptJitEnabled",
     "browser.ironfox.fenix.safeBrowsingEnabled",
     "browser.ironfox.fenix.spoofEnglish",

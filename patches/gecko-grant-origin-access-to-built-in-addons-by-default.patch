@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 13 Oct 2026 05:26:04 +0000
+Subject: [PATCH] Gecko - Grant origin access to built-in add-ons by default
+
+Grants built-in MV3 extensions access to requested origins by default (like they would for ex. MV2).
+
+Origins can still be revoked from settings as optional permissions, this simply controls the default.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/toolkit/components/extensions/Extension.sys.mjs b/toolkit/components/extensions/Extension.sys.mjs
+index 6e813967d5bb..f3a16c045f8c 100644
+--- a/toolkit/components/extensions/Extension.sys.mjs
++++ b/toolkit/components/extensions/Extension.sys.mjs
+@@ -67,6 +67,7 @@ const lazy = XPCOMUtils.declareLazy({
+   permissionToL10nId:
+     "resource://gre/modules/ExtensionPermissionMessages.sys.mjs",
+   QuarantinedDomains: "resource://gre/modules/ExtensionPermissions.sys.mjs",
++  IFAddonUtils:       "moz-src:///ironfox/utils/IFAddonUtils.sys.mjs",
+ 
+   resourceProtocol: () =>
+     Services.io
+@@ -1328,7 +1329,7 @@ export class ExtensionData {
+ 
+     if (
+       this.originControls &&
+-      (lazy.installIncludesOrigins ||
++      (lazy.installIncludesOrigins || lazy.IFAddonUtils.isAddonBuiltIn(this.id) ||
+         Services.policies?.isAddonRequiredByPolicy(this.id))
+     ) {
+       return {
+@@ -4404,7 +4405,7 @@ export class Extension extends ExtensionData {
+         (this.startupReason === "ADDON_UPGRADE" &&
+           Services.policies?.isAddonRequiredByPolicy(this.id))) &&
+       (this.manifest.granted_host_permissions ||
+-        lazy.installIncludesOrigins ||
++        lazy.installIncludesOrigins || lazy.IFAddonUtils.isAddonBuiltIn(this.id) ||
+         Services.policies?.isAddonRequiredByPolicy(this.id))
+     ) {
+       let origins = this.getManifestOrigins();
+-- 

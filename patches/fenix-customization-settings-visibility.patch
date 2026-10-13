@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Mon, 12 Oct 2026 05:17:53 +0000
+Subject: [PATCH] Fenix - Customization Settings visibility
+
+Provides support for controlling the visibility of UI settings within the Customization Settings fragment.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
+index 1956c4ef6f25d..ae33274a6d33a 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
+@@ -4,6 +4,7 @@
+ 
+ package org.mozilla.fenix.settings
+ 
++import org.ironfoxoss.ironfox.utils.FenixSettingsVisibilityManager
+ import android.content.Context
+ import android.content.res.Configuration
+ import android.os.Build
+@@ -129,6 +130,7 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
+             isSummarizationEnabled = status.isSummarizationFeatureEnabled,
+             isSummarizationGestureEnabled = status.isSummarizationGestureEnabled,
+         )
++        FenixSettingsVisibilityManager.CustomizationSettingsFragment(requireContext(), this)
+     }
+ 
+     private fun updateToolbarShortcut() {
+-- 

@@ -172,6 +172,15 @@ patches:
     effect: "Gecko preferences remain in sync with their corresponding UI setting(s), users are provided with a more stable browsing experience, and users can avoid having their preferences unintentionally reset (when set from `about:config` directly)."
     category: "Build System"
 
+  - file: "gecko-grant-origin-access-to-built-in-addons-by-default.patch"
+    name: "Gecko - Grant origin access to built-in add-ons by default"
+    description: |
+     Grants built-in MV3 extensions access to requested origins by default (like they would for ex. MV2).
+    reason: "Allows built-in extensions to function as expected out of the box."
+    effect: |
+      Built-in extensions work correctly, and users can still revoke access to origins from settings as optional permissions.
+    category: "Build System"
+
   # Dependency
   - file: "a-c-liberate.patch"
     name: "Android Components - Liberate"
@@ -760,6 +769,13 @@ patches:
     category: "User Control"
 
   # User Experience
+  - file: "fenix-support-android-tv.patch"
+    name: "Fenix - Support Android TV"
+    description: "Adds support for Android TV (and Fire TV) devices."
+    reason: "Allows users to install and use IronFox on TV devices."
+    effect: "Users can install and use IronFox on TV devices."
+    category: "User Experience"
+
   - file: "gecko-ironfox-fingerprinting-protection-overrides.patch"
     name: "Gecko - IronFox Fingerprinting Protection (FPP) overrides"
     description: "Adds support for an internal list that disables specific fingerprinting protections as needed on a per-site basis."
@@ -900,6 +916,13 @@ patches:
     description: "Adds minor tweaks to the browser's user interface."
     reason: "To reduce clutter and improve the user experience."
     effect: "Users are provided with a cleaner, focused browsing experience."
+    category: "User Interface"
+
+  - file: "fenix-customization-settings-visibility.patch"
+    name: "Fenix - Customization Settings visibility"
+    description: "Provides support for controlling the visibility of UI settings within the Customization Settings fragment."
+    reason: "To hide unwanted settings and display wanted ones."
+    effect: "Unwanted UI settings are hidden, and settings that we do want to display are revealed."
     category: "User Interface"
 
   - file: "fenix-search-settings-visibility.patch"

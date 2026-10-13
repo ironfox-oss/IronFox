@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'none'; form-action 'none'; connect-src 'none'; img-src 'none'; script-src 'none'; style-src 'none'; base-uri 'none'" />
+  <meta charset="utf-8" />
+  <title>Virtual Cursor Settings</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="settings-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-area">
+        <div class="brand">
+          <h1>Virtual Cursor</h1>
+          <span class="version">0.0.1</span>
+        </div>
+      </div>
+      
+      <!-- Global Toggle Switch -->
+      <label class="toggle-switch">
+        <input type="checkbox" id="enabled-toggle" checked>
+        <span class="slider"></span>
+      </label>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Mode Selection Tabs -->
+      <section class="section">
+        <h2 class="section-title">Navigation Mode</h2>
+        <div class="mode-tabs">
+          <button class="mode-tab active" data-mode="cursor">
+            <span class="mode-icon">🎯</span>
+            <span class="mode-label">Cursor</span>
+          </button>
+          <button class="mode-tab" data-mode="spatial">
+            <span class="mode-icon">⚡</span>
+            <span class="mode-label">Spatial</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Settings Panel -->
+      <section class="section settings-panel">
+        
+        <!-- Speed Setting -->
+        <div class="setting-item">
+          <div class="setting-info">
+            <label for="speed-range" class="setting-label">Movement Speed</label>
+            <span class="setting-value" id="speed-value">8</span>
+          </div>
+          <div class="range-container">
+            <input type="range" id="speed-range" min="2" max="25" value="8" step="1">
+          </div>
+        </div>
+
+        <!-- Global Option: Typing protection -->
+        <div class="setting-item row-layout">
+          <div class="setting-info-text">
+            <span class="setting-label">Ignore inside text fields</span>
+            <span class="setting-desc">Typing works normally on inputs & textareas</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="ignore-inputs-toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Key Configuration -->
+        <div class="setting-item key-config-section">
+          <div class="setting-info">
+            <label class="setting-label">Keyboard Layout Bindings</label>
+            <button class="reset-keys-btn" id="reset-keys-btn">Reset Defaults</button>
+          </div>
+          <span class="setting-desc">Click a keycap, then press any key to bind it.</span>
+          <div class="keycaps-config-container">
+            <div class="direction-keys-grid">
+              <div class="keycap-row">
+                <button class="keycap-btn" id="keycap-up" data-action="keyUp">W</button>
+              </div>
+              <div class="keycap-row">
+                <button class="keycap-btn" id="keycap-left" data-action="keyLeft">A</button>
+                <button class="keycap-btn" id="keycap-down" data-action="keyDown">S</button>
+                <button class="keycap-btn" id="keycap-right" data-action="keyRight">D</button>
+              </div>
+              <div class="keycap-row" style="margin-top: 10px; gap: 10px;">
+                <div class="keybind-group-mini">
+                  <span class="setting-label-mini">Back</span>
+                  <button class="keycap-btn" id="keycap-back" data-action="keyBack">None</button>
+                </div>
+                <div class="keybind-group-mini">
+                  <span class="setting-label-mini">Fwd</span>
+                  <button class="keycap-btn" id="keycap-forward" data-action="keyForward">None</button>
+                </div>
+              </div>
+            </div>
+            <div class="click-key-config">
+              <div class="keybind-row-split">
+                <div class="keybind-group">
+                  <span class="setting-label-sub">Left Click</span>
+                  <button class="keycap-btn click-key-btn-split" id="keycap-click" data-action="keyClick">Space</button>
+                </div>
+                <div class="keybind-group">
+                  <span class="setting-label-sub">Right Click</span>
+                  <button class="keycap-btn click-key-btn-split" id="keycap-right-click" data-action="keyRightClick">E</button>
+                </div>
+              </div>
+              <div class="keybind-row-split" style="margin-top: 8px;">
+                <div class="keybind-group">
+                  <span class="setting-label-sub">Middle Click</span>
+                  <button class="keycap-btn click-key-btn-split" id="keycap-middle-click" data-action="keyMiddleClick">R</button>
+                </div>
+                <div class="keybind-group">
+                  <span class="setting-label-sub">Speed Boost</span>
+                  <button class="keycap-btn click-key-btn-split" id="keycap-speed-boost" data-action="keySpeedBoost">Shift</button>
+                </div>
+              </div>
+              <div class="keybind-group" style="margin-top: 8px; width: 100%;">
+                <span class="setting-label-sub">Mode Toggle</span>
+                <button class="keycap-btn click-key-btn-wide" id="keycap-toggle-mode" data-action="keyToggleMode">Q</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode-specific Settings -->
+        <div id="cursor-settings-group">
+          <!-- Cursor Customizer Grid -->
+          <div class="setting-grid">
+            <!-- Cursor Size -->
+            <div class="setting-item">
+              <div class="setting-info">
+                <label for="cursor-size" class="setting-label">Cursor Size</label>
+                <span class="setting-value" id="cursor-size-value">18px</span>
+              </div>
+              <input type="range" id="cursor-size" min="10" max="40" value="18">
+            </div>
+
+            <!-- Cursor Opacity -->
+            <div class="setting-item">
+              <div class="setting-info">
+                <label for="cursor-opacity" class="setting-label">Opacity</label>
+                <span class="setting-value" id="cursor-opacity-value">80%</span>
+              </div>
+              <input type="range" id="cursor-opacity" min="20" max="100" value="80" step="5">
+            </div>
+          </div>
+        </div>
+
+        <!-- Color & Glow -->
+        <div class="setting-item">
+          <label class="setting-label">Styling</label>
+          <div class="style-row">
+            <div class="color-presets">
+              <button class="color-dot active" data-color="#38bdf8" style="background-color: #38bdf8;"></button>
+              <button class="color-dot" data-color="#a855f7" style="background-color: #a855f7;"></button>
+              <button class="color-dot" data-color="#f43f5e" style="background-color: #f43f5e;"></button>
+              <button class="color-dot" data-color="#10b981" style="background-color: #10b981;"></button>
+              <button class="color-dot" data-color="#eab308" style="background-color: #eab308;"></button>
+              <button class="color-dot" data-color="#ffffff" style="background-color: #ffffff;"></button>
+            </div>
+            
+            <div class="glow-toggle-wrapper">
+              <span class="setting-label-sub">Glow</span>
+              <label class="toggle-switch small">
+                <input type="checkbox" id="glow-toggle" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+
+      </section>
+    </main>
+
+    <!-- Keybinds & Help -->
+    <footer class="footer">
+      <div class="keyboard-guide">
+        <h3>Quick Controls</h3>
+          <div class="guide-grid">
+            <div class="guide-row">
+              <span class="guide-keys" id="guide-keys-nav">
+                <kbd id="guide-key-up">W</kbd>
+                <kbd id="guide-key-left">A</kbd>
+                <kbd id="guide-key-down">S</kbd>
+                <kbd id="guide-key-right">D</kbd>
+              </span> 
+              <span class="guide-desc">Navigate / Move</span>
+            </div>
+            <div class="guide-row">
+              <span class="guide-keys"><kbd id="kbd-click-key">Space</kbd> / <kbd id="kbd-right-click-key">E</kbd> / <kbd id="kbd-middle-click-key">R</kbd></span>
+              <span class="guide-desc">Left / Right / Middle Click</span>
+            </div>
+            <div class="guide-row">
+              <span class="guide-keys"><kbd id="kbd-toggle-mode-key">Q</kbd></span>
+              <span class="guide-desc">Switch Mode</span>
+            </div>
+            <div class="guide-row">
+              <span class="guide-keys">
+                <kbd id="guide-key-back">None</kbd> / 
+                <kbd id="guide-key-forward">None</kbd>
+              </span>
+              <span class="guide-desc">Back / Forward Navigation</span>
+            </div>
+            <div class="guide-row">
+              <span class="guide-keys"><kbd id="guide-key-speed-boost">Shift</kbd></span>
+              <span class="guide-desc">Hold for Speed Boost (3x)</span>
+            </div>
+            <div class="guide-row">
+              <span class="guide-keys" id="guide-toggle-kbd-container">
+                <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd>
+              </span>
+              <span class="guide-desc">Toggle Extension <a href="#" class="remap-link" id="manage-shortcuts-btn">(Remap)</a></span>
+            </div>
+          </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
