@@ -2,10 +2,10 @@
 # Sources
 
 # Firefox
-# Version: 158.0 (BUILD1)
+# Version: 158.0 (RELEASE)
 # https://github.com/mozilla-firefox/firefox
 readonly IRONFOX_GECKO_COMMIT='3c71aeacdb296402e41fb2084b13e797d1770642'
-readonly IRONFOX_GECKO_SHA512SUM='796d83d41e234201f3e5fef74e5fb1822a0e17f06544810c88c237878bab8afe341b6721bffd990ef4ad6a7b3dfb7895d41992a114a3130c9d1566dffbfe7bb9'
+readonly IRONFOX_GECKO_SHA512SUM='63f0b8b2a4070d6fa8af2b9f902be0b401e322fa3ddc38c95d768d35eeb708f38dacc79a3e26a06c9cd10be8910c98b8598756c433a3260cd6cb8f1cc125edcd'
 readonly IRONFOX_GECKO_VERSION='158.0'
 
 # IronFox
