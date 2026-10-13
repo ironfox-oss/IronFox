@@ -1,4 +1,3 @@
-- Updated to Firefox [`157.0.1`](https://firefox.com/firefox/android/157.0.1/releasenotes/).
-- [Added a UI setting to enable/disable support for Firefox Sync](https://gitlab.com/ironfox-oss/IronFox/-/commit/ceff1273185fe1a43f6c497b8f827fb3984e09c1) *(Enabled by default)*, located at `Settings` -> `IronFox settings` -> `Miscellaneous` -> `Enable Firefox Sync`.
-- [Added a UI setting to enable/disable browsing history](https://gitlab.com/ironfox-oss/IronFox/-/commit/f1e2bd1ee45dee736346ecf7723f2c767a827145) *(Disabled by default)*, located at `Settings` -> `IronFox settings` -> `Privacy` -> `Remember browsing history`.
-- Minor tweaks, fixes, and refinements.
+- Updated to Firefox [`158.0`](https://firefox.com/firefox/android/158.0/releasenotes/).
+- [Added support for Android TV *(and Fire TV)* devices](https://gitlab.com/ironfox-oss/IronFox/-/commit/27101b424b57e700d4125fe876fc17a6c49ccafa).
+- Minor tweaks and refinements.
