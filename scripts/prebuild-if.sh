@@ -241,16 +241,6 @@ function prepare_ac() {
 
   pushd "${IRONFOX_AC}"
 
-  # Set Android compile SDK version
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|g" "${IRONFOX_AC}/.config.yml"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|g" "${IRONFOX_AC}/.config.yml"
-
-  # Set Android minimum SDK version
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_MIN_SDK}|${IRONFOX_ANDROID_MIN_SDK}|g" "${IRONFOX_AC}/.config.yml"
-
-  # Set Android target SDK version
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_TARGET_SDK}|${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_AC}/.config.yml"
-
   # Remove default built-in search engines
   "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/feature/search/src/main/assets/searchplugins/"*
 
@@ -827,6 +817,7 @@ function prepare_firefox() {
 
   # Verify directories
   verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO' || return 1
+  verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC' || return 1
   verify_dir_with_env "${IRONFOX_GECKO_OVERLAY}" 'IRONFOX_GECKO_OVERLAY' || return 1
 
   "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}/gecko/ironfox"
@@ -900,6 +891,16 @@ function prepare_firefox() {
 
   # Fail on use of prebuilt nimbus-fml
   "${IRONFOX_SED}" -i 's|https://|hxxps://|g' "${IRONFOX_GECKO}/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt"
+
+  # Set Android compile SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|g" "${IRONFOX_AC}/.config.yml"
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|g" "${IRONFOX_AC}/.config.yml"
+
+  # Set Android minimum SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_MIN_SDK}|${IRONFOX_ANDROID_MIN_SDK}|g" "${IRONFOX_AC}/.config.yml"
+
+  # Set Android target SDK version
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_TARGET_SDK}|${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_AC}/.config.yml"
 
   # Set Rust version
   "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GECKO}/Cargo.toml"
