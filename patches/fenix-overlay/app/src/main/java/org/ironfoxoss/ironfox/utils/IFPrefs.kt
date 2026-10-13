@@ -343,6 +343,12 @@ object IFPrefs {
       prefs.setDefaultBoolPref(R.string.pref_key_website_pull_to_refresh, true) // [DEFAULT]
     }
 
+    // Enable tab bar by default for TV users
+    // Improves UX and makes the most sense for our use case
+    if (isTV) {
+      prefs.setDefaultBoolPref(R.string.pref_key_tab_strip_show, true)
+    }
+
     // Skip Mozilla's Privacy Notice and Terms of Use
     val tosTime = TOU_TIME_IN_MILLIS + 1_000
     prefs.setLongPref(R.string.pref_key_privacy_notice_banner_last_displayed_time, tosTime)
