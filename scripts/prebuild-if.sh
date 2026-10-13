@@ -313,7 +313,7 @@ function prepare_ac() {
   "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/feature/webcompat-reporter"
 
   # Apply a-c overlay
-  apply_overlay "${IRONFOX_AC_OVERLAY}/"
+  apply_overlay "${IRONFOX_AC_OVERLAY}/" || return 1
 
   popd
 
@@ -366,7 +366,7 @@ function prepare_android_sdk() {
 
   # Work-around "error: Unversioned target triples are not supported!" error for Application Services
   pushd "${IRONFOX_SYSROOT}"
-  apply_patch 'android-ndk-fix-target-triples.patch'
+  apply_patch 'android-ndk-fix-target-triples.patch' || return 1
   popd
 
   echo_green_text 'SUCCESS: Prepared Android SDK!'
@@ -412,10 +412,10 @@ function prepare_as() {
   fi
 
   # Apply patches
-  a-s_apply_patches
+  a-s_apply_patches || return 1
 
   # Always use our Gradle wrapper with our Gradle flags/configuration
-  localize_gradle
+  localize_gradle || return 1
 
   # Disable debug
   "${IRONFOX_SED}" -i -e 's|debug = .*|debug = false|g' "${IRONFOX_AS}/Cargo.toml"
@@ -428,7 +428,7 @@ function prepare_as() {
   "${IRONFOX_SED}" -i -e '/content {/,/}/d' "${IRONFOX_AS}/build.gradle"
 
   # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
-  localize_maven
+  localize_maven || return 1
 
   # Set Android compile SDK version
   "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|g" "${IRONFOX_AS}/build.gradle"
@@ -497,7 +497,7 @@ function prepare_as() {
   "${IRONFOX_SED}" -i 's|error-support|# error-support|g' "${IRONFOX_AS}/megazords/full/Cargo.toml"
 
   # Apply Application Services overlay
-  apply_overlay "${IRONFOX_AS_OVERLAY}/"
+  apply_overlay "${IRONFOX_AS_OVERLAY}/" || return 1
 
   popd
 
@@ -513,10 +513,10 @@ function prepare_bundletool() {
   pushd "${IRONFOX_BUNDLETOOL_DIR}"
 
   # Apply patches
-  apply_patch 'bundletool-localize-maven.patch'
+  apply_patch 'bundletool-localize-maven.patch' || return 1
 
   # Always use our Gradle wrapper with our Gradle flags/configuration
-  localize_gradle
+  localize_gradle || return 1
 
   popd
 
@@ -765,10 +765,10 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -vr "${IRONFOX_FENIX}/app/src/main/assets/searchplugins"/*
 
   # Apply Fenix overlay
-  apply_overlay "${IRONFOX_FENIX_OVERLAY}/"
+  apply_overlay "${IRONFOX_FENIX_OVERLAY}/" || return 1
 
   # Apply UnifiedPush-AC overlay (for Fenix)
-  apply_overlay "${IRONFOX_UP_AC}/fenix-overlay/"
+  apply_overlay "${IRONFOX_UP_AC}/fenix-overlay/" || return 1
 
   ## The following are for the build script, so that it can update the environment variables if needed
   ### (ex. if the user changes them)
@@ -844,15 +844,15 @@ function prepare_firefox() {
   fi
 
   # Apply patches
-  apply_patches
+  apply_patches || return 1
 
   ## For UnifiedPush-AC
   if [[ -d "${IRONFOX_UP_AC}" ]]; then
-    up_ac_apply_patches
+    up_ac_apply_patches || return 1
   fi
 
   # Always use our Gradle wrapper with our Gradle flags/configuration
-  localize_gradle
+  localize_gradle || return 1
 
   # Let it be IronFox (part 2...)
   "${IRONFOX_SED}" -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' "${IRONFOX_GECKO}/mobile/android/moz.configure"
@@ -1057,7 +1057,7 @@ function prepare_firefox() {
     "${IRONFOX_GECKO}/mobile/android/app/geckoview-prefs.js"
 
   # Apply Gecko overlay
-  apply_overlay "${IRONFOX_GECKO_OVERLAY}/"
+  apply_overlay "${IRONFOX_GECKO_OVERLAY}/" || return 1
 
   ## The following are for the build script, so that it can update the environment variables if needed
   ### (ex. if the user changes them)
@@ -1137,13 +1137,13 @@ function prepare_glean() {
   fi
 
   # Apply patches
-  glean_apply_patches
+  glean_apply_patches || return 1
 
   # Always use our Gradle wrapper with our Gradle flags/configuration
-  localize_gradle
+  localize_gradle || return 1
 
   # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
-  localize_maven
+  localize_maven || return 1
 
   # Set Android compile SDK version
   "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|g" "${IRONFOX_GLEAN}/build.gradle"
@@ -1214,7 +1214,7 @@ function prepare_glean() {
   fi
 
   # Apply Glean overlay
-  apply_overlay "${IRONFOX_GLEAN_OVERLAY}/"
+  apply_overlay "${IRONFOX_GLEAN_OVERLAY}/" || return 1
 
   ## This is so the build script can set the uniffi path if needed (ex. if the user changes it)
   if [[ -f "${IRONFOX_TEMP}/glean/build.gradle" ]]; then
@@ -1270,11 +1270,11 @@ function prepare_microg() {
   pushd "${IRONFOX_GMSCORE}"
 
   # Apply patches
-  apply_patch 'microg-gradle-project-resolution.patch'
-  apply_patch 'microg-localize-maven.patch'
+  apply_patch 'microg-gradle-project-resolution.patch' || return 1
+  apply_patch 'microg-localize-maven.patch' || return 1
 
   # Always use our Gradle wrapper with our Gradle flags/configuration
-  localize_gradle
+  localize_gradle || return 1
 
   # Set Android build tools version
   "${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}'|g" "${IRONFOX_GMSCORE}/build.gradle"
@@ -1304,7 +1304,7 @@ function prepare_uniffi() {
 
   # Apply patches
   pushd "${IRONFOX_UNIFFI_DIR}"
-  apply_patch 'uniffi-noop.patch'
+  apply_patch 'uniffi-noop.patch' || return 1
   popd
 
   # Set Rust version
@@ -1360,51 +1360,51 @@ echo_red_text "Preparing to build IronFox '${IRONFOX_VERSION}'..."
 
 # This needs to run before we prepare Android Components, to ensure that ex. patches apply properly
 if [[ "${IRONFOX_PREPARE_GECKO}" == 1 ]]; then
-  prepare_firefox
+  prepare_firefox || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_AC}" == 1 ]]; then
-  prepare_ac
+  prepare_ac || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_ANDROID_SDK}" == 1 ]]; then
-  prepare_android_sdk
+  prepare_android_sdk || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_AS}" == 1 ]]; then
-  prepare_as
+  prepare_as || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_BUNDLETOOL}" == 1 ]]; then
-  prepare_bundletool
+  prepare_bundletool || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_FENIX}" == 1 ]]; then
-  prepare_fenix
+  prepare_fenix || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_GLEAN}" == 1 ]]; then
-  prepare_glean
+  prepare_glean || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_LLVM}" == 1 ]]; then
-  prepare_llvm
+  prepare_llvm || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_MICROG}" == 1 ]]; then
-  prepare_microg
+  prepare_microg || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_RUST}" == 1 ]]; then
-  prepare_rust
+  prepare_rust || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_UNIFFI}" == 1 ]]; then
-  prepare_uniffi
+  prepare_uniffi || return 1
 fi
 
 if [[ "${IRONFOX_PREPARE_WASI}" == 1 ]]; then
-  prepare_wasi
+  prepare_wasi || return 1
 fi
 
 echo_green_text "SUCCESS: Prepared to build IronFox '${IRONFOX_VERSION}'!"
