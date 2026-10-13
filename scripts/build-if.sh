@@ -924,13 +924,13 @@ function prep_as() {
   if [[ -f "${IRONFOX_AS}/local.properties" ]]; then
     "${IRONFOX_RM}" -f "${IRONFOX_AS}/local.properties"
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/application-services/local.properties" "${IRONFOX_AS}/local.properties"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM}|${IRONFOX_PLATFORM}|g" "${IRONFOX_AS}/local.properties"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_RUST_PLATFORM_ARCH}|${IRONFOX_RUST_PLATFORM_ARCH}|g" "${IRONFOX_AS}/local.properties"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_TARGET_RUST}|${IRONFOX_TARGET_RUST}|g" "${IRONFOX_AS}/local.properties"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/application-services/local.properties" "${IRONFOX_AS}/local.properties" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM}|${IRONFOX_PLATFORM}|g" "${IRONFOX_AS}/local.properties" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_RUST_PLATFORM_ARCH}|${IRONFOX_RUST_PLATFORM_ARCH}|g" "${IRONFOX_AS}/local.properties" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_TARGET_RUST}|${IRONFOX_TARGET_RUST}|g" "${IRONFOX_AS}/local.properties" || return 1
 
   # Substitute our builds of Android Components
-  "${IRONFOX_SED}" -i -e "/^android-components = \"/c\\android-components = \"${IF_LOCAL_AC_VERSION}\"" "${IRONFOX_AS}/gradle/libs.versions.toml"
+  "${IRONFOX_SED}" -i -e "/^android-components = \"/c\\android-components = \"${IF_LOCAL_AC_VERSION}\"" "${IRONFOX_AS}/gradle/libs.versions.toml" || return 1
 
   echo_green_text 'SUCCESS: Prepared Application Services'
 }
@@ -952,9 +952,9 @@ function prep_fenix() {
   if [[ -f "${IRONFOX_FENIX}/app/build.gradle" ]]; then
     "${IRONFOX_RM}" -f "${IRONFOX_FENIX}/app/build.gradle"
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/fenix/app/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/fenix/app/build.gradle" "${IRONFOX_FENIX}/app/build.gradle" || return 1
 
-  "${IRONFOX_SED}" -i -e "s/include \"armeabi-v7a\", \"arm64-v8a\", \"x86_64\"/include \"${IRONFOX_TARGET_ABI}\"/" "${IRONFOX_FENIX}/app/build.gradle"
+  "${IRONFOX_SED}" -i -e "s/include \"armeabi-v7a\", \"arm64-v8a\", \"x86_64\"/include \"${IRONFOX_TARGET_ABI}\"/" "${IRONFOX_FENIX}/app/build.gradle" || return 1
 
   if [[ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]]; then
     # Universal APKs make no sense for architecture-specific builds...
@@ -964,17 +964,17 @@ function prep_fenix() {
   if [[ -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml" ]]; then
     "${IRONFOX_RM}" -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml"
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/fenix/app/src/release/res/values/static_strings.xml" "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/fenix/app/src/release/res/values/static_strings.xml" "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml" || return 1
 
   if [[ -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" ]]; then
     "${IRONFOX_RM}" -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/fenix/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/fenix/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" || return 1
 
   if [[ -d "${IRONFOX_FENIX}/app/src/main/res" ]]; then
     "${IRONFOX_RM}" -rf "${IRONFOX_FENIX}/app/src/main/res"
   fi
-  "${IRONFOX_CP}" -rf "${IRONFOX_TEMP}/fenix/app/src/main/res/" "${IRONFOX_FENIX}/app/src/main/res/"
+  "${IRONFOX_CP}" -rf "${IRONFOX_TEMP}/fenix/app/src/main/res/" "${IRONFOX_FENIX}/app/src/main/res/" || return 1
 
   # Set-up the app ID, version name and version code
   if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
@@ -990,11 +990,11 @@ function prep_fenix() {
     -e "s|applicationIdSuffix \"".firefox\""|applicationIdSuffix \"".${fenix_app_id_suffix}\""|g" \
     -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|g' \
     -e "s/Config.releaseVersionName(project)/'${IRONFOX_IF_VERSION}'/" \
-    "${IRONFOX_FENIX}/app/build.gradle"
+    "${IRONFOX_FENIX}/app/build.gradle" || return 1
 
-  "${IRONFOX_SED}" -i -e "/android:targetPackage/s/org.mozilla.firefox/${fenix_app_id}/" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
+  "${IRONFOX_SED}" -i -e "/android:targetPackage/s/org.mozilla.firefox/${fenix_app_id}/" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" || return 1
 
-  "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/g" ${IRONFOX_FENIX}/app/src/*/res/values*/*strings.xml
+  "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/g" ${IRONFOX_FENIX}/app/src/*/res/values*/*strings.xml || return 1
 
   echo_green_text 'SUCCESS: Prepared Fenix'
 }
@@ -1064,17 +1064,17 @@ function prep_glean() {
   if [[ -f "${IRONFOX_GLEAN}/local.properties" ]]; then
     "${IRONFOX_RM}" -f "${IRONFOX_GLEAN}/local.properties"
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/glean/local.properties" "${IRONFOX_GLEAN}/local.properties"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM}|${IRONFOX_PLATFORM}|g" "${IRONFOX_GLEAN}/local.properties"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_RUST_PLATFORM_ARCH}|${IRONFOX_RUST_PLATFORM_ARCH}|g" "${IRONFOX_GLEAN}/local.properties"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_TARGET_RUST}|${IRONFOX_TARGET_RUST}|g" "${IRONFOX_GLEAN}/local.properties"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/glean/local.properties" "${IRONFOX_GLEAN}/local.properties" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM}|${IRONFOX_PLATFORM}|g" "${IRONFOX_GLEAN}/local.properties" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_RUST_PLATFORM_ARCH}|${IRONFOX_RUST_PLATFORM_ARCH}|g" "${IRONFOX_GLEAN}/local.properties" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_TARGET_RUST}|${IRONFOX_TARGET_RUST}|g" "${IRONFOX_GLEAN}/local.properties" || return 1
 
   # Set Glean's uniffi-bindgen location
   if [[ -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle" ]]; then
-    "${IRONFOX_RM}" -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
+    "${IRONFOX_RM}" -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle" || return 1
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/glean/build.gradle" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIFFI}|${IRONFOX_UNIFFI}|g" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/glean/build.gradle" "${IRONFOX_GLEAN}/glean-core/android/build.gradle" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIFFI}|${IRONFOX_UNIFFI}|g" "${IRONFOX_GLEAN}/glean-core/android/build.gradle" || return 1
 
   echo_green_text 'SUCCESS: Prepared Glean'
 }
@@ -1095,11 +1095,11 @@ function prep_up_ac() {
   if [[ -f "${IRONFOX_UP_AC}/local.properties" ]]; then
     "${IRONFOX_RM}" -f "${IRONFOX_UP_AC}/local.properties"
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/unifiedpush-ac/local.properties" "${IRONFOX_UP_AC}/local.properties"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/unifiedpush-ac/local.properties" "${IRONFOX_UP_AC}/local.properties" || return 1
 
   # Substitute our local versions of Android Components and Application Services
-  "${IRONFOX_SED}" -i "s|{IF_LOCAL_AC_VERSION}|${IF_LOCAL_AC_VERSION}|g" "${IRONFOX_UP_AC}/local.properties"
-  "${IRONFOX_SED}" -i "s|{IF_LOCAL_AS_VERSION}|${IF_LOCAL_AS_VERSION}|g" "${IRONFOX_UP_AC}/local.properties"
+  "${IRONFOX_SED}" -i "s|{IF_LOCAL_AC_VERSION}|${IF_LOCAL_AC_VERSION}|g" "${IRONFOX_UP_AC}/local.properties" || return 1
+  "${IRONFOX_SED}" -i "s|{IF_LOCAL_AS_VERSION}|${IF_LOCAL_AS_VERSION}|g" "${IRONFOX_UP_AC}/local.properties" || return 1
 
   echo_green_text 'SUCCESS: Prepared UnifiedPush-AC'
 }
@@ -1116,9 +1116,9 @@ function prep_llvm() {
 
   # Set LLVM build targets
   if [[ -f "${IRONFOX_BUILD}/targets_to_build" ]]; then
-    "${IRONFOX_RM}" -f "${IRONFOX_BUILD}/targets_to_build"
+    "${IRONFOX_RM}" -f "${IRONFOX_BUILD}/targets_to_build" || return 1
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/llvm/targets_to_build_${IRONFOX_TARGET_ARCH}" "${IRONFOX_BUILD}/targets_to_build"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/llvm/targets_to_build_${IRONFOX_TARGET_ARCH}" "${IRONFOX_BUILD}/targets_to_build" || return 1
 
   echo_green_text 'SUCCESS: Prepared LLVM'
 }
@@ -1131,10 +1131,10 @@ function build_bundletool() {
   verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
 
   pushd "${IRONFOX_BUNDLETOOL_DIR}"
-  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} assemble
+  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} assemble || return 1
   popd
 
-  "${IRONFOX_CP}" -f "${IRONFOX_BUNDLETOOL_DIR}/build/libs/bundletool.jar" "${IRONFOX_BUNDLETOOL_JAR}"
+  "${IRONFOX_CP}" -f "${IRONFOX_BUNDLETOOL_DIR}/build/libs/bundletool.jar" "${IRONFOX_BUNDLETOOL_JAR}" || return 1
 
   echo_green_text 'SUCCESS: Built Bundletool'
 }
@@ -1158,9 +1158,9 @@ function build_llvm() {
   "${IRONFOX_CMAKE}" -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ -DLLVM_ENABLE_PROJECTS="clang" -DLLVM_TARGETS_TO_BUILD="$llvmtarget" \
     -DLLVM_USE_LINKER=lld -DLLVM_BINUTILS_INCDIR=/usr/include -DLLVM_ENABLE_PLUGINS=FORCE_ON \
-    -DLLVM_DEFAULT_TARGET_TRIPLE="x86_64-unknown-linux-gnu"
-  "${IRONFOX_CMAKE}" --build build -j"$("${IRONFOX_NPROC}")"
-  "${IRONFOX_CMAKE}" --build build --target install -j"$("${IRONFOX_NPROC}")"
+    -DLLVM_DEFAULT_TARGET_TRIPLE="x86_64-unknown-linux-gnu" || return 1
+  "${IRONFOX_CMAKE}" --build build -j"$("${IRONFOX_NPROC}")" || return 1
+  "${IRONFOX_CMAKE}" --build build --target install -j"$("${IRONFOX_NPROC}")" || return 1
   popd
 
   echo_green_text 'SUCCESS: Built LLVM'
@@ -1180,15 +1180,15 @@ function build_phoenix() {
   verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   pushd "${IRONFOX_PHOENIX}"
-  "${IRONFOX_BASH}" "${IRONFOX_PHOENIX}/scripts/build.sh" 'android'
+  "${IRONFOX_BASH}" "${IRONFOX_PHOENIX}/scripts/build.sh" 'android' || return 1
   popd
 
   # Ensure our cfg and policy files don't already exist in mozilla-central
-  "${IRONFOX_RM}" -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg" "${IRONFOX_GECKO}/ironfox/prefs/policies.json"
+  "${IRONFOX_RM}" -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg" "${IRONFOX_GECKO}/ironfox/prefs/policies.json" || return 1
 
   # Copy our outputs to mozilla-central
-  "${IRONFOX_CP}" "${IRONFOX_PHOENIX}/outputs/android/phoenix.cfg" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
-  "${IRONFOX_CP}" "${IRONFOX_PHOENIX}/outputs/android/policies.json" "${IRONFOX_GECKO}/ironfox/prefs/policies.json"
+  "${IRONFOX_CP}" "${IRONFOX_PHOENIX}/outputs/android/phoenix.cfg" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg" || return 1
+  "${IRONFOX_CP}" "${IRONFOX_PHOENIX}/outputs/android/policies.json" "${IRONFOX_GECKO}/ironfox/prefs/policies.json" || return 1
 
   echo_green_text 'SUCCESS: Built Phoenix'
 }
@@ -1197,7 +1197,7 @@ function build_phoenix() {
 function build_uniffi() {
   echo_red_text 'Building uniffi-bindgen...'
   pushd "${IRONFOX_UNIFFI_DIR}"
-  "${IRONFOX_CARGO}" build --release
+  "${IRONFOX_CARGO}" build --release || return 1
   popd
   echo_green_text 'SUCCESS: Built uniffi-bindgen'
 }
@@ -1210,7 +1210,7 @@ function build_wasi() {
   verify_exec "${IRONFOX_BASH}" 'IRONFOX_BASH' || return 1
 
   pushd "${IRONFOX_PREBUILDS}"
-  "${IRONFOX_BASH}" "${IRONFOX_PREBUILDS}/scripts/build.sh" 'wasi'
+  "${IRONFOX_BASH}" "${IRONFOX_PREBUILDS}/scripts/build.sh" 'wasi' || return 1
   popd
 
   echo_green_text 'SUCCESS: Built WASI SDK'
@@ -1225,7 +1225,7 @@ function build_microg() {
     :play-services-base:publishToMavenLocal \
     :play-services-basement:publishToMavenLocal \
     :play-services-fido:publishToMavenLocal \
-    :play-services-tasks:publishToMavenLocal
+    :play-services-tasks:publishToMavenLocal || return 1
   popd
 
   echo_green_text 'SUCCESS: Built microG'
@@ -1236,8 +1236,8 @@ function build_glean() {
   echo_red_text 'Building Glean...'
 
   pushd "${IRONFOX_GLEAN}"
-  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
-  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x Bootstrap_CONDA
+  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal || return 1
+  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x Bootstrap_CONDA || return 1
   popd
 
   echo_green_text 'SUCCESS: Built Glean'
@@ -1257,12 +1257,12 @@ function build_as() {
 
   pushd "${IRONFOX_AS}"
   export JAVA_HOME="${IRONFOX_JDK_17_HOME}"
-  "${IRONFOX_BASH}" "${IRONFOX_AS}/libs/verify-android-environment.sh"
+  "${IRONFOX_BASH}" "${IRONFOX_AS}/libs/verify-android-environment.sh" || return 1
   unset JAVA_HOME
   export JAVA_HOME="${IRONFOX_JAVA_HOME}"
 
   # Build Application Services
-  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_AS_VERSION_GRADLE} publish
+  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_AS_VERSION_GRADLE} publish || return 1
   popd
 
   echo_green_text 'SUCCESS: Built Application Services'
@@ -1272,7 +1272,7 @@ function build_as() {
 function build_nimbus_fml() {
   echo_red_text 'Building nimbus-fml...'
   pushd "${IRONFOX_AS}/components/support/nimbus-fml"
-  "${IRONFOX_CARGO}" build --release
+  "${IRONFOX_CARGO}" build --release || return 1
   popd
   echo_green_text 'SUCCESS: Built nimbus-fml'
 }
@@ -1363,15 +1363,15 @@ function _build_geckoview() {
 
   # Build GeckoView
   echo_red_text "Building GeckoView (${pretty_arch})..."
-  "${IRONFOX_MACH}" configure
+  "${IRONFOX_MACH}" configure || return 1
 
   if [[ "${publish_gv_to_maven_local}" == 1 ]]; then
     # Publish GeckoView to our local Maven repo
-    "${IRONFOX_MACH}" gradle :geckoview:publishReleasePublicationToMavenLocal
+    "${IRONFOX_MACH}" gradle :geckoview:publishReleasePublicationToMavenLocal || return 1
   else
     # Create our AAR archives
     "${IRONFOX_MACH}" gradle :machConfigure
-    MOZ_AUTOMATION=1 "${IRONFOX_MACH}" android archive-geckoview
+    MOZ_AUTOMATION=1 "${IRONFOX_MACH}" android archive-geckoview || return 1
     unset MOZ_AUTOMATION
 
     if [[ "${target_arch}" == 'arm64' ]]; then
@@ -1385,7 +1385,7 @@ function _build_geckoview() {
     # Create our AAR output directory
     "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${aar_output}")
 
-    "${IRONFOX_CP}" -vf "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${target_arch}/gradle/target.maven.zip" "${aar_output}"
+    "${IRONFOX_CP}" -vf "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${target_arch}/gradle/target.maven.zip" "${aar_output}" || return 1
   fi
 
   echo_green_text "SUCCESS: Built GeckoView (${pretty_arch})"
@@ -1422,26 +1422,26 @@ function build_geckoview() {
 
   # ARM64
   if [[ "${if_build_geckoview_arm64}" == 1 ]]; then
-    _build_geckoview 'arm64'
+    _build_geckoview 'arm64' || return 1
   fi
 
   # ARM
   if [[ "${if_build_geckoview_arm}" == 1 ]]; then
-    _build_geckoview 'arm'
+    _build_geckoview 'arm' || return 1
   fi
 
   # x86_64
   if [[ "${if_build_geckoview_x86_64}" == 1 ]]; then
-    _build_geckoview 'x86_64'
+    _build_geckoview 'x86_64' || return 1
   fi
 
   # Bundle (Universal)
   if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
     # First, we need to produce our fat AAR
     ## That process re-uses a lot of the same logic as `_build_gecko`, hence we re-use it
-    _build_gecko 'bundle'
+    _build_gecko 'bundle' || return 1
 
-    _build_geckoview 'bundle'
+    _build_geckoview 'bundle' || return 1
   fi
 }
 
@@ -1541,8 +1541,8 @@ function _build_gecko() {
   # Build Gecko
   echo_red_text "Building Gecko (${pretty_arch})..."
   export IRONFOX_MACH_GECKO_STAGE='build'
-  "${IRONFOX_MACH}" configure
-  "${IRONFOX_MACH}" build
+  "${IRONFOX_MACH}" configure || return 1
+  "${IRONFOX_MACH}" build || return 1
   echo_green_text "SUCCESS: Built Gecko (${pretty_arch})"
 
   # Package Gecko
@@ -1552,10 +1552,10 @@ function _build_gecko() {
 
     if [[ "${target_arch}" != 'bundle' ]]; then
       # If we're building a bundle, no need to re-run mach configure here (since Mach is always set to package for Bundle builds)
-      "${IRONFOX_MACH}" configure
+      "${IRONFOX_MACH}" configure || return 1
     fi
 
-    "${IRONFOX_MACH}" package-multi-locale --locales ${IRONFOX_LOCALES}
+    "${IRONFOX_MACH}" package-multi-locale --locales ${IRONFOX_LOCALES} || return 1
     echo_green_text "SUCCESS: Packaged Gecko (${pretty_arch})"
   fi
   popd
@@ -1591,17 +1591,17 @@ function build_gecko() {
 
   # ARM64
   if [[ "${if_build_gecko_arm64}" == 1 ]]; then
-    _build_gecko 'arm64'
+    _build_gecko 'arm64' || return 1
   fi
 
   # ARM
   if [[ "${if_build_gecko_arm}" == 1 ]]; then
-    _build_gecko 'arm'
+    _build_gecko 'arm' || return 1
   fi
 
   # x86_64
   if [[ "${if_build_gecko_x86_64}" == 1 ]]; then
-    _build_gecko 'x86_64'
+    _build_gecko 'x86_64' || return 1
   fi
 }
 
@@ -1629,10 +1629,10 @@ function build_ironfox_core() {
   "${IRONFOX_RM}" -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
 
   # Configure Mach
-  "${IRONFOX_MACH}" configure
+  "${IRONFOX_MACH}" configure || return 1
 
   # Build IronFox Core
-  "${IRONFOX_MACH}" gradle -p ironfox/android :core:publish
+  "${IRONFOX_MACH}" gradle -p ironfox/android :core:publish || return 1
   popd
 
   echo_green_text 'SUCCESS: Built IronFox Core'
@@ -1664,14 +1664,14 @@ function build_ac_core() {
   "${IRONFOX_RM}" -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
 
   # Configure Mach
-  "${IRONFOX_MACH}" configure
+  "${IRONFOX_MACH}" configure || return 1
 
   # Build concept-fetch, concept-base (dependency of support-base), support-base and ui-icons
   ## (Needed by UnifiedPush-AC)
-  "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:concept-fetch:publishToMavenLocal
-  "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:concept-base:publishToMavenLocal
-  "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:support-base:publishToMavenLocal
-  "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:ui-icons:publishToMavenLocal
+  "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:concept-fetch:publishToMavenLocal || return 1
+  "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:concept-base:publishToMavenLocal || return 1
+  "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:support-base:publishToMavenLocal || return 1
+  "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:ui-icons:publishToMavenLocal || return 1
   popd
 
   echo_green_text 'SUCCESS: Built Android Components (Core)'
@@ -1682,7 +1682,7 @@ function build_up_ac() {
   echo_red_text 'Building UnifiedPush-AC...'
 
   pushd "${IRONFOX_UP_AC}"
-  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} publish
+  "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} publish || return 1
   popd
 
   echo_green_text 'SUCCESS: Built UnifiedPush-AC'
@@ -1712,10 +1712,10 @@ function build_ac() {
   "${IRONFOX_RM}" -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
 
   # Configure Mach
-  "${IRONFOX_MACH}" configure
+  "${IRONFOX_MACH}" configure || return 1
 
   # Build Android Components
-  "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components publishToMavenLocal
+  "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components publishToMavenLocal || return 1
   popd
 
   echo_green_text 'SUCCESS: Built Android Components'
@@ -1757,7 +1757,7 @@ function build_fenix() {
   "${IRONFOX_RM}" -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
 
   # Configure Mach
-  "${IRONFOX_MACH}" configure
+  "${IRONFOX_MACH}" configure || return 1
 
   # If it's not our first time building Fenix, clean Gradle to ensure our builds are fresh
   if [[ -f "${IRONFOX_TEMP}/built-fenix" ]]; then
@@ -1765,7 +1765,7 @@ function build_fenix() {
   fi
 
   # Build Fenix
-  "${IRONFOX_MACH}" gradle -p mobile/android/fenix assembleRelease
+  "${IRONFOX_MACH}" gradle -p mobile/android/fenix assembleRelease || return 1
 
   # 1. Export APK for ARM64
   if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
@@ -1773,12 +1773,12 @@ function build_fenix() {
       # Create our output directory
       "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_ARM64_UNSIGNED}")
 
-      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-arm64-v8a-release-unsigned.apk" "${IRONFOX_OUTPUTS_ARM64_UNSIGNED}"
+      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-arm64-v8a-release-unsigned.apk" "${IRONFOX_OUTPUTS_ARM64_UNSIGNED}" || return 1
     else
       # Create our output directory
       "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_ARM64}")
 
-      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-arm64-v8a-release.apk" "${IRONFOX_OUTPUTS_ARM64}"
+      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-arm64-v8a-release.apk" "${IRONFOX_OUTPUTS_ARM64}" || return 1
     fi
   fi
 
@@ -1788,12 +1788,12 @@ function build_fenix() {
       # Create our output directory
       "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_ARM_UNSIGNED}")
 
-      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-armeabi-v7a-release-unsigned.apk" "${IRONFOX_OUTPUTS_ARM_UNSIGNED}"
+      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-armeabi-v7a-release-unsigned.apk" "${IRONFOX_OUTPUTS_ARM_UNSIGNED}" || return 1
     else
       # Create our output directory
       "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_ARM}")
 
-      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-armeabi-v7a-release.apk" "${IRONFOX_OUTPUTS_ARM}"
+      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-armeabi-v7a-release.apk" "${IRONFOX_OUTPUTS_ARM}" || return 1
     fi
   fi
 
@@ -1803,12 +1803,12 @@ function build_fenix() {
       # Create our output directory
       "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_X86_64_UNSIGNED}")
 
-      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-x86_64-release-unsigned.apk" "${IRONFOX_OUTPUTS_X86_64_UNSIGNED}"
+      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-x86_64-release-unsigned.apk" "${IRONFOX_OUTPUTS_X86_64_UNSIGNED}" || return 1
     else
       # Create our output directory
       "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_X86_64}")
 
-      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-x86_64-release.apk" "${IRONFOX_OUTPUTS_X86_64}"
+      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-x86_64-release.apk" "${IRONFOX_OUTPUTS_X86_64}" || return 1
     fi
   fi
 
@@ -1819,21 +1819,21 @@ function build_fenix() {
       # Create our output directory
       "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED}")
 
-      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED}"
+      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED}" || return 1
     else
       # Create our output directory
       "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_UNIVERSAL}")
 
-      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-universal-release.apk" "${IRONFOX_OUTPUTS_UNIVERSAL}"
+      "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-universal-release.apk" "${IRONFOX_OUTPUTS_UNIVERSAL}" || return 1
     fi
 
     # 5. Finally, build and export our AAB
-    "${IRONFOX_MACH}" gradle -Paab -p mobile/android/fenix bundleRelease
+    "${IRONFOX_MACH}" gradle -Paab -p mobile/android/fenix bundleRelease || return 1
 
     # Create our output directory
     "${IRONFOX_MKDIR}" -p $("${IRONFOX_DIRNAME}" "${IRONFOX_OUTPUTS_BUNDLE_AAB}")
 
-    "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/bundle/release/app-release.aab" "${IRONFOX_OUTPUTS_BUNDLE_AAB}"
+    "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/bundle/release/app-release.aab" "${IRONFOX_OUTPUTS_BUNDLE_AAB}" || return 1
   fi
   popd
 
@@ -1853,69 +1853,69 @@ function build_fenix() {
 echo_red_text 'Preparing your build environment...'
 
 # Set-up our build environment
-set_build_env
+set_build_env || return 1
 
 # Prepare mozilla-central
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
   [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
-  prep_gecko
+  prep_gecko || return 1
 fi
 
 # Prepare Application Services
 if [[ "${IRONFOX_BUILD_AS}" == 1 ]]; then
-  prep_as
+  prep_as || return 1
 fi
 
 # Prepare Fenix
 if [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
-  prep_fenix
+  prep_fenix || return 1
 fi
 
 # Prepare Glean
 if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
-  prep_glean
+  prep_glean || return 1
 fi
 
 # Prepare LLVM
 if [[ "${IRONFOX_BUILD_LLVM}" == 1 ]]; then
-  prep_llvm
+  prep_llvm || return 1
 fi
 
 # Prepare UnifiedPush-AC
 if [[ "${IRONFOX_BUILD_UP_AC}" == 1 ]]; then
-  prep_up_ac
+  prep_up_ac || return 1
 fi
 
 echo_green_text 'SUCCESS: Prepared build environment'
 
 # Build Phoenix
 if [[ "${IRONFOX_BUILD_PHOENIX}" == 1 ]]; then
-  build_phoenix
+  build_phoenix || return 1
 fi
 
 # Build Bundletool
 if [[ "${IRONFOX_BUILD_BUNDLETOOL}" == 1 ]]; then
-  build_bundletool
+  build_bundletool || return 1
 fi
 
 # Build microG
 if [[ "${IRONFOX_BUILD_MICROG}" == 1 ]]; then
-  build_microg
+  build_microg || return 1
 fi
 
 # Build LLVM
 if [[ "${IRONFOX_BUILD_LLVM}" == 1 ]]; then
-  build_llvm
+  build_llvm || return 1
 fi
 
 # Build WASI SDK
 if [[ "${IRONFOX_BUILD_WASI}" == 1 ]]; then
-  build_wasi
+  build_wasi || return 1
 fi
 
 # Build Gecko
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
-  build_gecko
+  build_gecko || return 1
 fi
 
 # If we're targetting a bundle, ensure `MOZ_ANDROID_FAT_AAR_ARCHITECTURES` is always set at this point
@@ -1927,12 +1927,12 @@ fi
 
 # Build IronFox Core
 if [[ "${IRONFOX_BUILD_IF_CORE}" == 1 ]]; then
-  build_ironfox_core
+  build_ironfox_core || return 1
 fi
 
 # Build GeckoView
 if [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]]; then
-  build_geckoview
+  build_geckoview || return 1
 fi
 
 # Ensure `MOZ_CHROME_MULTILOCALE` is always set at this point
@@ -1945,40 +1945,40 @@ export MOZ_CHROME_MULTILOCALE
 
 # Build Android Components (Core)
 if [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]]; then
-  build_ac_core
+  build_ac_core || return 1
 fi
 
 # Build Application Services
 if [[ "${IRONFOX_BUILD_AS}" == 1 ]]; then
-  build_as
+  build_as || return 1
 fi
 
 # Build UnifiedPush-AC
 if [[ "${IRONFOX_BUILD_UP_AC}" == 1 ]]; then
-  build_up_ac
+  build_up_ac || return 1
 fi
 
 # Build nimbus-fml
 if [[ "${IRONFOX_BUILD_NIMBUS_FML}" == 1 ]]; then
-  build_nimbus_fml
+  build_nimbus_fml || return 1
 fi
 
 # Build Android Components
 if [[ "${IRONFOX_BUILD_AC}" == 1 ]]; then
-  build_ac
+  build_ac || return 1
 fi
 
 # Build uniffi-bindgen
 if [[ "${IRONFOX_BUILD_UNIFFI}" == 1 ]]; then
-  build_uniffi
+  build_uniffi || return 1
 fi
 
 # Build Glean
 if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
-  build_glean
+  build_glean || return 1
 fi
 
 # Build Fenix
 if [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
-  build_fenix
+  build_fenix || return 1
 fi
