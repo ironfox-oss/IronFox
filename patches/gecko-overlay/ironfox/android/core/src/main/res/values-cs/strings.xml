@@ -68,4 +68,6 @@
     <string name="preference_ironfox_geo_provider_network_enabled">Povolit síťového poskytovatele geolokace</string>
     <string name="preference_ironfox_geo_provider_network_summary">Pokud je povoleno a není dostupný poskytovatel geolokace systému Android, použije IronFox geolokační službu BeaconDB pro poskytnutí vaší polohy webovým stránkám (pokud stránce udělíte oprávnění). Změna tohoto nastavení restartuje váš prohlížeč</string>
     <string name="preference_ironfox_ip_protection_enabled">Povolit Firefox VPN</string>
+    <string name="preference_ironfox_history_enabled">Zapamatovat si historii prohlížení</string>
+    <string name="preference_ironfox_fxa_enabled">Povolit službu Firefox Sync</string>
 </resources>

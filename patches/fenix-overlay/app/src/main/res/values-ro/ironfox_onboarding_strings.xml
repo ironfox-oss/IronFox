@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ironfox_onboarding_preferences_title">Personalizează IronFox</string>
+    <string name="ironfox_onboarding_preferences_description">Personalizează IronFox după bunul tău plac</string>
+    <string name="ironfox_onboarding_doh_caption">Asigurați-vă navigarea cu ajutorul tehnologiei DNS-over-HTTPS pentru un nivel sporit de confidențialitate și securitate.</string>
+    <string name="ironfox_onboarding_jit_enabled">Activează compilarea „just-in-time” (JIT) a JavaScript-ului</string>
+    <string name="ironfox_onboarding_jit_enabled_caption">Îmbunătățiți performanța JavaScript activând JIT. (Nu este recomandat pentru majoritatea utilizatorilor)</string>
+    <string name="ironfox_onboarding_jit_enabled_description">Cu prețul sacrificării securității, puteți activa JIT pentru a îmbunătăți performanța site-urilor web. Se recomandă doar utilizatorilor cu dispozitive de gamă inferioară.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled">Activează navigarea sigură</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_caption">Beneficiați de protecție în timp real împotriva site-urilor periculoase, a programelor malware și a tentativelor de phishing.</string>
+    <string name="ironfox_onboarding_safe_browsing_enabled_description">Funcționalitatea „Navigare sigură” a IronFox este furnizată în prezent de Google. IronFox va actualiza periodic baza de date pentru a se asigura că utilizatorii sunt protejați împotriva celor mai recente amenințări, iar în cazul identificării unei potențiale corespondențe, IronFox ar putea transmite către Google un hash parțial al adresei URL suspecte. Rețineți că IronFox redirecționează aceste conexiuni prin proxy, pentru a împiedica asocierea adresei dvs. IP publice cu aceste solicitări.</string>
+    <string name="ironfox_onboarding_spoof_english">Falsificați limba în en-US</string>
+    <string name="ironfox_onboarding_spoof_english_caption">Îmbunătățiți-vă confidențialitatea ascunzând setările de limbă ale dispozitivului.</string>
+    <string name="ironfox_onboarding_spoof_english_description">Solicitați versiunile în limba engleză (en-US) ale paginilor web. Acest lucru contribuie la reducerea gradului de unicitate al browserului dumneavoastră, consolidând protecția împotriva tehnicilor de „amprentare digitală” care identifică utilizatorii pe baza preferințelor lor lingvistice.</string>
+    <string name="ironfox_onboarding_install_ublock">Instalează uBlock Origin</string>
+    <string name="ironfox_onboarding_install_ublock_caption">Blochează reclamele, modulele de urmărire și programele malware pentru o experiență de navigare mai sigură și mai curată.</string>
+    <string name="ironfox_onboarding_install_ublock_description">uBlock Origin îți îmbunătățește confidențialitatea și securitatea prin blocarea conținutului nedorit. IronFox utilizează o configurație personalizată a uBlock Origin, cu liste de filtre selectate cu grijă, pentru o protecție și o performanță optime.</string>
+</resources>

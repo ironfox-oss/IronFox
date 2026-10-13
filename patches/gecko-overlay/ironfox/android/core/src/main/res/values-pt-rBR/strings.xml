@@ -69,4 +69,6 @@
     <string name="preference_ironfox_geo_provider_network_enabled">Ativar o provedor de localização de rede</string>
     <string name="preference_ironfox_geo_provider_network_summary">Caso ativado e o provedor de localização do Android estiver indisponível, o IronFox usará o serviço de localização de rede do BeaconDB para fornecer sua localização aos sites (caso dê a permissão ao site) - Alterar esta configuração reiniciará o navegador</string>
     <string name="preference_ironfox_ip_protection_enabled">Ativar VPN do Firefox</string>
+    <string name="preference_ironfox_history_enabled">Lembrar do histórico de navegação</string>
+    <string name="preference_ironfox_fxa_enabled">Ativar Firefox Sync</string>
 </resources>
