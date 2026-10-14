@@ -33,6 +33,13 @@ function deglean() {
   verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   local -r dir="$1"
+
+  # Ensure we have a valid directory
+  if [[ ! -d "${dir}" ]]; then
+    echo_red_text "ERROR: Invalid directory: '${dir}'!"
+    return 1
+  fi
+
   local -r gradle_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.gradle")
   local -r kt_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.kt")
   local -r yaml_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "metrics.yaml" -o -name "pings.yaml")
@@ -129,6 +136,13 @@ function fenix_deglean() {
   verify_exec "${IRONFOX_GREP}" 'IRONFOX_GREP' || return 1
 
   local -r dir="$1"
+
+  # Ensure we have a valid directory
+  if [[ ! -d "${dir}" ]]; then
+    echo_red_text "ERROR: Invalid directory: '${dir}'!"
+    return 1
+  fi
+
   local -r gradle_files=$("${IRONFOX_FIND}" "${dir}" -type f -name "*.gradle")
 
   if [[ -n "${gradle_files}" ]]; then

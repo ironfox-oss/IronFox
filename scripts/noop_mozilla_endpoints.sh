@@ -37,6 +37,7 @@ function noop_mozilla_endpoints() {
 
   # Ensure we have a valid file or directory
   if [[ ! -d "${dir}" ]] && [[ ! -f "${dir}" ]]; then
+    echo_red_text "ERROR: Invalid file or directory: '${dir}'!"
     return 1
   fi
 
