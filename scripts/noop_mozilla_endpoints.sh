@@ -115,10 +115,6 @@ function noop_ac_endpoints() {
   noop_mozilla_endpoints "ads.allizom.org" "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt" || return 1
   noop_mozilla_endpoints "ads.mozilla.org" "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt" || return 1
 
-  # Pocket
-  noop_mozilla_endpoints "spocs.getpocket.com" "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt" || return 1
-  noop_mozilla_endpoints "spocs.getpocket.dev" "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt" || return 1
-
   echo_green_text 'SUCCESS: No-oped endpoints from Android Components'
 }
 
