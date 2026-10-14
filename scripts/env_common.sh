@@ -24,7 +24,7 @@ source "${IRONFOX_VERSIONS}" || return 1
 ## These need to be set first, to ensure that they don't interfere with certain variables
 readonly IRONFOX_ENV_OVERRIDE="${IRONFOX_ROOT}/env_override.sh"
 if [[ -f "${IRONFOX_ENV_OVERRIDE}" ]]; then
-  source "${IRONFOX_ENV_OVERRIDE}"
+  source "${IRONFOX_ENV_OVERRIDE}" || return 1
 fi
 
 # Utilities

@@ -357,8 +357,8 @@ function backup_file() {
   if [[ -f "${file}" ]]; then
     "${IRONFOX_RM}" -f "${backup_file}"
     "${IRONFOX_MKDIR}" -p "$("${IRONFOX_DIRNAME}" "${backup_file}")"
-    "${IRONFOX_CP}" -f "${file}" "${backup_file}"
-    "${IRONFOX_RM}" -f "${file}"
+    "${IRONFOX_CP}" -f "${file}" "${backup_file}" || return 1
+    "${IRONFOX_RM}" -f "${file}" || return 1
   fi
 }
 
@@ -393,8 +393,8 @@ function backup_dir() {
   if [[ -d "${dir}" ]]; then
     "${IRONFOX_RM}" -rf "${backup_dir}"
     "${IRONFOX_MKDIR}" -p "$("${IRONFOX_DIRNAME}" "${backup_dir}")"
-    "${IRONFOX_CP}" -rf "${dir}/" "${backup_dir}"
-    "${IRONFOX_RM}" -rf "${dir}"
+    "${IRONFOX_CP}" -rf "${dir}/" "${backup_dir}" || return 1
+    "${IRONFOX_RM}" -rf "${dir}" || return 1
   fi
 }
 
@@ -429,8 +429,8 @@ function restore_file() {
   if [[ -f "${backed_up_file}" ]]; then
     "${IRONFOX_RM}" -f "${file}"
     "${IRONFOX_MKDIR}" -p "$("${IRONFOX_DIRNAME}" "${file}")"
-    "${IRONFOX_CP}" -f "${backed_up_file}" "${file}"
-    "${IRONFOX_RM}" -f "${backed_up_file}"
+    "${IRONFOX_CP}" -f "${backed_up_file}" "${file}" || return 1
+    "${IRONFOX_RM}" -f "${backed_up_file}" || return 1
   fi
 }
 
@@ -465,8 +465,8 @@ function restore_dir() {
   if [[ -d "${backed_up_dir}" ]]; then
     "${IRONFOX_RM}" -rf "${dir}"
     "${IRONFOX_MKDIR}" -p "$("${IRONFOX_DIRNAME}" "${dir}")"
-    "${IRONFOX_CP}" -rf "${backed_up_dir}/" "${dir}"
-    "${IRONFOX_RM}" -rf "${backed_up_dir}"
+    "${IRONFOX_CP}" -rf "${backed_up_dir}/" "${dir}" || return 1
+    "${IRONFOX_RM}" -rf "${backed_up_dir}" || return 1
   fi
 }
 
@@ -527,7 +527,7 @@ function update_checksum() {
     echo "New ${checksum_type_pretty}: '${new_checksum}'"
   else
     echo_red_text "Updating ${checksum_type_pretty} for file: '${file}'..."
-    "${IRONFOX_SED}" -i "s|'${old_checksum}'|'${new_checksum}'|g" "${IRONFOX_VERSIONS}"
+    "${IRONFOX_SED}" -i "s|'${old_checksum}'|'${new_checksum}'|g" "${IRONFOX_VERSIONS}" || return 1
     echo_green_text "SUCCESS: Updated ${checksum_type_pretty} for file: '${file}'!"
   fi
 }
@@ -792,8 +792,11 @@ function download_and_extract() {
     local -r extension=".tar.gz"
   elif [[ "${url}" =~ \.tar\.zst$ ]]; then
     local -r extension=".tar.zst"
-  else
+  elif [[ "${url}" =~ \.zip$ ]]; then
     local -r extension=".zip"
+  else
+    echo_red_text "ERROR: Unsupported archive format: '${path}'!"
+    return 1
   fi
 
   # Tell `download` to return instead of exit upon an error

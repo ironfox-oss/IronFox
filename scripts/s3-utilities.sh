@@ -124,7 +124,7 @@ function push_file() {
   esac
 
   # Ensure we're not running with xtrace at this point...
-  set +x
+  set +x || return 1
 
   local -r s3_access_key=$("${IRONFOX_CAT}" "${s3_access_key_file}" | "${IRONFOX_XARGS}")
   local -r s3_bucket_name=$("${IRONFOX_CAT}" "${s3_bucket_name_file}" | "${IRONFOX_XARGS}")
@@ -138,12 +138,12 @@ function push_file() {
   fi
 
   echo_red_text "Pushing file: '${push_file}' to S3 storage..."
-  source "${IRONFOX_PYENV}"
+  source "${IRONFOX_PYENV}" || return 1
   "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} --mime-type="${mime_type}" put "${push_file}" "${s3_target_path}" \
     --access_key="${s3_access_key}" \
     --secret_key="${s3_secret_key}" \
     --host="${s3_endpoint}" \
-    --host-bucket="${s3_endpoint}"
+    --host-bucket="${s3_endpoint}" || return 1
   echo_green_text "SUCCESS: Pushed file: '${push_file}' to S3 storage!"
 
   # Set verbosity
@@ -228,10 +228,10 @@ function push_sha512sum() {
   fi
 
   local -r local_sha512sum=$("${IRONFOX_SHASUM}" -a 512 "${sha512sum_file_in}" | "${IRONFOX_AWK}" '{print $1}')
-  echo -n "${local_sha512sum}" > "${sha512sum_file_out}"
+  echo -n "${local_sha512sum}" > "${sha512sum_file_out}" || return 1
 
   # Push our SHA512sum
-  push_file "${sha512sum_file_out}" "${sha512sum_s3path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
+  push_file "${sha512sum_file_out}" "${sha512sum_s3path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}" || return 1
 }
 
 # Create a SHA512sum for and push a file to S3 storage
@@ -294,10 +294,10 @@ function push_and_add_sha512sum() {
   verify_file "${s3_secret_key_file}" || return 1
 
   # Push our file to S3 storage
-  push_file "${file_in}" "${s3_path_out}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
+  push_file "${file_in}" "${s3_path_out}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}" || return 1
 
   # Create and push a SHA512sum for our file to S3 storage
-  push_sha512sum "${file_in}" "${s3_path_out}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
+  push_sha512sum "${file_in}" "${s3_path_out}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}" || return 1
 }
 
 # Push a directory to S3 storage
@@ -394,7 +394,7 @@ function push_dir() {
       else
         local s3_path="${target_s3_path}${target_path}"
       fi
-      push_file "${file}" "${s3_path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
+      push_file "${file}" "${s3_path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}" || return 1
     else
       echo "Skipping upload of file: '${file}'"
     fi
@@ -496,7 +496,7 @@ function push_dir_and_add_sha512sum() {
       else
         local s3_path="${target_s3_path}${target_path}"
       fi
-      push_and_add_sha512sum "${file}" "${s3_path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
+      push_and_add_sha512sum "${file}" "${s3_path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}" || return 1
     else
       echo "Skipping upload of file: '${file}'"
     fi
@@ -570,7 +570,7 @@ function delete_file() {
   verify_file "${s3_secret_key_file}" || return 1
 
   # Ensure we're not running with xtrace at this point...
-  set +x
+  set +x || return 1
 
   local -r s3_access_key=$("${IRONFOX_CAT}" "${s3_access_key_file}" | "${IRONFOX_XARGS}")
   local -r s3_bucket_name=$("${IRONFOX_CAT}" "${s3_bucket_name_file}" | "${IRONFOX_XARGS}")
@@ -580,12 +580,12 @@ function delete_file() {
   local -r s3_target_path="s3://${s3_bucket_name}/${s3_file}"
 
   echo_red_text "Deleting file: '${s3_file_name}' from S3 storage..."
-  source "${IRONFOX_PYENV}"
+  source "${IRONFOX_PYENV}" || return 1
   "${IRONFOX_S3CMD}" ${IRONFOX_S3CMD_FLAGS} rm "${s3_file}" \
     --access_key="${s3_access_key}" \
     --secret_key="${s3_secret_key}" \
     --host="${s3_endpoint}" \
-    --host-bucket="${s3_endpoint}"
+    --host-bucket="${s3_endpoint}" || return 1
   echo_green_text "SUCCESS: Deleted file: '${s3_file_name}' from S3 storage!"
 
   # Set verbosity

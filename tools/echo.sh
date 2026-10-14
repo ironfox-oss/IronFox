@@ -1,2 +1,3 @@
 #!/bin/bash
-exec "${IRONFOX_BASH}" -c "echo $@"
+set -euo pipefail
+exec "${IRONFOX_BASH}" -c "echo $@" || exit 1

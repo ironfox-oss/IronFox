@@ -105,7 +105,7 @@ function push_to_s3() {
   verify_file "${push_file}" || return 1
 
   # Create and push a SHA512sum for our file to S3 storage
-  push_and_add_sha512sum "${push_file}" "${s3_path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}"
+  push_and_add_sha512sum "${push_file}" "${s3_path}" "${s3_access_key_file}" "${s3_bucket_name_file}" "${s3_endpoint_file}" "${s3_secret_key_file}" || return 1
 }
 
 if [[ "${IRONFOX_AR_UP_FENIX}" == 1 ]]; then
@@ -113,21 +113,21 @@ if [[ "${IRONFOX_AR_UP_FENIX}" == 1 ]]; then
     # Ensure we have `IRONFOX_OUTPUTS_ARM64`
     verify_file_with_env "${IRONFOX_OUTPUTS_ARM64}" 'IRONFOX_OUTPUTS_ARM64' || return 1
 
-    push_to_s3 "${IRONFOX_OUTPUTS_ARM64}" "${IRONFOX_S3_PATH}"
+    push_to_s3 "${IRONFOX_OUTPUTS_ARM64}" "${IRONFOX_S3_PATH}" || return 1
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm' ]] || [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
     # Ensure we have `IRONFOX_OUTPUTS_ARM`
     verify_file_with_env "${IRONFOX_OUTPUTS_ARM}" 'IRONFOX_OUTPUTS_ARM' || return 1
 
-    push_to_s3 "${IRONFOX_OUTPUTS_ARM}" "${IRONFOX_S3_PATH}"
+    push_to_s3 "${IRONFOX_OUTPUTS_ARM}" "${IRONFOX_S3_PATH}" || return 1
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'x86_64' ]] || [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
     # Ensure we have `IRONFOX_OUTPUTS_X86_64`
     verify_file_with_env "${IRONFOX_OUTPUTS_X86_64}" 'IRONFOX_OUTPUTS_X86_64' || return 1
 
-    push_to_s3 "${IRONFOX_OUTPUTS_X86_64}" "${IRONFOX_S3_PATH}"
+    push_to_s3 "${IRONFOX_OUTPUTS_X86_64}" "${IRONFOX_S3_PATH}" || return 1
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'bundle' ]]; then
@@ -140,9 +140,9 @@ if [[ "${IRONFOX_AR_UP_FENIX}" == 1 ]]; then
     # Ensure we have `IRONFOX_OUTPUTS_UNIVERSAL`
     verify_file_with_env "${IRONFOX_OUTPUTS_UNIVERSAL}" 'IRONFOX_OUTPUTS_UNIVERSAL' || return 1
 
-    push_to_s3 "${IRONFOX_OUTPUTS_UNIVERSAL}" "${IRONFOX_S3_PATH}"
-    push_to_s3 "${IRONFOX_OUTPUTS_BUNDLE}" "${IRONFOX_S3_PATH}"
-    push_to_s3 "${IRONFOX_OUTPUTS_BUNDLE_AAB}" "${IRONFOX_S3_PATH}"
+    push_to_s3 "${IRONFOX_OUTPUTS_UNIVERSAL}" "${IRONFOX_S3_PATH}" || return 1
+    push_to_s3 "${IRONFOX_OUTPUTS_BUNDLE}" "${IRONFOX_S3_PATH}" || return 1
+    push_to_s3 "${IRONFOX_OUTPUTS_BUNDLE_AAB}" "${IRONFOX_S3_PATH}" || return 1
   fi
 fi
 
@@ -151,20 +151,20 @@ if [[ "${IRONFOX_AR_UP_GECKOVIEW}" == 1 ]]; then
     # Ensure we have `IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64`
     verify_file_with_env "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" 'IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64' || return 1
 
-    push_to_s3 "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${IRONFOX_S3_PATH}"
+    push_to_s3 "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${IRONFOX_S3_PATH}" || return 1
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'arm' ]]; then
     # Ensure we have `IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM`
     verify_file_with_env "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" 'IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM' || return 1
 
-    push_to_s3 "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${IRONFOX_S3_PATH}"
+    push_to_s3 "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${IRONFOX_S3_PATH}" || return 1
   fi
 
   if [[ "${IRONFOX_AR_UP_ARCH}" == 'x86_64' ]]; then
     # Ensure we have `IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64`
     verify_file_with_env "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" 'IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64' || return 1
 
-    push_to_s3 "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${IRONFOX_S3_PATH}"
+    push_to_s3 "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${IRONFOX_S3_PATH}" || return 1
   fi
 fi

@@ -12,4 +12,4 @@
 
 set -euo pipefail
 
-exec "$(git rev-parse --show-toplevel)/scripts/lint.sh" --staged
+exec "$(git rev-parse --show-toplevel)/scripts/lint.sh" --staged || exit 1

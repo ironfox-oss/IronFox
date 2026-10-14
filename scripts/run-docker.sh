@@ -98,10 +98,10 @@ function container_running() {
 function build_image() {
   echo "Building Docker image '${IMAGE_NAME}'..."
   if [[ ! -f "${DOCKERFILE_PATH}" ]]; then
-    echo "Error: Dockerfile not found at ${DOCKERFILE_PATH}"
-    exit 1
+    echo "Error: Dockerfile not found at '${DOCKERFILE_PATH}'!"
+    return 1
   fi
-  docker build -t "${IMAGE_NAME}" -f "${DOCKERFILE_PATH}" .
+  docker build -t "${IMAGE_NAME}" -f "${DOCKERFILE_PATH}" . || return 1
   echo "Docker image '${IMAGE_NAME}' built successfully."
 }
 
@@ -116,26 +116,26 @@ function create_container() {
     "${IMAGE_NAME}"
   )
 
-  "${docker_cmd[@]}"
+  "${docker_cmd[@]}" || return 1
   echo "Container '${CONTAINER_NAME}' created successfully."
 }
 
 function start_container() {
   if ! container_running; then
     echo "Starting container '${CONTAINER_NAME}'..."
-    docker start "${CONTAINER_NAME}"
+    docker start "${CONTAINER_NAME}" || return 1
   fi
 }
 
 function execute_in_container() {
-  local -r cmd=("$@")
+  local -r cmd=("$@") || return 1
 
   if [[ ${#cmd[@]} -eq 0 ]]; then
     echo "Starting interactive shell in container '${CONTAINER_NAME}'..."
-    docker exec -it "${CONTAINER_NAME}" /bin/bash -c "export PS1='${PROMPT}' && /bin/bash"
+    docker exec -it "${CONTAINER_NAME}" /bin/bash -c "export PS1='${PROMPT}' && /bin/bash" || return 1
   else
     echo "Executing command in container '${CONTAINER_NAME}': ${cmd[*]}"
-    docker exec -it "${CONTAINER_NAME}" "${cmd[@]}"
+    docker exec -it "${CONTAINER_NAME}" "${cmd[@]}" || return 1
   fi
 }
 
@@ -144,19 +144,19 @@ function main() {
   echo "========================"
 
   if ! image_exists; then
-    build_image
+    build_image || return 1
   else
     echo "Docker image '${IMAGE_NAME}' already exists."
   fi
 
   if ! container_exists; then
-    create_container
+    create_container || return 1
   else
     echo "Container '${CONTAINER_NAME}' already exists."
   fi
 
-  start_container
-  execute_in_container "${COMMAND_ARGS[@]}"
+  start_container || return 1
+  execute_in_container "${COMMAND_ARGS[@]}" || return 1
 }
 
-main
+main || exit 1

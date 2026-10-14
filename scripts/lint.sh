@@ -29,7 +29,7 @@ function setup_env() {
     else
       if ! command -v dirname > /dev/null 2>&1; then
         echo "ERROR: Missing dirname!" >&2
-        exit 1
+        return 1
       fi
       # It isn't a known location, so we sadly have to just fall-back to the PATH
       local -r dirname="$(dirname)"
@@ -39,14 +39,14 @@ function setup_env() {
     readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
     if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
       echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
-      exit 1
+      return 1
     fi
-    source "${IRONFOX_ENV_SH}" || exit 1
+    source "${IRONFOX_ENV_SH}" || return 1
   fi
 }
 
 # Set-up our environment
-setup_env
+setup_env || exit 1
 
 # Set verbosity
 set_verbosity
@@ -59,7 +59,7 @@ verify_exec "${IRONFOX_SHFMT}" 'IRONFOX_SHFMT' || exit 1
 
 # Resolve and move to the repo root so relative paths and config discovery
 # (.shellcheckrc, .editorconfig) work regardless of the caller's cwd.
-pushd "${IRONFOX_ROOT}"
+pushd "${IRONFOX_ROOT}" || exit 1
 
 mode='all'
 if [[ "${1:-}" == '--staged' ]]; then
@@ -124,6 +124,6 @@ else
   echo 'lint: FAILED' >&2
 fi
 
-popd
+popd || exit 1
 
 exit "${status}"

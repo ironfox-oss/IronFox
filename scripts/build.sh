@@ -15,7 +15,7 @@ function setup_env() {
     else
       if ! command -v dirname > /dev/null 2>&1; then
         echo "ERROR: Missing dirname!" >&2
-        exit 1
+        return 1
       fi
       # It isn't a known location, so we sadly have to just fall-back to the PATH
       local -r dirname="$(dirname)"
@@ -25,14 +25,14 @@ function setup_env() {
     readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
     if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
       echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
-      exit 1
+      return 1
     fi
-    source "${IRONFOX_ENV_SH}" || exit 1
+    source "${IRONFOX_ENV_SH}" || return 1
   fi
 }
 
 # Set-up our environment
-setup_env
+setup_env || exit 1
 
 # Ensure we have GNU awk
 verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || exit 1
@@ -75,7 +75,7 @@ else
   readonly build_project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 fi
 
-pushd "${IRONFOX_ROOT}"
+pushd "${IRONFOX_ROOT}" || exit 1
 
 # Build IronFox
 readonly IRONFOX_FROM_BUILD=1
@@ -164,19 +164,19 @@ if [[ "${IRONFOX_BUILT_FENIX}" == 1 ]] && [[ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]];
     if [[ "${build_target}" == 'bundle' ]]; then
       # If we built a bundle, install the universal APK
       verify_file_with_env "${IRONFOX_OUTPUTS_UNIVERSAL}" 'IRONFOX_OUTPUTS_UNIVERSAL' || exit 1
-      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_UNIVERSAL}"
+      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_UNIVERSAL}" || exit 1
     elif [[ "${build_target}" == 'arm64' ]]; then
       # Install the ARM64 APK
       verify_file_with_env "${IRONFOX_OUTPUTS_ARM64}" 'IRONFOX_OUTPUTS_ARM64' || exit 1
-      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM64}"
+      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM64}" || exit 1
     elif [[ "${build_target}" == 'arm' ]]; then
       # Install the ARM APK
       verify_file_with_env "${IRONFOX_OUTPUTS_ARM}" 'IRONFOX_OUTPUTS_ARM' || exit 1
-      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM}"
+      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM}" || exit 1
     elif [[ "${build_target}" == 'x86_64' ]]; then
       # Install the x86_64 APK
       verify_file_with_env "${IRONFOX_OUTPUTS_X86_64}" 'IRONFOX_OUTPUTS_X86_64' || exit 1
-      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_X86_64}"
+      "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_X86_64}" || exit 1
     fi
     # Now that the app is installed, we can kill the server
     "${IRONFOX_ADB}" kill-server
@@ -185,4 +185,4 @@ if [[ "${IRONFOX_BUILT_FENIX}" == 1 ]] && [[ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]];
   fi
 fi
 
-popd
+popd || exit 1

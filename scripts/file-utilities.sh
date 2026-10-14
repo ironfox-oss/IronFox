@@ -125,11 +125,11 @@ function create_archive() {
 
   # Override the timestamps for each file to match our stamp above
   "${IRONFOX_FIND}" "${target_dir}" -newermt "${IRONFOX_FIND_STAMP}" -print0 |
-    "${IRONFOX_XARGS}" -0r "${IRONFOX_TOUCH}" -h -d "${IRONFOX_TIMESTAMP}"
+    "${IRONFOX_XARGS}" -0r "${IRONFOX_TOUCH}" -h -d "${IRONFOX_TIMESTAMP}" || return 1
 
   # Override the timestamps for each directory to match our stamp above
   for dir in $("${IRONFOX_FIND}" "${target_dir}" -type d); do
-    "${IRONFOX_TOUCH}" -r "${dir}/$("${IRONFOX_LS}" -At "${dir}" | "${IRONFOX_HEAD}" -n 1)" "${dir}"
+    "${IRONFOX_TOUCH}" -r "${dir}/$("${IRONFOX_LS}" -At "${dir}" | "${IRONFOX_HEAD}" -n 1)" "${dir}" || return 1
   done
 
   # By default, we know the archive creation has not failed...
@@ -137,7 +137,7 @@ function create_archive() {
 
   # Finally, create our archive
   echo_red_text "Creating archive: '${output_archive}' from path: '${target_dir}'..."
-  pushd "${target_dir}"
+  pushd "${target_dir}" || return 1
   if [[ "${archive_format}" == 'zip' ]]; then
     # shellcheck disable=SC2035
     "${IRONFOX_ZIP}" -X -r "${output_archive}" * -x '.DS_Store' || local archive_failed=1
@@ -148,7 +148,7 @@ function create_archive() {
     echo_red_text "ERROR: Invalid archive format: '${archive_format}'!"
     return 1
   fi
-  popd
+  popd || return 1
 
   # Ensure the archive we just created is valid
   if [[ "${archive_failed}" != 1 ]]; then

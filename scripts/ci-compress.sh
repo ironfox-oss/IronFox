@@ -18,7 +18,7 @@ function setup_env() {
     else
       if ! command -v dirname > /dev/null 2>&1; then
         echo "ERROR: Missing dirname!" >&2
-        exit 1
+        return 1
       fi
       # It isn't a known location, so we sadly have to just fall-back to the PATH
       local -r dirname="$(dirname)"
@@ -28,14 +28,14 @@ function setup_env() {
     readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
     if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
       echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
-      exit 1
+      return 1
     fi
-    source "${IRONFOX_ENV_SH}" || exit 1
+    source "${IRONFOX_ENV_SH}" || return 1
   fi
 }
 
 # Set-up our environment
-setup_env
+setup_env || exit 1
 
 # Set verbosity
 set_verbosity
@@ -60,16 +60,16 @@ readonly artifact_path="${IRONFOX_ARTIFACTS}/${artifact_archive}"
 
 function ironfox_package_artifacts() {
   # Ensure we have find
-  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || exit 1
+  verify_exec "${IRONFOX_FIND}" 'IRONFOX_FIND' || return 1
 
   # Ensure we have GNU tar
-  verify_exec "${IRONFOX_TAR}" 'IRONFOX_TAR' || exit 1
+  verify_exec "${IRONFOX_TAR}" 'IRONFOX_TAR' || return 1
 
   # Ensure we have mkdir
-  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
 
   # Ensure we have tr
-  verify_exec "${IRONFOX_TR}" 'IRONFOX_TR' || exit 1
+  verify_exec "${IRONFOX_TR}" 'IRONFOX_TR' || return 1
 
   # For debugging purposes
   echo "Listing available artifacts"
@@ -94,14 +94,14 @@ function ironfox_package_artifacts() {
   fi
 
   "${IRONFOX_MKDIR}" -p "${IRONFOX_ARTIFACTS}"
-  "${IRONFOX_TAR}" cvJf "${artifact_path}" -C "${IRONFOX_ARTIFACTS}" "${paths[@]}"
+  "${IRONFOX_TAR}" cvJf "${artifact_path}" -C "${IRONFOX_ARTIFACTS}" "${paths[@]}" || return 1
 }
 
 if [[ -z "${IRONFOX_ARTIFACT_INCLUDES+x}" ]]; then
   echo_red_text "IRONFOX_ARTIFACT_INCLUDES has not been specified. Creating empty artifact."
   "${IRONFOX_TOUCH}" "${artifact_path}"
 else
-  ironfox_package_artifacts
+  ironfox_package_artifacts || exit 1
 fi
 
 if [ "${IRONFOX_CI_BUILD_FAILED}" == 1 ]; then

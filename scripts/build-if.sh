@@ -781,7 +781,7 @@ function set_build_env() {
   if [[ "${IF_BUILD_ID}" != 'null' ]]; then
     "${IRONFOX_RM}" -f "${moz_build_id_file}"
     "${IRONFOX_TOUCH}" "${moz_build_id_file}"
-    echo -n "${IF_BUILD_ID}" > "${moz_build_id_file}"
+    echo -n "${IF_BUILD_ID}" > "${moz_build_id_file}" || return 1
   fi
 
   # Override our version for local Android Components substitution
@@ -811,7 +811,7 @@ function set_build_env() {
     fi
     "${IRONFOX_RM}" -f "${ac_version_file}"
     "${IRONFOX_TOUCH}" "${ac_version_file}"
-    echo -n "${IF_LOCAL_AC_VERSION_STAMP_TEMP}" > "${ac_version_file}"
+    echo -n "${IF_LOCAL_AC_VERSION_STAMP_TEMP}" > "${ac_version_file}" || return 1
   fi
 
   # Override our version for local Application Services substitution
@@ -841,7 +841,7 @@ function set_build_env() {
     fi
     "${IRONFOX_RM}" -f "${as_version_file}"
     "${IRONFOX_TOUCH}" "${as_version_file}"
-    echo -n "${IF_LOCAL_AS_VERSION_STAMP_TEMP}" > "${as_version_file}"
+    echo -n "${IF_LOCAL_AS_VERSION_STAMP_TEMP}" > "${as_version_file}" || return 1
   fi
 
   # Override our version for local Glean substitution
@@ -873,7 +873,7 @@ function set_build_env() {
     fi
     "${IRONFOX_RM}" -f "${glean_version_file}"
     "${IRONFOX_TOUCH}" "${glean_version_file}"
-    echo -n "${IF_LOCAL_GLEAN_VERSION_STAMP_TEMP}" > "${glean_version_file}"
+    echo -n "${IF_LOCAL_GLEAN_VERSION_STAMP_TEMP}" > "${glean_version_file}" || return 1
   fi
 
   # Override our version for IronFox Core substitution
@@ -1015,31 +1015,31 @@ function prep_gecko() {
   if [[ -f "${IRONFOX_GECKO}/local.properties" ]]; then
     "${IRONFOX_RM}" -f "${IRONFOX_GECKO}/local.properties"
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/gecko/local.properties" "${IRONFOX_GECKO}/local.properties"
-  "${IRONFOX_SED}" -i "s|{IRONFOX_MOZCONFIGS}|${IRONFOX_MOZCONFIGS}|g" "${IRONFOX_GECKO}/local.properties"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMPLATES}/gecko/local.properties" "${IRONFOX_GECKO}/local.properties" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_MOZCONFIGS}|${IRONFOX_MOZCONFIGS}|g" "${IRONFOX_GECKO}/local.properties" || return 1
 
   # Substitute Android Components
-  "${IRONFOX_SED}" -i "s|{IF_LOCAL_AC_VERSION}|${IF_LOCAL_AC_VERSION}|g" "${IRONFOX_GECKO}/local.properties"
+  "${IRONFOX_SED}" -i "s|{IF_LOCAL_AC_VERSION}|${IF_LOCAL_AC_VERSION}|g" "${IRONFOX_GECKO}/local.properties" || return 1
 
   # Substitute Application Services
-  "${IRONFOX_SED}" -i -e "s|val VERSION = .*|val VERSION = \""${IF_LOCAL_AS_VERSION}\""|g" "${IRONFOX_AC}/plugins/dependencies/src/main/java/ApplicationServices.kt"
-  "${IRONFOX_SED}" -i "s|{IF_LOCAL_AS_VERSION}|${IF_LOCAL_AS_VERSION}|g" "${IRONFOX_GECKO}/local.properties"
+  "${IRONFOX_SED}" -i -e "s|val VERSION = .*|val VERSION = \""${IF_LOCAL_AS_VERSION}\""|g" "${IRONFOX_AC}/plugins/dependencies/src/main/java/ApplicationServices.kt" || return 1
+  "${IRONFOX_SED}" -i "s|{IF_LOCAL_AS_VERSION}|${IF_LOCAL_AS_VERSION}|g" "${IRONFOX_GECKO}/local.properties" || return 1
 
   # Substitute Glean
-  "${IRONFOX_SED}" -i -e "/^glean = \"/c\\glean = \"${IF_LOCAL_GLEAN_VERSION}\"" "${IRONFOX_GECKO}/gradle/libs.versions.toml"
+  "${IRONFOX_SED}" -i -e "/^glean = \"/c\\glean = \"${IF_LOCAL_GLEAN_VERSION}\"" "${IRONFOX_GECKO}/gradle/libs.versions.toml" || return 1
 
   # Configure release channel
   if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
     "${IRONFOX_RM}" -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
-  "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" || return 1
+  "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" || return 1
 
   if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html" ]]; then
     "${IRONFOX_RM}" -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
   fi
-  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
-  "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
+  "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html" || return 1
+  "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html" || return 1
 
   # Ensure we remove any existing Mach environment cache
   ## (To ensure our configurations are properly updated/reflected...)
@@ -1071,7 +1071,7 @@ function prep_glean() {
 
   # Set Glean's uniffi-bindgen location
   if [[ -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle" ]]; then
-    "${IRONFOX_RM}" -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle" || return 1
+    "${IRONFOX_RM}" -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
   fi
   "${IRONFOX_CP}" -f "${IRONFOX_TEMP}/glean/build.gradle" "${IRONFOX_GLEAN}/glean-core/android/build.gradle" || return 1
   "${IRONFOX_SED}" -i "s|{IRONFOX_UNIFFI}|${IRONFOX_UNIFFI}|g" "${IRONFOX_GLEAN}/glean-core/android/build.gradle" || return 1
@@ -1130,9 +1130,9 @@ function build_bundletool() {
   # Ensure we have cp
   verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
 
-  pushd "${IRONFOX_BUNDLETOOL_DIR}"
+  pushd "${IRONFOX_BUNDLETOOL_DIR}" || return 1
   "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} assemble || return 1
-  popd
+  popd || return 1
 
   "${IRONFOX_CP}" -f "${IRONFOX_BUNDLETOOL_DIR}/build/libs/bundletool.jar" "${IRONFOX_BUNDLETOOL_JAR}" || return 1
 
@@ -1152,7 +1152,7 @@ function build_llvm() {
   # Ensure we have nproc
   verify_exec "${IRONFOX_NPROC}" 'IRONFOX_NPROC' || return 1
 
-  pushd "${llvm}"
+  pushd "${llvm}" || return 1
   local -r llvmtarget=$("${IRONFOX_CAT}" "${IRONFOX_BUILD}/targets_to_build")
   echo_green_text "building llvm for ${llvmtarget}"
   "${IRONFOX_CMAKE}" -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang \
@@ -1161,7 +1161,7 @@ function build_llvm() {
     -DLLVM_DEFAULT_TARGET_TRIPLE="x86_64-unknown-linux-gnu" || return 1
   "${IRONFOX_CMAKE}" --build build -j"$("${IRONFOX_NPROC}")" || return 1
   "${IRONFOX_CMAKE}" --build build --target install -j"$("${IRONFOX_NPROC}")" || return 1
-  popd
+  popd || return 1
 
   echo_green_text 'SUCCESS: Built LLVM'
 }
@@ -1179,9 +1179,9 @@ function build_phoenix() {
   # Ensure we have rm
   verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
-  pushd "${IRONFOX_PHOENIX}"
+  pushd "${IRONFOX_PHOENIX}" || return 1
   "${IRONFOX_BASH}" "${IRONFOX_PHOENIX}/scripts/build.sh" 'android' || return 1
-  popd
+  popd || return 1
 
   # Ensure our cfg and policy files don't already exist in mozilla-central
   "${IRONFOX_RM}" -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg" "${IRONFOX_GECKO}/ironfox/prefs/policies.json" || return 1
@@ -1196,9 +1196,9 @@ function build_phoenix() {
 # uniffi-bindgen
 function build_uniffi() {
   echo_red_text 'Building uniffi-bindgen...'
-  pushd "${IRONFOX_UNIFFI_DIR}"
+  pushd "${IRONFOX_UNIFFI_DIR}" || return 1
   "${IRONFOX_CARGO}" build --release || return 1
-  popd
+  popd || return 1
   echo_green_text 'SUCCESS: Built uniffi-bindgen'
 }
 
@@ -1209,9 +1209,9 @@ function build_wasi() {
   # Ensure we have bash
   verify_exec "${IRONFOX_BASH}" 'IRONFOX_BASH' || return 1
 
-  pushd "${IRONFOX_PREBUILDS}"
+  pushd "${IRONFOX_PREBUILDS}" || return 1
   "${IRONFOX_BASH}" "${IRONFOX_PREBUILDS}/scripts/build.sh" 'wasi' || return 1
-  popd
+  popd || return 1
 
   echo_green_text 'SUCCESS: Built WASI SDK'
 }
@@ -1220,13 +1220,13 @@ function build_wasi() {
 function build_microg() {
   echo_red_text 'Building microG...'
 
-  pushd "${IRONFOX_GMSCORE}"
+  pushd "${IRONFOX_GMSCORE}" || return 1
   "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} -x javaDocReleaseGeneration \
     :play-services-base:publishToMavenLocal \
     :play-services-basement:publishToMavenLocal \
     :play-services-fido:publishToMavenLocal \
     :play-services-tasks:publishToMavenLocal || return 1
-  popd
+  popd || return 1
 
   echo_green_text 'SUCCESS: Built microG'
 }
@@ -1235,10 +1235,10 @@ function build_microg() {
 function build_glean() {
   echo_red_text 'Building Glean...'
 
-  pushd "${IRONFOX_GLEAN}"
+  pushd "${IRONFOX_GLEAN}" || return 1
   "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal || return 1
   "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x Bootstrap_CONDA || return 1
-  popd
+  popd || return 1
 
   echo_green_text 'SUCCESS: Built Glean'
 }
@@ -1255,7 +1255,7 @@ function build_as() {
   unset CI
   unset JAVA_HOME
 
-  pushd "${IRONFOX_AS}"
+  pushd "${IRONFOX_AS}" || return 1
   export JAVA_HOME="${IRONFOX_JDK_17_HOME}"
   "${IRONFOX_BASH}" "${IRONFOX_AS}/libs/verify-android-environment.sh" || return 1
   unset JAVA_HOME
@@ -1263,7 +1263,7 @@ function build_as() {
 
   # Build Application Services
   "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_AS_VERSION_GRADLE} publish || return 1
-  popd
+  popd || return 1
 
   echo_green_text 'SUCCESS: Built Application Services'
 }
@@ -1271,9 +1271,9 @@ function build_as() {
 # nimbus-fml
 function build_nimbus_fml() {
   echo_red_text 'Building nimbus-fml...'
-  pushd "${IRONFOX_AS}/components/support/nimbus-fml"
+  pushd "${IRONFOX_AS}/components/support/nimbus-fml" || return 1
   "${IRONFOX_CARGO}" build --release || return 1
-  popd
+  popd || return 1
   echo_green_text 'SUCCESS: Built nimbus-fml'
 }
 
@@ -1359,7 +1359,7 @@ function _build_geckoview() {
   # For multi-locale builds
   export MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
 
-  pushd "${IRONFOX_GECKO}"
+  pushd "${IRONFOX_GECKO}" || return 1
 
   # Build GeckoView
   echo_red_text "Building GeckoView (${pretty_arch})..."
@@ -1370,7 +1370,7 @@ function _build_geckoview() {
     "${IRONFOX_MACH}" gradle :geckoview:publishReleasePublicationToMavenLocal || return 1
   else
     # Create our AAR archives
-    "${IRONFOX_MACH}" gradle :machConfigure
+    "${IRONFOX_MACH}" gradle :machConfigure || return 1
     MOZ_AUTOMATION=1 "${IRONFOX_MACH}" android archive-geckoview || return 1
     unset MOZ_AUTOMATION
 
@@ -1389,7 +1389,7 @@ function _build_geckoview() {
   fi
 
   echo_green_text "SUCCESS: Built GeckoView (${pretty_arch})"
-  popd
+  popd || return 1
 }
 
 function build_geckoview() {
@@ -1536,7 +1536,7 @@ function _build_gecko() {
   # Set our target project
   export IRONFOX_MACH_TARGET_PROJECT='gecko'
 
-  pushd "${IRONFOX_GECKO}"
+  pushd "${IRONFOX_GECKO}" || return 1
 
   # Build Gecko
   echo_red_text "Building Gecko (${pretty_arch})..."
@@ -1558,7 +1558,7 @@ function _build_gecko() {
     "${IRONFOX_MACH}" package-multi-locale --locales ${IRONFOX_LOCALES} || return 1
     echo_green_text "SUCCESS: Packaged Gecko (${pretty_arch})"
   fi
-  popd
+  popd || return 1
 }
 
 function build_gecko() {
@@ -1622,7 +1622,7 @@ function build_ironfox_core() {
   # Set our target architecture
   export IRONFOX_MACH_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 
-  pushd "${IRONFOX_GECKO}"
+  pushd "${IRONFOX_GECKO}" || return 1
 
   # Ensure we remove any existing Mach environment cache
   ## (To ensure our configurations are properly updated/reflected...)
@@ -1633,7 +1633,7 @@ function build_ironfox_core() {
 
   # Build IronFox Core
   "${IRONFOX_MACH}" gradle -p ironfox/android :core:publish || return 1
-  popd
+  popd || return 1
 
   echo_green_text 'SUCCESS: Built IronFox Core'
 }
@@ -1657,7 +1657,7 @@ function build_ac_core() {
   # Set our target architecture
   export IRONFOX_MACH_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 
-  pushd "${IRONFOX_GECKO}"
+  pushd "${IRONFOX_GECKO}" || return 1
 
   # Ensure we remove any existing Mach environment cache
   ## (To ensure our configurations are properly updated/reflected...)
@@ -1672,7 +1672,7 @@ function build_ac_core() {
   "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:concept-base:publishToMavenLocal || return 1
   "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:support-base:publishToMavenLocal || return 1
   "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:ui-icons:publishToMavenLocal || return 1
-  popd
+  popd || return 1
 
   echo_green_text 'SUCCESS: Built Android Components (Core)'
 }
@@ -1681,9 +1681,9 @@ function build_ac_core() {
 function build_up_ac() {
   echo_red_text 'Building UnifiedPush-AC...'
 
-  pushd "${IRONFOX_UP_AC}"
+  pushd "${IRONFOX_UP_AC}" || return 1
   "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} publish || return 1
-  popd
+  popd || return 1
 
   echo_green_text 'SUCCESS: Built UnifiedPush-AC'
 }
@@ -1705,7 +1705,7 @@ function build_ac() {
   # Set our target architecture
   export IRONFOX_MACH_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 
-  pushd "${IRONFOX_GECKO}"
+  pushd "${IRONFOX_GECKO}" || return 1
 
   # Ensure we remove any existing Mach environment cache
   ## (To ensure our configurations are properly updated/reflected...)
@@ -1716,7 +1716,7 @@ function build_ac() {
 
   # Build Android Components
   "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components publishToMavenLocal || return 1
-  popd
+  popd || return 1
 
   echo_green_text 'SUCCESS: Built Android Components'
 }
@@ -1750,7 +1750,7 @@ function build_fenix() {
   # Set our target architecture
   export IRONFOX_MACH_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 
-  pushd "${IRONFOX_GECKO}"
+  pushd "${IRONFOX_GECKO}" || return 1
 
   # Ensure we remove any existing Mach environment cache
   ## (To ensure our configurations are properly updated/reflected...)
@@ -1835,7 +1835,7 @@ function build_fenix() {
 
     "${IRONFOX_CP}" -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/bundle/release/app-release.aab" "${IRONFOX_OUTPUTS_BUNDLE_AAB}" || return 1
   fi
-  popd
+  popd || return 1
 
   echo_green_text "SUCCESS: Built IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
 

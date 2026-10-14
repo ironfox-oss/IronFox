@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-. "${IRONFOX_MOZCONFIGS}/branding/common.mozconfig"
+. "${IRONFOX_MOZCONFIGS}/branding/common.mozconfig" || return 1
 
 ac_add_options --disable-ironfox-release
 ac_add_options --with-app-basename='IronFox Nightly'

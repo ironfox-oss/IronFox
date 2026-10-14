@@ -1,2 +1,3 @@
 #!/bin/bash
-exec "${IRONFOX_JAVA}" -jar "${IRONFOX_BUNDLETOOL_JAR}" "$@"
+set -euo pipefail
+exec "${IRONFOX_JAVA}" -jar "${IRONFOX_BUNDLETOOL_JAR}" "$@" || exit 1

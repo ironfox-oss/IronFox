@@ -263,7 +263,7 @@ function slugify() {
   echo "${input}" |
     "${IRONFOX_TR}" '[:upper:]' '[:lower:]' |
     "${IRONFOX_SED}" -E 's/[^a-z0-9]+/-/g' |
-    "${IRONFOX_SED}" -E 's/^-+|-+$//g'
+    "${IRONFOX_SED}" -E 's/^-+|-+$//g' || return 1
 }
 
 # Function to rebase a single patch file atomically
@@ -359,14 +359,14 @@ function rebase_patch() {
   if ! "${IRONFOX_GIT}" rev-parse --verify "${compatible_tag}" > /dev/null 2>&1; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Compatible tag '${compatible_tag}' does not exist" >&2
-    cleanup_and_rollback
+    cleanup_and_rollback || return 1
     return 1
   fi
 
   if ! "${IRONFOX_GIT}" rev-parse --verify "${target_tag}" > /dev/null 2>&1; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Target tag '${target_tag}' does not exist" >&2
-    cleanup_and_rollback
+    cleanup_and_rollback || return 1
     return 1
   fi
 
@@ -375,7 +375,7 @@ function rebase_patch() {
   if ! "${IRONFOX_GIT}" checkout "${compatible_tag}"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Failed to checkout compatible tag '${compatible_tag}'" >&2
-    cleanup_and_rollback
+    cleanup_and_rollback || return 1
     return 1
   fi
 
@@ -384,7 +384,7 @@ function rebase_patch() {
   if ! "${IRONFOX_GIT}" checkout -b "${branch_name}"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Failed to create branch '${branch_name}'" >&2
-    cleanup_and_rollback
+    cleanup_and_rollback || return 1
     return 1
   fi
 
@@ -393,7 +393,7 @@ function rebase_patch() {
   if ! "${IRONFOX_GIT}" apply "${patch_file}"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Failed to apply '${patch_file}'" >&2
-    cleanup_and_rollback
+    cleanup_and_rollback || return 1
     return 1
   fi
 
@@ -401,7 +401,7 @@ function rebase_patch() {
   if ! "${IRONFOX_GIT}" add .; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Failed to stage changes" >&2
-    cleanup_and_rollback
+    cleanup_and_rollback || return 1
     return 1
   fi
 
@@ -411,7 +411,7 @@ function rebase_patch() {
   if ! "${IRONFOX_GIT}" commit -m "${commit_message}"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Failed to commit changes" >&2
-    cleanup_and_rollback
+    cleanup_and_rollback || return 1
     return 1
   fi
 
@@ -420,7 +420,7 @@ function rebase_patch() {
   if ! "${IRONFOX_GIT}" rebase "$target_tag"; then
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Failed to rebase to target tag '${target_tag}'" >&2
-    cleanup_and_rollback
+    cleanup_and_rollback || return 1
     return 1
   fi
 
@@ -431,7 +431,7 @@ function rebase_patch() {
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Failed to generate new patch" >&2
     "${IRONFOX_RM}" -f "${temp_patch}"
-    cleanup_and_rollback
+    cleanup_and_rollback || return 1
     return 1
   fi
 
@@ -440,24 +440,24 @@ function rebase_patch() {
     printf "${RED}✗ %-45s: FAILED${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"
     echo "Failed to update patch file" >&2
     "${IRONFOX_RM}" -f "${temp_patch}"
-    cleanup_and_rollback
+    cleanup_and_rollback || return 1
     return 1
   fi
 
   # Cleanup: switch back to original branch and delete temporary branch
   if [[ -n "${original_branch}" && "${original_branch}" != "HEAD" ]]; then
-    "${IRONFOX_GIT}" checkout "${original_branch}"
+    "${IRONFOX_GIT}" checkout "${original_branch}" || return 1
   else
-    "${IRONFOX_GIT}" checkout "${target_tag}"
+    "${IRONFOX_GIT}" checkout "${target_tag}" || return 1
   fi
 
-  "${IRONFOX_GIT}" branch -D "${branch_name}"
+  "${IRONFOX_GIT}" branch -D "${branch_name}" || return 1
 
   # Restore stashed changes if any
   local -r current_stash_count=$("${IRONFOX_GIT}" stash list | "${IRONFOX_WC}" -l)
   if [[ "${current_stash_count}" -gt "${original_stash_count}" ]]; then
     echo "Restoring stashed changes..."
-    "${IRONFOX_GIT}" stash pop
+    "${IRONFOX_GIT}" stash pop || return 1
   fi
 
   printf "${GREEN}✓ %-45s: SUCCESS${NC}\n" "$("${IRONFOX_BASENAME}" "${patch}")"

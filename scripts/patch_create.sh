@@ -14,7 +14,7 @@ function setup_env() {
     else
       if ! command -v dirname > /dev/null 2>&1; then
         echo "ERROR: Missing dirname!" >&2
-        exit 1
+        return 1
       fi
       # It isn't a known location, so we sadly have to just fall-back to the PATH
       local -r dirname="$(dirname)"
@@ -24,14 +24,14 @@ function setup_env() {
     readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
     if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
       echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
-      exit 1
+      return 1
     fi
-    source "${IRONFOX_ENV_SH}" || exit 1
+    source "${IRONFOX_ENV_SH}" || return 1
   fi
 }
 
 # Set-up our environment
-setup_env
+setup_env || exit 1
 
 # Set verbosity
 set_verbosity
@@ -76,7 +76,7 @@ case ${PROJECT} in
     # Ensure we have `IRONFOX_AS`
     verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS' || exit 1
 
-    pushd "${IRONFOX_AS}"
+    pushd "${IRONFOX_AS}" || exit 1
     readonly PROJECT='AS'
     ;;
 
@@ -84,7 +84,7 @@ case ${PROJECT} in
     # Ensure we have `IRONFOX_GECKO`
     verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO' || exit 1
 
-    pushd "${IRONFOX_GECKO}"
+    pushd "${IRONFOX_GECKO}" || exit 1
     readonly PROJECT='gecko'
     ;;
 
@@ -92,7 +92,7 @@ case ${PROJECT} in
     # Ensure we have `IRONFOX_GLEAN`
     verify_dir_with_env "${IRONFOX_GLEAN}" 'IRONFOX_GLEAN' || exit 1
 
-    pushd "${IRONFOX_GLEAN}"
+    pushd "${IRONFOX_GLEAN}" || exit 1
     readonly PROJECT='glean'
     ;;
 
@@ -136,7 +136,7 @@ fi
 echo_red_text "Creating patch: '${IRONFOX_PATCHES}/${PATCH_NAME}.patch'..."
 
 # Create temporary branch, named after our patch
-"${IRONFOX_GIT}" checkout -b "${PATCH_NAME}"
+"${IRONFOX_GIT}" checkout -b "${PATCH_NAME}" || exit 1
 echo_red_text "Created temporary git branch for our changes..."
 
 echo_green_text "Please now make your desired changes to the target project."
@@ -148,13 +148,15 @@ read -r
 read -rp 'Please enter your desired patch message: ' PATCH_MSG
 
 # Commit our changes
-"${IRONFOX_GIT}" commit -am "${PATCH_MSG}" --sign
+"${IRONFOX_GIT}" commit -am "${PATCH_MSG}" --sign || exit 1
 
 # Now, create our patch...
-"${IRONFOX_GIT}" format-patch -1 --stdout > "${IRONFOX_PATCHES}/${PATCH_NAME}.patch"
+"${IRONFOX_GIT}" format-patch -1 --stdout > "${IRONFOX_PATCHES}/${PATCH_NAME}.patch" || exit 1
 
 # Finally, switch back to the original branch, and remove our temporary branch
-"${IRONFOX_GIT}" checkout main
-"${IRONFOX_GIT}" branch -D "${PATCH_NAME}"
+"${IRONFOX_GIT}" checkout main || exit 1
+"${IRONFOX_GIT}" branch -D "${PATCH_NAME}" || exit 1
+
+popd || exit 1
 
 echo_green_text "SUCCESS: Created patch: '${IRONFOX_PATCHES}/${PATCH_NAME}.patch'! :)"

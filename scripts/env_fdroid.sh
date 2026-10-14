@@ -36,4 +36,4 @@ export llvm="${FDROID_SRCLIB}/llvm"
 export llvm_android="${FDROID_SRCLIB}/llvm_android"
 export toolchain_utils="${FDROID_SRCLIB}/toolchain-utils"
 
-source "\${rootdir}/scripts/env_common.sh"
+source "\${rootdir}/scripts/env_common.sh" || return 1

@@ -1,2 +1,3 @@
 #!/bin/bash
-exec "${IRONFOX_BASH}" -c 'pwd'
+set -euo pipefail
+exec "${IRONFOX_BASH}" -c 'pwd' || exit 1

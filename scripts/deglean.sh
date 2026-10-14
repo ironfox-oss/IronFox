@@ -40,30 +40,30 @@ function deglean() {
   if [[ -n "${gradle_files}" ]]; then
     for file in $gradle_files; do
       local modified=false
-      "${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/deglean.py" "${file}"
+      "${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/deglean.py" "${file}" || return 1
 
       if "${IRONFOX_GREP}" -q 'apply plugin.*glean' "${file}"; then
-        "${IRONFOX_SED}" -i -r 's/^(.*apply plugin:.*glean.*)$/\/\/ \1/' "${file}"
+        "${IRONFOX_SED}" -i -r 's/^(.*apply plugin:.*glean.*)$/\/\/ \1/' "${file}" || return 1
         local modified=true
       fi
 
       if "${IRONFOX_GREP}" -q 'classpath.*glean' "${file}"; then
-        "${IRONFOX_SED}" -i -r 's/^(.*classpath.*glean.*)$/\/\/ \1/' "${file}"
+        "${IRONFOX_SED}" -i -r 's/^(.*classpath.*glean.*)$/\/\/ \1/' "${file}" || return 1
         local modified=true
       fi
 
       if "${IRONFOX_GREP}" -q 'compileOnly.*glean' "$file"; then
-        "${IRONFOX_SED}" -i -r 's/^(.*compileOnly.*glean.*)$/\/\/ \1/' "${file}"
+        "${IRONFOX_SED}" -i -r 's/^(.*compileOnly.*glean.*)$/\/\/ \1/' "${file}" || return 1
         local modified=true
       fi
 
       if "${IRONFOX_GREP}" -q 'implementation.*glean' "$file"; then
-        "${IRONFOX_SED}" -i -r 's/^(.*implementation.*glean.*)$/\/\/ \1/' "${file}"
+        "${IRONFOX_SED}" -i -r 's/^(.*implementation.*glean.*)$/\/\/ \1/' "${file}" || return 1
         local modified=true
       fi
 
       if "${IRONFOX_GREP}" -q 'testImplementation.*glean' "${file}"; then
-        "${IRONFOX_SED}" -i -r 's/^(.*testImplementation.*glean.*)$/\/\/ \1/' "${file}"
+        "${IRONFOX_SED}" -i -r 's/^(.*testImplementation.*glean.*)$/\/\/ \1/' "${file}" || return 1
         local modified=true
       fi
 
@@ -80,12 +80,12 @@ function deglean() {
       local modified=false
 
       if "${IRONFOX_GREP}" -q 'import mozilla.telemetry.*' "${file}"; then
-        "${IRONFOX_SED}" -i -r 's/^(.*import mozilla.telemetry.*)$/\/\/ \1/' "${file}"
+        "${IRONFOX_SED}" -i -r 's/^(.*import mozilla.telemetry.*)$/\/\/ \1/' "${file}" || return 1
         local modified=true
       fi
 
       if "${IRONFOX_GREP}" -q 'import .*GleanMetrics' "${file}"; then
-        "${IRONFOX_SED}" -i -r 's/^(.*GleanMetrics.*)$/\/\/ \1/' "${file}"
+        "${IRONFOX_SED}" -i -r 's/^(.*GleanMetrics.*)$/\/\/ \1/' "${file}" || return 1
         local modified=true
       fi
 
@@ -99,7 +99,7 @@ function deglean() {
 
   if [[ -n "${yaml_files}" ]]; then
     for yaml_file in $yaml_files; do
-      "${IRONFOX_RM}" -vf "${yaml_file}"
+      "${IRONFOX_RM}" -vf "${yaml_file}" || return 1
       echo_red_text "De-gleaned ${yaml_file}."
     done
   else
@@ -136,12 +136,12 @@ function fenix_deglean() {
       local modified=false
 
       if "${IRONFOX_GREP}" -q 'implementation.*service-glean' "${file}"; then
-        "${IRONFOX_SED}" -i -r 's/^(.*implementation.*service-glean.*)$/\/\/ \1/' "${file}"
+        "${IRONFOX_SED}" -i -r 's/^(.*implementation.*service-glean.*)$/\/\/ \1/' "${file}" || return 1
         local modified=true
       fi
 
       if "${IRONFOX_GREP}" -q 'testImplementation.*glean' "${file}"; then
-        "${IRONFOX_SED}" -i -r 's/^(.*testImplementation.*glean.*)$/\/\/ \1/' "${file}"
+        "${IRONFOX_SED}" -i -r 's/^(.*testImplementation.*glean.*)$/\/\/ \1/' "${file}" || return 1
         local modified=true
       fi
 
@@ -167,21 +167,21 @@ function deglean_ac() {
   # Ensure we have `IRONFOX_AC`
   verify_dir_with_env "${IRONFOX_AC}" 'IRONFOX_AC' || return 1
 
-  deglean "${IRONFOX_AC}"
+  deglean "${IRONFOX_AC}" || return 1
 
   # Remove the Glean service
   ## https://searchfox.org/firefox-main/source/mobile/android/android-components/components/service/glean/README.md
-  "${IRONFOX_RM}" -rvf "${IRONFOX_AC}/components/service/glean"
-  "${IRONFOX_RM}" -rvf "${IRONFOX_AC}/samples/glean"
+  "${IRONFOX_RM}" -rv "${IRONFOX_AC}/components/service/glean" || return 1
+  "${IRONFOX_RM}" -rv "${IRONFOX_AC}/samples/glean" || return 1
 
   # Remove Glean classes
-  "${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
-  "${IRONFOX_SED}" -i -e 's|Microsurvey.confirmation|// Microsurvey.confirmation|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
-  "${IRONFOX_SED}" -i -e 's|Microsurvey.dismiss|// Microsurvey.dismiss|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
-  "${IRONFOX_SED}" -i -e 's|Microsurvey.privacy|// Microsurvey.privacy|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
-  "${IRONFOX_SED}" -i -e 's|Microsurvey.shown|// Microsurvey.shown|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
-  "${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt"
-  "${IRONFOX_RM}" -vf "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt"
+  "${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt" || return 1
+  "${IRONFOX_SED}" -i -e 's|Microsurvey.confirmation|// Microsurvey.confirmation|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt" || return 1
+  "${IRONFOX_SED}" -i -e 's|Microsurvey.dismiss|// Microsurvey.dismiss|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt" || return 1
+  "${IRONFOX_SED}" -i -e 's|Microsurvey.privacy|// Microsurvey.privacy|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt" || return 1
+  "${IRONFOX_SED}" -i -e 's|Microsurvey.shown|// Microsurvey.shown|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt" || return 1
+  "${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|g' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt" || return 1
+  "${IRONFOX_RM}" -v "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt" || return 1
 
   echo_green_text 'SUCCESS: De-gleaned Android Components'
 }
@@ -199,18 +199,18 @@ function deglean_as() {
   # Ensure we have `IRONFOX_AS`
   verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS' || return 1
 
-  deglean "${IRONFOX_AS}"
-  "${IRONFOX_SED}" -i 's|mozilla-glean|# mozilla-glean|g' "${IRONFOX_AS}/gradle/libs.versions.toml"
-  "${IRONFOX_SED}" -i 's|glean|# glean|g' "${IRONFOX_AS}/gradle/libs.versions.toml"
+  deglean "${IRONFOX_AS}" || return 1
+  "${IRONFOX_SED}" -i 's|mozilla-glean|# mozilla-glean|g' "${IRONFOX_AS}/gradle/libs.versions.toml" || return 1
+  "${IRONFOX_SED}" -i 's|glean|# glean|g' "${IRONFOX_AS}/gradle/libs.versions.toml" || return 1
 
   # Remove unused/unnecessary Glean components
-  "${IRONFOX_RM}" -vf "${IRONFOX_AS}/components/remote_settings/android/src/main/java/mozilla/appservices/remotesettings/GleanTelemetry.kt"
-  "${IRONFOX_RM}" -vf "${IRONFOX_AS}/components/sync_manager/android/src/main/java/mozilla/appservices/syncmanager/BaseGleanSyncPing.kt"
+  "${IRONFOX_RM}" -v "${IRONFOX_AS}/components/remote_settings/android/src/main/java/mozilla/appservices/remotesettings/GleanTelemetry.kt" || return 1
+  "${IRONFOX_RM}" -v "${IRONFOX_AS}/components/sync_manager/android/src/main/java/mozilla/appservices/syncmanager/BaseGleanSyncPing.kt" || return 1
 
   # Remove Glean classes
-  "${IRONFOX_SED}" -i 's|FxaClientMetrics|// FxaClientMetrics|g' "${IRONFOX_AS}/components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt"
-  "${IRONFOX_SED}" -i 's|NimbusEvents.isReady|// NimbusEvents.isReady|g' "${IRONFOX_AS}/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt"
-  "${IRONFOX_SED}" -i 's|PlacesManagerMetrics|// PlacesManagerMetrics|g' "${IRONFOX_AS}/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt"
+  "${IRONFOX_SED}" -i 's|FxaClientMetrics|// FxaClientMetrics|g' "${IRONFOX_AS}/components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt" || return 1
+  "${IRONFOX_SED}" -i 's|NimbusEvents.isReady|// NimbusEvents.isReady|g' "${IRONFOX_AS}/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt" || return 1
+  "${IRONFOX_SED}" -i 's|PlacesManagerMetrics|// PlacesManagerMetrics|g' "${IRONFOX_AS}/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt" || return 1
 
   echo_green_text 'SUCCESS: De-gleaned Application Services'
 }
@@ -228,17 +228,17 @@ function deglean_fenix() {
   # Ensure we have `IRONFOX_FENIX`
   verify_dir_with_env "${IRONFOX_FENIX}" 'IRONFOX_FENIX' || return 1
 
-  deglean "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko"
-  fenix_deglean "${IRONFOX_FENIX}"
+  deglean "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko" || return 1
+  fenix_deglean "${IRONFOX_FENIX}" || return 1
 
   # Remove Glean classes
-  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
-  "${IRONFOX_SED}" -i 's|ErrorPage.archive|// ErrorPage.archive|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
-  "${IRONFOX_SED}" -i 's|ErrorPage.visited|// ErrorPage.visited|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
+  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt" || return 1
+  "${IRONFOX_SED}" -i 's|ErrorPage.archive|// ErrorPage.archive|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt" || return 1
+  "${IRONFOX_SED}" -i 's|ErrorPage.visited|// ErrorPage.visited|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt" || return 1
 
-  "${IRONFOX_SED}" -i -e 's|Metrics|// Metrics|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko/search/SearchWidgetProvider.kt"
+  "${IRONFOX_SED}" -i -e 's|Metrics|// Metrics|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko/search/SearchWidgetProvider.kt" || return 1
 
-  "${IRONFOX_RM}" "${IRONFOX_FENIX}/app/longfox/metrics.yaml"
+  "${IRONFOX_RM}" "${IRONFOX_FENIX}/app/longfox/metrics.yaml" || return 1
 
   echo_green_text 'SUCCESS: De-gleaned Fenix'
 }
@@ -253,10 +253,10 @@ function deglean_firefox() {
   # Ensure we have `IRONFOX_GECKO`
   verify_dir_with_env "${IRONFOX_GECKO}" 'IRONFOX_GECKO' || return 1
 
-  deglean "${IRONFOX_GECKO}/mobile/android/geckoview"
-  deglean "${IRONFOX_GECKO}/mobile/android/gradle"
+  deglean "${IRONFOX_GECKO}/mobile/android/geckoview" || return 1
+  deglean "${IRONFOX_GECKO}/mobile/android/gradle" || return 1
 
-  "${IRONFOX_SED}" -i 's|classpath libs.mozilla.glean|// classpath libs.mozilla.glean|g' "${IRONFOX_GECKO}/build.gradle"
+  "${IRONFOX_SED}" -i 's|classpath libs.mozilla.glean|// classpath libs.mozilla.glean|g' "${IRONFOX_GECKO}/build.gradle" || return 1
 
   echo_green_text 'SUCCESS: De-gleaned Firefox'
 }

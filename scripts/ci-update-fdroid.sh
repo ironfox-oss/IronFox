@@ -22,7 +22,7 @@ function setup_env() {
     else
       if ! command -v dirname > /dev/null 2>&1; then
         echo "ERROR: Missing dirname!" >&2
-        exit 1
+        return 1
       fi
       # It isn't a known location, so we sadly have to just fall-back to the PATH
       local -r dirname="$(dirname)"
@@ -32,14 +32,14 @@ function setup_env() {
     readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
     if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
       echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
-      exit 1
+      return 1
     fi
-    source "${IRONFOX_ENV_SH}" || exit 1
+    source "${IRONFOX_ENV_SH}" || return 1
   fi
 }
 
 # Set-up our environment
-setup_env
+setup_env || exit 1
 
 # Include download utilities
 verify_file_with_env "${IRONFOX_DOWNLOAD_UTILS}" 'IRONFOX_DOWNLOAD_UTILS' || exit 1
@@ -147,21 +147,21 @@ fi
 # Configure Git
 function configure_git() {
   # Ensure we have a push token...
-  verify_env "${IRONFOX_GITLAB_CI_PUSH_TOKEN}" 'IRONFOX_GITLAB_CI_PUSH_TOKEN' || exit 1
+  verify_env "${IRONFOX_GITLAB_CI_PUSH_TOKEN}" 'IRONFOX_GITLAB_CI_PUSH_TOKEN' || return 1
 
   # Ensure we have `IRONFOX_GIT_EMAIL`
-  verify_env "${IRONFOX_GIT_EMAIL}" 'IRONFOX_GIT_EMAIL' || exit 1
+  verify_env "${IRONFOX_GIT_EMAIL}" 'IRONFOX_GIT_EMAIL' || return 1
 
   # Ensure we have `IRONFOX_GIT_NAME`
-  verify_env "${IRONFOX_GIT_NAME}" 'IRONFOX_GIT_NAME' || exit 1
+  verify_env "${IRONFOX_GIT_NAME}" 'IRONFOX_GIT_NAME' || return 1
 
   # Ensure we have `IRONFOX_GIT_USERNAME`
-  verify_env "${IRONFOX_GIT_USERNAME}" 'IRONFOX_GIT_USERNAME' || exit 1
+  verify_env "${IRONFOX_GIT_USERNAME}" 'IRONFOX_GIT_USERNAME' || return 1
 
   echo_red_text 'Configuring Git...'
-  "${IRONFOX_GIT}" config --global user.email "${IRONFOX_GIT_EMAIL}"
-  "${IRONFOX_GIT}" config --global user.name "${IRONFOX_GIT_NAME}"
-  "${IRONFOX_GIT}" config --global url."https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
+  "${IRONFOX_GIT}" config --global user.email "${IRONFOX_GIT_EMAIL}" || return 1
+  "${IRONFOX_GIT}" config --global user.name "${IRONFOX_GIT_NAME}" || return 1
+  "${IRONFOX_GIT}" config --global url."https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/" || return 1
   echo_green_text 'SUCCESS: Configured Git.'
 }
 
@@ -174,26 +174,26 @@ function download_release() {
   if [[ -z "${1+x}" ]]; then
     echo_red_text 'ERROR: Please specify the version to download!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${2+x}" ]]; then
     echo_red_text 'ERROR: Please specify the architecture to download!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${3+x}" ]]; then
     echo_red_text 'ERROR: Please specify the path to the output directory!'
     print_usage
-    exit 1
+    return 1
   fi
 
   # Ensure we have GNU awk
-  verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || exit 1
+  verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || return 1
 
   # Ensure we have shasum
-  verify_exec "${IRONFOX_SHASUM}" 'IRONFOX_SHASUM' || exit 1
+  verify_exec "${IRONFOX_SHASUM}" 'IRONFOX_SHASUM' || return 1
 
   local -r version="$1"
   local -r arch="$2"
@@ -213,12 +213,12 @@ function download_release() {
 
   # Download the APK
   echo_red_text "Downloading ${target_apk} from ${target_apk_url}..."
-  download "${target_apk_url}" "${output_apk}"
+  download "${target_apk_url}" "${output_apk}" || return 1
   echo_green_text "SUCCESS: Downloaded ${target_apk}"
 
   # Check the SHA512sum
   echo_red_text "Validating SHA512sum for file: '${target_apk}'..."
-  download "${target_expected_sha512sum_url}" "${output_expected_sha512sum}"
+  download "${target_expected_sha512sum_url}" "${output_expected_sha512sum}" || return 1
   local -r expected_sha512sum=$("${IRONFOX_CAT}" "${output_expected_sha512sum}" | "${IRONFOX_XARGS}")
   local -r local_sha512sum=$("${IRONFOX_SHASUM}" -a 512 "${output_apk}" | "${IRONFOX_AWK}" '{print $1}')
   if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
@@ -229,7 +229,7 @@ function download_release() {
     # If checksum validation fails, also just clean-up the files
     "${IRONFOX_RM}" -f "${output_apk}"
     "${IRONFOX_RM}" -f "${output_expected_sha512sum}"
-    exit 1
+    return 1
   fi
   echo_green_text "SUCCESS: Validated checksum for file: '${target_apk}'!"
   echo "SHA512sum: '${local_sha512sum}'"
@@ -238,43 +238,43 @@ function download_release() {
 # Function to download all APKs for a desired release
 function download_releases() {
   # ARM64
-  download_release "${IRONFOX_APK_VERSION}" 'arm64-v8a' "${IRONFOX_FDROID_REPO}"
+  download_release "${IRONFOX_APK_VERSION}" 'arm64-v8a' "${IRONFOX_FDROID_REPO}" || return 1
 
   # ARM
-  download_release "${IRONFOX_APK_VERSION}" 'armeabi-v7a' "${IRONFOX_FDROID_REPO}"
+  download_release "${IRONFOX_APK_VERSION}" 'armeabi-v7a' "${IRONFOX_FDROID_REPO}" || return 1
 
   # x86_64
-  download_release "${IRONFOX_APK_VERSION}" 'x86_64' "${IRONFOX_FDROID_REPO}"
+  download_release "${IRONFOX_APK_VERSION}" 'x86_64' "${IRONFOX_FDROID_REPO}" || return 1
 }
 
 # Configure Git
-configure_git
+configure_git || exit 1
 
 # Clone the repo
-clone_git_repo "https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_FDROID_REPO_PATH}.git" "${IRONFOX_FDROID_REPO_ROOT}" 'no-revision' --silent --submodules
+clone_git_repo "https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_FDROID_REPO_PATH}.git" "${IRONFOX_FDROID_REPO_ROOT}" 'no-revision' --silent --submodules || exit 1
 pushd "${IRONFOX_FDROID_REPO_ROOT}" || {
   echo_red_text "ERROR: Unable to pushd into '${IRONFOX_FDROID_REPO_ROOT}'"
   exit 1
 }
 "${IRONFOX_MKDIR}" -vp "${IRONFOX_FDROID_REPO}"
-"${IRONFOX_GIT}" lfs install
+"${IRONFOX_GIT}" lfs install || exit 1
 
 # Download all variants of the latest release
-download_releases
+download_releases || exit 1
 
 # Because we now upload releases to releases.ironfoxoss.org, the F-Droid repo doesn't need to store them all anymore
 # So to improve performance and reduce size, we can keep only the last 3 releases
 "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
 
-download "${IRONFOX_RELEASES_BASE_URL}/releases/previous_release.txt" "${IRONFOX_TEMP}/release_previous_release.txt"
-download "${IRONFOX_RELEASES_BASE_URL}/releases/previous_previous_release.txt" "${IRONFOX_TEMP}/release_previous_previous_release.txt"
+download "${IRONFOX_RELEASES_BASE_URL}/releases/previous_release.txt" "${IRONFOX_TEMP}/release_previous_release.txt" || exit 1
+download "${IRONFOX_RELEASES_BASE_URL}/releases/previous_previous_release.txt" "${IRONFOX_TEMP}/release_previous_previous_release.txt" || exit 1
 
-download "${IRONFOX_RELEASES_BASE_URL}/nightly/previous_release.txt" "${IRONFOX_TEMP}/nightly_previous_release.txt"
-download "${IRONFOX_RELEASES_BASE_URL}/nightly/previous_previous_release.txt" "${IRONFOX_TEMP}/nightly_previous_previous_release.txt"
+download "${IRONFOX_RELEASES_BASE_URL}/nightly/previous_release.txt" "${IRONFOX_TEMP}/nightly_previous_release.txt" || exit 1
+download "${IRONFOX_RELEASES_BASE_URL}/nightly/previous_previous_release.txt" "${IRONFOX_TEMP}/nightly_previous_previous_release.txt" || exit 1
 
 # If we're targetting Release, we also need to get the current Nightly version
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-  download "${IRONFOX_RELEASES_BASE_URL}/nightly/latest_release.txt" "${IRONFOX_TEMP}/nightly_latest_release.txt"
+  download "${IRONFOX_RELEASES_BASE_URL}/nightly/latest_release.txt" "${IRONFOX_TEMP}/nightly_latest_release.txt" || exit 1
   readonly IRONFOX_NIGHTLY_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/nightly_latest_release.txt" | "${IRONFOX_XARGS}")
 else
   readonly IRONFOX_NIGHTLY_VERSION="${IRONFOX_APK_VERSION}"
@@ -362,7 +362,7 @@ for sha_txt in "${IRONFOX_FDROID_REPO}"/*-sha512sum.txt; do
 done
 
 source "${IRONFOX_PYENV}" || exit 1
-IFS=":" read -r vercode vername <<< "$("${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/get_latest_version.py" $("${IRONFOX_LS}" "${IRONFOX_FDROID_REPO}"/*.apk))"
+IFS=":" read -r vercode vername <<< "$("${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/get_latest_version.py" $("${IRONFOX_LS}" "${IRONFOX_FDROID_REPO}"/*.apk))" || exit 1
 
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
   readonly if_fdroid_metadata_file="${IRONFOX_FDROID_METADATA_FILE_PATH}"
@@ -372,7 +372,7 @@ fi
 
 "${IRONFOX_SED}" -i \
   -e "s/CurrentVersion: .*/CurrentVersion: \"v${vername}\"/" \
-  -e "s/CurrentVersionCode: .*/CurrentVersionCode: ${vercode}/" "${if_fdroid_metadata_file}"
+  -e "s/CurrentVersionCode: .*/CurrentVersionCode: ${vercode}/" "${if_fdroid_metadata_file}" || exit 1
 
 pushd "${IRONFOX_FDROID_METADATA}" || {
   echo_red_text "ERROR: Unable to pushd into '${IRONFOX_FDROID_METADATA}'"
@@ -380,7 +380,7 @@ pushd "${IRONFOX_FDROID_METADATA}" || {
 }
 
 # Update metadata repository
-"${IRONFOX_GIT}" add "${IRONFOX_FDROID_METADATA_FILE_NAME}" "${IRONFOX_FDROID_METADATA_NIGHTLY_FILE_NAME}"
+"${IRONFOX_GIT}" add "${IRONFOX_FDROID_METADATA_FILE_NAME}" "${IRONFOX_FDROID_METADATA_NIGHTLY_FILE_NAME}" || exit 1
 "${IRONFOX_GIT}" commit -m "feat: update for IronFox ${IRONFOX_CHANNEL}: ${IRONFOX_APK_VERSION}" || echo 'Metadata repo already up to date! Not committing anything...'
 "${IRONFOX_GIT}" push origin "HEAD:${IRONFOX_FDROID_METADATA_BRANCH}" || echo 'Metadata repo already up to date! Not pushing anything...'
 
@@ -390,18 +390,18 @@ popd || {
 }
 
 # Indicate our target release channel (so that `ci-update-git.repo.sh` can handle it properly...)
-"${IRONFOX_RM}" -f "${IRONFOX_FDROID_REPO_ROOT}/target-release" "${IRONFOX_FDROID_REPO_ROOT}/target-nightly"
+"${IRONFOX_RM}" -f "${IRONFOX_FDROID_REPO_ROOT}/target-release" "${IRONFOX_FDROID_REPO_ROOT}/target-nightly" || exit 1
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-  "${IRONFOX_TOUCH}" "${IRONFOX_FDROID_REPO_ROOT}/target-release"
-  "${IRONFOX_GIT}" add "${IRONFOX_FDROID_REPO_ROOT}/target-release"
+  "${IRONFOX_TOUCH}" "${IRONFOX_FDROID_REPO_ROOT}/target-release" || exit 1
+  "${IRONFOX_GIT}" add "${IRONFOX_FDROID_REPO_ROOT}/target-release" || exit 1
 else
-  "${IRONFOX_TOUCH}" "${IRONFOX_FDROID_REPO_ROOT}/target-nightly"
-  "${IRONFOX_GIT}" add "${IRONFOX_FDROID_REPO_ROOT}/target-nightly"
+  "${IRONFOX_TOUCH}" "${IRONFOX_FDROID_REPO_ROOT}/target-nightly" || exit 1
+  "${IRONFOX_GIT}" add "${IRONFOX_FDROID_REPO_ROOT}/target-nightly" || exit 1
 fi
 
 # Update F-Droid repository
-"${IRONFOX_GIT}" add "${IRONFOX_FDROID_REPO}" "${IRONFOX_FDROID_METADATA}"
-"${IRONFOX_GIT}" commit -m "feat: update for IronFox ${IRONFOX_CHANNEL}: ${IRONFOX_APK_VERSION}"
-"${IRONFOX_GIT}" push origin "HEAD:${IRONFOX_FDROID_REPO_BRANCH}"
+"${IRONFOX_GIT}" add "${IRONFOX_FDROID_REPO}" "${IRONFOX_FDROID_METADATA}" || exit 1
+"${IRONFOX_GIT}" commit -m "feat: update for IronFox ${IRONFOX_CHANNEL}: ${IRONFOX_APK_VERSION}" || exit 1
+"${IRONFOX_GIT}" push origin "HEAD:${IRONFOX_FDROID_REPO_BRANCH}" || exit 1
 
-popd # ignore error
+popd || exit 1

@@ -86,7 +86,7 @@ function sign_apk() {
     --ks-key-alias="${IRONFOX_ANDROID_KEYSTORE_KEY_ALIAS}" \
     --key-pass="file:/${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" \
     --out="${signed_apk}" \
-    "${unsigned_apk}"
+    "${unsigned_apk}" || return 1
 
   # Ensure nothing went wrong...
   verify_file "${signed_apk}" || return 1
@@ -147,7 +147,7 @@ function sign_apkset() {
     --ks-key-alias="${IRONFOX_ANDROID_KEYSTORE_KEY_ALIAS}" \
     --key-pass="file:/${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" \
     --mode='universal' \
-    --overwrite
+    --overwrite || return 1
 
   # Ensure nothing went wrong...
   verify_file "${apkset}" || return 1

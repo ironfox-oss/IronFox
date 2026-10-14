@@ -1,2 +1,3 @@
 #!/bin/bash
-exec "${IRONFOX_PYTHON}" "${IRONFOX_GRADLE_PY}" "$@"
+set -euo pipefail
+exec "${IRONFOX_PYTHON}" "${IRONFOX_GRADLE_PY}" "$@" || exit 1

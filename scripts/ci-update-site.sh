@@ -21,7 +21,7 @@ function setup_env() {
     else
       if ! command -v dirname > /dev/null 2>&1; then
         echo "ERROR: Missing dirname!" >&2
-        exit 1
+        return 1
       fi
       # It isn't a known location, so we sadly have to just fall-back to the PATH
       local -r dirname="$(dirname)"
@@ -31,14 +31,14 @@ function setup_env() {
     readonly IRONFOX_ENV_SH="$("${dirname}" $0)/env.sh"
     if [[ ! -f "${IRONFOX_ENV_SH}" ]] || [[ ! -s "${IRONFOX_ENV_SH}" ]]; then
       echo "ERROR: '${IRONFOX_ENV_SH}' is invalid!"
-      exit 1
+      return 1
     fi
-    source "${IRONFOX_ENV_SH}" || exit 1
+    source "${IRONFOX_ENV_SH}" || return 1
   fi
 }
 
 # Set-up our environment
-setup_env
+setup_env || exit 1
 
 # Include download utilities
 verify_file_with_env "${IRONFOX_DOWNLOAD_UTILS}" 'IRONFOX_DOWNLOAD_UTILS' || exit 1
@@ -147,76 +147,76 @@ readonly IRONFOX_CI_COMMIT="${CI_COMMIT_SHA}"
 # Configure Git
 function configure_git() {
   # Ensure we have a push token...
-  verify_env "${IRONFOX_GITLAB_CI_PUSH_TOKEN}" 'IRONFOX_GITLAB_CI_PUSH_TOKEN' || exit 1
+  verify_env "${IRONFOX_GITLAB_CI_PUSH_TOKEN}" 'IRONFOX_GITLAB_CI_PUSH_TOKEN' || return 1
 
   # Ensure we have `IRONFOX_GIT_EMAIL`
-  verify_env "${IRONFOX_GIT_EMAIL}" 'IRONFOX_GIT_EMAIL' || exit 1
+  verify_env "${IRONFOX_GIT_EMAIL}" 'IRONFOX_GIT_EMAIL' || return 1
 
   # Ensure we have `IRONFOX_GIT_NAME`
-  verify_env "${IRONFOX_GIT_NAME}" 'IRONFOX_GIT_NAME' || exit 1
+  verify_env "${IRONFOX_GIT_NAME}" 'IRONFOX_GIT_NAME' || return 1
 
   # Ensure we have `IRONFOX_GIT_USERNAME`
-  verify_env "${IRONFOX_GIT_USERNAME}" 'IRONFOX_GIT_USERNAME' || exit 1
+  verify_env "${IRONFOX_GIT_USERNAME}" 'IRONFOX_GIT_USERNAME' || return 1
 
   echo_red_text 'Configuring Git...'
-  "${IRONFOX_GIT}" config --global user.email "${IRONFOX_GIT_EMAIL}"
-  "${IRONFOX_GIT}" config --global user.name "${IRONFOX_GIT_NAME}"
-  "${IRONFOX_GIT}" config --global url."https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
+  "${IRONFOX_GIT}" config --global user.email "${IRONFOX_GIT_EMAIL}" || return 1
+  "${IRONFOX_GIT}" config --global user.name "${IRONFOX_GIT_NAME}" || return 1
+  "${IRONFOX_GIT}" config --global url."https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/" || return 1
   echo_green_text 'SUCCESS: Configured Git.'
 }
 
-configure_git
+configure_git || exit 1
 
 # Clone the repo
-clone_git_repo "https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_SITE_REPO_PATH}.git" "${IRONFOX_SITE_REPO}" 'no-revision' --silent
+clone_git_repo "https://${IRONFOX_GIT_USERNAME}:${IRONFOX_GITLAB_CI_PUSH_TOKEN}@gitlab.com/${IRONFOX_SITE_REPO_PATH}.git" "${IRONFOX_SITE_REPO}" 'no-revision' --silent || exit 1
 
-pushd "${IRONFOX_SITE_REPO}"
+pushd "${IRONFOX_SITE_REPO}" || exit 1
 
 # Generate documentation for patches
 source "${IRONFOX_PYENV}" || exit 1
-"${IRONFOX_PYTHON}" ./scripts/gen_patch_pages.py "${IRONFOX_SCRIPTS}/patches.yaml"
+"${IRONFOX_PYTHON}" ./scripts/gen_patch_pages.py "${IRONFOX_SCRIPTS}/patches.yaml" || exit 1
 
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
   # Update version name
   "${IRONFOX_SED}" -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_RELEASE_VERSION}\";/g" \
-    ./src/version.ts
+    ./src/version.ts || exit 1
 
   # Update release notes
-  download "${IRONFOX_RELEASES_BASE_URL}/${IRONFOX_RELEASE_VERSION}/ironfox-${IRONFOX_RELEASE_VERSION}-release-notes.md" "${IRONFOX_RELEASE_VERSION}-temp.md"
+  download "${IRONFOX_RELEASES_BASE_URL}/${IRONFOX_RELEASE_VERSION}/ironfox-${IRONFOX_RELEASE_VERSION}-release-notes.md" "${IRONFOX_RELEASE_VERSION}-temp.md" || exit 1
 
-  "${IRONFOX_CP}" -f ./release-notes.md ./release-notes-temp.md
-  "${IRONFOX_RM}" -f ./release-notes.md
+  "${IRONFOX_CP}" -f ./release-notes.md ./release-notes-temp.md || exit 1
+  "${IRONFOX_RM}" -f ./release-notes.md || exit 1
 
-  "${IRONFOX_SED}" -i "s|# IronFox ${IRONFOX_RELEASE_VERSION}||g" "${IRONFOX_RELEASE_VERSION}-temp.md"
+  "${IRONFOX_SED}" -i "s|# IronFox ${IRONFOX_RELEASE_VERSION}||g" "${IRONFOX_RELEASE_VERSION}-temp.md" || exit 1
   {
-    echo "<div id='${IRONFOX_RELEASE_VERSION}'>"
-    echo "  <h1>${IRONFOX_RELEASE_VERSION}</h1>"
-    echo "</div>"
-    "${IRONFOX_CAT}" "${IRONFOX_RELEASE_VERSION}-temp.md"
-    echo ''
-  } >> "${IRONFOX_RELEASE_VERSION}.md"
+    echo "<div id='${IRONFOX_RELEASE_VERSION}'>" || exit 1
+    echo "  <h1>${IRONFOX_RELEASE_VERSION}</h1>" || exit 1
+    echo "</div>" || exit 1
+    "${IRONFOX_CAT}" "${IRONFOX_RELEASE_VERSION}-temp.md" || exit 1
+    echo '' || exit 1
+  } >> "${IRONFOX_RELEASE_VERSION}.md" || exit 1
   "${IRONFOX_RM}" -f "${IRONFOX_RELEASE_VERSION}-temp.md"
 
-  "${IRONFOX_CAT}" "${IRONFOX_RELEASE_VERSION}.md" ./release-notes-temp.md > ./release-notes.md
+  "${IRONFOX_CAT}" "${IRONFOX_RELEASE_VERSION}.md" ./release-notes-temp.md > ./release-notes.md || exit 1
   "${IRONFOX_RM}" -f "${IRONFOX_RELEASE_VERSION}.md"
   "${IRONFOX_RM}" -f ./release-notes-temp.md
 
-  "${IRONFOX_RM}" -f ./src/content/docs/releases.mdx
+  "${IRONFOX_RM}" -f ./src/content/docs/releases.mdx || exit 1
   {
-    echo '---'
-    echo 'title: IronFox releases'
-    echo '---'
-    echo ''
-    echo 'import { IRONFOX_VERSION } from "../../version.ts";'
-    echo 'import MarkdownLayout from "../../layouts/MarkdownLayout.astro";'
-    echo ''
-    echo '<MarkdownLayout>'
-    echo ''
-    echo '> Latest release: <a href={`https://ironfoxoss.org/releases/#${IRONFOX_VERSION}`} rel="noopener noreferrer me">{IRONFOX_VERSION}</a>'
-    echo ''
-    "${IRONFOX_CAT}" ./release-notes.md
-    echo '</MarkdownLayout>'
-  } >> ./src/content/docs/releases.mdx
+    echo '---' || exit 1
+    echo 'title: IronFox releases' || exit 1
+    echo '---' || exit 1
+    echo '' || exit 1
+    echo 'import { IRONFOX_VERSION } from "../../version.ts";' || exit 1
+    echo 'import MarkdownLayout from "../../layouts/MarkdownLayout.astro";' || exit 1
+    echo '' || exit 1
+    echo '<MarkdownLayout>' || exit 1
+    echo '' || exit 1
+    echo '> Latest release: <a href={`https://ironfoxoss.org/releases/#${IRONFOX_VERSION}`} rel="noopener noreferrer me">{IRONFOX_VERSION}</a>' || exit 1
+    echo '' || exit 1
+    "${IRONFOX_CAT}" ./release-notes.md || exit 1
+    echo '</MarkdownLayout>' || exit 1
+  } >> ./src/content/docs/releases.mdx || exit 1
 fi
 
 # Update RSS
@@ -225,13 +225,13 @@ if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
 else
   readonly if_rss_path='nightly'
 fi
-"${IRONFOX_RM}" -f ./public/"${if_rss_path}"/rss.xml
-"${IRONFOX_MKDIR}" -p ./public/"${if_rss_path}"
+"${IRONFOX_RM}" -f ./public/"${if_rss_path}"/rss.xml || exit 1
+"${IRONFOX_MKDIR}" -p ./public/"${if_rss_path}" || exit 1
 
 # The RSS feed only needs to include the last 3 releases
 "${IRONFOX_MKDIR}" -p "${IRONFOX_TEMP}"
-download "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" "${IRONFOX_TEMP}/previous_release.txt"
-download "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" "${IRONFOX_TEMP}/previous_previous_release.txt"
+download "${IRONFOX_RELEASES_BASE_URL}/previous_release.txt" "${IRONFOX_TEMP}/previous_release.txt" || exit 1
+download "${IRONFOX_RELEASES_BASE_URL}/previous_previous_release.txt" "${IRONFOX_TEMP}/previous_previous_release.txt" || exit 1
 
 readonly IRONFOX_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/previous_release.txt" | "${IRONFOX_XARGS}")
 readonly IRONFOX_PREVIOUS_PREVIOUS_VERSION=$("${IRONFOX_CAT}" "${IRONFOX_TEMP}/previous_previous_release.txt" | "${IRONFOX_XARGS}")
@@ -258,45 +258,45 @@ if [[ -f ./rss/"${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml" ]]; then
 fi
 "${IRONFOX_TOUCH}" ./rss/"${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml"
 {
-  echo '    <item>'
-  echo "      <title>IronFox ${IRONFOX_RELEASE_VERSION}</title>"
-  echo "      <link>${IRONFOX_RELEASE_PAGE_URL}/#${IRONFOX_RELEASE_VERSION}</link>"
-  echo "      <guid isPermaLink='true'>${IRONFOX_RELEASE_PAGE_URL}/#${IRONFOX_RELEASE_VERSION}</guid>"
-  echo "      <pubDate>${IRONFOX_RSS_DATE} GMT</pubDate>"
-  echo "      <author>${IRONFOX_RSS_EMAIL}</author>"
-  echo "      <enclosure url='${IRONFOX_BASE_URL}/ironfox.png' width='604' height='599' length='24128' type='image/png'/>"
-  echo "    </item>"
-} >> ./rss/"${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml"
+  echo '    <item>' || exit 1
+  echo "      <title>IronFox ${IRONFOX_RELEASE_VERSION}</title>" || exit 1
+  echo "      <link>${IRONFOX_RELEASE_PAGE_URL}/#${IRONFOX_RELEASE_VERSION}</link>" || exit 1
+  echo "      <guid isPermaLink='true'>${IRONFOX_RELEASE_PAGE_URL}/#${IRONFOX_RELEASE_VERSION}</guid>" || exit 1
+  echo "      <pubDate>${IRONFOX_RSS_DATE} GMT</pubDate>" || exit 1
+  echo "      <author>${IRONFOX_RSS_EMAIL}</author>" || exit 1
+  echo "      <enclosure url='${IRONFOX_BASE_URL}/ironfox.png' width='604' height='599' length='24128' type='image/png'/>" || exit 1
+  echo "    </item>" || exit 1
+} >> ./rss/"${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml" || exit 1
 
 {
-  "${IRONFOX_CAT}" ./templates/"${if_rss_path}.rss.xml"
-  "${IRONFOX_CAT}" ./rss/"${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml"
+  "${IRONFOX_CAT}" ./templates/"${if_rss_path}.rss.xml" || exit 1
+  "${IRONFOX_CAT}" ./rss/"${if_rss_path}/${IRONFOX_RELEASE_VERSION}.xml" || exit 1
 
   if [[ -f ./rss/"${if_rss_path}/${IRONFOX_PREVIOUS_VERSION}.xml" ]]; then
-    "${IRONFOX_CAT}" ./rss/"${if_rss_path}/${IRONFOX_PREVIOUS_VERSION}.xml"
+    "${IRONFOX_CAT}" ./rss/"${if_rss_path}/${IRONFOX_PREVIOUS_VERSION}.xml" || exit 1
   fi
 
   if [[ -f ./rss/"${if_rss_path}/${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml" ]]; then
-    "${IRONFOX_CAT}" ./rss/"${if_rss_path}/${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml"
+    "${IRONFOX_CAT}" ./rss/"${if_rss_path}/${IRONFOX_PREVIOUS_PREVIOUS_VERSION}.xml" || exit 1
   fi
 
-  echo '  </channel>'
-  echo '</rss>'
-} >> ./public/"${if_rss_path}"/rss.xml
+  echo '  </channel>' || exit 1
+  echo '</rss>' || exit 1
+} >> ./public/"${if_rss_path}"/rss.xml || exit 1
 
 # Indicate our target release channel (so that `ci-update-git.repo.sh` can handle it properly...)
-"${IRONFOX_RM}" -f "${IRONFOX_SITE_REPO}/target-release" "${IRONFOX_SITE_REPO}/target-nightly"
+"${IRONFOX_RM}" -f "${IRONFOX_SITE_REPO}/target-release" "${IRONFOX_SITE_REPO}/target-nightly" || exit 1
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-  "${IRONFOX_TOUCH}" "${IRONFOX_SITE_REPO}/target-release"
-  "${IRONFOX_GIT}" add "${IRONFOX_SITE_REPO}/target-release"
+  "${IRONFOX_TOUCH}" "${IRONFOX_SITE_REPO}/target-release" || exit 1
+  "${IRONFOX_GIT}" add "${IRONFOX_SITE_REPO}/target-release" || exit 1
 else
-  "${IRONFOX_TOUCH}" "${IRONFOX_SITE_REPO}/target-nightly"
-  "${IRONFOX_GIT}" add "${IRONFOX_SITE_REPO}/target-nightly"
+  "${IRONFOX_TOUCH}" "${IRONFOX_SITE_REPO}/target-nightly" || exit 1
+  "${IRONFOX_GIT}" add "${IRONFOX_SITE_REPO}/target-nightly" || exit 1
 fi
 
 # Commit changes
-"${IRONFOX_GIT}" add rss src public release-notes.md
+"${IRONFOX_GIT}" add rss src public release-notes.md || exit 1
 "${IRONFOX_GIT}" commit -m "feat: update patch docs to reflect ironfox-oss/IronFox@${IRONFOX_CI_COMMIT}" || exit 0
 "${IRONFOX_GIT}" push origin "HEAD:${IRONFOX_SITE_REPO_BRANCH}" || exit 0
 
-popd
+popd || exit 1

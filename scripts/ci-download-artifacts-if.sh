@@ -176,11 +176,11 @@ function download_artifact() {
   local -r output_expected_sha512sum="${output_dir}/${target_expected_sha512sum}"
 
   # Download the artifact
-  download "${target_file_url}" "${output_file}"
+  download "${target_file_url}" "${output_file}" || return 1
 
   # Check the SHA512sum
   echo_red_text "Validating SHA512sum for file: '${target_file}'.."
-  download "${target_expected_sha512sum_url}" "${output_expected_sha512sum}"
+  download "${target_expected_sha512sum_url}" "${output_expected_sha512sum}" || return 1
   local -r expected_sha512sum=$("${IRONFOX_CAT}" "${output_expected_sha512sum}" | "${IRONFOX_XARGS}")
   local -r local_sha512sum=$("${IRONFOX_SHASUM}" -a 512 "${output_file}" | "${IRONFOX_AWK}" '{print $1}')
   if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
@@ -207,20 +207,20 @@ if [[ "${IRONFOX_AR_DOWN_FENIX}" == 1 ]]; then
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm64' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'arm64'
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'arm64' || return 1
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'arm'
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'arm' || return 1
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'x86_64' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'x86_64'
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'x86_64' || return 1
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'bundle' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'universal'
-    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APKS_ARTIFACTS}" 'bundle'
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APK_ARTIFACTS}" 'universal' || return 1
+    download_artifact "${IRONFOX_CI_ID}" 'fenix' "${IRONFOX_APKS_ARTIFACTS}" 'bundle' || return 1
   fi
 fi
 
@@ -229,14 +229,14 @@ if [[ "${IRONFOX_AR_DOWN_GECKOVIEW}" == 1 ]]; then
   verify_env "${IRONFOX_AAR_ARTIFACTS}" 'IRONFOX_AAR_ARTIFACTS' || return 1
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm64' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'geckoview' "${IRONFOX_AAR_ARTIFACTS}" 'arm64'
+    download_artifact "${IRONFOX_CI_ID}" 'geckoview' "${IRONFOX_AAR_ARTIFACTS}" 'arm64' || return 1
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'arm' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'geckoview' "${IRONFOX_AAR_ARTIFACTS}" 'arm'
+    download_artifact "${IRONFOX_CI_ID}" 'geckoview' "${IRONFOX_AAR_ARTIFACTS}" 'arm' || return 1
   fi
 
   if [[ "${IRONFOX_AR_DOWN_ARCH}" == 'x86_64' ]]; then
-    download_artifact "${IRONFOX_CI_ID}" 'geckoview' "${IRONFOX_AAR_ARTIFACTS}" 'x86_64'
+    download_artifact "${IRONFOX_CI_ID}" 'geckoview' "${IRONFOX_AAR_ARTIFACTS}" 'x86_64' || return 1
   fi
 fi
