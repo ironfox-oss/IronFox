@@ -116,8 +116,6 @@ function noop_ac_endpoints() {
   noop_mozilla_endpoints "ads.mozilla.org" "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt" || return 1
 
   # Pocket
-  noop_mozilla_endpoints "firefox-android-home-recommendations.getpocket.com" "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/stories/api/PocketEndpointRaw.kt" || return 1
-  noop_mozilla_endpoints "img-getpocket.cdn.mozilla.net" "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/recommendations/api/ContentRecommendationsEndpoint.kt" || return 1
   noop_mozilla_endpoints "spocs.getpocket.com" "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt" || return 1
   noop_mozilla_endpoints "spocs.getpocket.dev" "${IRONFOX_AC}/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt" || return 1
 
@@ -132,6 +130,7 @@ function noop_as_endpoints() {
   verify_dir_with_env "${IRONFOX_AS}" 'IRONFOX_AS' || return 1
 
   # MARS
+  noop_mozilla_endpoints "ads.mozilla.org" "${IRONFOX_AS}/components/ads-client/src/mars/environment.rs" || return 1
   noop_mozilla_endpoints "ads.mozilla.org" "${IRONFOX_AS}/components/context_id/src/mars.rs" || return 1
 
   echo_green_text 'SUCCESS: No-oped endpoints from Application Services'
