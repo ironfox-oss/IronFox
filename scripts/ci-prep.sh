@@ -95,29 +95,29 @@ function create_key_file() {
   if [[ -z "${1+x}" ]]; then
     echo_red_text 'ERROR: Please specify the secret key!'
     print_usage
-    exit 1
+    return 1
   fi
 
   if [[ -z "${2+x}" ]]; then
     echo_red_text 'ERROR: Please specify the path to the key file!'
     print_usage
-    exit 1
+    return 1
   fi
 
   # Ensure we have chmod
-  verify_exec "${IRONFOX_CHMOD}" 'IRONFOX_CHMOD' || exit 1
+  verify_exec "${IRONFOX_CHMOD}" 'IRONFOX_CHMOD' || return 1
 
   # Ensure we have dirname
-  verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || exit 1
+  verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || return 1
 
   # Ensure we have mkdir
-  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || exit 1
+  verify_exec "${IRONFOX_MKDIR}" 'IRONFOX_MKDIR' || return 1
 
   # Ensure we have rm
-  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || exit 1
+  verify_exec "${IRONFOX_RM}" 'IRONFOX_RM' || return 1
 
   # Ensure we have touch
-  verify_exec "${IRONFOX_TOUCH}" 'IRONFOX_TOUCH' || exit 1
+  verify_exec "${IRONFOX_TOUCH}" 'IRONFOX_TOUCH' || return 1
 
   local -r key="$1"
   local -r key_file="$2"
