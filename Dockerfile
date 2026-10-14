@@ -8,9 +8,13 @@ RUN dnf update -y --refresh
 
 # Install our dependencies...
 RUN dnf install -y \
-  cmake \
+  bash \
+  ca-certificates \
   clang \
+  cmake \
+  curl \
   gawk \
+  gcc \
   git \
   jq \
   m4 \
@@ -20,8 +24,11 @@ RUN dnf install -y \
   patch \
   perl \
   shasum \
+  tar \
+  unzip \
   xz \
   yq \
+  zip \
   zlib-devel
 
 # cd into working directory

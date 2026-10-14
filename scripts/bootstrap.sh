@@ -154,9 +154,13 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
   echo
 
   ${SUDO} /usr/bin/dnf install -y \
-    cmake \
+    bash \
+    ca-certificates \
     clang \
+    cmake \
+    curl \
     gawk \
+    gcc \
     git \
     jq \
     m4 \
@@ -166,8 +170,11 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
     patch \
     perl \
     shasum \
+    tar \
+    unzip \
     xz \
     yq \
+    zip \
     zlib-devel || error_fn
   echo
 

@@ -109,7 +109,29 @@ esac
 # Get dependencies
 echo_red_text 'CI - Downloading dependencies...'
 /bin/sudo /bin/dnf update -y --refresh || exit 1
-/bin/sudo /bin/dnf install -y bash curl shasum tar || exit 1
+/bin/sudo /bin/dnf install -y \
+  bash \
+  ca-certificates \
+  clang \
+  cmake \
+  curl \
+  gawk \
+  gcc \
+  git \
+  jq \
+  m4 \
+  make \
+  nasm \
+  ninja-build \
+  patch \
+  perl \
+  shasum \
+  tar \
+  unzip \
+  xz \
+  yq \
+  zip \
+  zlib-devel || exit 1
 if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'geckoview' ]]; then
   # If we're only building GeckoView, we don't need to download all sources
   "${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 'uv' || exit 1

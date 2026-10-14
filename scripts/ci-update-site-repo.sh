@@ -76,7 +76,19 @@ fi
 # Get dependencies
 echo_red_text 'CI - Downloading dependencies...'
 /bin/sudo /bin/dnf update -y --refresh || exit 1
-/bin/sudo /bin/dnf install -y bash curl git make shasum yq || exit 1
+/bin/sudo /bin/dnf install -y \
+  bash \
+  ca-certificates \
+  curl \
+  gawk \
+  git \
+  jq \
+  make \
+  shasum \
+  tar \
+  unzip \
+  xz \
+  yq || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 'uv' || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 'python' || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 'pyyaml' || exit 1
