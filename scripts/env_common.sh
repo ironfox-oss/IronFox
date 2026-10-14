@@ -1123,11 +1123,7 @@ fi
 readonly IRONFOX_SYSCTL
 
 # sysroot
-if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-  readonly IRONFOX_SYSROOT_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/sysroot"
-else
-  readonly IRONFOX_SYSROOT_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/musl/sysroot"
-fi
+readonly IRONFOX_SYSROOT_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/sysroot"
 if [[ -z "${IRONFOX_SYSROOT+x}" ]] || [[ "${IRONFOX_SYSROOT}" == "" ]] || [[ "${IRONFOX_SYSROOT}" == "null" ]]; then
   IRONFOX_SYSROOT="${IRONFOX_SYSROOT_DEFAULT}"
 fi
