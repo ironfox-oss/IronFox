@@ -10,14 +10,19 @@ RUN dnf update -y --refresh
 RUN dnf install -y \
   as \
   bash \
+  binutils \
   ca-certificates \
   clang \
   cmake \
+  cpp \
   curl \
   gawk \
   gcc \
   git \
   jq \
+  libtool \
+  lld \
+  llvm \
   m4 \
   make \
   nasm \

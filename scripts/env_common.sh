@@ -495,6 +495,33 @@ if [[ -z "${IRONFOX_CLANG+x}" ]] || [[ "${IRONFOX_CLANG}" == "" ]] || [[ "${IRON
 fi
 readonly IRONFOX_CLANG
 
+# clang-cl
+## (For Linux)
+readonly IRONFOX_CLANG_CL_DEFAULT='/bin/clang-cl'
+if [[ -z "${IRONFOX_CLANG_CL+x}" ]] || [[ "${IRONFOX_CLANG_CL}" == "" ]] || [[ "${IRONFOX_CLANG_CL}" == "null" ]]; then
+  IRONFOX_CLANG_CL="${IRONFOX_CLANG_CL_DEFAULT}"
+fi
+readonly IRONFOX_CLANG_CL
+
+# clang-cpp
+## (For Linux)
+readonly IRONFOX_CLANG_CPP_DEFAULT='/bin/clang-cpp'
+if [[ -z "${IRONFOX_CLANG_CPP+x}" ]] || [[ "${IRONFOX_CLANG_CPP}" == "" ]] || [[ "${IRONFOX_CLANG_CPP}" == "null" ]]; then
+  IRONFOX_CLANG_CPP="${IRONFOX_CLANG_CPP_DEFAULT}"
+fi
+readonly IRONFOX_CLANG_CPP
+
+# clang++
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+  readonly IRONFOX_CLANG_PP_DEFAULT='/usr/bin/clang++'
+else
+  readonly IRONFOX_CLANG_PP_DEFAULT='/bin/clang++'
+fi
+if [[ -z "${IRONFOX_CLANG_PP+x}" ]] || [[ "${IRONFOX_CLANG_PP}" == "" ]] || [[ "${IRONFOX_CLANG_PP}" == "null" ]]; then
+  IRONFOX_CLANG_PP="${IRONFOX_CLANG_PP_DEFAULT}"
+fi
+readonly IRONFOX_CLANG_PP
+
 # cmake
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
   readonly IRONFOX_CMAKE_DEFAULT='/opt/homebrew/bin/cmake'
@@ -525,6 +552,17 @@ if [[ -z "${IRONFOX_CP+x}" ]] || [[ "${IRONFOX_CP}" == "" ]] || [[ "${IRONFOX_CP
   IRONFOX_CP="${IRONFOX_CP_DEFAULT}"
 fi
 readonly IRONFOX_CP
+
+# cpp
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+  readonly IRONFOX_CPP_DEFAULT='/usr/bin/cpp'
+else
+  readonly IRONFOX_CPP_DEFAULT='/bin/cpp'
+fi
+if [[ -z "${IRONFOX_CPP+x}" ]] || [[ "${IRONFOX_CPP}" == "" ]] || [[ "${IRONFOX_CPP}" == "null" ]]; then
+  IRONFOX_CPP="${IRONFOX_CPP_DEFAULT}"
+fi
+readonly IRONFOX_CPP
 
 # curl
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
@@ -614,6 +652,17 @@ if [[ -z "${IRONFOX_FIND+x}" ]] || [[ "${IRONFOX_FIND}" == "" ]] || [[ "${IRONFO
 fi
 readonly IRONFOX_FIND
 
+# g++
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+  readonly IRONFOX_G_PP_DEFAULT='/usr/bin/g++'
+else
+  readonly IRONFOX_G_PP_DEFAULT='/bin/g++'
+fi
+if [[ -z "${IRONFOX_G_PP+x}" ]] || [[ "${IRONFOX_G_PP}" == "" ]] || [[ "${IRONFOX_G_PP}" == "null" ]]; then
+  IRONFOX_G_PP="${IRONFOX_G_PP_DEFAULT}"
+fi
+readonly IRONFOX_G_PP
+
 # gcc
 ## (For Linux)
 readonly IRONFOX_GCC_DEFAULT='/bin/gcc'
@@ -621,6 +670,14 @@ if [[ -z "${IRONFOX_GCC+x}" ]] || [[ "${IRONFOX_GCC}" == "" ]] || [[ "${IRONFOX_
   IRONFOX_GCC="${IRONFOX_GCC_DEFAULT}"
 fi
 readonly IRONFOX_GCC
+
+# gcc-ranlib
+## (For Linux)
+readonly IRONFOX_GCC_RANLIB_DEFAULT='/bin/gcc-ranlib'
+if [[ -z "${IRONFOX_GCC_RANLIB+x}" ]] || [[ "${IRONFOX_GCC_RANLIB}" == "" ]] || [[ "${IRONFOX_GCC_RANLIB}" == "null" ]]; then
+  IRONFOX_GCC_RANLIB="${IRONFOX_GCC_RANLIB_DEFAULT}"
+fi
+readonly IRONFOX_GCC_RANLIB
 
 # git
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
@@ -1016,6 +1073,17 @@ if [[ -z "${IRONFOX_PWD+x}" ]] || [[ "${IRONFOX_PWD}" == "" ]] || [[ "${IRONFOX_
   IRONFOX_PWD="${IRONFOX_PWD_DEFAULT}"
 fi
 readonly IRONFOX_PWD
+
+# ranlib
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+  readonly IRONFOX_RANLIB_DEFAULT='/usr/bin/ranlib'
+else
+  readonly IRONFOX_RANLIB_DEFAULT='/bin/ranlib'
+fi
+if [[ -z "${IRONFOX_RANLIB+x}" ]] || [[ "${IRONFOX_RANLIB}" == "" ]] || [[ "${IRONFOX_RANLIB}" == "null" ]]; then
+  IRONFOX_RANLIB="${IRONFOX_RANLIB_DEFAULT}"
+fi
+readonly IRONFOX_RANLIB
 
 # realpath
 readonly IRONFOX_REALPATH_DEFAULT='/bin/realpath'

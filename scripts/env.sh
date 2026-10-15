@@ -233,9 +233,11 @@ function setup_path() {
   add_to_full_path "${IRONFOX_CC}" 'IRONFOX_CC' 'cc' || return 1
   add_to_full_path "${IRONFOX_CHMOD}" 'IRONFOX_CHMOD' 'chmod' || return 1
   add_to_full_path "${IRONFOX_CLANG}" 'IRONFOX_CLANG' 'clang' || return 1
+  add_to_full_path "${IRONFOX_CLANG_PP}" 'IRONFOX_CLANG_PP' 'clang++' || return 1
   add_to_full_path "${IRONFOX_CMAKE}" 'IRONFOX_CMAKE' 'cmake' || return 1
   add_to_full_path "${IRONFOX_CMP}" 'IRONFOX_CMP' 'cmp' || return 1
   add_to_full_path "${IRONFOX_CP}" 'IRONFOX_CP' 'cp' || return 1
+  add_to_full_path "${IRONFOX_CPP}" 'IRONFOX_CPP' 'cpp' || return 1
   add_to_full_path "${IRONFOX_CPLUSPLUS}" 'IRONFOX_CPLUSPLUS' 'c++' || return 1
   add_to_full_path "${IRONFOX_CURL}" 'IRONFOX_CURL' 'curl' || return 1
   add_to_full_path "${IRONFOX_CUT}" 'IRONFOX_CUT' 'cut' || return 1
@@ -247,6 +249,7 @@ function setup_path() {
   add_to_full_path "${IRONFOX_EGREP}" 'IRONFOX_EGREP' 'egrep' || return 1
   add_to_full_path "${IRONFOX_EXPR}" 'IRONFOX_EXPR' 'expr' || return 1
   add_to_full_path "${IRONFOX_FIND}" 'IRONFOX_FIND' 'find' || return 1
+  add_to_full_path "${IRONFOX_G_PP}" 'IRONFOX_G_PP' 'g++' || return 1
   add_to_full_path "${IRONFOX_GIT}" 'IRONFOX_GIT' 'git' || return 1
   add_to_full_path "${IRONFOX_GIT_LFS}" 'IRONFOX_GIT_LFS' 'git-lfs' || return 1
   add_to_full_path "${IRONFOX_GLEAN_PARSER}" 'IRONFOX_GLEAN_PARSER' 'glean_parser' || return 1
@@ -285,6 +288,7 @@ function setup_path() {
   add_to_full_path "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' 'python' || return 1
   add_to_full_path "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' 'python3' || return 1
   add_to_full_path "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' 'python3.14' || return 1
+  add_to_full_path "${IRONFOX_RANLIB}" 'IRONFOX_RANLIB' 'ranlib' || return 1
   add_to_full_path "${IRONFOX_REALPATH}" 'IRONFOX_REALPATH' 'realpath' || return 1
   add_to_full_path "${IRONFOX_RM}" 'IRONFOX_RM' 'rm' || return 1
   add_to_full_path "${IRONFOX_RMDIR}" 'IRONFOX_RMDIR' 'rmdir' || return 1
@@ -324,7 +328,10 @@ function setup_path() {
     add_to_full_path "${IRONFOX_XCRUN}" 'IRONFOX_XCRUN' 'xcrun' || return 1
   else
     # Linux-specific
+    add_to_full_path "${IRONFOX_CLANG_CL}" 'IRONFOX_CLANG_CL' 'clang-cl' || return 1
+    add_to_full_path "${IRONFOX_CLANG_CPP}" 'IRONFOX_CLANG_CPP' 'clang-cpp' || return 1
     add_to_full_path "${IRONFOX_GCC}" 'IRONFOX_GCC' 'gcc' || return 1
+    add_to_full_path "${IRONFOX_GCC_RANLIB}" 'IRONFOX_GCC_RANLIB' 'gcc-ranlib' || return 1
     add_to_full_path "${IRONFOX_NPROC}" 'IRONFOX_NPROC' 'nproc' || return 1
   fi
 

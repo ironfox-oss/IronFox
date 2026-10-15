@@ -106,6 +106,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
       gnu-sed \
       gnu-tar \
       gpatch \
+      lld \
       m4 \
       make \
       xz \
@@ -156,14 +157,19 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
   ${SUDO} /usr/bin/dnf install -y \
     as \
     bash \
+    binutils \
     ca-certificates \
     clang \
     cmake \
+    cpp \
     curl \
     gawk \
     gcc \
     git \
     jq \
+    libtool \
+    lld \
+    llvm \
     m4 \
     make \
     nasm \
