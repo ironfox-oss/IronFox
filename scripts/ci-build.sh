@@ -110,6 +110,7 @@ esac
 echo_red_text 'CI - Downloading dependencies...'
 /bin/sudo /bin/dnf update -y --refresh || exit 1
 /bin/sudo /bin/dnf install -y \
+  as \
   bash \
   ca-certificates \
   clang \

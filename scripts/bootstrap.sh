@@ -154,6 +154,7 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
   echo
 
   ${SUDO} /usr/bin/dnf install -y \
+    as \
     bash \
     ca-certificates \
     clang \
