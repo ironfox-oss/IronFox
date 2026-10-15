@@ -446,6 +446,7 @@ function prepare_as() {
 
   # Set Android NDK version
   "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_NDK_REVISION}|${IRONFOX_ANDROID_NDK_REVISION}|g" "${IRONFOX_AS}/settings.gradle" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_NDK_REVISION}|${IRONFOX_ANDROID_NDK_REVISION}|g" "${IRONFOX_AS}/components/support/rc_crypto/nss/nss_build_common/src/lib.rs" || return 1
 
   # Set Rust version
   "${IRONFOX_SED}" -i -e "s|channel = .*|channel = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_AS}/rust-toolchain.toml" || return 1
