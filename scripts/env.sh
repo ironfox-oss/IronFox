@@ -221,7 +221,7 @@ function setup_path() {
   add_to_full_path "${IRONFOX_ANDROID}" 'IRONFOX_ANDROID' 'android' || return 1
   add_to_full_path "${IRONFOX_APKSIGNER}" 'IRONFOX_APKSIGNER' 'apksigner' || return 1
   add_to_full_path "${IRONFOX_AR}" 'IRONFOX_AR' 'ar' || return 1
-  add_to_full_path "${IRONFOX_AS}" 'IRONFOX_AS' 'as' || return 1
+  add_to_full_path "${IRONFOX_ASSEMBLER}" 'IRONFOX_ASSEMBLER' 'as' || return 1
   add_to_full_path "${IRONFOX_AWK}" 'IRONFOX_AWK' 'awk' || return 1
   add_to_full_path "${IRONFOX_AWK}" 'IRONFOX_AWK' 'gawk' || return 1
   add_to_full_path "${IRONFOX_BASENAME}" 'IRONFOX_BASENAME' 'basename' || return 1
