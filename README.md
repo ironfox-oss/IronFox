@@ -69,14 +69,29 @@ C5:E2:91:B5:A5:71:F9:C8:CD:9A:97:99:C2:C9:4E:02:EC:97:03:94:88:93:F2:CA:75:6D:67
 IronFox makes it easier (and faster) to build the project locally.
 For example, prebuilt versions of wasi-sdk sysroot and llvm-project are used instead of building them locally. ~~F-Droid builds still build those from source.~~
 
-**It is recommended to use the Docker image for building IronFox.**
+**It is recommended to use the container image for building IronFox.**
 
-### Build with Docker
+### Build with Docker or Podman
 
-Pull the docker image with :
+The easiest way to get started is with the container build script, which
+works with both Docker and Podman (auto-detects your engine):
+
+```sh
+./scripts/run-container.sh
+```
+
+To override the auto-detected engine:
+
+```sh
+CONTAINER_ENGINE=docker ./scripts/run-container.sh
+```
+
+Alternatively, pull the pre-built image directly:
 
 ```sh
 docker pull registry.gitlab.com/ironfox-oss/ironfox:latest
+# or
+podman pull registry.gitlab.com/ironfox-oss/ironfox:latest
 ```
 
 You can also use the `main` tag to pull the image which was used to
@@ -85,13 +100,13 @@ to pull images for those versions.
 
 For example:
 
-```
+```sh
 docker pull registry.gitlab.com/ironfox-oss/ironfox:v135-0
 ```
 
 Then, you need to [set up the source files](#get--patch-sources).
 
-### Build without Docker
+### Build without Docker or Podman
 
 **NOTE**: Currently, builds on the latest versions of **`Fedora`**, **`macOS`**, **`secureblue`**, and **`Ubuntu`** systems are supported. YMMV for other operating systems/environments.
 
