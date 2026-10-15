@@ -346,6 +346,7 @@ if [[ "${IRONFOX_BUILD_FENIX_DEPS}" == 1 ]]; then
 
   # Glean
   IRONFOX_BUILD_GLEAN=1
+  IRONFOX_BUILD_GLEAN_DEPS=1
 
   # nimbus-fml
   IRONFOX_BUILD_NIMBUS_FML=1
