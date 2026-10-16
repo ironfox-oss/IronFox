@@ -35,7 +35,7 @@
     "extension_pages": "default-src 'none'; base-uri 'none'; child-src 'none'; connect-src 'none'; font-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'none'; manifest-src 'none'; media-src 'none'; object-src 'none'; require-trusted-types-for 'script'; style-src 'none'; worker-src 'none'; upgrade-insecure-requests;"
   },
   "description": "Virtual cursor for Android TV devices.",
-  "homepage_url": "https://gitlab.com/ironfox-oss/IronFox",
+  "homepage_url": "https://ironfoxoss.org/",
   "host_permissions": [
     "<all_urls>"
   ],
