@@ -1042,6 +1042,76 @@
     },
     {
       "schemaVersion": "1.12.0",
+      "slug": "ironfox-import-bookmarks",
+      "id": "ironfox-import-bookmarks",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Import Bookmarks",
+      "userFacingDescription": "Controls the ability to import bookmarks (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-import-bookmarks-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "import-bookmarks"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "import-bookmarks",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "import-bookmarks",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
       "slug": "ironfox-ip-protection",
       "id": "ironfox-ip-protection",
       "arguments": {},

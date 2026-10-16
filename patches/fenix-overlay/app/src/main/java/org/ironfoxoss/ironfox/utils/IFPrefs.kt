@@ -294,8 +294,11 @@ object IFPrefs {
     // Enable DoH without fallback by default
     prefs.setDefaultIntPref(R.string.pref_key_doh_settings_mode, 3)
 
-    /// Set the default DoH provider to Mullvad (Base)
+    /// Set the default DoH provider
     prefs.setStringPref(R.string.pref_key_doh_default_provider_uri, IFConstants.IRONFOX_DEFAULT_DOH_URL)
+
+    // Enable the ability to import bookmarks by default
+    prefs.setDefaultBoolPref(R.string.pref_key_enable_import_bookmarks, true)
 
     // Enable ETP Strict
     prefs.setBoolPref(R.string.pref_key_tracking_protection, true) // [DEFAULT]
