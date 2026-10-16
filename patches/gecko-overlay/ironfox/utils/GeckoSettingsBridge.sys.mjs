@@ -547,12 +547,13 @@ function setDohBootstrap(address) {
 
   // Determine our bootstrap IP
   let bootstrapIP = '';
-  if (address === "https://base.dns.mullvad.net/dns-query" ||
-   address === "https://base.dns.mullvad.net:443/dns-query") {
-    bootstrapIP = '194.242.2.4';
-  } else if (address === "https://dns.mullvad.net/dns-query" ||
-   address === "https://dns.mullvad.net:443/dns-query") {
-    bootstrapIP = '194.242.2.2';
+  if (address === "https://dns.quad9.net/dns-query" ||
+   address === "https://dns.quad9.net:443/dns-query") {
+    if (useFallback) {
+      bootstrapIP = '149.112.112.112';
+    } else {
+      bootstrapIP = '9.9.9.9';
+    };
   } else if (address === "https://mozilla.cloudflare-dns.com/dns-query" ||
    address === "https://mozilla.cloudflare-dns.com:443/dns-query" ||
    address === "https://cloudflare-dns.com/dns-query" ||

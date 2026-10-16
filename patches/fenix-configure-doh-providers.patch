@@ -8,7 +8,7 @@ Adds custom DoH providers.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
-index 5d8cfdeda120..3cb5556c418f 100644
+index 5d8cfdeda120a..8ad8a2142f463 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 @@ -7,6 +7,7 @@ package org.mozilla.fenix.settings.doh
@@ -19,7 +19,7 @@ index 5d8cfdeda120..3cb5556c418f 100644
  
  internal interface DohSettingsProvider {
      fun getProtectionLevels(): List<ProtectionLevel>
-@@ -45,20 +46,79 @@ internal class DefaultDohSettingsProvider(
+@@ -45,20 +46,72 @@ internal class DefaultDohSettingsProvider(
      private val cloudflare =
          Provider.BuiltIn(
              url = cloudflareUri,
@@ -29,14 +29,14 @@ index 5d8cfdeda120..3cb5556c418f 100644
 +            default = dohDefaultProviderUrl == cloudflareUri,
          )
 -    private val nextDns =
-+    private val mullvadBase =
++    private val quad9 =
          Provider.BuiltIn(
 -            url = nextDnsUri,
 -            name = "NextDNS",
 -            default = dohDefaultProviderUrl == nextDnsUri,
-+            url = IFDohProviders.mullvadBaseUri,
-+            name = IFDohProviders.mullvadBaseName,
-+            default = dohDefaultProviderUrl.isBlank() || dohDefaultProviderUrl == IFDohProviders.mullvadBaseUri,
++            url = IFDohProviders.quad9Uri,
++            name = IFDohProviders.quad9Name,
++            default = dohDefaultProviderUrl.isBlank() || dohDefaultProviderUrl == IFDohProviders.quad9Uri,
 +        )
 +    private val cloudflareMalware =
 +        Provider.BuiltIn(
@@ -85,32 +85,25 @@ index 5d8cfdeda120..3cb5556c418f 100644
 +            url = IFDohProviders.dnsForgeNormalUri,
 +            name = IFDohProviders.dnsForgeNormalName,
 +            default = dohDefaultProviderUrl == IFDohProviders.dnsForgeNormalUri,
-+        )
-+    private val mullvadUnfiltered =
-+        Provider.BuiltIn(
-+            url = IFDohProviders.mullvadUnfilteredUri,
-+            name = IFDohProviders.mullvadUnfilteredName,
-+            default = dohDefaultProviderUrl == IFDohProviders.mullvadUnfilteredUri,
          )
      private val providerUrl = settings.dohProviderUrl
      private val custom =
          Provider.Custom(
              url =
 -                if (providerUrl != cloudflareUri && providerUrl != nextDnsUri) {
-+                if (providerUrl != cloudflareUri && providerUrl != IFDohProviders.mullvadBaseUri &&
++                if (providerUrl != cloudflareUri && providerUrl != IFDohProviders.quad9Uri &&
 +         providerUrl != IFDohProviders.cloudflareMalwareUri && providerUrl != IFDohProviders.dns4EuAdBlockingUri &&
 +         providerUrl != IFDohProviders.dns4EuProtectiveUri && providerUrl != IFDohProviders.dns4EuUnfilteredUri &&
 +         providerUrl != IFDohProviders.dnsBunkerUri && providerUrl != IFDohProviders.dnsForgeBlankUri &&
-+         providerUrl != IFDohProviders.dnsForgeHardUri && providerUrl != IFDohProviders.dnsForgeNormalUri &&
-+         providerUrl != IFDohProviders.mullvadUnfilteredUri) {
++         providerUrl != IFDohProviders.dnsForgeHardUri && providerUrl != IFDohProviders.dnsForgeNormalUri) {
                      providerUrl
                  } else {
                      ""
-@@ -67,8 +127,17 @@ internal class DefaultDohSettingsProvider(
+@@ -67,8 +120,16 @@ internal class DefaultDohSettingsProvider(
  
      override fun getDefaultProviders(): List<Provider> =
          listOf(
-+            mullvadBase,
++            quad9,
 +            cloudflareMalware,
              cloudflare,
 -            nextDns,
@@ -121,16 +114,15 @@ index 5d8cfdeda120..3cb5556c418f 100644
 +            dnsForgeNormal,
 +            dnsForgeHard,
 +            dnsForgeBlank,
-+            mullvadUnfiltered,
              custom,
          )
  
-@@ -91,7 +160,16 @@ internal class DefaultDohSettingsProvider(
+@@ -91,7 +152,15 @@ internal class DefaultDohSettingsProvider(
              else -> {
                  when (settings.dohProviderUrl) {
                      cloudflareUri -> cloudflare
 -                    nextDnsUri -> nextDns
-+                    IFDohProviders.mullvadBaseUri -> mullvadBase
++                    IFDohProviders.quad9Uri -> quad9
 +                    IFDohProviders.cloudflareMalwareUri -> cloudflareMalware
 +                    IFDohProviders.dns4EuAdBlockingUri -> dns4EuAdBlocking
 +                    IFDohProviders.dns4EuProtectiveUri -> dns4EuProtective
@@ -139,7 +131,6 @@ index 5d8cfdeda120..3cb5556c418f 100644
 +                    IFDohProviders.dnsForgeBlankUri -> dnsForgeBlank
 +                    IFDohProviders.dnsForgeHardUri -> dnsForgeHard
 +                    IFDohProviders.dnsForgeNormalUri -> dnsForgeNormal
-+                    IFDohProviders.mullvadUnfilteredUri -> mullvadUnfiltered
                      "" -> getDefaultProviders().first()
                      else -> custom
                  }

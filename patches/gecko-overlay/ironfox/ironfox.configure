@@ -140,7 +140,7 @@ project_flag("IRONFOX_URL",                     nargs=1, help="IronFox URL", set
 
 imply_option("IRONFOX_BUGS_URL",                "https://codeberg.org/ironfox-oss/bugs/issues")
 imply_option("IRONFOX_CHANNEL",                 ironfox_channel)
-imply_option("IRONFOX_DEFAULT_DOH_URL",         "https://base.dns.mullvad.net/dns-query")
+imply_option("IRONFOX_DEFAULT_DOH_URL",         "https://dns.quad9.net/dns-query")
 imply_option("IRONFOX_FAQ_URL",                 "https://ironfoxoss.org/docs/faq/")
 imply_option("IRONFOX_RELEASES_URL",            "https://ironfoxoss.org/releases")
 imply_option("IRONFOX_REPO_GIT_URL",            "gitlab.com:ironfox-oss/IronFox.git")

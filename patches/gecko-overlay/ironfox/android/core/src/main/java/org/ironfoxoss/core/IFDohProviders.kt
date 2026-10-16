@@ -5,9 +5,9 @@ package org.ironfoxoss.core
  *
  */
 object IFDohProviders {
-  // Mullvad (Base)
-  const val mullvadBaseName = "Mullvad (Base) 🇸🇪"
-  const val mullvadBaseUri = "https://base.dns.mullvad.net/dns-query"
+  // Quad9
+  const val quad9Name = "Quad9 🇨🇭"
+  const val quad9Uri = "https://dns.quad9.net/dns-query"
 
   // Cloudflare
   /// (We don't provide the Uri variable here, as it's specified by `DohSettingsProvider.kt` directly)
@@ -44,8 +44,4 @@ object IFDohProviders {
   // dnsforge.de (Normal)
   const val dnsForgeNormalName = "dnsforge.de (Normal) 🇩🇪"
   const val dnsForgeNormalUri = "https://dnsforge.de/dns-query"
-
-  // Mullvad (Unfiltered)
-  const val mullvadUnfilteredName = "Mullvad (Unfiltered) 🇸🇪"
-  const val mullvadUnfilteredUri = "https://dns.mullvad.net/dns-query"
 }

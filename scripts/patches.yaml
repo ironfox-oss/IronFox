@@ -524,7 +524,7 @@ patches:
     name: "Fenix - Configure DNS over HTTPS providers"
     description: |
       Adds the following custom DoH providers:
-        - Mullvad (Base)
+        - Quad9
         - Cloudflare (Malware Protection)
         - DNS4EU (Ad Blocking)
         - DNS4EU (Protective)
@@ -533,7 +533,6 @@ patches:
         - dnsforge.de (Blank)
         - dnsforge.de (Hard)
         - dnsforge.de (Normal)
-        - Mullvad (Unfiltered)
     reason: "To add support for multiple secure DNS providers in the UI settings."
     effect: "Adds a selection of carefully selected DoH providers for the users to choose from."
     category: "Privacy"
