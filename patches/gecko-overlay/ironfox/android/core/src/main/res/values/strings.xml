@@ -143,4 +143,9 @@
   <!-- Onboarding - States -->
   <string name="ironfox_onboarding_state_installing_ublock">Installing uBlock Origin…</string>
   <string name="ironfox_onboarding_state_installing_ublock_error">An error occurred while installing uBlock Origin: %1$s</string>
+
+  <!-- Messages -->
+  <string name="ironfox_doh_migration_message_title">Mullvad Discontinuation Notice</string>
+  <string name="ironfox_doh_migration_message_desc">Your currently selected DNS over HTTPS provider (Mullvad) is ceasing operations on November 2, 2026. To ensure your browser continues to work as expected, you are strongly urged to switch to a different provider.</string>
+  <string name="ironfox_doh_migration_button">Open DNS over HTTPS settings</string>
 </resources>

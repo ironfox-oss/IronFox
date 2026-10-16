@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <item name="ic_ironfox_artwork" type="drawable">@drawable/mozac_ic_storage_24</item>
+  <item name="ic_ironfox_warning" type="drawable">@drawable/ironfox_warning</item>
 </resources>

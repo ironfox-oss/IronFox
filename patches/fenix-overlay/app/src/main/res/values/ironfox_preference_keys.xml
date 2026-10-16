@@ -114,4 +114,7 @@
 
   <!-- XPInstall -->
   <string name="pref_key_xpinstall_enabled" translatable="false">pref_key_xpinstall_enabled</string>
+
+  <!-- Messages -->
+  <string name="pref_key_ironfox_shown_doh_migration_message" translatable="false">pref_key_ironfox_shown_doh_migration_message</string>
 </resources>

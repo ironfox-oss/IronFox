@@ -1,0 +1,138 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Fri, 16 Oct 2026 05:51:38 +0000
+Subject: [PATCH] Fenix - IronFox messaging
+
+Provides support for displaying in-app messages/pop-ups to users.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
+index 2d733a28d4d3..e34da3dc3383 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
+@@ -88,10 +88,12 @@ import org.mozilla.fenix.settings.downloads.DownloadLocationManager
+ import org.mozilla.fenix.summarization.SummarizationNavigator
+ import org.mozilla.fenix.termsofuse.store.Surface
+ import org.mozilla.fenix.utils.Settings
++import org.ironfoxoss.ironfox.utils.IFMessageFeature
+ 
+ /** Fragment used for browsing the web within the main app. */
+ @Suppress("TooManyFunctions", "LargeClass")
+ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler, SystemInsetsPaddedFragment {
++    private val ifMessageFeature = ViewBoundFeatureWrapper<IFMessageFeature>()
+     private val windowFeature = ViewBoundFeatureWrapper<WindowFeature>()
+     private val openInAppOnboardingObserver = ViewBoundFeatureWrapper<OpenInAppOnboardingObserver>()
+     private val translationsBinding = ViewBoundFeatureWrapper<TranslationsBinding>()
+@@ -170,6 +172,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler, SystemIns
+         initPdfTools(context = context, rootView = view)
+         initListenSheet(context = context, rootView = view)
+         initContinuousOnboardingFeature()
++        initIFMessageFeature()
+ 
+         thumbnailsFeature.set(
+             feature = BrowserThumbnails(context, binding.engineView, components.core.store),
+@@ -403,6 +406,20 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler, SystemIns
+         )
+     }
+ 
++    private fun initIFMessageFeature() {
++        IFMessageFeature.register(
++            fragment = this,
++            binding = ifMessageFeature,
++            navigateToDohSettings = {
++                findNavController()
++                    .navigateSafe(
++                        R.id.browserFragment,
++                        BrowserFragmentDirections.actionBrowserFragmentToDohSettingsFragment(),
++                    )
++            },
++        )
++    }
++
+     private fun openTranslationsDialogFromToolbar() {
+         Translations.action.record(Translations.ActionExtra("main_flow_toolbar"))
+         requireComponents.appStore.dispatch(SnackbarAction.SnackbarDismissed)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
+index 1312a62fa3be..555468bb4df4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
+@@ -196,6 +196,8 @@ import org.mozilla.fenix.utils.getUndoDelay
+ import org.mozilla.fenix.utils.showAddSearchWidgetPromptIfSupported
+ import org.mozilla.fenix.wallpapers.LocalWallpaperState
+ import org.mozilla.fenix.wallpapers.Wallpaper
++import org.ironfoxoss.ironfox.utils.IFMessageFeature
++import org.mozilla.fenix.ext.navigateSafe
+ 
+ /** The home screen. */
+ @Suppress("TooManyFunctions", "LargeClass")
+@@ -267,6 +269,7 @@ class HomeFragment : Fragment(), UserInteractionHandler, OnLongPressedListener {
+ 
+     @VisibleForTesting internal val messagingFeatureMicrosurvey = ViewBoundFeatureWrapper<MessagingFeature>()
+ 
++    private val ifMessageFeature = ViewBoundFeatureWrapper<IFMessageFeature>()
+     private val recentTabsListFeature = ViewBoundFeatureWrapper<RecentTabsListFeature>()
+     private val recentSyncedTabFeature = ViewBoundFeatureWrapper<RecentSyncedTabFeature>()
+     private val bookmarksFeature = ViewBoundFeatureWrapper<BookmarksFeature>()
+@@ -572,6 +575,7 @@ class HomeFragment : Fragment(), UserInteractionHandler, OnLongPressedListener {
+         initSnackbarBinding(view = view)
+         initIpProtectionBindings(view = view)
+         initContinuousOnboardingFeature()
++        initIFMessageFeature()
+ 
+         privacyNoticeBannerStore =
+             PrivacyNoticeBannerStore(
+@@ -1512,6 +1516,20 @@ class HomeFragment : Fragment(), UserInteractionHandler, OnLongPressedListener {
+         )
+     }
+ 
++    private fun initIFMessageFeature() {
++        IFMessageFeature.register(
++            fragment = this,
++            binding = ifMessageFeature,
++            navigateToDohSettings = {
++                findNavController()
++                    .navigateSafe(
++                        R.id.homeFragment,
++                        HomeFragmentDirections.actionHomeFragmentToDohSettingsFragment(),
++                    )
++            },
++        )
++    }
++
+     @Suppress("LongMethod")
+     private fun initInteractor() {
+         _sessionControlInteractor =
+diff --git a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
+index 2a74ab01ff9c..39fcfb7d2f48 100644
+--- a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
++++ b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
+@@ -303,6 +303,13 @@
+         <action
+             android:id="@+id/action_homeFragment_to_global_protections_dashboard"
+             app:destination="@id/global_protections_dashboard" />
++        <action
++          android:id="@+id/action_homeFragment_to_dohSettingsFragment"
++          app:destination="@id/dohSettingsFragment"
++          app:enterAnim="@anim/slide_in_right"
++          app:exitAnim="@anim/slide_out_left"
++          app:popEnterAnim="@anim/slide_in_left"
++          app:popExitAnim="@anim/slide_out_right" />
+     </fragment>
+ 
+     <fragment
+@@ -440,6 +447,13 @@
+         <action
+           android:id="@+id/action_browserFragment_to_menuFragment"
+           app:destination="@id/menu_graph" />
++        <action
++          android:id="@+id/action_browserFragment_to_dohSettingsFragment"
++          app:destination="@id/dohSettingsFragment"
++          app:enterAnim="@anim/slide_in_right"
++          app:exitAnim="@anim/slide_out_left"
++          app:popEnterAnim="@anim/slide_in_left"
++          app:popExitAnim="@anim/slide_out_right" />
+     </fragment>
+ 
+     <fragment
+-- 

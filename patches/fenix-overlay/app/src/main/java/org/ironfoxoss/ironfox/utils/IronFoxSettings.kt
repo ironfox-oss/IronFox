@@ -256,6 +256,12 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
       default = true,
     )
 
+  var shownDohMigrationMessage by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_ironfox_shown_doh_migration_message),
+      default = false,
+    )
+
   var spoofEnglish by
     booleanPreference(
       key = context.getPreferenceKey(R.string.pref_key_spoof_english),

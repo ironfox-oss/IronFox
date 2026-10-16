@@ -84,6 +84,13 @@ patches:
     effect: "Ensures that core IronFox changes are always/properly applied as expected."
     category: "Build System"
 
+  - file: "fenix-ironfox-messaging.patch"
+    name: "Fenix - IronFox messaging"
+    description: "Provides support for displaying in-app messages/pop-ups to users."
+    reason: "To be able to notify users of important changes (ex. DoH provider migration)."
+    effect: "Ensures that users are in control and notified of important changes."
+    category: "Build System"
+
   - file: "fenix-enable-legacy-packaging.patch"
     name: "Fenix - Enable legacy packaging"
     description: "Enables legacy Android packaging unconditionally to reduce the size of our APKsets."
