@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Fri, 16 Oct 2026 02:05:30 +0000
+Subject: [PATCH] Gecko - Disable JSHacks
+
+Prevents Gecko from relaxing security checks if certain preferences are set (which do not cause issues for us).
+
+https://searchfox.org/firefox-main/rev/9046137a91a4614ad5be3448370a8265de01affc/dom/security/nsContentSecurityUtils.h#49
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/dom/security/nsContentSecurityUtils.cpp b/dom/security/nsContentSecurityUtils.cpp
+index ea7e8944731c..be12162852ff 100644
+--- a/dom/security/nsContentSecurityUtils.cpp
++++ b/dom/security/nsContentSecurityUtils.cpp
+@@ -852,7 +852,10 @@ void nsContentSecurityUtils::DetectJsHacks() {
+   // In theory, it would be possible that a separate thread could get here
+   // before the main thread, resulting in the other thread not being able to
+   // perform this check, but the odds of that are small (and probably zero.)
+-  if (!NS_IsMainThread()) {
++  if (true) {
++    sJSHackObserverAdded = true;
++    sJSHacksChecked = true;
++    sJSHacksPresent = false;
+     return;
+   }
+ 
+-- 

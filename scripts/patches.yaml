@@ -684,6 +684,13 @@ patches:
     effect: "Users are provided with a more secure browsing experience."
     category: "Security"
 
+  - file: "gecko-disable-jshacks.patch"
+    name: "Gecko - Disable JSHacks"
+    description: "Prevents Gecko from relaxing security checks if certain preferences are set (which do not cause issues for us)."
+    reason: "To improve security by preventing Gecko from unnecessarily relaxing certain protections."
+    effect: "Users are provided with a more secure browsing experience."
+    category: "Security"
+
   - file: "gecko-disable-native-messaging.patch"
     name: "Gecko - Disable native messaging"
     description: "Disables native messaging for non-built-in extensions."
