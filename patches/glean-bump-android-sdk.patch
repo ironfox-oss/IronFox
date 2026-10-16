@@ -1,5 +1,5 @@
 diff --git a/build.gradle b/build.gradle
-index fa83f350..0d25456f 100644
+index fa83f3505..e1216556f 100644
 --- a/build.gradle
 +++ b/build.gradle
 @@ -8,10 +8,11 @@
@@ -10,7 +10,7 @@ index fa83f350..0d25456f 100644
 -        compileSdkVersion: 36,
 -        targetSdkVersion: 36,
 -        minSdkVersion: 26,
-+        ndkVersion: "{IRONFOX_ANDROID_NDK_REVISION}", // Keep it in sync in TC Dockerfile.
++        ndkVersion: System.getenv("IRONFOX_ANDROID_NDK_REVISION"), // Keep it in sync in TC Dockerfile.
 +        compileSdkMajorVersion: {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR},
 +        compileSdkMinorVersion: {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR},
 +        targetSdkVersion: {IRONFOX_ANDROID_TARGET_SDK},

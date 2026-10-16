@@ -18,7 +18,7 @@ index 4610b3d68..4d486cd04 100644
      ]
  
 diff --git a/settings.gradle b/settings.gradle
-index a5f588255..a46b2b0ce 100644
+index a5f588255..e9db3e7b4 100644
 --- a/settings.gradle
 +++ b/settings.gradle
 @@ -200,11 +200,11 @@ gradle.projectsLoaded { ->
@@ -34,12 +34,12 @@ index a5f588255..a46b2b0ce 100644
 +            {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR},  // compileSdkMinorVersion,
 +            {IRONFOX_ANDROID_MIN_SDK}, // minSdkVersion,
 +            {IRONFOX_ANDROID_TARGET_SDK}, // targetSdkVersion,
-+            "{IRONFOX_ANDROID_NDK_REVISION}", // ndkVersion - Keep it in sync in TC Dockerfile.
++            System.getenv("IRONFOX_ANDROID_NDK_REVISION"), // ndkVersion - Keep it in sync in TC Dockerfile.
          )
      }
  }
 diff --git a/components/support/rc_crypto/nss/nss_build_common/src/lib.rs b/components/support/rc_crypto/nss/nss_build_common/src/lib.rs
-index 3a7336810..72dadf18c 100644
+index 3a7336810..272945306 100644
 --- a/components/support/rc_crypto/nss/nss_build_common/src/lib.rs
 +++ b/components/support/rc_crypto/nss/nss_build_common/src/lib.rs
 @@ -92,7 +92,7 @@ fn link_nss_libs(kind: LinkingKind) {
@@ -47,7 +47,7 @@ index 3a7336810..72dadf18c 100644
      if target_arch == "x86_64" && target_os == "android" {
          let android_home = env::var("ANDROID_HOME").expect("ANDROID_HOME not set");
 -        const ANDROID_NDK_VERSION: &str = "29.0.14206865";
-+        const ANDROID_NDK_VERSION: &str = "{IRONFOX_ANDROID_NDK_REVISION}";
++        let ANDROID_NDK_VERSION = env::var("IRONFOX_ANDROID_NDK_REVISION").expect("IRONFOX_ANDROID_NDK_REVISION not set");
          // One of these will exist, depending on the host platform.
          const DARWIN_X86_64_LIB_DIR: &str =
              "/toolchains/llvm/prebuilt/darwin-x86_64/lib/clang/21/lib/linux/";

@@ -330,8 +330,8 @@ function prepare_android_sdk() {
   # Ensure we have `IRONFOX_ANDROID_NDK_REVISION`
   verify_env "${IRONFOX_ANDROID_NDK_REVISION}" 'IRONFOX_ANDROID_NDK_REVISION' || return 1
 
-  # Ensure we have `IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING`
-  verify_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING' || return 1
+  # Ensure we have `IRONFOX_ANDROID_SDK_BUILD_TOOLS_REVISION`
+  verify_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_REVISION}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_REVISION' || return 1
 
   echo_red_text 'Preparing Android SDK...'
 
@@ -349,9 +349,9 @@ function prepare_android_sdk() {
   fi
 
   # Create Android SDK Build Tools symlinks
-  if [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" ]]; then
+  if [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/${IRONFOX_ANDROID_SDK_BUILD_TOOLS_REVISION}" ]]; then
     "${IRONFOX_MKDIR}" -p "${IRONFOX_ANDROID_SDK}/build-tools"
-    "${IRONFOX_LN}" -s "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" "${IRONFOX_ANDROID_SDK}/build-tools/${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" || return 1
+    "${IRONFOX_LN}" -s "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" "${IRONFOX_ANDROID_SDK}/build-tools/${IRONFOX_ANDROID_SDK_BUILD_TOOLS_REVISION}" || return 1
   fi
 
   if [[ -d "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}" ]] && [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/35.0.0" ]]; then
@@ -387,9 +387,6 @@ function prepare_as() {
 
   # Ensure we have `IRONFOX_ANDROID_MIN_SDK`
   verify_env "${IRONFOX_ANDROID_MIN_SDK}" 'IRONFOX_ANDROID_MIN_SDK' || return 1
-
-  # Ensure we have `IRONFOX_ANDROID_NDK_REVISION`
-  verify_env "${IRONFOX_ANDROID_NDK_REVISION}" 'IRONFOX_ANDROID_NDK_REVISION' || return 1
 
   # Ensure we have `IRONFOX_ANDROID_TARGET_SDK`
   verify_env "${IRONFOX_ANDROID_TARGET_SDK}" 'IRONFOX_ANDROID_TARGET_SDK' || return 1
@@ -443,10 +440,6 @@ function prepare_as() {
   # Set Android target SDK version
   "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_TARGET_SDK}|${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_AS}/build.gradle" || return 1
   "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_TARGET_SDK}|${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_AS}/settings.gradle" || return 1
-
-  # Set Android NDK version
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_NDK_REVISION}|${IRONFOX_ANDROID_NDK_REVISION}|g" "${IRONFOX_AS}/settings.gradle" || return 1
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_NDK_REVISION}|${IRONFOX_ANDROID_NDK_REVISION}|g" "${IRONFOX_AS}/components/support/rc_crypto/nss/nss_build_common/src/lib.rs" || return 1
 
   # Set Rust version
   "${IRONFOX_SED}" -i -e "s|channel = .*|channel = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_AS}/rust-toolchain.toml" || return 1
@@ -1101,9 +1094,6 @@ function prepare_glean() {
   # Ensure we have `IRONFOX_ANDROID_MIN_SDK`
   verify_env "${IRONFOX_ANDROID_MIN_SDK}" 'IRONFOX_ANDROID_MIN_SDK' || return 1
 
-  # Ensure we have `IRONFOX_ANDROID_NDK_REVISION`
-  verify_env "${IRONFOX_ANDROID_NDK_REVISION}" 'IRONFOX_ANDROID_NDK_REVISION' || return 1
-
   # Ensure we have `IRONFOX_ANDROID_TARGET_SDK`
   verify_env "${IRONFOX_ANDROID_TARGET_SDK}" 'IRONFOX_ANDROID_TARGET_SDK' || return 1
 
@@ -1156,16 +1146,10 @@ function prepare_glean() {
   # Set Android target SDK version
   "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_TARGET_SDK}|${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_GLEAN}/build.gradle" || return 1
 
-  # Set Android NDK version
-  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_NDK_REVISION}|${IRONFOX_ANDROID_NDK_REVISION}|g" "${IRONFOX_GLEAN}/build.gradle" || return 1
-
   # Set Glean Parser version
-  "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN_PARSER_VERSION}|${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/glean-core/build/src/lib.rs" || return 1
-  "${IRONFOX_SED}" -i -e "s|glean_parser~=.*|glean_parser~=${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/Makefile" || return 1
-  "${IRONFOX_SED}" -i -e "s|glean_parser~=.*|glean_parser~=${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/pyproject.toml" || return 1
-  "${IRONFOX_SED}" -i -e "s|glean-parser = .*|glean-parser = \""${IRONFOX_GLEAN_PARSER_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml" || return 1
-  "${IRONFOX_SED}" -i -e "s|GLEAN_PARSER_VERSION = .*|GLEAN_PARSER_VERSION = \""${IRONFOX_GLEAN_PARSER_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/python/glean/__init__.py" || return 1
-  "${IRONFOX_SED}" -i -e "s|GLEAN_PARSER_VERSION = .*|GLEAN_PARSER_VERSION = \""${IRONFOX_GLEAN_PARSER_VERSION}\""|g" "${IRONFOX_GLEAN}/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN_PARSER_VERSION}|${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/Makefile" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN_PARSER_VERSION}|${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/pyproject.toml" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN_PARSER_VERSION}|${IRONFOX_GLEAN_PARSER_VERSION}|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml" || return 1
 
   # Set Rust version
   "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${IRONFOX_RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml" || return 1
@@ -1251,8 +1235,8 @@ function prepare_microg() {
   # Ensure we have GNU sed
   verify_exec "${IRONFOX_SED}" 'IRONFOX_SED' || return 1
 
-  # Ensure we have `IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING`
-  verify_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING' || return 1
+  # Ensure we have `IRONFOX_ANDROID_SDK_BUILD_TOOLS_REVISION`
+  verify_env "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_REVISION}" 'IRONFOX_ANDROID_SDK_BUILD_TOOLS_REVISION' || return 1
 
   # Ensure we have `IRONFOX_ANDROID_MIN_SDK`
   verify_env "${IRONFOX_ANDROID_MIN_SDK}" 'IRONFOX_ANDROID_MIN_SDK' || return 1
@@ -1271,23 +1255,22 @@ function prepare_microg() {
   pushd "${IRONFOX_GMSCORE}" || return 1
 
   # Apply patches
+  apply_patch 'microg-bump-android-sdk.patch' || return 1
   apply_patch 'microg-gradle-project-resolution.patch' || return 1
   apply_patch 'microg-localize-maven.patch' || return 1
 
   # Always use our Gradle wrapper with our Gradle flags/configuration
   localize_gradle || return 1
 
-  # Set Android build tools version
-  "${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${IRONFOX_ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}'|g" "${IRONFOX_GMSCORE}/build.gradle" || return 1
-
   # Set Android compile SDK version
-  "${IRONFOX_SED}" -i -e "s|ext.androidCompileSdk = .*|ext.androidCompileSdk = ${IRONFOX_GMSCORE_ANDROID_SDK_COMPILE_VERSION}|g" "${IRONFOX_GMSCORE}/build.gradle" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}|g" "${IRONFOX_GMSCORE}/build.gradle" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|${IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}|g" "${IRONFOX_GMSCORE}/build.gradle" || return 1
 
   # Set Android minimum SDK version
-  "${IRONFOX_SED}" -i -e "s|ext.androidMinSdk = .*|ext.androidMinSdk = ${IRONFOX_ANDROID_MIN_SDK}|g" "${IRONFOX_GMSCORE}/build.gradle" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_MIN_SDK}|${IRONFOX_ANDROID_MIN_SDK}|g" "${IRONFOX_GMSCORE}/build.gradle" || return 1
 
   # Set Android target SDK version
-  "${IRONFOX_SED}" -i -e "s|ext.androidTargetSdk = .*|ext.androidTargetSdk = ${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_GMSCORE}/build.gradle" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ANDROID_TARGET_SDK}|${IRONFOX_ANDROID_TARGET_SDK}|g" "${IRONFOX_GMSCORE}/build.gradle" || return 1
 
   popd || return 1
 

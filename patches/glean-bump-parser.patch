@@ -1,5 +1,44 @@
+diff --git a/Makefile b/Makefile
+index 2077c8b40..9e22cf38a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -159,7 +159,7 @@ docs-python: build-python ## Build the Python documentation
+ .PHONY: docs docs-rust docs-swift
+ 
+ docs-metrics: setup-python ## Build the internal metrics documentation
+-	$(GLEAN_PYENV)/bin/pip install glean_parser~=20.1
++#	$(GLEAN_PYENV)/bin/pip install glean_parser~=20.1
+ 	$(GLEAN_PYENV)/bin/glean_parser translate --allow-reserved \
+ 		 -f markdown \
+ 		 -o ./docs/user/user/collected-metrics \
+diff --git a/pyproject.toml b/pyproject.toml
+index a8f39086c..d270f214c 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -22,7 +22,7 @@ maintainers = [
+ 
+ dependencies = [
+   "semver>=2.13.0",
+-  "glean_parser~=20.1",
++  "glean_parser~={IRONFOX_GLEAN_PARSER_VERSION}",
+ ]
+ 
+ [project.urls]
+diff --git a/glean-core/Cargo.toml b/glean-core/Cargo.toml
+index 499d69c05..fb8174725 100644
+--- a/glean-core/Cargo.toml
++++ b/glean-core/Cargo.toml
+@@ -21,7 +21,7 @@ include = [
+ rust-version = "1.90"
+ 
+ [package.metadata.glean]
+-glean-parser = "20.1.0"
++glean-parser = "{IRONFOX_GLEAN_PARSER_VERSION}"
+ 
+ [badges]
+ circle-ci = { repository = "mozilla/glean", branch = "main" }
 diff --git a/glean-core/build/src/lib.rs b/glean-core/build/src/lib.rs
-index 1be411d8..95ecd95b 100644
+index 1be411d8c..5fed9915f 100644
 --- a/glean-core/build/src/lib.rs
 +++ b/glean-core/build/src/lib.rs
 @@ -39,7 +39,7 @@ use std::{env, path::PathBuf};
@@ -7,7 +46,51 @@ index 1be411d8..95ecd95b 100644
  use xshell_venv::{Result, Shell, VirtualEnv};
  
 -const GLEAN_PARSER_VERSION: &str = "20.1.0";
-+const GLEAN_PARSER_VERSION: &str = "{IRONFOX_GLEAN_PARSER_VERSION}";
++let GLEAN_PARSER_VERSION = env::var("IRONFOX_GLEAN_PARSER_VERSION").expect("IRONFOX_GLEAN_PARSER_VERSION not set");
  
  /// A Glean Rust bindings generator.
  pub struct Builder {
+diff --git a/glean-core/python/glean/__init__.py b/glean-core/python/glean/__init__.py
+index bb95ab3ca..83f483cb4 100644
+--- a/glean-core/python/glean/__init__.py
++++ b/glean-core/python/glean/__init__.py
+@@ -18,7 +18,7 @@ from .glean import Glean
+ from .config import Configuration
+ from ._loader import load_metrics, load_pings
+ from ._uniffi import SessionMode
+-
++import os
+ 
+ __version__: str = "unknown"
+ try:
+@@ -31,7 +31,7 @@ __author__ = "The Glean Team"
+ __email__ = "glean-team@mozilla.com"
+ 
+ 
+-GLEAN_PARSER_VERSION = "20.1.0"
++GLEAN_PARSER_VERSION = os.environ.get("IRONFOX_GLEAN_PARSER_VERSION")
+ parser_version = VersionInfo.parse(GLEAN_PARSER_VERSION)
+ parser_version_next_major = parser_version.bump_major()
+ 
+diff --git a/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy b/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy
+index f9789a851..8a2abb01c 100644
+--- a/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy
++++ b/gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy
+@@ -59,7 +59,7 @@ abstract class GleanMetricsYamlTransform implements TransformAction<TransformPar
+ @SuppressWarnings("GrPackage")
+ class GleanPlugin implements Plugin<Project> {
+     // The version of glean_parser to install from PyPI.
+-    private String GLEAN_PARSER_VERSION = "20.1"
++    private String GLEAN_PARSER_VERSION = System.getenv("IRONFOX_GLEAN_PARSER_VERSION")
+     // The version of Miniconda is explicitly specified.
+     // Miniconda3-4.5.12 is known to not work on Windows.
+     private String MINICONDA_VERSION = "24.3.0-0"
+@@ -527,7 +527,7 @@ except:
+     }
+ 
+     def gleanParserVersion(Project project) {
+-        if (project.ext.has("gleanParserOverride")) {
++        if (false) {
+             println("glean_parser override detected. Using ${project.ext.gleanParserOverride}")
+             return project.ext.gleanParserOverride
+         } else {

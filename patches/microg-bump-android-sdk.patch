@@ -1,0 +1,73 @@
+diff --git a/build.gradle b/build.gradle
+index a42ad58..069a967 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -37,11 +37,12 @@ buildscript {
+ 
+     ext.androidBuildGradleVersion = '8.13.2'
+ 
+-    ext.androidBuildVersionTools = '35.0.0'
++    ext.androidBuildVersionTools = System.getenv("IRONFOX_ANDROID_SDK_BUILD_TOOLS_REVISION")
+ 
+-    ext.androidMinSdk = 19
+-    ext.androidTargetSdk = 29
+-    ext.androidCompileSdk = 35
++    ext.androidMinSdk = {IRONFOX_ANDROID_MIN_SDK}
++    ext.androidTargetSdk = {IRONFOX_ANDROID_TARGET_SDK}
++    ext.androidCompileSdkMajorVersion = {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MAJOR}
++    ext.androidCompileSdkMinorVersion = {IRONFOX_ANDROID_COMPILE_SDK_VERSION_MINOR}
+ 
+     ext.localProperties = new Properties()
+ 
+diff --git a/play-services-base/build.gradle b/play-services-base/build.gradle
+index d4df1ce..6a67bfb 100644
+--- a/play-services-base/build.gradle
++++ b/play-services-base/build.gradle
+@@ -10,7 +10,7 @@ apply plugin: 'signing'
+ android {
+     namespace "com.google.android.gms.base"
+ 
+-    compileSdkVersion androidCompileSdk
++    compileSdk {version = release(androidCompileSdkMajorVersion) { minorApiLevel = androidCompileSdkMinorVersion } }
+     buildToolsVersion "$androidBuildVersionTools"
+ 
+     aidlPackagedList "com/google/android/gms/common/data/DataHolder.aidl"
+diff --git a/play-services-basement/build.gradle b/play-services-basement/build.gradle
+index 025b1da..70cb0a0 100644
+--- a/play-services-basement/build.gradle
++++ b/play-services-basement/build.gradle
+@@ -10,7 +10,7 @@ apply plugin: 'signing'
+ android {
+     namespace "com.google.android.gms.common"
+ 
+-    compileSdkVersion androidCompileSdk
++    compileSdk {version = release(androidCompileSdkMajorVersion) { minorApiLevel = androidCompileSdkMinorVersion } }
+     buildToolsVersion "$androidBuildVersionTools"
+ 
+     aidlPackagedList "com/google/android/gms/common/api/Status.aidl"
+diff --git a/play-services-fido/build.gradle b/play-services-fido/build.gradle
+index d497836..562fece 100644
+--- a/play-services-fido/build.gradle
++++ b/play-services-fido/build.gradle
+@@ -10,7 +10,7 @@ apply plugin: 'signing'
+ android {
+     namespace "com.google.android.gms.fido"
+ 
+-    compileSdkVersion androidCompileSdk
++    compileSdk {version = release(androidCompileSdkMajorVersion) { minorApiLevel = androidCompileSdkMinorVersion } }
+     buildToolsVersion "$androidBuildVersionTools"
+ 
+     buildFeatures {
+diff --git a/play-services-tasks/build.gradle b/play-services-tasks/build.gradle
+index bd4786b..4b6e740 100644
+--- a/play-services-tasks/build.gradle
++++ b/play-services-tasks/build.gradle
+@@ -10,7 +10,7 @@ apply plugin: 'signing'
+ android {
+     namespace "com.google.android.gms.tasks"
+ 
+-    compileSdkVersion androidCompileSdk
++    compileSdk {version = release(androidCompileSdkMajorVersion) { minorApiLevel = androidCompileSdkMinorVersion } }
+     buildToolsVersion "$androidBuildVersionTools"
+ 
+     defaultConfig {
