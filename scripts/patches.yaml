@@ -91,6 +91,13 @@ patches:
     effect: "Ensures that users are in control and notified of important changes."
     category: "Build System"
 
+  - file: "fenix-ironfox-updater.patch"
+    name: "Fenix - IronFox updater"
+    description: "Provides support for the in-app updater."
+    reason: "To allow IronFox installed outside of a store to learn about and install new releases, with the user's approval."
+    effect: "Ensures that users who opt in are notified of new releases, and that updates are verified before they are installed."
+    category: "User Experience"
+
   - file: "fenix-enable-legacy-packaging.patch"
     name: "Fenix - Enable legacy packaging"
     description: "Enables legacy Android packaging unconditionally to reduce the size of our APKsets."

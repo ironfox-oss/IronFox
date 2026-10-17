@@ -284,6 +284,13 @@ if [[ -z "${IRONFOX_APKSIGNER+x}" ]] || [[ "${IRONFOX_APKSIGNER}" == "" ]] || [[
 fi
 readonly IRONFOX_APKSIGNER
 
+## aapt2
+readonly IRONFOX_AAPT2_DEFAULT="${IRONFOX_ANDROID_SDK_BUILD_TOOLS}/aapt2"
+if [[ -z "${IRONFOX_AAPT2+x}" ]] || [[ "${IRONFOX_AAPT2}" == "" ]] || [[ "${IRONFOX_AAPT2}" == "null" ]]; then
+  IRONFOX_AAPT2="${IRONFOX_AAPT2_DEFAULT}"
+fi
+readonly IRONFOX_AAPT2
+
 # Android SDK Build Tools (35 - needed by Glean)
 readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-build-tools-35"
 if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35+x}" ]] || [[ "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}" == "" ]] ||

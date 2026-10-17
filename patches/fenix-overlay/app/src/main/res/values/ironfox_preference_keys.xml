@@ -117,4 +117,12 @@
 
   <!-- Messages -->
   <string name="pref_key_ironfox_shown_doh_migration_message" translatable="false">pref_key_ironfox_shown_doh_migration_message</string>
+
+  <!-- Updater -->
+  <string name="pref_key_if_updater" translatable="false">pref_key_if_updater</string>
+  <string name="pref_key_updater_enabled" translatable="false">pref_key_updater_enabled</string>
+  <string name="pref_key_updater_allow_other_sources" translatable="false">pref_key_updater_allow_other_sources</string>
+  <string name="pref_key_updater_installed_via" translatable="false">pref_key_updater_installed_via</string>
+  <string name="pref_key_updater_status" translatable="false">pref_key_updater_status</string>
+  <string name="pref_key_updater_check_now" translatable="false">pref_key_updater_check_now</string>
 </resources>

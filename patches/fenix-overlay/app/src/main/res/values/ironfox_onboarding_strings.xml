@@ -27,4 +27,9 @@
   <string name="ironfox_onboarding_install_ublock">Install uBlock Origin</string>
   <string name="ironfox_onboarding_install_ublock_caption">Block ads, trackers, and malware for a safer, cleaner browsing experience.</string>
   <string name="ironfox_onboarding_install_ublock_description">uBlock Origin enhances your privacy and security by blocking unwanted content. IronFox uses a custom uBlock Origin configuration with curated filter lists for optimal protection and performance.</string>
+
+  <!-- Onboarding - Updater -->
+  <string name="ironfox_onboarding_updater_title">Stay up to date</string>
+  <string name="ironfox_onboarding_updater_description">IronFox can check for new versions and install them with your approval. No request is made unless you turn this on.</string>
+  <string name="ironfox_onboarding_updater_switch">Check for updates automatically</string>
 </resources>

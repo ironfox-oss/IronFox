@@ -164,6 +164,28 @@ verify_file "${IRONFOX_APK_ARM}" || return 1
 verify_file "${IRONFOX_APK_X86_64}" || return 1
 verify_file "${IRONFOX_APK_UNIVERSAL}" || return 1
 verify_file "${IRONFOX_APKSET}" || return 1
+verify_exec "${IRONFOX_AAPT2}" 'IRONFOX_AAPT2' || return 1
+
+# Read the versionCode out of an APK
+function get_apk_version_code() {
+  local -r apk="${1}"
+  local -r version_code="$("${IRONFOX_AAPT2}" dump badging "${apk}" | "${IRONFOX_SED}" -n "s|^package: .* versionCode='\([0-9]\+\)'.*|\1|p")"
+  if [[ -z "${version_code}" ]]; then
+    echo_red_text "ERROR: Unable to read versionCode from '${apk}'!"
+    return 1
+  fi
+  echo "${version_code}"
+}
+
+# Artifact version codes
+IRONFOX_ARM64_VERSION_CODE="$(get_apk_version_code "${IRONFOX_APK_ARM64}")" || return 1
+readonly IRONFOX_ARM64_VERSION_CODE
+IRONFOX_ARM_VERSION_CODE="$(get_apk_version_code "${IRONFOX_APK_ARM}")" || return 1
+readonly IRONFOX_ARM_VERSION_CODE
+IRONFOX_X86_64_VERSION_CODE="$(get_apk_version_code "${IRONFOX_APK_X86_64}")" || return 1
+readonly IRONFOX_X86_64_VERSION_CODE
+IRONFOX_UNIVERSAL_VERSION_CODE="$(get_apk_version_code "${IRONFOX_APK_UNIVERSAL}")" || return 1
+readonly IRONFOX_UNIVERSAL_VERSION_CODE
 
 # Artifact SHA512sums
 readonly IRONFOX_ARM64_SHA512SUM=$("${IRONFOX_SHASUM}" -a 512 "${IRONFOX_APK_ARM64}" | "${IRONFOX_AWK}" '{print $1}')
@@ -527,6 +549,10 @@ function create_release_json() {
 
   "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|g" "${IRONFOX_TEMP}/updates.json" || return 1
 
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_VERSION_CODE}|${IRONFOX_ARM64_VERSION_CODE}|g" "${IRONFOX_TEMP}/updates.json" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_VERSION_CODE}|${IRONFOX_ARM_VERSION_CODE}|g" "${IRONFOX_TEMP}/updates.json" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_VERSION_CODE}|${IRONFOX_X86_64_VERSION_CODE}|g" "${IRONFOX_TEMP}/updates.json" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_VERSION_CODE}|${IRONFOX_UNIVERSAL_VERSION_CODE}|g" "${IRONFOX_TEMP}/updates.json" || return 1
   "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json" || return 1
   "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json" || return 1
   "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json" || return 1
@@ -566,6 +592,10 @@ function create_nightly_json() {
   "${IRONFOX_SED}" -i "s|{IRONFOX_NIGHTLY_VERSION}|${IRONFOX_NIGHTLY_VERSION}|g" "${IRONFOX_TEMP}/updates.json" || return 1
   "${IRONFOX_SED}" -i "s|{IRONFOX_CI_COMMIT}|${IRONFOX_CI_COMMIT}|g" "${IRONFOX_TEMP}/updates.json" || return 1
 
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_VERSION_CODE}|${IRONFOX_ARM64_VERSION_CODE}|g" "${IRONFOX_TEMP}/updates.json" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_VERSION_CODE}|${IRONFOX_ARM_VERSION_CODE}|g" "${IRONFOX_TEMP}/updates.json" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_VERSION_CODE}|${IRONFOX_X86_64_VERSION_CODE}|g" "${IRONFOX_TEMP}/updates.json" || return 1
+  "${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_VERSION_CODE}|${IRONFOX_UNIVERSAL_VERSION_CODE}|g" "${IRONFOX_TEMP}/updates.json" || return 1
   "${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json" || return 1
   "${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json" || return 1
   "${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|g" "${IRONFOX_TEMP}/updates.json" || return 1

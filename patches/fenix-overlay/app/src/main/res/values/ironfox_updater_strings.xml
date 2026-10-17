@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!-- Updates settings -->
+  <string name="updater_title">Updates</string>
+  <string name="updater_enabled_title">Check for updates automatically</string>
+  <string name="updater_enabled_summary">IronFox contacts the IronFox release server to look for new versions. No request is made until you turn this on.</string>
+  <string name="updater_enabled_summary_gated">Unavailable: updates are managed by %1$s</string>
+  <string name="updater_allow_other_sources_title">Allow updates when installed from another source</string>
+  <string name="updater_allow_other_sources_summary">Another app, such as a store, may also try to update IronFox. Only turn this on if you want IronFox to update itself regardless.</string>
+  <string name="updater_installed_via_title">Installed via</string>
+  <string name="updater_status_title">Status</string>
+  <string name="updater_check_now_title">Check for updates</string>
+  <string name="updater_status_never">Not checked yet</string>
+  <string name="updater_status_last_checked">Last checked %1$s</string>
+  <string name="updater_status_available">Version %1$s is available. Tap to update.</string>
+  <string name="updater_status_checking">Checking...</string>
+  <string name="updater_status_error">Could not check for updates: %1$s</string>
+
+  <!-- Update dialog -->
+  <string name="updater_dialog_title">Update available</string>
+  <string name="updater_dialog_message">IronFox %1$s is available.</string>
+  <string name="updater_dialog_update">Update</string>
+  <string name="updater_dialog_later">Later</string>
+  <string name="updater_dialog_release_notes">Release notes</string>
+
+  <!-- Install permission -->
+  <string name="updater_unknown_sources_title">Allow installing updates</string>
+  <string name="updater_unknown_sources_message">Android needs your permission before IronFox can install updates. Allow it on the next screen, then come back here.</string>
+  <string name="updater_unknown_sources_continue">Continue</string>
+
+  <!-- Download notification -->
+  <string name="updater_notification_channel">IronFox updates</string>
+  <string name="updater_notification_downloading">Downloading IronFox update</string>
+
+  <!-- Failures -->
+  <string name="updater_failure_title">Update failed</string>
+  <string name="updater_failure_blocked">The system blocked the update.</string>
+  <string name="updater_failure_incompatible">This update is not compatible with your device.</string>
+  <string name="updater_failure_conflict">The update conflicts with the installed app. Another source may own updates for IronFox.</string>
+  <string name="updater_failure_invalid">The update could not be verified.</string>
+  <string name="updater_failure_storage">There is not enough storage to install the update.</string>
+  <string name="updater_failure_aborted">The update was cancelled or interrupted.</string>
+  <string name="updater_failure_verification_hint">Some devices only install apps from verified developers. Learn more at https://ironfoxoss.org</string>
+  <string name="updater_try_again">Try again</string>
+  <string name="updater_close">Close</string>
+
+  <!-- Onboarding -->
+  <string name="ironfox_onboarding_updater_installed_via">Installed via %1$s</string>
+  <string name="ironfox_onboarding_updater_gated">Updates are managed by the app that installed IronFox. You can change this later in IronFox settings.</string>
+</resources>

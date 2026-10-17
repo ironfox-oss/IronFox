@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <contact@itsaky.com>
+Date: Sat, 17 Oct 2026 14:21:37 +0000
+Subject: [PATCH] Fenix - IronFox updater
+
+Registers the status receiver and requests the update ownership permission for the in-app updater.
+
+Signed-off-by: Akash Yadav <contact@itsaky.com>
+---
+diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+index d226b42..e7283a5 100644
+--- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
++++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+@@ -37,6 +37,9 @@
+     <!-- Needed to prompt the user to give permission to install a downloaded apk -->
+     <uses-permission-sdk-23 android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+ 
++    <!-- Needed so the in-app updater can ask to be the update owner of IronFox on Android 14 and later -->
++    <uses-permission android:name="android.permission.ENFORCE_UPDATE_OWNERSHIP" />
++
+     <!-- Needed to interact with all apps installed on a device -->
+     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+         tools:ignore="QueryAllPackagesPermission" />
+@@ -784,6 +787,10 @@
+             android:name=".onboarding.WidgetPinnedReceiver"
+             android:exported="false" />
+ 
++        <receiver
++            android:name="org.ironfoxoss.ironfox.updater.InstallStatusReceiver"
++            android:exported="false" />
++
+         <receiver
+             android:name=".privacyreport.PrivacyReportNotificationReceiver"
+             android:exported="false" />
+-- 
