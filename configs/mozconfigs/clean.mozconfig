@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-# Ensures environment variables are properly set upon each mach configuration (so that they can in be properly set by the other mozconfigs)
+# Ensures environment variables are properly set upon each mach configuration (so that they can be properly set by the other mozconfigs)
 # Also ensures we're not using/inheriting values set elsewhere...
 unset ANDROID_BUNDLETOOL_PATH
 unset ASFLAGS
