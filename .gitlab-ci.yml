@@ -130,7 +130,7 @@ build-docker:
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
   script:
     - set -euo pipefail
-    - docker build --pull -t "${DOCKER_IMAGE_NAME}" .
+    - docker build --pull -f Containerfile -t "${DOCKER_IMAGE_NAME}" .
     - docker push "${DOCKER_IMAGE_NAME}"
     - |
       if [[ "${CI_COMMIT_BRANCH}" == "${IRONFOX_DEV_BRANCH}" ]]; then
