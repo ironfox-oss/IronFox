@@ -1,3 +1,6 @@
-- Updated to Firefox [`158.0`](https://firefox.com/firefox/android/158.0/releasenotes/).
-- [Added support for Android TV *(and Fire TV)* devices](https://gitlab.com/ironfox-oss/IronFox/-/commit/27101b424b57e700d4125fe876fc17a6c49ccafa).
+- Updated to Firefox [`158.0.1`](https://firefox.com/firefox/android/158.0.1/releasenotes/).
+- Switched the default DNS over HTTPS back to [Quad9](https://quad9.net/), due to them now meeting our criteria *(as well as the discontinuation of our current default provider, Mullvad)*.
+  - Current users of Mullvad's DNS over HTTPS servers in IronFox will receive a notification notifying them of the discontinuation, and prompting them to switch providers.
+- [Explicitly enabled the ability to import bookmarks](https://gitlab.com/ironfox-oss/IronFox/-/commit/0148e8ff3837753c26a851bcc52c71c3afc8cd58) by default, to match upstream behavior *(Upstream has been enabling it by default via A/B testing/rollouts, which don't apply to us)*.
+- Updated to Rust [`1.99.1`](https://releases.rs/docs/1.99.1/).
 - Minor tweaks and refinements.
