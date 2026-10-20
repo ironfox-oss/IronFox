@@ -33,6 +33,9 @@ class ApkDownloader(
         return target
     }
 
+    /** Returns whether an APK for [offer] is already in the cache; it was verified before it was kept. */
+    fun isCached(offer: UpdateOffer): Boolean = fileFor(offer).isFile
+
     /**
      * Deletes APKs for the installed build and older, for builds older than [keep], and any partial file.
      */

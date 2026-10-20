@@ -387,6 +387,13 @@
       android:title="@string/updater_direct_downloads_title"
       app:iconSpaceReserved="false" />
 
+    <!-- Whether IronFox downloads an update as soon as it finds one -->
+    <androidx.preference.SwitchPreference
+      android:key="@string/pref_key_updater_auto_download"
+      android:persistent="false"
+      android:title="@string/updater_auto_download_title"
+      app:iconSpaceReserved="false" />
+
     <!-- Whether the updater may use plain HTTP (nightly builds only) -->
     <androidx.preference.SwitchPreference
       android:key="@string/pref_key_updater_allow_insecure_http"

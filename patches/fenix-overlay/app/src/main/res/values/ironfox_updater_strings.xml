@@ -8,6 +8,12 @@
   <string name="updater_interval_summary">How often IronFox checks for updates, in hours</string>
   <string name="updater_direct_downloads_title">Download updates directly</string>
   <string name="updater_direct_downloads_summary">Download and install updates with IronFox instead of opening %1$s. Android may ask you to confirm updating from a different source.</string>
+  <string name="updater_auto_download_title">Download updates automatically</string>
+  <string name="updater_auto_download_summary">When an update is found, IronFox downloads it right away on any connection, including mobile data. Updates are up to about 200 MB.</string>
+  <string name="updater_auto_download_needs_direct_summary">Turn on "Download updates directly" first.</string>
+  <string name="updater_auto_download_confirm_title">Download updates automatically?</string>
+  <string name="updater_auto_download_confirm_message">When an update is found, IronFox will download it right away on any connection, including mobile data. Updates are up to about 200 MB. You still choose when to install.</string>
+  <string name="updater_auto_download_confirm_enable">Turn on</string>
   <string name="updater_insecure_http_title">Allow insecure HTTP connections</string>
   <string name="updater_insecure_http_summary">Lets the updater use plain HTTP. Only for testing against a local update server.</string>
   <string name="updater_insecure_http_blocked_summary">HTTPS-Only mode blocks plain HTTP. Turn it off for all tabs in Privacy and security to use this.</string>
@@ -19,12 +25,15 @@
   <string name="updater_status_last_checked">Last checked %1$s</string>
   <string name="updater_status_available">Version %1$s is available. Tap to update.</string>
   <string name="updater_status_checking">Checking...</string>
+  <string name="updater_status_downloading">Downloading the update...</string>
   <string name="updater_status_error">Could not check for updates: %1$s</string>
 
   <!-- Update dialog -->
   <string name="updater_dialog_title">Update available</string>
   <string name="updater_dialog_message">IronFox %1$s is available.</string>
   <string name="updater_dialog_store_message">IronFox %1$s is available. Open %2$s to update it; if it is not listed there yet, refresh the store.</string>
+  <string name="updater_dialog_ready_message">IronFox %1$s has been downloaded and is ready to install.</string>
+  <string name="updater_dialog_install">Install</string>
   <string name="updater_dialog_update">Update</string>
   <string name="updater_dialog_open_store">Open %1$s</string>
   <string name="updater_dialog_later">Later</string>

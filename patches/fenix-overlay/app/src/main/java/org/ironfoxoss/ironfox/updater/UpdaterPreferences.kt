@@ -1,6 +1,7 @@
 package org.ironfoxoss.ironfox.updater
 
 import android.text.format.DateUtils
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -8,6 +9,7 @@ import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreference
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import mozilla.components.ui.widgets.withCenterAlignedButtons
 import org.ironfoxoss.core.IFConstants
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.components
@@ -37,6 +39,12 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
                 settings.updaterIntervalHours = hours
                 (preference as SeekBarPreference).value = hours
                 false
+            }
+        fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_auto_download)
+            .setOnPreferenceChangeListener { _, value ->
+                val enabling = value as Boolean
+                if (enabling) confirmAutoDownload() else settings.updaterAutoDownload = false
+                !enabling
             }
         fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_direct_downloads)
             .setOnPreferenceChangeListener { _, value ->
@@ -72,19 +80,41 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
         fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_direct_downloads).apply {
             isVisible = store != null
             isChecked = settings.updaterDirectDownloads
-            if (store != null) summary = fragment.getString(R.string.updater_direct_downloads_summary, store.displayName)
+            if (store != null) summary = this@UpdaterPreferences.fragment.getString(R.string.updater_direct_downloads_summary, store.displayName)
+        }
+        fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_auto_download).apply {
+            val downloadsDirectly = controller.activeStore == null
+            isEnabled = downloadsDirectly
+            isChecked = settings.updaterAutoDownload && downloadsDirectly
+            summary = this@UpdaterPreferences.fragment.getString(
+                if (downloadsDirectly) R.string.updater_auto_download_summary else R.string.updater_auto_download_needs_direct_summary,
+            )
         }
         fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_allow_insecure_http).apply {
             isVisible = IFConstants.IRONFOX_NIGHTLY
             isEnabled = !httpsOnlyInAllTabs
             isChecked = settings.updaterAllowInsecureHttp && !httpsOnlyInAllTabs
-            summary = fragment.getString(
+            summary = this@UpdaterPreferences.fragment.getString(
                 if (httpsOnlyInAllTabs) R.string.updater_insecure_http_blocked_summary else R.string.updater_insecure_http_summary,
             )
         }
         fragment.requirePreference<Preference>(R.string.pref_key_updater_source).summary =
             controller.activeStore?.displayName ?: fragment.getString(R.string.updater_source_direct)
         fragment.requirePreference<Preference>(R.string.pref_key_updater_status).summary = statusText()
+    }
+
+    private fun confirmAutoDownload() {
+        AlertDialog.Builder(fragment.requireContext())
+            .setTitle(R.string.updater_auto_download_confirm_title)
+            .setMessage(R.string.updater_auto_download_confirm_message)
+            .setPositiveButton(R.string.updater_auto_download_confirm_enable) { _, _ ->
+                controller.settings.updaterAutoDownload = true
+                refresh()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            .withCenterAlignedButtons()
+            .show()
     }
 
     private fun statusText(): String {
@@ -96,12 +126,22 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
         return fragment.getString(R.string.updater_status_last_checked, ago)
     }
 
+    private suspend fun downloadAheadWithStatus(offer: UpdateOffer) {
+        if (!controller.autoDownloadActive) return
+        transientStatus = fragment.getString(R.string.updater_status_downloading)
+        refresh()
+        controller.downloadAhead(offer)
+    }
+
     private fun checkNow() {
         fragment.viewLifecycleOwner.lifecycleScope.launch {
             transientStatus = fragment.getString(R.string.updater_status_checking)
             refresh()
             transientStatus = try {
-                (controller.check(manual = true) as? CheckResult.Available)?.let { ui.showUpdateDialog(it.offer) }
+                (controller.check(manual = true) as? CheckResult.Available)?.let { result ->
+                    downloadAheadWithStatus(result.offer)
+                    ui.showUpdateDialog(result.offer)
+                }
                 null
             } catch (e: CancellationException) {
                 throw e

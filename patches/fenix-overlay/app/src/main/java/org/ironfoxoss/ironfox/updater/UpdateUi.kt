@@ -38,11 +38,16 @@ class UpdateUi(
     /**
      * Asks the user whether to install [offer]; does nothing if a dialog is already up or an update is running.
      *
-     * Update downloads and installs the APK, unless IronFox came from a known store and the user did not choose
-     * direct downloads: then the button opens that store. Later remembers the version so it is not offered again;
-     * Release notes opens them in a new IronFox tab.
+     * Update (or Install, once the APK is already downloaded) installs the APK, unless IronFox came from a known
+     * store and the user did not choose direct downloads: then the button opens that store. Later remembers the
+     * version so it is not offered again; Release notes opens them in a new IronFox tab.
      */
-    fun showUpdateDialog(offer: UpdateOffer) {
+    fun showUpdateDialog(offer: UpdateOffer) = showDialog(offer) {}
+
+    /** Like [showUpdateDialog], but only a button closes it, so an automatic check cannot be dismissed by accident. */
+    fun showForegroundUpdateDialog(offer: UpdateOffer) = showDialog(offer) { setCancelable(false) }
+
+    private fun showDialog(offer: UpdateOffer, configure: AlertDialog.Builder.() -> Unit) {
         if (controller.isUpdating || !dialogShowing.compareAndSet(false, true)) return
         val store = controller.activeStore
         val builder = AlertDialog.Builder(activity)
@@ -53,15 +58,22 @@ class UpdateUi(
             .setNeutralButton(R.string.updater_dialog_release_notes) { _, _ -> openReleaseNotes(offer) }
             .setOnDismissListener { dialogShowing.set(false) }
         if (store == null) {
-            builder.setMessage(activity.getString(R.string.updater_dialog_message, offer.version))
-                .setPositiveButton(R.string.updater_dialog_update) { _, _ -> startUpdate(offer) }
+            val downloaded = controller.isDownloaded(offer)
+            builder.setMessage(
+                activity.getString(
+                    if (downloaded) R.string.updater_dialog_ready_message else R.string.updater_dialog_message,
+                    offer.version,
+                ),
+            ).setPositiveButton(if (downloaded) R.string.updater_dialog_install else R.string.updater_dialog_update) { _, _ ->
+                startUpdate(offer)
+            }
         } else {
             builder.setMessage(activity.getString(R.string.updater_dialog_store_message, offer.version, store.displayName))
                 .setPositiveButton(activity.getString(R.string.updater_dialog_open_store, store.displayName)) { _, _ ->
                     openStore(offer, store)
                 }
         }
-        builder.create().withCenterAlignedButtons().show()
+        builder.apply(configure).create().withCenterAlignedButtons().show()
     }
 
     private fun openStore(offer: UpdateOffer, store: KnownStore) {

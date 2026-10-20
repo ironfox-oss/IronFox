@@ -28,7 +28,8 @@ object UpdateForegroundCheck {
             if (!controller.beginCheck()) return@launch
             try {
                 val offer = checkQuietly(controller) ?: return@launch
-                activity.lifecycle.withStarted { UpdateUi(activity, controller).showUpdateDialog(offer) }
+                controller.downloadAhead(offer)
+                activity.lifecycle.withStarted { UpdateUi(activity, controller).showForegroundUpdateDialog(offer) }
             } finally {
                 controller.endCheck()
             }

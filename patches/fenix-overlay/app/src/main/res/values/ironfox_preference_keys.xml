@@ -122,6 +122,7 @@
   <string name="pref_key_if_updater" translatable="false">pref_key_if_updater</string>
   <string name="pref_key_updater_enabled" translatable="false">pref_key_updater_enabled</string>
   <string name="pref_key_updater_allow_insecure_http" translatable="false">pref_key_updater_allow_insecure_http</string>
+  <string name="pref_key_updater_auto_download" translatable="false">pref_key_updater_auto_download</string>
   <string name="pref_key_updater_direct_downloads" translatable="false">pref_key_updater_direct_downloads</string>
   <string name="pref_key_updater_dismissed_version" translatable="false">pref_key_updater_dismissed_version</string>
   <string name="pref_key_updater_interval_hours" translatable="false">pref_key_updater_interval_hours</string>

@@ -10,6 +10,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mozilla.components.concept.fetch.Client
+import mozilla.components.support.base.log.logger.Logger
 import org.ironfoxoss.core.IFConstants
 import org.mozilla.fenix.BuildConfig
 import org.mozilla.fenix.ext.components
@@ -41,6 +42,7 @@ class UpdateController private constructor(
     private val installedVersionCode: Long
         get() = PackageInfoCompat.getLongVersionCode(packageManager.getPackageInfo(appContext.packageName, 0))
 
+    private val logger = Logger("UpdateController")
     private val updateInProgress = AtomicBoolean(false)
     private val checkInProgress = AtomicBoolean(false)
 
@@ -55,6 +57,33 @@ class UpdateController private constructor(
     /** The store the Update button should open: the remembered store, unless the user chose direct downloads. */
     val activeStore: KnownStore?
         get() = rememberedStore.takeUnless { settings.updaterDirectDownloads }
+
+    /** Whether IronFox downloads an update as soon as it finds one: the user wants it and IronFox downloads APKs itself. */
+    val autoDownloadActive: Boolean
+        get() = settings.updaterAutoDownload && activeStore == null
+
+    /** Returns whether the APK for [offer] was already downloaded and verified. */
+    fun isDownloaded(offer: UpdateOffer): Boolean = newDownloader().isCached(offer)
+
+    /**
+     * Downloads [offer] ahead of the user's request if automatic downloads are active; never throws on failure.
+     *
+     * @return Whether the verified APK is ready to install.
+     */
+    suspend fun downloadAhead(offer: UpdateOffer): Boolean {
+        if (!autoDownloadActive || !beginUpdate()) return false
+        return try {
+            download(offer) {}
+            true
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            logger.warn("Automatic update download failed", e)
+            false
+        } finally {
+            endUpdate()
+        }
+    }
 
     /** Remembers the installing store, if it is a known one. Cheap and local; call before checking. */
     fun rememberInstaller() = installSource.rememberInstaller()

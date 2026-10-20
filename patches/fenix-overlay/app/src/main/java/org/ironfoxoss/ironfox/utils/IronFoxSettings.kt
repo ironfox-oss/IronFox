@@ -302,6 +302,12 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
       default = false,
     )
 
+  var updaterAutoDownload by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_updater_auto_download),
+      default = { updaterOriginalStore.isEmpty() },
+    )
+
   var updaterDirectDownloads by
     booleanPreference(
       key = context.getPreferenceKey(R.string.pref_key_updater_direct_downloads),
