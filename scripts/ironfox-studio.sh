@@ -2,7 +2,7 @@
 #
 # Launch Android Studio with IronFox's build environment.
 #
-# Usage: ironfox-studio [project]
+# Usage: scripts/ironfox-studio.sh [project]
 #
 # Projects opened from the Gecko tree, each from the directory IronFox itself builds it from:
 #   fenix         Fenix (default)
@@ -25,7 +25,7 @@
 set -euo pipefail
 
 # Exported before sourcing env.sh so it does not look for root.txt next to this script
-IRONFOX_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+IRONFOX_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export IRONFOX_ROOT
 
 function usage() {
