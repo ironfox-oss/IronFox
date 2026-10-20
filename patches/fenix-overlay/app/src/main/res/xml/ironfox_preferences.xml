@@ -369,18 +369,36 @@
       android:title="@string/updater_enabled_title"
       app:iconSpaceReserved="false" />
 
-    <!-- Whether the updater may run when another source installed IronFox -->
-    <androidx.preference.SwitchPreference
-      android:key="@string/pref_key_updater_allow_other_sources"
+    <!-- How often the updater checks, in hours -->
+    <androidx.preference.SeekBarPreference
+      android:key="@string/pref_key_updater_interval_hours"
+      android:max="24"
       android:persistent="false"
-      android:summary="@string/updater_allow_other_sources_summary"
-      android:title="@string/updater_allow_other_sources_title"
+      android:summary="@string/updater_interval_summary"
+      android:title="@string/updater_interval_title"
+      app:iconSpaceReserved="false"
+      app:min="0"
+      app:showSeekBarValue="true" />
+
+    <!-- Whether IronFox downloads updates itself instead of opening the store that installed it -->
+    <androidx.preference.SwitchPreference
+      android:key="@string/pref_key_updater_direct_downloads"
+      android:persistent="false"
+      android:title="@string/updater_direct_downloads_title"
+      app:iconSpaceReserved="false" />
+
+    <!-- Whether the updater may use plain HTTP (nightly builds only) -->
+    <androidx.preference.SwitchPreference
+      android:key="@string/pref_key_updater_allow_insecure_http"
+      android:persistent="false"
+      android:summary="@string/updater_insecure_http_summary"
+      android:title="@string/updater_insecure_http_title"
       app:iconSpaceReserved="false" />
 
     <androidx.preference.Preference
-      android:key="@string/pref_key_updater_installed_via"
+      android:key="@string/pref_key_updater_source"
       android:selectable="false"
-      android:title="@string/updater_installed_via_title"
+      android:title="@string/updater_source_title"
       app:iconSpaceReserved="false" />
 
     <androidx.preference.Preference

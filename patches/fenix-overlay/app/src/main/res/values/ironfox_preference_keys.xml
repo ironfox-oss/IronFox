@@ -121,8 +121,14 @@
   <!-- Updater -->
   <string name="pref_key_if_updater" translatable="false">pref_key_if_updater</string>
   <string name="pref_key_updater_enabled" translatable="false">pref_key_updater_enabled</string>
-  <string name="pref_key_updater_allow_other_sources" translatable="false">pref_key_updater_allow_other_sources</string>
-  <string name="pref_key_updater_installed_via" translatable="false">pref_key_updater_installed_via</string>
+  <string name="pref_key_updater_allow_insecure_http" translatable="false">pref_key_updater_allow_insecure_http</string>
+  <string name="pref_key_updater_direct_downloads" translatable="false">pref_key_updater_direct_downloads</string>
+  <string name="pref_key_updater_dismissed_version" translatable="false">pref_key_updater_dismissed_version</string>
+  <string name="pref_key_updater_interval_hours" translatable="false">pref_key_updater_interval_hours</string>
+  <string name="pref_key_updater_last_check" translatable="false">pref_key_updater_last_check</string>
+  <string name="pref_key_updater_last_failure" translatable="false">pref_key_updater_last_failure</string>
+  <string name="pref_key_updater_original_store" translatable="false">pref_key_updater_original_store</string>
+  <string name="pref_key_updater_source" translatable="false">pref_key_updater_source</string>
   <string name="pref_key_updater_status" translatable="false">pref_key_updater_status</string>
   <string name="pref_key_updater_check_now" translatable="false">pref_key_updater_check_now</string>
 </resources>

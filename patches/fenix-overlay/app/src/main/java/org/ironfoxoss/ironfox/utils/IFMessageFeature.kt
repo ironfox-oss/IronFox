@@ -17,7 +17,7 @@ import org.ironfoxoss.ironfox.utils.IFMessageState
 import org.mozilla.fenix.R as fenixR
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.theme.FirefoxTheme
-import org.ironfoxoss.ironfox.updater.UpdateStartupCheck
+import org.ironfoxoss.ironfox.updater.UpdateForegroundCheck
 import org.mozilla.fenix.utils.Settings
 
 /**
@@ -32,7 +32,7 @@ class IFMessageFeature(
 
   override fun start() {
     showDohMigrationMessage()
-    (activity as? FragmentActivity)?.let { UpdateStartupCheck.run(it) }
+    (activity as? FragmentActivity)?.let { UpdateForegroundCheck.run(it) }
   }
 
   override fun stop() {}

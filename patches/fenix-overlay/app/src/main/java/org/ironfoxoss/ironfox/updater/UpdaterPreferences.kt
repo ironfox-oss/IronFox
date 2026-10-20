@@ -1,17 +1,16 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 package org.ironfoxoss.ironfox.updater
 
 import android.text.format.DateUtils
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreference
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import org.ironfoxoss.core.IFConstants
 import org.mozilla.fenix.R
+import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.settings.requirePreference
 
 /**
@@ -26,15 +25,28 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
 
     /** Attaches the listeners and shows the current state; safe to call on every resume. */
     fun bind() {
+        val settings = controller.settings
         fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_enabled)
             .setOnPreferenceChangeListener { _, value ->
-                controller.settings.enabled = value as Boolean
+                settings.updaterEnabled = value as Boolean
                 true
             }
-        fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_allow_other_sources)
+        fragment.requirePreference<SeekBarPreference>(R.string.pref_key_updater_interval_hours)
+            .setOnPreferenceChangeListener { preference, value ->
+                val hours = (value as Int).coerceIn(UpdateInterval.MIN_HOURS, UpdateInterval.MAX_HOURS)
+                settings.updaterIntervalHours = hours
+                (preference as SeekBarPreference).value = hours
+                false
+            }
+        fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_direct_downloads)
             .setOnPreferenceChangeListener { _, value ->
-                controller.settings.allowOtherSources = value as Boolean
+                settings.updaterDirectDownloads = value as Boolean
                 refresh()
+                true
+            }
+        fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_allow_insecure_http)
+            .setOnPreferenceChangeListener { _, value ->
+                settings.updaterAllowInsecureHttp = value as Boolean
                 true
             }
         fragment.requirePreference<Preference>(R.string.pref_key_updater_status).setOnPreferenceClickListener {
@@ -50,28 +62,35 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
 
     private fun refresh() {
         val settings = controller.settings
-        val allowed = controller.isUpdaterAllowed()
-        fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_enabled).apply {
-            isEnabled = allowed
-            isChecked = settings.enabled && allowed
-            summary = if (allowed) {
-                this@UpdaterPreferences.fragment.getString(R.string.updater_enabled_summary)
-            } else {
-                this@UpdaterPreferences.fragment.getString(R.string.updater_enabled_summary_gated, controller.gate.installerDisplayName)
-            }
+        val store = controller.rememberedStore
+        val browserSettings = fragment.requireContext().components.settings
+        val httpsOnlyInAllTabs = browserSettings.shouldUseHttpsOnly && browserSettings.shouldUseHttpsOnlyInAllTabs
+        fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_enabled).isChecked =
+            settings.updaterEnabled
+        fragment.requirePreference<SeekBarPreference>(R.string.pref_key_updater_interval_hours).value =
+            settings.updaterIntervalHours.coerceIn(UpdateInterval.MIN_HOURS, UpdateInterval.MAX_HOURS)
+        fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_direct_downloads).apply {
+            isVisible = store != null
+            isChecked = settings.updaterDirectDownloads
+            if (store != null) summary = fragment.getString(R.string.updater_direct_downloads_summary, store.displayName)
         }
-        fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_allow_other_sources).isChecked =
-            settings.allowOtherSources
-        fragment.requirePreference<Preference>(R.string.pref_key_updater_installed_via).summary =
-            controller.gate.installerDisplayName
-        fragment.requirePreference<Preference>(R.string.pref_key_updater_check_now).isEnabled = allowed
+        fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_allow_insecure_http).apply {
+            isVisible = IFConstants.IRONFOX_NIGHTLY
+            isEnabled = !httpsOnlyInAllTabs
+            isChecked = settings.updaterAllowInsecureHttp && !httpsOnlyInAllTabs
+            summary = fragment.getString(
+                if (httpsOnlyInAllTabs) R.string.updater_insecure_http_blocked_summary else R.string.updater_insecure_http_summary,
+            )
+        }
+        fragment.requirePreference<Preference>(R.string.pref_key_updater_source).summary =
+            controller.activeStore?.displayName ?: fragment.getString(R.string.updater_source_direct)
         fragment.requirePreference<Preference>(R.string.pref_key_updater_status).summary = statusText()
     }
 
     private fun statusText(): String {
         transientStatus?.let { return it }
         controller.availableOffer?.let { return fragment.getString(R.string.updater_status_available, it.version) }
-        val lastCheck = controller.settings.lastCheckMillis
+        val lastCheck = controller.settings.updaterLastCheckMillis
         if (lastCheck == 0L) return fragment.getString(R.string.updater_status_never)
         val ago = DateUtils.getRelativeTimeSpanString(lastCheck, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS)
         return fragment.getString(R.string.updater_status_last_checked, ago)

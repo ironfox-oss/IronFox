@@ -30,6 +30,6 @@
 
   <!-- Onboarding - Updater -->
   <string name="ironfox_onboarding_updater_title">Stay up to date</string>
-  <string name="ironfox_onboarding_updater_description">IronFox can check for new versions and install them with your approval. No request is made unless you turn this on.</string>
+  <string name="ironfox_onboarding_updater_description">IronFox checks for new versions and asks before installing them. You can turn this off at any time in IronFox settings.</string>
   <string name="ironfox_onboarding_updater_switch">Check for updates automatically</string>
 </resources>

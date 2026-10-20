@@ -5,11 +5,12 @@ It serves the update feed and an APK, and can misbehave on demand: malformed fee
 hosts, truncated or reset downloads, and so on. Every request is logged with its time, path, host and user agent.
 
 Connecting to it:
-  - The updater only talks to hosts in the locked `browser.ironfox.updater.allowedHosts` pref, so the build under
-    test has to list the host you serve from (configs/phoenix/ironfox.cfg).
+  - The updater only talks to the host of the build-time `IRONFOX_UPDATE_MANIFEST_URL` option, so build the app under
+    test with that variable pointing at this server's address.
   - Over HTTPS, put a TLS terminator (Caddy, cloudflared, nginx) in front of this plain-HTTP server.
-  - Set `browser.ironfox.updater.allowInsecureHttpConnection` (off by default) to true in about:config and use a
-    plain `--base http://<host>:<port>` instead.
+  - On nightly builds, turn on "Allow insecure HTTP connections" in the Updates settings and use a plain
+    `--base http://<host>:<port>` instead. "HTTPS-Only Mode" is Firefox settings must be set to "On in private tabs"
+    for this to work.
 
 Example:
 
@@ -296,7 +297,7 @@ def main():
     parser.add_argument("--installed-code", required=True, type=int, help="version code of the installed build")
     parser.add_argument("--other-apk", help="any other signed APK (for the wrong-pkg scenario)")
     parser.add_argument("--wrong-key-apk", help="the new APK re-signed with another key (for the wrong-key scenario)")
-    parser.add_argument("--base", required=True, help="public HTTPS base URL, e.g. https://updates.test.example")
+    parser.add_argument("--base", required=True, help="public HTTP(S) base URL, e.g. https://updates.test.example")
     parser.add_argument("--package", default="org.ironfoxoss.ironfox")
     parser.add_argument("--variant", default="arm64-v8a", help="feed key of the installed variant")
     parser.add_argument("--version", default="99.0.0")
@@ -311,6 +312,8 @@ def main():
     args.other_apk = args.other_apk or args.new_apk
     args.wrong_key_apk = args.wrong_key_apk or args.new_apk
     print("Serving on %s:%d as %s (scenario file: %s)" % (args.bind, args.port, args.base, args.scenario_file))
+    if args.base.startswith("http://"):
+      print("You may need to set HTTPS-Only mode to 'On in private tabs' and enable 'Allow insecure HTTP connections' in IronFox settings.")
     Server(args).serve_forever()
 
 

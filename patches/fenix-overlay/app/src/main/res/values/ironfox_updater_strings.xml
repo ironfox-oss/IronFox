@@ -3,11 +3,16 @@
   <!-- Updates settings -->
   <string name="updater_title">Updates</string>
   <string name="updater_enabled_title">Check for updates automatically</string>
-  <string name="updater_enabled_summary">IronFox contacts the IronFox release server to look for new versions. No request is made until you turn this on.</string>
-  <string name="updater_enabled_summary_gated">Unavailable: updates are managed by %1$s</string>
-  <string name="updater_allow_other_sources_title">Allow updates when installed from another source</string>
-  <string name="updater_allow_other_sources_summary">Another app, such as a store, may also try to update IronFox. Only turn this on if you want IronFox to update itself regardless.</string>
-  <string name="updater_installed_via_title">Installed via</string>
+  <string name="updater_enabled_summary">IronFox checks the IronFox release server for new versions and asks before installing them.</string>
+  <string name="updater_interval_title">Check interval</string>
+  <string name="updater_interval_summary">How often IronFox checks for updates, in hours</string>
+  <string name="updater_direct_downloads_title">Download updates directly</string>
+  <string name="updater_direct_downloads_summary">Download and install updates with IronFox instead of opening %1$s. Android may ask you to confirm updating from a different source.</string>
+  <string name="updater_insecure_http_title">Allow insecure HTTP connections</string>
+  <string name="updater_insecure_http_summary">Lets the updater use plain HTTP. Only for testing against a local update server.</string>
+  <string name="updater_insecure_http_blocked_summary">HTTPS-Only mode blocks plain HTTP. Turn it off for all tabs in Privacy and security to use this.</string>
+  <string name="updater_source_title">Updates through</string>
+  <string name="updater_source_direct">IronFox (direct download)</string>
   <string name="updater_status_title">Status</string>
   <string name="updater_check_now_title">Check for updates</string>
   <string name="updater_status_never">Not checked yet</string>
@@ -19,9 +24,16 @@
   <!-- Update dialog -->
   <string name="updater_dialog_title">Update available</string>
   <string name="updater_dialog_message">IronFox %1$s is available.</string>
+  <string name="updater_dialog_store_message">IronFox %1$s is available. Open %2$s to update it; if it is not listed there yet, refresh the store.</string>
   <string name="updater_dialog_update">Update</string>
+  <string name="updater_dialog_open_store">Open %1$s</string>
   <string name="updater_dialog_later">Later</string>
   <string name="updater_dialog_release_notes">Release notes</string>
+
+  <!-- Store no longer installed -->
+  <string name="updater_store_gone_title">%1$s is not available</string>
+  <string name="updater_store_gone_message">IronFox was installed from %1$s, but it is no longer installed. Download and install the update directly?</string>
+  <string name="updater_store_gone_download">Download</string>
 
   <!-- Install permission -->
   <string name="updater_unknown_sources_title">Allow installing updates</string>
@@ -43,8 +55,4 @@
   <string name="updater_failure_verification_hint">Some devices only install apps from verified developers. Learn more at https://ironfoxoss.org</string>
   <string name="updater_try_again">Try again</string>
   <string name="updater_close">Close</string>
-
-  <!-- Onboarding -->
-  <string name="ironfox_onboarding_updater_installed_via">Installed via %1$s</string>
-  <string name="ironfox_onboarding_updater_gated">Updates are managed by the app that installed IronFox. You can change this later in IronFox settings.</string>
 </resources>

@@ -7,6 +7,7 @@ import android.content.pm.PackageInstaller
 import androidx.core.content.IntentCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
+import org.mozilla.fenix.ext.components
 
 /**
  * Receives the result of an update install session.
@@ -30,7 +31,7 @@ class InstallStatusReceiver : BroadcastReceiver() {
             context.startActivity(confirmation.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         } else {
             abandonSession(context, intent)
-            UpdaterSettings(context).lastCheckMillis = 0L
+            context.components.settings.ironfox.updaterLastCheckMillis = 0L
         }
     }
 

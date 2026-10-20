@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
@@ -35,19 +36,46 @@ class UpdateUi(
     private val notifier = UpdateNotifier(activity)
 
     /**
-     * Asks the user whether to install [offer].
+     * Asks the user whether to install [offer]; does nothing if a dialog is already up or an update is running.
      *
-     * Later remembers the version so it is not offered again; Release notes opens them in a new IronFox tab.
+     * Update downloads and installs the APK, unless IronFox came from a known store and the user did not choose
+     * direct downloads: then the button opens that store. Later remembers the version so it is not offered again;
+     * Release notes opens them in a new IronFox tab.
      */
     fun showUpdateDialog(offer: UpdateOffer) {
-        AlertDialog.Builder(activity)
+        if (controller.isUpdating || !dialogShowing.compareAndSet(false, true)) return
+        val store = controller.activeStore
+        val builder = AlertDialog.Builder(activity)
             .setTitle(R.string.updater_dialog_title)
-            .setMessage(activity.getString(R.string.updater_dialog_message, offer.version))
-            .setPositiveButton(R.string.updater_dialog_update) { _, _ -> startUpdate(offer) }
             .setNegativeButton(R.string.updater_dialog_later) { _, _ ->
-                controller.settings.dismissedVersion = offer.version
+                controller.settings.updaterDismissedVersion = offer.version
             }
             .setNeutralButton(R.string.updater_dialog_release_notes) { _, _ -> openReleaseNotes(offer) }
+            .setOnDismissListener { dialogShowing.set(false) }
+        if (store == null) {
+            builder.setMessage(activity.getString(R.string.updater_dialog_message, offer.version))
+                .setPositiveButton(R.string.updater_dialog_update) { _, _ -> startUpdate(offer) }
+        } else {
+            builder.setMessage(activity.getString(R.string.updater_dialog_store_message, offer.version, store.displayName))
+                .setPositiveButton(activity.getString(R.string.updater_dialog_open_store, store.displayName)) { _, _ ->
+                    openStore(offer, store)
+                }
+        }
+        builder.create().withCenterAlignedButtons().show()
+    }
+
+    private fun openStore(offer: UpdateOffer, store: KnownStore) {
+        val intent = controller.launchIntentFor(store)
+        val opened = intent != null && runCatching { activity.startActivity(intent) }.isSuccess
+        if (!opened) showStoreGone(offer, store)
+    }
+
+    private fun showStoreGone(offer: UpdateOffer, store: KnownStore) {
+        AlertDialog.Builder(activity)
+            .setTitle(activity.getString(R.string.updater_store_gone_title, store.displayName))
+            .setMessage(activity.getString(R.string.updater_store_gone_message, store.displayName))
+            .setPositiveButton(R.string.updater_store_gone_download) { _, _ -> startUpdate(offer) }
+            .setNegativeButton(android.R.string.cancel, null)
             .create()
             .withCenterAlignedButtons()
             .show()
@@ -168,5 +196,9 @@ class UpdateUi(
                 if (controller.installer.canRequestInstalls()) startUpdate(offer)
             }
         })
+    }
+
+    private companion object {
+        val dialogShowing = AtomicBoolean(false)
     }
 }

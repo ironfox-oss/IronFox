@@ -19,6 +19,7 @@ object IFConstants {
   const val IRONFOX_RELEASES_URL =            BuildConfig.IRONFOX_RELEASES_URL
   const val IRONFOX_REPO_GIT_URL =            BuildConfig.IRONFOX_REPO_GIT_URL
   const val IRONFOX_REPO_URL =                BuildConfig.IRONFOX_REPO_URL
+  const val IRONFOX_UPDATE_MANIFEST_URL =     BuildConfig.IRONFOX_UPDATE_MANIFEST_URL
   const val IRONFOX_URL =                     BuildConfig.IRONFOX_URL
   const val IRONFOX_VERSION =                 BuildConfig.IRONFOX_VERSION
 }

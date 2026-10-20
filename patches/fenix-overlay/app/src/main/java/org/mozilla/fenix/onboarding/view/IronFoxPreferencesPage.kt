@@ -62,9 +62,6 @@ import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Error
 import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Progress
 import org.mozilla.fenix.onboarding.view.OnboardingPageState
 import org.mozilla.fenix.theme.FirefoxTheme
-import org.ironfoxoss.ironfox.updater.InstallerGateState
-import org.ironfoxoss.ironfox.updater.UpdaterSettings
-import org.ironfoxoss.ironfox.updater.createInstallerGate
 
 private val IF_CONTENT_IMAGE_HEIGHT = 120.dp
 private val IF_CONTENT_IMAGE_HEIGHT_SMALL_DEVICE = 88.dp
@@ -93,7 +90,7 @@ private data class IfPreferencesSwitchStates(
   val safeBrowsingEnabled: Boolean = true,
   val spoofEnglish: Boolean = true,
   val installUBlock: Boolean = true,
-  val updaterEnabled: Boolean = false,
+  val updaterEnabled: Boolean = true,
 )
 
 private val logger = Logger("IronFoxOnboardingPreferences")
@@ -135,7 +132,7 @@ fun IronFoxPreferencesOnboardingPage(
         val context = LocalContext.current
 
         var switchStates by remember {
-          mutableStateOf(IfPreferencesSwitchStates(updaterEnabled = updaterEnabledByDefault(context)))
+          mutableStateOf(IfPreferencesSwitchStates())
         }
 
         val onContentStateChange = remember {
@@ -261,7 +258,6 @@ private fun IronFoxPreferenceConfiguration(
   onUpdateSwitchStates: (IfPreferencesSwitchStates) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val updaterGated = !updaterEnabledByDefault(LocalContext.current)
   Column(modifier = modifier) {
     IronFoxPreferenceSwitchItem(
       option = option,
@@ -283,7 +279,7 @@ private fun IronFoxPreferenceConfiguration(
             IfPreferenceType.INSTALL_UBLOCK -> state.copy(installUBlock = !state.installUBlock)
             IfPreferenceType.SAFE_BROWSING -> state.copy(safeBrowsingEnabled = !state.safeBrowsingEnabled)
             IfPreferenceType.SPOOF_ENGLISH -> state.copy(spoofEnglish = !state.spoofEnglish)
-            IfPreferenceType.UPDATER -> if (updaterGated) state else state.copy(updaterEnabled = !state.updaterEnabled)
+            IfPreferenceType.UPDATER -> state.copy(updaterEnabled = !state.updaterEnabled)
             IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
           },
         )
@@ -296,7 +292,7 @@ private fun IronFoxPreferenceConfiguration(
       modifier = Modifier
         .padding(16.dp)
         .fillMaxWidth(),
-      text = descriptionFor(option),
+      text = option.description,
       style = FirefoxTheme.typography.body2,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
@@ -341,22 +337,9 @@ private suspend fun applyPreference(
     }
 
     IfPreferenceType.UPDATER -> {
-      UpdaterSettings(context).enabled = state.updaterEnabled && updaterEnabledByDefault(context)
+      context.components.settings.ironfox.updaterEnabled = state.updaterEnabled
     }
   }
-}
-
-private fun updaterEnabledByDefault(context: Context): Boolean =
-  createInstallerGate(context).defaultState() == InstallerGateState.ENABLED_BY_DEFAULT
-
-@Composable
-private fun descriptionFor(option: IfPreferenceOption): String {
-  if (option.preferenceType != IfPreferenceType.UPDATER) return option.description
-  val context = LocalContext.current
-  val installer = remember(context) { createInstallerGate(context).installerDisplayName }
-  val installedVia = stringResource(fenixR.string.ironfox_onboarding_updater_installed_via, installer)
-  val gatedNote = if (updaterEnabledByDefault(context)) "" else "\n\n${stringResource(fenixR.string.ironfox_onboarding_updater_gated)}"
-  return "${option.description}\n\n$installedVia$gatedNote"
 }
 
 private suspend fun installUBlockOrigin(

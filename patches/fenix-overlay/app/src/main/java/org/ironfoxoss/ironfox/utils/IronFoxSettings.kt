@@ -6,6 +6,9 @@ import android.content.SharedPreferences
 import mozilla.components.support.ktx.android.content.PreferencesHolder
 import mozilla.components.support.ktx.android.content.booleanPreference
 import mozilla.components.support.ktx.android.content.intPreference
+import mozilla.components.support.ktx.android.content.longPreference
+import mozilla.components.support.ktx.android.content.stringPreference
+import org.ironfoxoss.ironfox.updater.UpdateInterval
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.getPreferenceKey
 
@@ -290,6 +293,55 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
     booleanPreference(
       key = context.getPreferenceKey(R.string.pref_key_use_unifiedpush),
       default = false,
+    )
+
+  /** The updater's settings and state. */
+  var updaterAllowInsecureHttp by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_updater_allow_insecure_http),
+      default = false,
+    )
+
+  var updaterDirectDownloads by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_updater_direct_downloads),
+      default = false,
+    )
+
+  var updaterDismissedVersion by
+    stringPreference(
+      key = context.getPreferenceKey(R.string.pref_key_updater_dismissed_version),
+      default = "",
+    )
+
+  var updaterEnabled by
+    booleanPreference(
+      key = context.getPreferenceKey(R.string.pref_key_updater_enabled),
+      default = true,
+    )
+
+  var updaterIntervalHours by
+    intPreference(
+      key = context.getPreferenceKey(R.string.pref_key_updater_interval_hours),
+      default = UpdateInterval.DEFAULT_HOURS,
+    )
+
+  var updaterLastCheckMillis by
+    longPreference(
+      key = context.getPreferenceKey(R.string.pref_key_updater_last_check),
+      default = 0L,
+    )
+
+  var updaterLastFailureMillis by
+    longPreference(
+      key = context.getPreferenceKey(R.string.pref_key_updater_last_failure),
+      default = 0L,
+    )
+
+  var updaterOriginalStore by
+    stringPreference(
+      key = context.getPreferenceKey(R.string.pref_key_updater_original_store),
+      default = "",
     )
 
   var wasmEnabled by

@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInstaller
-import android.os.Build
 import java.io.File
 import java.io.IOException
 
@@ -13,12 +12,8 @@ import java.io.IOException
  * Installs a verified APK through a [PackageInstaller] session.
  *
  * @param context Application context.
- * @param allowOtherSources Whether the user lifted the installer gate; when true, update ownership is not requested.
  */
-class ApkInstaller(
-    private val context: Context,
-    private val allowOtherSources: () -> Boolean,
-) {
+class ApkInstaller(private val context: Context) {
     private val packageInstaller: PackageInstaller
         get() = context.packageManager.packageInstaller
 
@@ -52,9 +47,6 @@ class ApkInstaller(
     private fun sessionParams() = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
         .apply {
             setAppPackageName(context.packageName)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && !allowOtherSources()) {
-                setRequestUpdateOwnership(true)
-            }
         }
 
     private fun write(session: PackageInstaller.Session, apk: File) {
