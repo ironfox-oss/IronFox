@@ -51,10 +51,49 @@ and security-oriented web browser for daily use.**
 > [Limitations](https://ironfoxoss.org/docs/limitations/) and [Frequently Asked
 > Questions](https://ironfoxoss.org/docs/faq/) pages!**
 
-## Installation and Verification
+## Features
+
+IronFox hardens Firefox for Android and removes parts of it that work against
+privacy. Highlights:
+
+- **Privacy:** clears history, cache, downloads and open tabs on exit, uses
+  DNS over HTTPS (Quad9, max protection), enables Strict Enhanced Tracking
+  Protection, bundles uBlock Origin, and blocks geolocation, local network and
+  external-app prompts by default.
+- **Fingerprinting resistance:** enables Suspected Fingerprinters Protection,
+  defaults to the light theme, and requests English (`en-US`) pages by default.
+- **Security:** HTTPS-Only Mode, per-site process isolation (Fission), memory
+  tagging on supported devices, a hardened PDF viewer, and JavaScript JIT,
+  add-on installation, autofill and the built-in password manager off by
+  default.
+- **User control:** toggles for JavaScript, WebGL, WebRTC, WebAssembly, SVG,
+  IPv6 and the referer policy, plus `about:config`.
+- **Less Mozilla:** no sponsored tiles, Firefox Suggest, surveys or crash
+  reporting, and no Adjust, Sentry or Google Play libraries. Push
+  notifications use UnifiedPush.
+- **Sensible defaults:** DuckDuckGo as the default search engine, and media
+  autoplay and web notifications blocked.
+
+See the full list on the
+[features page](https://ironfoxoss.org/docs/features/), and read the
+[limitations](https://ironfoxoss.org/docs/limitations/) to understand what
+IronFox can and can't protect against.
+
+## Install and Verify
 
 For details and step-by-step instructions on how to install IronFox, see our
 [Download](https://ironfoxoss.org/download/) page.
+
+IronFox supports the same minimum Android version as Firefox for Android, on
+`arm64`, `arm` and `x86_64` devices, including Android TV and Fire TV.
+
+**Release** builds are the stable channel. **Nightly** builds come from CI, use
+a different package ID, and differ slightly in branding and developer options.
+See [Nightly vs. Release](https://ironfoxoss.org/docs/nightly-vs-release/).
+
+The [changelog](CHANGELOG.md) has the notes for the latest release. Notes for
+every release are on the
+[releases page](https://gitlab.com/ironfox-oss/IronFox/-/releases).
 
 **Package ID**: `org.ironfoxoss.ironfox`
 
@@ -72,14 +111,17 @@ Want to join the IronFox Community? We'd love to see you over on
 [Matrix](https://matrix.to/#/#ironfox:unredacted.org) _(Recommended)_ and
 [Discord](https://discord.gg/zbdzfRVyVh)!
 
-While IronFox's home is [GitLab](https://gitlab.com/ironfox-oss/IronFox), this
-repo is also mirrored to both
+Report bugs and suggestions on the
+[issue tracker](https://codeberg.org/ironfox-oss/bugs/issues). Code and merge
+requests go to [GitLab](https://gitlab.com/ironfox-oss/IronFox), which is
+IronFox's home. The repository is also mirrored to
 [Codeberg](https://codeberg.org/ironfox-oss/IronFox) and
 [GitHub](https://github.com/ironfox-oss/IronFox).
 
 Bug reports, translations, and code changes are welcome. See
 [CONTRIBUTING.md](CONTRIBUTING.md) for how to build IronFox, run the linters,
-and submit changes.
+and submit changes, and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a map
+of the repository.
 
 ## Licensing
 
