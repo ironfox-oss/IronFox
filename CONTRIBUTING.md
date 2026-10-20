@@ -113,6 +113,23 @@ fetch the sources again with `./scripts/get_sources.sh`.
 
 `bundle` also produces an APK per architecture and a universal APK.
 
+### Building a single project
+
+`build.sh` takes an optional second argument that selects what to build. It
+defaults to `fenix`, which builds the whole app and is what you want in most
+cases:
+
+```sh
+./scripts/build.sh arm64 [project]
+```
+
+`project` is one of `fenix`, `ac-core`, `ac`, `as`, `bundletool`, `gecko`,
+`geckoview`, `glean`, `ironfox-core`, `llvm`, `microg`, `nimbus-fml`,
+`phoenix`, `uniffi`, `up-ac` or `wasi`. Each builds that project and its
+dependencies. Prefix a project with `rebuild-` (for example `rebuild-as`) to
+build it and the projects that consume it. `rebuild-fenix` builds only Fenix.
+Run the script with an invalid project name to print the full list.
+
 ## Build options
 
 Build behavior is controlled by `IRONFOX_*` environment variables. They are
