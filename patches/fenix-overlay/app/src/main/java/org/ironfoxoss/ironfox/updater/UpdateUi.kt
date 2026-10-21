@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import mozilla.components.ui.widgets.withCenterAlignedButtons
 import org.mozilla.fenix.BrowserDirection
+import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
 
@@ -95,12 +96,13 @@ class UpdateUi(
 
     private fun openReleaseNotes(offer: UpdateOffer) {
         if (!offer.releaseNotesUrl.startsWith("https://")) return
-        @Suppress("DEPRECATION")
-        (activity as? HomeActivity)?.openToBrowserAndLoad(
+        (activity as? HomeActivity)?.apply {
+          openToBrowser(from = BrowserDirection.FromGlobal)
+          components.useCases.fenixBrowserUseCases.loadUrlOrSearch(
             searchTermOrURL = offer.releaseNotesUrl,
             newTab = true,
-            from = BrowserDirection.FromGlobal,
-        )
+          )
+        }
     }
 
     /** Downloads, verifies and installs [offer], first asking for the install permission if needed. */
