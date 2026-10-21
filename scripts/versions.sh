@@ -2,17 +2,17 @@
 # Sources
 
 # Firefox
-# Version: 158.0.1 (RELEASE)
+# Version: 158.0.2 (RELEASE)
 # https://github.com/mozilla-firefox/firefox
-readonly IRONFOX_GECKO_COMMIT='9378fbc58660847fbc02c3486a0ecd6049978e25'
-readonly IRONFOX_GECKO_SHA512SUM='576bb81dc98b0b33080f2914e4be72c55c20bfa756e459d819e33c4fe5770dad36a6ef0eadc725eb61d3b08f8d5d7f86a081988f6b95379e48ae69a0d621f132'
-readonly IRONFOX_GECKO_VERSION='158.0.1'
+readonly IRONFOX_GECKO_COMMIT='08d23041955657e661eef22c8fdc967735300233'
+readonly IRONFOX_GECKO_SHA512SUM='c3508ea58e18f45c12ffe906d3ba94ae9a083bd6326dcbeeb4514c668d4b34caec2a81989f8c26125d5f06bc5ae0f1728ca445fed08d601769af13606793bca3'
+readonly IRONFOX_GECKO_VERSION='158.0.2'
 
 # IronFox
 readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}"
 
 # This value is used for ex. producing reproducable archives, and its value should be bumped upon new releases
-readonly IRONFOX_VERSION_DATE='2026.10.20'
+readonly IRONFOX_VERSION_DATE='2026.10.21'
 
 # Application Services
 # Version: v158.0
@@ -26,8 +26,8 @@ readonly IRONFOX_AS_VERSION='158.0'
 # https://github.com/mozilla-l10n/firefox-l10n
 # NOTE: This repo is updated several times a day...
 # so I think best approach here will be for us to just update it alongside new releases
-readonly IRONFOX_L10N_CENTRAL_COMMIT='98b97b023455a01f0bf99e57661c7729d4ea0022'
-readonly IRONFOX_L10N_CENTRAL_SHA512SUM='315c77fcb371c3167a8bbcc3967efbd8b4a24deb39b9ef25a3e79ff449177d975912ca747d1dc098b30721bf5f5c457f5cab612ee9a571e201d080d0c2ebf012'
+readonly IRONFOX_L10N_CENTRAL_COMMIT='2b43666290f9cb7964b54087935852e3a226b998'
+readonly IRONFOX_L10N_CENTRAL_SHA512SUM='e97d3dcf8a680c63b1a5d5d75e5a8ae6ce2953486832733f54f6680a2bfe53965ba7bb43c05cdcd9b5cd692897e8f57774cb7b3019ebfb4f8a8343fedf31add4'
 
 # Glean
 # Version: 70.2.0
