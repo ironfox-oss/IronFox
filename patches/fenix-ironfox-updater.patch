@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <contact@itsaky.com>
+Date: Sat, 17 Oct 2026 14:21:37 +0000
+Subject: [PATCH] Fenix - IronFox updater
+
+Registers the status receiver for the in-app updater.
+
+Signed-off-by: Akash Yadav <contact@itsaky.com>
+---
+diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+index 2a81228..37f8c82 100644
+--- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
++++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+@@ -767,6 +767,10 @@
+             android:name=".onboarding.WidgetPinnedReceiver"
+             android:exported="false" />
+ 
++        <receiver
++            android:name="org.ironfoxoss.ironfox.updater.InstallStatusReceiver"
++            android:exported="false" />
++
+         <receiver
+             android:name=".privacyreport.PrivacyReportNotificationReceiver"
+             android:exported="false" />
+-- 

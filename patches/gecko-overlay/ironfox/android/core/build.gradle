@@ -29,6 +29,7 @@ android {
     buildConfigField 'String', "IRONFOX_RELEASES_URL",              "\"${gradle.mozconfig.defines.IRONFOX_RELEASES_URL}\"";
     buildConfigField 'String', "IRONFOX_REPO_GIT_URL",              "\"${gradle.mozconfig.defines.IRONFOX_REPO_GIT_URL}\"";
     buildConfigField 'String', "IRONFOX_REPO_URL",                  "\"${gradle.mozconfig.defines.IRONFOX_REPO_URL}\"";
+    buildConfigField 'String', "IRONFOX_UPDATE_MANIFEST_URL",       "\"${gradle.mozconfig.defines.IRONFOX_UPDATE_MANIFEST_URL}\"";
     buildConfigField 'String', "IRONFOX_URL",                       "\"${gradle.mozconfig.defines.IRONFOX_URL}\"";
     buildConfigField 'String', "IRONFOX_VERSION",                   "\"${gradle.mozconfig.defines.IRONFOX_VERSION}\"";
   }

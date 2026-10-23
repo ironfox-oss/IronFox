@@ -162,6 +162,23 @@ def ironfox_version(version):
 
 set_define("IRONFOX_VERSION", ironfox_version)
 
+# Set the update manifest URL
+## This is where the in-app updater looks for new releases (its host is the only host the updater will talk to)
+## Forks and local test builds can point it somewhere else with IRONFOX_UPDATE_MANIFEST_URL
+option(
+  env="IRONFOX_UPDATE_MANIFEST_URL",
+  nargs="?",
+  help="IronFox update manifest URL",
+)
+
+@depends("IRONFOX_UPDATE_MANIFEST_URL")
+def ironfox_update_manifest_url(url):
+  if not url:
+    return "https://releases.ironfoxoss.org/ironfox/updates.json"
+  return url[0]
+
+set_define("IRONFOX_UPDATE_MANIFEST_URL", ironfox_update_manifest_url)
+
 # Set app name
 @depends("--with-app-name")
 def ironfox_app_name(name):

@@ -29,6 +29,7 @@ import org.mozilla.fenix.ext.getPreferenceKey
 import org.mozilla.fenix.ext.requireComponents
 import org.mozilla.fenix.ext.showToolbar
 import org.mozilla.fenix.settings.requirePreference
+import org.ironfoxoss.ironfox.updater.UpdaterPreferences
 import org.mozilla.fenix.utils.view.addToRadioGroup
 
 @Suppress("TooManyFunctions")
@@ -43,9 +44,12 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
   private lateinit var radioRefererXOriginBaseDomainsMatch: RadioButtonPreference
   private lateinit var radioRefererXOriginHostsMatch: RadioButtonPreference
 
+  private val updaterPreferences by lazy { UpdaterPreferences(this) }
+
   override fun onResume() {
     super.onResume()
     showToolbar(getString(ironfoxR.string.if_preferences))
+    updaterPreferences.bind()
 
     /*** Miscellaneous ***/
 

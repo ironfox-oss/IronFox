@@ -355,6 +355,70 @@
       app:iconSpaceReserved="false" />
   </androidx.preference.PreferenceCategory>
 
+  <!-- Updates -->
+  <androidx.preference.PreferenceCategory
+    android:key="@string/pref_key_if_updater"
+    android:layout="@layout/preference_category_no_icon_style"
+    android:title="@string/updater_title">
+
+    <!-- Whether the updater checks for new versions automatically -->
+    <androidx.preference.SwitchPreference
+      android:key="@string/pref_key_updater_enabled"
+      android:persistent="false"
+      android:summary="@string/updater_enabled_summary"
+      android:title="@string/updater_enabled_title"
+      app:iconSpaceReserved="false" />
+
+    <!-- How often the updater checks, in hours -->
+    <androidx.preference.SeekBarPreference
+      android:key="@string/pref_key_updater_interval_hours"
+      android:max="24"
+      android:persistent="false"
+      android:summary="@string/updater_interval_summary"
+      android:title="@string/updater_interval_title"
+      app:iconSpaceReserved="false"
+      app:min="0"
+      app:showSeekBarValue="true" />
+
+    <!-- Whether IronFox downloads updates itself instead of opening the store that installed it -->
+    <androidx.preference.SwitchPreference
+      android:key="@string/pref_key_updater_direct_downloads"
+      android:persistent="false"
+      android:title="@string/updater_direct_downloads_title"
+      app:iconSpaceReserved="false" />
+
+    <!-- Whether IronFox downloads an update as soon as it finds one -->
+    <androidx.preference.SwitchPreference
+      android:key="@string/pref_key_updater_auto_download"
+      android:persistent="false"
+      android:title="@string/updater_auto_download_title"
+      app:iconSpaceReserved="false" />
+
+    <!-- Whether the updater may use plain HTTP (nightly builds only) -->
+    <androidx.preference.SwitchPreference
+      android:key="@string/pref_key_updater_allow_insecure_http"
+      android:persistent="false"
+      android:summary="@string/updater_insecure_http_summary"
+      android:title="@string/updater_insecure_http_title"
+      app:iconSpaceReserved="false" />
+
+    <androidx.preference.Preference
+      android:key="@string/pref_key_updater_source"
+      android:selectable="false"
+      android:title="@string/updater_source_title"
+      app:iconSpaceReserved="false" />
+
+    <androidx.preference.Preference
+      android:key="@string/pref_key_updater_status"
+      android:title="@string/updater_status_title"
+      app:iconSpaceReserved="false" />
+
+    <androidx.preference.Preference
+      android:key="@string/pref_key_updater_check_now"
+      android:title="@string/updater_check_now_title"
+      app:iconSpaceReserved="false" />
+  </androidx.preference.PreferenceCategory>
+
   <!-- Secret settings -->
   <androidx.preference.PreferenceCategory
     android:key="@string/pref_key_if_secret"

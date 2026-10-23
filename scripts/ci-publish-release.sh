@@ -100,6 +100,7 @@ echo_red_text 'CI - Downloading dependencies...'
   unzip \
   xz || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 'uv' || exit 1
+"${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 'android-sdk-build-tools' || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 'python' || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 's3cmd' || exit 1
 echo_green_text 'CI - SUCCESS: Downloaded dependencies.'

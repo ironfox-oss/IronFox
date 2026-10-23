@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.base.log.logger.Logger
@@ -16,6 +17,7 @@ import org.ironfoxoss.ironfox.utils.IFMessageState
 import org.mozilla.fenix.R as fenixR
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.theme.FirefoxTheme
+import org.ironfoxoss.ironfox.updater.UpdateForegroundCheck
 import org.mozilla.fenix.utils.Settings
 
 /**
@@ -30,6 +32,7 @@ class IFMessageFeature(
 
   override fun start() {
     showDohMigrationMessage()
+    (activity as? FragmentActivity)?.let { UpdateForegroundCheck.run(it) }
   }
 
   override fun stop() {}
