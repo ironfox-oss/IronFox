@@ -16,10 +16,10 @@ enum class KnownStore(val packageName: String, val displayName: String) {
     NEO_STORE("com.machiav3lli.fdroid", "Neo Store"),
     FOXY_DROID("nya.kitsunyan.foxydroid", "Foxy Droid"),
     AURORA_DROID("com.aurora.adroid", "Aurora Droid"),
-    AURORA_STORE("com.aurora.store", "Aurora Store"),
     ACCRESCENT("app.accrescent.client", "Accrescent"),
     ZAPSTORE("dev.zapstore.app", "Zapstore"),
     OBTAINIUM("dev.imranr.obtainium", "Obtainium"),
+    OBTAINX("dev.bikram.obtainx", "ObtainX"),
     FFUPDATER("de.marmaro.krt.ffupdater", "FFUpdater"),
     ;
 
