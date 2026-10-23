@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 import mozilla.components.concept.fetch.Client
 import mozilla.components.support.base.log.logger.Logger
 import org.ironfoxoss.core.IFConstants
-import org.mozilla.fenix.BuildConfig
 import org.mozilla.fenix.ext.components
 
 /** Coordinates checking, downloading and installing updates for the UI. */
@@ -158,7 +157,7 @@ class UpdateController private constructor(
         fetcher = newFetcher(),
         feedUrl = IFConstants.IRONFOX_UPDATE_MANIFEST_URL,
         settings = settings,
-        packageName = BuildConfig.APPLICATION_ID,
+        packageName = IFConstants.IRONFOX_APP_ID,
         installedVersionCode = installedVersionCode,
         clock = System::currentTimeMillis,
     )
@@ -166,7 +165,7 @@ class UpdateController private constructor(
     private fun newDownloader() = ApkDownloader(
         fetcher = newFetcher(),
         cacheDir = appContext.cacheDir,
-        verifier = ApkVerifier(PackageArchiveInspector(packageManager), BuildConfig.APPLICATION_ID),
+        verifier = ApkVerifier(PackageArchiveInspector(packageManager), IFConstants.IRONFOX_APP_ID),
     )
 
     private fun newFetcher(): AllowlistedFetcher {
