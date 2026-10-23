@@ -73,6 +73,7 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
     val store = controller.rememberedStore
     val browserSettings = fragment.requireContext().components.settings
     val httpsOnlyInAllTabs = browserSettings.shouldUseHttpsOnly && browserSettings.shouldUseHttpsOnlyInAllTabs
+    val showSecretDebugMenuThisSession = browserSettings.showSecretDebugMenuThisSession
     fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_enabled).isChecked =
       settings.updaterEnabled
     fragment.requirePreference<SeekBarPreference>(R.string.pref_key_updater_interval_hours).value =
@@ -91,7 +92,7 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
       )
     }
     fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_allow_insecure_http).apply {
-      isVisible = IFConstants.IRONFOX_NIGHTLY
+      isVisible = IFConstants.IRONFOX_NIGHTLY && showSecretDebugMenuThisSession
       isEnabled = !httpsOnlyInAllTabs
       isChecked = settings.updaterAllowInsecureHttp && !httpsOnlyInAllTabs
       summary = this@UpdaterPreferences.fragment.getString(
