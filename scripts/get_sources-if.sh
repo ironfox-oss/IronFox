@@ -1512,17 +1512,11 @@ function get_jdk_17() {
   local -r base_url="https://github.com/adoptium/temurin17-binaries/releases/download"
 
   if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
-    echo_red_text 'Downloading JDK (17) (Linux - ARM64)...'
-    download_file "${base_url}/jdk-${IRONFOX_JDK_17_VERSION}%2B${IRONFOX_JDK_17_REVISION}/OpenJDK17U-jdk_aarch64_linux_hotspot_${IRONFOX_JDK_17_VERSION}_${IRONFOX_JDK_17_REVISION}.tar.gz" "${IRONFOX_JDK_17}" "${IRONFOX_JDK_17_SHA512SUM_LINUX_ARM64}" || return 1
-
     echo_red_text 'Downloading JDK (17) (Linux - x86_64)...'
     download_file "${base_url}/jdk-${IRONFOX_JDK_17_VERSION}%2B${IRONFOX_JDK_17_REVISION}/OpenJDK17U-jdk_x64_linux_hotspot_${IRONFOX_JDK_17_VERSION}_${IRONFOX_JDK_17_REVISION}.tar.gz" "${IRONFOX_JDK_17}" "${IRONFOX_JDK_17_SHA512SUM_LINUX_X86_64}" || return 1
 
     echo_red_text 'Downloading JDK (17) (OS X - ARM64)...'
     download_file "${base_url}/jdk-${IRONFOX_JDK_17_VERSION}%2B${IRONFOX_JDK_17_REVISION}/OpenJDK17U-jdk_aarch64_mac_hotspot_${IRONFOX_JDK_17_VERSION}_${IRONFOX_JDK_17_REVISION}.tar.gz" "${IRONFOX_JDK_17}" "${IRONFOX_JDK_17_SHA512SUM_OSX_ARM64}" || return 1
-
-    echo_red_text 'Downloading JDK (17) (OS X - x86_64)...'
-    download_file "${base_url}/jdk-${IRONFOX_JDK_17_VERSION}%2B${IRONFOX_JDK_17_REVISION}/OpenJDK17U-jdk_x64_mac_hotspot_${IRONFOX_JDK_17_VERSION}_${IRONFOX_JDK_17_REVISION}.tar.gz" "${IRONFOX_JDK_17}" "${IRONFOX_JDK_17_SHA512SUM_OSX_X86_64}" || return 1
   else
     # Set our platform
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
@@ -1548,16 +1542,12 @@ function get_jdk_17() {
     if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
       if [[ "${IRONFOX_PLATFORM_ARCH}" == 'arm64' ]]; then
         local -r IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_OSX_ARM64}"
-      elif [[ "${IRONFOX_PLATFORM_ARCH}" == 'x86_64' ]]; then
-        local -r IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_OSX_X86_64}"
       else
         echo_red_text "ERROR: Unsupported architecture for JDK (17) on OS X: '${IRONFOX_PLATFORM_ARCH}'!"
         return 1
       fi
     elif [[ "${IRONFOX_PLATFORM}" == 'linux' ]]; then
-      if [[ "${IRONFOX_PLATFORM_ARCH}" == 'arm64' ]]; then
-        local -r IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_LINUX_ARM64}"
-      elif [[ "${IRONFOX_PLATFORM_ARCH}" == 'x86_64' ]]; then
+      if [[ "${IRONFOX_PLATFORM_ARCH}" == 'x86_64' ]]; then
         local -r IRONFOX_JDK_17_SHA512SUM="${IRONFOX_JDK_17_SHA512SUM_LINUX_X86_64}"
       else
         echo_red_text "ERROR: Unsupported architecture for JDK (17) on Linux: '${IRONFOX_PLATFORM_ARCH}'!"
