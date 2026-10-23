@@ -12,50 +12,50 @@ import java.net.URISyntaxException
  * @throws SecurityException if no host is listed.
  */
 class HostAllowlist(allowedHosts: String, private val allowInsecureHttp: Boolean = false) {
-    private val hosts: Set<String> = allowedHosts.split(",")
-        .map { it.trim().lowercase() }
-        .filter { it.isNotEmpty() }
-        .toSet()
+  private val hosts: Set<String> = allowedHosts.split(",")
+    .map { it.trim().lowercase() }
+    .filter { it.isNotEmpty() }
+    .toSet()
 
-    init {
-        if (hosts.isEmpty()) {
-            throw SecurityException("Updater host allowlist is empty")
-        }
+  init {
+    if (hosts.isEmpty()) {
+      throw SecurityException("Updater host allowlist is empty")
     }
+  }
 
-    /** Throws [SecurityException] unless [url] is an HTTPS (or, if enabled, HTTP) URL on an allowed host. */
-    fun requireAllowed(url: String) {
-        val uri = try {
-            URI(url)
-        } catch (e: URISyntaxException) {
-            throw SecurityException("Updater URL is malformed: $url", e)
-        }
-        if (!isSchemeAllowed(uri.scheme)) {
-            throw SecurityException("Updater URL is not HTTPS: $url")
-        }
-        val host = uri.host?.lowercase()
-        if (host == null || host !in hosts) {
-            throw SecurityException("Updater host '$host' is not allowed")
-        }
+  /** Throws [SecurityException] unless [url] is an HTTPS (or, if enabled, HTTP) URL on an allowed host. */
+  fun requireAllowed(url: String) {
+    val uri = try {
+      URI(url)
+    } catch (e: URISyntaxException) {
+      throw SecurityException("Updater URL is malformed: $url", e)
     }
-
-    /**
-     * Resolves a redirect [location] against [currentUrl], checks the result, and returns it.
-     *
-     * @throws SecurityException if the redirect leaves the allowlist or HTTPS.
-     */
-    fun requireAllowedRedirect(currentUrl: String, location: String): String {
-        val resolved = try {
-            URI(currentUrl).resolve(location).toString()
-        } catch (e: URISyntaxException) {
-            throw SecurityException("Updater redirect is malformed: $location", e)
-        } catch (e: IllegalArgumentException) {
-            throw SecurityException("Updater redirect is malformed: $location", e)
-        }
-        requireAllowed(resolved)
-        return resolved
+    if (!isSchemeAllowed(uri.scheme)) {
+      throw SecurityException("Updater URL is not HTTPS: $url")
     }
+    val host = uri.host?.lowercase()
+    if (host == null || host !in hosts) {
+      throw SecurityException("Updater host '$host' is not allowed")
+    }
+  }
 
-    private fun isSchemeAllowed(scheme: String?): Boolean =
-        "https".equals(scheme, ignoreCase = true) || (allowInsecureHttp && "http".equals(scheme, ignoreCase = true))
+  /**
+   * Resolves a redirect [location] against [currentUrl], checks the result, and returns it.
+   *
+   * @throws SecurityException if the redirect leaves the allowlist or HTTPS.
+   */
+  fun requireAllowedRedirect(currentUrl: String, location: String): String {
+    val resolved = try {
+      URI(currentUrl).resolve(location).toString()
+    } catch (e: URISyntaxException) {
+      throw SecurityException("Updater redirect is malformed: $location", e)
+    } catch (e: IllegalArgumentException) {
+      throw SecurityException("Updater redirect is malformed: $location", e)
+    }
+    requireAllowed(resolved)
+    return resolved
+  }
+
+  private fun isSchemeAllowed(scheme: String?): Boolean =
+    "https".equals(scheme, ignoreCase = true) || (allowInsecureHttp && "http".equals(scheme, ignoreCase = true))
 }

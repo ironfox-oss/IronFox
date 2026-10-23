@@ -7,8 +7,8 @@ package org.ironfoxoss.ironfox.updater
  * @property lowBits The low three bits of a version code built for this variant.
  */
 enum class Variant(val feedKey: String, val lowBits: Int) {
-    ARMEABI_V7A("armeabi-v7a", 0b000),
-    ARM64_V8A("arm64-v8a", 0b010),
-    X86_64("x86_64", 0b110),
-    UNIVERSAL("universal", 0b111),
+  ARMEABI_V7A("armeabi-v7a", 0b000),
+  ARM64_V8A("arm64-v8a", 0b010),
+  X86_64("x86_64", 0b110),
+  UNIVERSAL("universal", 0b111),
 }
