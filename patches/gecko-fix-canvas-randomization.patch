@@ -72,39 +72,4 @@ index 12492d606cc2..d16ecc6be00b 100644
            const auto pii = webgl::PackingInfoInfo::For(desc.pi);
            // DoReadPixels() requres pii to be Some().
            MOZ_ASSERT(pii.isSome());
-diff --git a/dom/canvas/OffscreenCanvasDisplayHelper.cpp b/dom/canvas/OffscreenCanvasDisplayHelper.cpp
-index 209d4980bc47..ca24bdc1c5f2 100644
---- a/dom/canvas/OffscreenCanvasDisplayHelper.cpp
-+++ b/dom/canvas/OffscreenCanvasDisplayHelper.cpp
-@@ -599,7 +599,7 @@ void OffscreenCanvasDisplayHelper::MaybeRandomizePixels(
-                                      aSize.height,
-                                      aSize.width * aSize.height * 4);
- 
--  if (aExtractionBehavior == CanvasUtils::ImageExtraction::Randomize) {
-+  if (aExtractionBehavior == CanvasUtils::ImageExtraction::Randomize || aExtractionBehavior == CanvasUtils::ImageExtraction::EfficientRandomize) {
-     nsRFPService::RandomizePixels(
-         cookieJarSettings, principal, aData, aSize.width, aSize.height,
-         aSize.width * aSize.height * 4, gfx::SurfaceFormat::A8R8G8B8_UINT32);
-diff --git a/toolkit/components/resistfingerprinting/nsRFPService.cpp b/toolkit/components/resistfingerprinting/nsRFPService.cpp
-index d900f49a3b1b..c81d308cb823 100644
---- a/toolkit/components/resistfingerprinting/nsRFPService.cpp
-+++ b/toolkit/components/resistfingerprinting/nsRFPService.cpp
-@@ -1886,7 +1886,7 @@ nsresult nsRFPService::RandomizeElements(
-   }
- 
-   // Don't randomize if all groups are uniform.
--  const bool allGroupsMatch = [&]() {
-+/*  const bool allGroupsMatch = [&]() {
-     auto itr = RangedPtr<const uint8_t>(aData, aSizeInBytes);
-     const auto itrEnd = itr + (groupCount * groupSize);
-     for (; itr != itrEnd; itr += groupSize) {
-@@ -1898,7 +1898,7 @@ nsresult nsRFPService::RandomizeElements(
-   }();
-   if (allGroupsMatch) {
-     return NS_OK;
--  }
-+  } */
- 
-   auto timerId =
-       glean::fingerprinting_protection::canvas_noise_calculate_time_2.Start();
 -- 
