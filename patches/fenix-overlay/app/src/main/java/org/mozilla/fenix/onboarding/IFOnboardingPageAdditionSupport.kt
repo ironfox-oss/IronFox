@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import mozilla.components.support.base.feature.LifecycleAwareFeature
+import org.ironfoxoss.core.IFConstants
 import org.mozilla.fenix.onboarding.view.OnboardingPageUiData
 import kotlin.coroutines.CoroutineContext
 
@@ -44,6 +45,7 @@ class IFOnboardingPageAdditionSupport(
 internal fun MutableList<OnboardingPageUiData>.removeIfPageNotReached(index: Int) {
   val searchWidgetIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.ADD_SEARCH_WIDGET }
   val syncIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.SYNC_SIGN_IN }
+  val updaterIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.IF_PREFERENCE_UPDATER }
 
   if (index < syncIndex) {
     removeAt(syncIndex)
@@ -51,5 +53,9 @@ internal fun MutableList<OnboardingPageUiData>.removeIfPageNotReached(index: Int
 
   if (index < searchWidgetIndex) {
     removeAt(searchWidgetIndex)
+  }
+
+  if (!IFConstants.IRONFOX_UPDATER && index < updaterIndex) {
+    removeAt(updaterIndex)
   }
 }

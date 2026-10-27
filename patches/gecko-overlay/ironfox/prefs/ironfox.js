@@ -16,7 +16,7 @@ pref("browser.ironfox.const.IRONFOX_FAQ_URL",                   "@IRONFOX_FAQ_UR
 pref("browser.ironfox.const.IRONFOX_RELEASES_URL",              "@IRONFOX_RELEASES_URL@", locked);
 pref("browser.ironfox.const.IRONFOX_REPO_GIT_URL",              "@IRONFOX_REPO_GIT_URL@", locked);
 pref("browser.ironfox.const.IRONFOX_REPO_URL",                  "@IRONFOX_REPO_URL@", locked);
-pref("browser.ironfox.const.IRONFOX_UPDATE_MANIFEST_URL",       "@IRONFOX_UPDATE_MANIFEST_URL@", locked);
+pref("browser.ironfox.const.IRONFOX_UPDATER_URL",               "@IRONFOX_UPDATER_URL@", locked);
 pref("browser.ironfox.const.IRONFOX_URL",                       "@IRONFOX_URL@", locked);
 pref("browser.ironfox.const.IRONFOX_VERSION",                   "@IRONFOX_VERSION@", locked);
 
@@ -30,6 +30,12 @@ pref("browser.ironfox.const.IRONFOX_VERSION",                   "@IRONFOX_VERSIO
   pref("browser.ironfox.const.IRONFOX_NIGHTLY", true, locked);
 #else
   pref("browser.ironfox.const.IRONFOX_NIGHTLY", false, locked);
+#endif
+
+#ifdef IRONFOX_UPDATER
+  pref("browser.ironfox.const.IRONFOX_UPDATER", true, locked);
+#else
+  pref("browser.ironfox.const.IRONFOX_UPDATER", false, locked);
 #endif
 
 /// Set-up AutoConfig

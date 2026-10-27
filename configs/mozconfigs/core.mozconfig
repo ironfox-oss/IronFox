@@ -111,6 +111,9 @@ ac_add_options --disable-nodejs
 ### https://support.mozilla.org/kb/customizing-firefox-using-autoconfig
 ac_add_options --enable-pref-extensions
 
+## Enable the built-in app updater
+ac_add_options --enable-ironfox-updater
+
 ## Enable isolated content process support
 ac_add_options --enable-isolated-zygote-process
 export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_WITH_ZYGOTE=1

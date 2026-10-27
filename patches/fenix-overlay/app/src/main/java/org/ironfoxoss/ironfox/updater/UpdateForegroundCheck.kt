@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import mozilla.components.support.base.log.logger.Logger
+import org.ironfoxoss.core.IFConstants
 
 /** Runs the automatic update check whenever IronFox comes to the foreground; the interval decides if it is due. */
 object UpdateForegroundCheck {
@@ -20,6 +21,7 @@ object UpdateForegroundCheck {
    * The first call in a process also cleans up after the previous run.
    */
   fun run(activity: FragmentActivity) {
+    if (!IFConstants.IRONFOX_UPDATER) return
     val controller = UpdateController.from(activity)
     observeInstallFailures(activity, controller)
     activity.lifecycleScope.launch {

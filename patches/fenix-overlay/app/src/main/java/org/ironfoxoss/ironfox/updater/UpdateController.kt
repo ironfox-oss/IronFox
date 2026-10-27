@@ -155,7 +155,7 @@ class UpdateController private constructor(
 
   private fun newChecker() = UpdateChecker(
     fetcher = newFetcher(),
-    feedUrl = IFConstants.IRONFOX_UPDATE_MANIFEST_URL,
+    feedUrl = IFConstants.IRONFOX_UPDATER_URL,
     settings = settings,
     packageName = IFConstants.IRONFOX_APP_ID,
     installedVersionCode = installedVersionCode,
@@ -169,7 +169,7 @@ class UpdateController private constructor(
   )
 
   private fun newFetcher(): AllowlistedFetcher {
-    val host = URI(IFConstants.IRONFOX_UPDATE_MANIFEST_URL).host.orEmpty()
+    val host = URI(IFConstants.IRONFOX_UPDATER_URL).host.orEmpty()
     val allowInsecureHttp = IFConstants.IRONFOX_NIGHTLY && settings.updaterAllowInsecureHttp
     return AllowlistedFetcher(client, HostAllowlist(host, allowInsecureHttp))
   }

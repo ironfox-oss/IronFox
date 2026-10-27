@@ -90,7 +90,6 @@ private data class IfPreferencesSwitchStates(
   val safeBrowsingEnabled: Boolean = true,
   val spoofEnglish: Boolean = true,
   val installUBlock: Boolean = true,
-  val updaterEnabled: Boolean = true,
 )
 
 private val logger = Logger("IronFoxOnboardingPreferences")
@@ -266,7 +265,6 @@ private fun IronFoxPreferenceConfiguration(
         IfPreferenceType.INSTALL_UBLOCK -> state.installUBlock
         IfPreferenceType.SAFE_BROWSING -> state.safeBrowsingEnabled
         IfPreferenceType.SPOOF_ENGLISH -> state.spoofEnglish
-        IfPreferenceType.UPDATER -> state.updaterEnabled
         IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
       },
       modifier = Modifier
@@ -279,7 +277,6 @@ private fun IronFoxPreferenceConfiguration(
             IfPreferenceType.INSTALL_UBLOCK -> state.copy(installUBlock = !state.installUBlock)
             IfPreferenceType.SAFE_BROWSING -> state.copy(safeBrowsingEnabled = !state.safeBrowsingEnabled)
             IfPreferenceType.SPOOF_ENGLISH -> state.copy(spoofEnglish = !state.spoofEnglish)
-            IfPreferenceType.UPDATER -> state.copy(updaterEnabled = !state.updaterEnabled)
             IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
           },
         )
@@ -334,10 +331,6 @@ private suspend fun applyPreference(
         state.installUBlock,
         onContentStateChange,
       )
-    }
-
-    IfPreferenceType.UPDATER -> {
-      context.components.settings.ironfox.updaterEnabled = state.updaterEnabled
     }
   }
 }

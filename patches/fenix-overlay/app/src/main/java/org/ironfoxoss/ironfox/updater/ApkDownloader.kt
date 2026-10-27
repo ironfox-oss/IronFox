@@ -3,6 +3,7 @@ package org.ironfoxoss.ironfox.updater
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import org.ironfoxoss.core.IFConstants
 
 /**
  * Downloads update APKs into the cache and keeps only the ones still worth having.
@@ -58,6 +59,7 @@ class ApkDownloader(
     }
 
   private fun download(offer: UpdateOffer, target: File, onProgress: (Int) -> Unit) {
+    if (!IFConstants.IRONFOX_UPDATER) return
     check(updatesDir.isDirectory || updatesDir.mkdirs()) { "Cannot create $updatesDir" }
     val partial = File(updatesDir, target.name + PARTIAL_SUFFIX)
     try {

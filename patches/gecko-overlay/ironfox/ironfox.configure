@@ -111,6 +111,21 @@ def ironfox_nightly(value):
 set_config("IRONFOX_NIGHTLY", ironfox_nightly)
 set_define("IRONFOX_NIGHTLY", ironfox_nightly)
 
+# Whether we should enable the built-in app updater
+option(
+  "--enable-ironfox-updater",
+  default=True,
+  help="Enable the built-in app updater",
+)
+
+@depends("--enable-ironfox-updater")
+def ironfox_updater(value):
+  if value:
+    return True
+
+set_config("IRONFOX_UPDATER", ironfox_updater)
+set_define("IRONFOX_UPDATER", ironfox_updater)
+
 # Get the release channel
 @depends("--enable-ironfox-release")
 def ironfox_channel(release):
@@ -164,20 +179,20 @@ set_define("IRONFOX_VERSION", ironfox_version)
 
 # Set the update manifest URL
 ## This is where the in-app updater looks for new releases (its host is the only host the updater will talk to)
-## Forks and local test builds can point it somewhere else with IRONFOX_UPDATE_MANIFEST_URL
+## Forks and local test builds can point it somewhere else with IRONFOX_UPDATER_URL
 option(
-  env="IRONFOX_UPDATE_MANIFEST_URL",
+  env="IRONFOX_UPDATER_URL",
   nargs="?",
   help="IronFox update manifest URL",
 )
 
-@depends("IRONFOX_UPDATE_MANIFEST_URL")
-def ironfox_update_manifest_url(url):
+@depends("IRONFOX_UPDATER_URL")
+def ironfox_updater_url(url):
   if not url:
     return "https://releases.ironfoxoss.org/ironfox/updates.json"
   return url[0]
 
-set_define("IRONFOX_UPDATE_MANIFEST_URL", ironfox_update_manifest_url)
+set_define("IRONFOX_UPDATER_URL", ironfox_updater_url)
 
 # Set app name
 @depends("--with-app-name")

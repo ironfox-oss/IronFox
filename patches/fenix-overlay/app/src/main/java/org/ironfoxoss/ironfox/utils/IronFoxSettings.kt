@@ -8,6 +8,7 @@ import mozilla.components.support.ktx.android.content.booleanPreference
 import mozilla.components.support.ktx.android.content.intPreference
 import mozilla.components.support.ktx.android.content.longPreference
 import mozilla.components.support.ktx.android.content.stringPreference
+import org.ironfoxoss.core.IFConstants
 import org.ironfoxoss.ironfox.updater.UpdateInterval
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.getPreferenceKey
@@ -305,7 +306,7 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
   var updaterAutoDownload by
     booleanPreference(
       key = context.getPreferenceKey(R.string.pref_key_updater_auto_download),
-      default = { updaterOriginalStore.isEmpty() },
+      default = { IFConstants.IRONFOX_UPDATER && updaterOriginalStore.isEmpty() },
     )
 
   var updaterDirectDownloads by
@@ -323,7 +324,7 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
   var updaterEnabled by
     booleanPreference(
       key = context.getPreferenceKey(R.string.pref_key_updater_enabled),
-      default = true,
+      default = IFConstants.IRONFOX_UPDATER,
     )
 
   var updaterIntervalHours by

@@ -15,6 +15,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import mozilla.components.ui.widgets.withCenterAlignedButtons
+import org.ironfoxoss.core.IFConstants
 import org.mozilla.fenix.BrowserDirection
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.HomeActivity
@@ -45,7 +46,7 @@ class UpdateUi(
   fun showForegroundUpdateDialog(offer: UpdateOffer) = showDialog(offer) { setCancelable(false) }
 
   private fun showDialog(offer: UpdateOffer, configure: AlertDialog.Builder.() -> Unit) {
-    if (controller.isUpdating || !dialogShowing.compareAndSet(false, true)) return
+    if (!IFConstants.IRONFOX_UPDATER || controller.isUpdating || !dialogShowing.compareAndSet(false, true)) return
     val store = controller.activeStore
     val builder = AlertDialog.Builder(activity)
       .setTitle(R.string.updater_dialog_title)

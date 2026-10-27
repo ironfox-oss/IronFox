@@ -1,6 +1,7 @@
 package org.ironfoxoss.ironfox.updater
 
 import java.io.IOException
+import org.ironfoxoss.core.IFConstants
 import org.ironfoxoss.ironfox.utils.IronFoxSettings
 
 /** The bounds of the user-chosen interval between automatic checks. */
@@ -60,7 +61,7 @@ class UpdateChecker(
    * @throws SecurityException if the feed leaves the host allowlist.
    */
   fun check(manual: Boolean): CheckResult {
-    if (!manual && !isDue()) return CheckResult.NotDue
+    if (!IFConstants.IRONFOX_UPDATER || (!manual && !isDue())) return CheckResult.NotDue
     val offer = fetchOffer()
     settings.updaterLastCheckMillis = clock()
     return when {

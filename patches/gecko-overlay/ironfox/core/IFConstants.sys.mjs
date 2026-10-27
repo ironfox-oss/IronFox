@@ -14,7 +14,7 @@ export const IFConstants = Object.freeze({
   IRONFOX_RELEASES_URL:             "@IRONFOX_RELEASES_URL@",
   IRONFOX_REPO_GIT_URL:             "@IRONFOX_REPO_GIT_URL@",
   IRONFOX_REPO_URL:                 "@IRONFOX_REPO_URL@",
-  IRONFOX_UPDATE_MANIFEST_URL:      "@IRONFOX_UPDATE_MANIFEST_URL@",
+  IRONFOX_UPDATER_URL:              "@IRONFOX_UPDATER_URL@",
   IRONFOX_URL:                      "@IRONFOX_URL@",
   IRONFOX_VERSION:                  "@IRONFOX_VERSION@",
 
@@ -27,6 +27,13 @@ export const IFConstants = Object.freeze({
 
   IRONFOX_NIGHTLY:
 #ifdef IRONFOX_NIGHTLY
+  true,
+#else
+  false,
+#endif
+
+  IRONFOX_UPDATER:
+#ifdef IRONFOX_UPDATER
   true,
 #else
   false,

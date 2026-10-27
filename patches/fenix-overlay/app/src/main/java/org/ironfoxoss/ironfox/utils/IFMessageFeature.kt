@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import mozilla.components.support.base.feature.LifecycleAwareFeature
 import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
 import mozilla.components.support.base.log.logger.Logger
+import org.ironfoxoss.core.IFConstants
 import org.ironfoxoss.core.R as ironfoxR
 import org.ironfoxoss.ironfox.utils.Action
 import org.ironfoxoss.ironfox.utils.IFMessageScreen
@@ -32,7 +33,10 @@ class IFMessageFeature(
 
   override fun start() {
     showDohMigrationMessage()
-    (activity as? FragmentActivity)?.let { UpdateForegroundCheck.run(it) }
+
+    if (IFConstants.IRONFOX_UPDATER) {
+      (activity as? FragmentActivity)?.let { UpdateForegroundCheck.run(it) }
+    }
   }
 
   override fun stop() {}

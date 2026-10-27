@@ -27,43 +27,45 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
 
   /** Attaches the listeners and shows the current state; safe to call on every resume. */
   fun bind() {
-    val settings = controller.settings
-    fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_enabled)
-      .setOnPreferenceChangeListener { _, value ->
-        settings.updaterEnabled = value as Boolean
+    if (IFConstants.IRONFOX_UPDATER) {
+      val settings = controller.settings
+      fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_enabled)
+        .setOnPreferenceChangeListener { _, value ->
+          settings.updaterEnabled = value as Boolean
+          true
+        }
+      fragment.requirePreference<SeekBarPreference>(R.string.pref_key_updater_interval_hours)
+        .setOnPreferenceChangeListener { preference, value ->
+          val hours = (value as Int).coerceIn(UpdateInterval.MIN_HOURS, UpdateInterval.MAX_HOURS)
+          settings.updaterIntervalHours = hours
+          (preference as SeekBarPreference).value = hours
+          false
+        }
+      fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_auto_download)
+        .setOnPreferenceChangeListener { _, value ->
+          val enabling = value as Boolean
+          if (enabling) confirmAutoDownload() else settings.updaterAutoDownload = false
+          !enabling
+        }
+      fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_direct_downloads)
+        .setOnPreferenceChangeListener { _, value ->
+          settings.updaterDirectDownloads = value as Boolean
+          refresh()
+          true
+        }
+      fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_allow_insecure_http)
+        .setOnPreferenceChangeListener { _, value ->
+          settings.updaterAllowInsecureHttp = value as Boolean
+          true
+        }
+      fragment.requirePreference<Preference>(R.string.pref_key_updater_status).setOnPreferenceClickListener {
+        controller.availableOffer?.let(ui::showUpdateDialog)
         true
       }
-    fragment.requirePreference<SeekBarPreference>(R.string.pref_key_updater_interval_hours)
-      .setOnPreferenceChangeListener { preference, value ->
-        val hours = (value as Int).coerceIn(UpdateInterval.MIN_HOURS, UpdateInterval.MAX_HOURS)
-        settings.updaterIntervalHours = hours
-        (preference as SeekBarPreference).value = hours
-        false
-      }
-    fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_auto_download)
-      .setOnPreferenceChangeListener { _, value ->
-        val enabling = value as Boolean
-        if (enabling) confirmAutoDownload() else settings.updaterAutoDownload = false
-        !enabling
-      }
-    fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_direct_downloads)
-      .setOnPreferenceChangeListener { _, value ->
-        settings.updaterDirectDownloads = value as Boolean
-        refresh()
+      fragment.requirePreference<Preference>(R.string.pref_key_updater_check_now).setOnPreferenceClickListener {
+        checkNow()
         true
       }
-    fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_allow_insecure_http)
-      .setOnPreferenceChangeListener { _, value ->
-        settings.updaterAllowInsecureHttp = value as Boolean
-        true
-      }
-    fragment.requirePreference<Preference>(R.string.pref_key_updater_status).setOnPreferenceClickListener {
-      controller.availableOffer?.let(ui::showUpdateDialog)
-      true
-    }
-    fragment.requirePreference<Preference>(R.string.pref_key_updater_check_now).setOnPreferenceClickListener {
-      checkNow()
-      true
     }
     refresh()
   }
@@ -79,35 +81,50 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
     // https://accrescent.app/docs/guide/appendix/requirements/#self-updaters)
     val directDownloadsSupported: Boolean = store == null || store.packageName != "app.accrescent.client"
 
-    fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_enabled).isChecked =
-      settings.updaterEnabled
-    fragment.requirePreference<SeekBarPreference>(R.string.pref_key_updater_interval_hours).value =
-      settings.updaterIntervalHours.coerceIn(UpdateInterval.MIN_HOURS, UpdateInterval.MAX_HOURS)
+    fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_enabled).apply {
+      isVisible = IFConstants.IRONFOX_UPDATER
+      isChecked = settings.updaterEnabled
+    }
+
+    fragment.requirePreference<SeekBarPreference>(R.string.pref_key_updater_interval_hours).apply {
+      isVisible = IFConstants.IRONFOX_UPDATER
+      value = settings.updaterIntervalHours.coerceIn(UpdateInterval.MIN_HOURS, UpdateInterval.MAX_HOURS)
+    }
+
     fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_direct_downloads).apply {
-      isVisible = directDownloadsSupported && store != null
+      isVisible = IFConstants.IRONFOX_UPDATER && directDownloadsSupported && store != null
       isChecked = settings.updaterDirectDownloads
       if (store != null) summary = this@UpdaterPreferences.fragment.getString(R.string.updater_direct_downloads_summary, store.displayName)
     }
+
     fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_auto_download).apply {
       val downloadsDirectly = controller.activeStore == null
-      isVisible = directDownloadsSupported
+      isVisible = IFConstants.IRONFOX_UPDATER && directDownloadsSupported
       isEnabled = downloadsDirectly
       isChecked = settings.updaterAutoDownload && downloadsDirectly
       summary = this@UpdaterPreferences.fragment.getString(
         if (downloadsDirectly) R.string.updater_auto_download_summary else R.string.updater_auto_download_needs_direct_summary,
       )
     }
+
     fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_allow_insecure_http).apply {
-      isVisible = IFConstants.IRONFOX_NIGHTLY && showSecretDebugMenuThisSession
+      isVisible = IFConstants.IRONFOX_UPDATER && IFConstants.IRONFOX_NIGHTLY && showSecretDebugMenuThisSession
       isEnabled = !httpsOnlyInAllTabs
       isChecked = settings.updaterAllowInsecureHttp && !httpsOnlyInAllTabs
       summary = this@UpdaterPreferences.fragment.getString(
         if (httpsOnlyInAllTabs) R.string.updater_insecure_http_blocked_summary else R.string.updater_insecure_http_summary,
       )
     }
-    fragment.requirePreference<Preference>(R.string.pref_key_updater_source).summary =
-      controller.activeStore?.displayName ?: fragment.getString(R.string.updater_source_direct)
-    fragment.requirePreference<Preference>(R.string.pref_key_updater_status).summary = statusText()
+
+    fragment.requirePreference<Preference>(R.string.pref_key_updater_source).apply {
+      isVisible = IFConstants.IRONFOX_UPDATER
+      summary = controller.activeStore?.displayName ?: this@UpdaterPreferences.fragment.getString(R.string.updater_source_direct)
+    }
+
+    fragment.requirePreference<Preference>(R.string.pref_key_updater_status).apply {
+      isVisible = IFConstants.IRONFOX_UPDATER
+      summary = statusText()
+    }
   }
 
   private fun confirmAutoDownload() {
@@ -141,6 +158,7 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
   }
 
   private fun checkNow() {
+    if (!IFConstants.IRONFOX_UPDATER) return
     fragment.viewLifecycleOwner.lifecycleScope.launch {
       transientStatus = fragment.getString(R.string.updater_status_checking)
       refresh()

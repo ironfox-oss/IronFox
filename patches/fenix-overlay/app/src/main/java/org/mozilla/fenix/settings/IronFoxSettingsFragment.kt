@@ -29,6 +29,7 @@ import org.mozilla.fenix.ext.getPreferenceKey
 import org.mozilla.fenix.ext.requireComponents
 import org.mozilla.fenix.ext.showToolbar
 import org.mozilla.fenix.settings.requirePreference
+import org.ironfoxoss.core.IFConstants
 import org.ironfoxoss.ironfox.updater.UpdaterPreferences
 import org.mozilla.fenix.utils.view.addToRadioGroup
 
@@ -49,6 +50,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
   override fun onResume() {
     super.onResume()
     showToolbar(getString(ironfoxR.string.if_preferences))
+
     updaterPreferences.bind()
 
     /*** Miscellaneous ***/
@@ -816,6 +818,11 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
         isChecked = IronFoxPreferences.shouldUseUnifiedPush(requireContext())
       }
     }
+    if (!IFConstants.IRONFOX_UPDATER) {
+      findPreference<PreferenceCategory>(
+        getPreferenceKey(fenixR.string.pref_key_if_updater),
+      )?.isVisible = false
+    }
     setupAutoplayBlockingPolicy()
     setupCrossOriginRefererPolicy()
     setupWebsiteAppearance()
@@ -827,7 +834,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFr
 
     val alwaysUsePB = IronFoxPreferences.isAlwaysUsePrivateBrowsing(requireContext())
     val historyEnabled = IronFoxPreferences.isHistoryEnabled(requireContext())
-    
+
     if (!historyEnabled || alwaysUsePB) {
       engine.settings.historyTrackingDelegate = null
     } else {
