@@ -79,7 +79,9 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
     fragment.requirePreference<SeekBarPreference>(R.string.pref_key_updater_interval_hours).value =
       settings.updaterIntervalHours.coerceIn(UpdateInterval.MIN_HOURS, UpdateInterval.MAX_HOURS)
     fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_direct_downloads).apply {
-      isVisible = store != null
+      // (We can't support switching to direct downloads for Accrescent builds, to avoid violating their policies:
+      // https://accrescent.app/docs/guide/appendix/requirements/#self-updaters)
+      isVisible = store != null && store.packageName != "app.accrescent.client"
       isChecked = settings.updaterDirectDownloads
       if (store != null) summary = this@UpdaterPreferences.fragment.getString(R.string.updater_direct_downloads_summary, store.displayName)
     }
