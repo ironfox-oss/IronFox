@@ -256,6 +256,7 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_is_user_meta_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_moloco_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_pairing_campaign_attributed, false) // [DEFAULT]
+    prefs.setBoolPref(R.string.pref_key_is_user_quora_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_rakuten_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_reddit_attributed, false) // [DEFAULT]
     prefs.setBoolPref(R.string.pref_key_is_user_skyflag_attributed, false) // [DEFAULT]

@@ -8,15 +8,15 @@ Allows users to search for IronFox-specific UI settings.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
-index 1edff31a4346..35e2b8f20f34 100644
+index 3072be9e99e7..aac967c7eb75 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
-@@ -366,6 +366,7 @@ class DefaultFenixSettingsIndexer(
-                 PreferenceFileInformation.TabsPreferences,
-                 PreferenceFileInformation.TrackingProtectionPreferences,
-                 PreferenceFileInformation.SaveLoginsPreferences,
-+                PreferenceFileInformation.IronFoxPreferences,
-             )
+@@ -373,6 +373,7 @@ class DefaultFenixSettingsIndexer(
+                 if (includeAutofillPreferences) {
+                     add(PreferenceFileInformation.SaveLoginsPreferences)
+                 }
++                add(PreferenceFileInformation.IronFoxPreferences)
+             }
  
          /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/PreferenceFileInformation.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/PreferenceFileInformation.kt

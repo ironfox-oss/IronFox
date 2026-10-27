@@ -1019,7 +1019,7 @@ function prepare_firefox() {
   # Remove Glean
   deglean_firefox || return 1
 
-  "${IRONFOX_SED}" -i 's/1753c69b71ae24a9b339d98e9b71166740a15506cfc46245251eb63c0222568f/0414411ba8ef1580ccd812794c5f843e9726d2af28e916cdd2359ce55d0215de/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json" || return 1
+  "${IRONFOX_SED}" -i 's/8b28662ab15031496b495fa701f211aa336c119b99c25b522be6f396a1231891/c78330d24c41b1c23cf161cf8f32a2d7c0879989e2a11938f6c276791def98f4/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json" || return 1
   "${IRONFOX_SED}" -i 's/ada8f059f0fa8a3a82315606318429d3a70200bbb2886d1a1bcaad2856a6303b/9e2f2f22f500be3e80638131fb0921c47702d377aaa13f4662d51dae57c21155/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json" || return 1
 
   ## We also need to de-glean Android Components here, as not doing so appears to cause build failures for ex. GeckoView

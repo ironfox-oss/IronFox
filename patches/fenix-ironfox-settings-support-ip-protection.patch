@@ -8,7 +8,7 @@ Provides support for a UI setting to enable/disable Firefox VPN (IP Protection).
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/FenixIPProtectionEligibilityStorage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/FenixIPProtectionEligibilityStorage.kt
-index 212e6c60df3c..41774aa13ca0 100644
+index 1a2dff144bfb..c62bb2317af7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/FenixIPProtectionEligibilityStorage.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/FenixIPProtectionEligibilityStorage.kt
 @@ -18,6 +18,9 @@ import mozilla.components.feature.ipprotection.IPProtectionEligibilityStorage
@@ -41,9 +41,9 @@ index 212e6c60df3c..41774aa13ca0 100644
                          secretOverride -> EligibilityStatus.Eligible
 -                        !nimbus.enabled -> EligibilityStatus.Ineligible
 +                        !ipProtectionEnabled || !fxaEnabled || !fxaSignedIn || !nimbus.enabled -> EligibilityStatus.Ineligible
-                         region?.home in nimbus.allowedRegions -> EligibilityStatus.Eligible
+                         region == null -> EligibilityStatus.Unknown
+                         region.home in nimbus.allowedRegions -> EligibilityStatus.Eligible
                          else -> EligibilityStatus.UnsupportedRegion
-                     }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt
 index a2f3b58abf0c4..e34c3333f5d82 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt

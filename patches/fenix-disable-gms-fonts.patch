@@ -38,28 +38,28 @@ index d867c71ba500..7c926e8be14b 100644
      implementation libs.androidx.fragment
      implementation libs.androidx.fragment.compose
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 7a166ddc83aae..e554eb0eb352f 100644
+index 1b30426f6452..7a704aa40375 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -20,7 +20,7 @@ import androidx.compose.runtime.Composable
- import androidx.core.app.NotificationManagerCompat
+@@ -22,7 +22,8 @@ import androidx.core.app.NotificationManagerCompat
+ import androidx.core.content.edit
  import androidx.core.content.getSystemService
  import androidx.core.net.toUri
 -import androidx.emoji2.text.DefaultEmojiCompatConfig
++import androidx.core.content.ContextCompat
 +import androidx.emoji2.bundled.BundledEmojiCompatConfig
  import androidx.emoji2.text.EmojiCompat
  import androidx.lifecycle.ProcessLifecycleOwner
  import androidx.work.Configuration.Builder
-@@ -1291,9 +1291,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-      * Defaults to [ioDispatcher].
-      */
+@@ -1370,9 +1371,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
      private suspend fun initializeEmojiCompat(dispatcher: CoroutineDispatcher = ioDispatcher) {
+         if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) return
+ 
 -        withContext(dispatcher) {
 +        if (true) {
              // If the device has no compatible provider (e.g. no Play Services), config will be null.
 -            val config = DefaultEmojiCompatConfig.create(applicationContext) ?: return@withContext
-+            @Suppress("DEPRECATION")
-+            val config = BundledEmojiCompatConfig(applicationContext)
++            val config = BundledEmojiCompatConfig(applicationContext, ContextCompat.getMainExecutor(applicationContext))
  
              config.setReplaceAll(true)
  

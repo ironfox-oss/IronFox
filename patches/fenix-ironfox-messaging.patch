@@ -104,13 +104,13 @@ index 1312a62fa3be..555468bb4df4 100644
      private fun initInteractor() {
          _sessionControlInteractor =
 diff --git a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
-index 2a74ab01ff9c..39fcfb7d2f48 100644
+index fdfce3d75dde..54ae03448d28 100644
 --- a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
 +++ b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
-@@ -303,6 +303,13 @@
+@@ -306,6 +306,13 @@
          <action
-             android:id="@+id/action_homeFragment_to_global_protections_dashboard"
-             app:destination="@id/global_protections_dashboard" />
+           android:id="@+id/action_homeFragment_to_menuFragment"
+           app:destination="@id/menu_graph" />
 +        <action
 +          android:id="@+id/action_homeFragment_to_dohSettingsFragment"
 +          app:destination="@id/dohSettingsFragment"
@@ -121,7 +121,7 @@ index 2a74ab01ff9c..39fcfb7d2f48 100644
      </fragment>
  
      <fragment
-@@ -440,6 +447,13 @@
+@@ -443,6 +450,13 @@
          <action
            android:id="@+id/action_browserFragment_to_menuFragment"
            app:destination="@id/menu_graph" />

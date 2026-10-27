@@ -2,40 +2,40 @@
 # Sources
 
 # Firefox
-# Version: 158.0.2 (RELEASE)
+# Version: 159.0 (BUILD1)
 # https://github.com/mozilla-firefox/firefox
-readonly IRONFOX_GECKO_COMMIT='08d23041955657e661eef22c8fdc967735300233'
-readonly IRONFOX_GECKO_SHA512SUM='c3508ea58e18f45c12ffe906d3ba94ae9a083bd6326dcbeeb4514c668d4b34caec2a81989f8c26125d5f06bc5ae0f1728ca445fed08d601769af13606793bca3'
-readonly IRONFOX_GECKO_VERSION='158.0.2'
+readonly IRONFOX_GECKO_COMMIT='9a2dc53c369c7ae5172018b35988e1d2ffeff402'
+readonly IRONFOX_GECKO_SHA512SUM='a57796e5c3556c8fe424af8996c678ae860c00d8672e0a5261a39f977a9a98b98720f2079b985da5e0af725a56cf89c4fba70695d54dae205e43e03abc3f3144'
+readonly IRONFOX_GECKO_VERSION='159.0'
 
 # IronFox
 readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}"
 
 # This value is used for ex. producing reproducable archives, and its value should be bumped upon new releases
-readonly IRONFOX_VERSION_DATE='2026.10.21'
+readonly IRONFOX_VERSION_DATE='2026.10.27'
 
 # Application Services
-# Version: v158.0
+# Version: v159.0.1
 # https://github.com/mozilla/application-services
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt)
-readonly IRONFOX_AS_COMMIT='c20f69b26d0dd17555bf370ece4565c6f5efc854'
-readonly IRONFOX_AS_SHA512SUM='a5f5531673e532da075e8c5cb0bae9d995d76eb80f78ca19282d62946bb748a6f8f249e8d38843d18161bb2774e96b655f0ddf017792feaeeac7a413052c3502'
-readonly IRONFOX_AS_VERSION='158.0'
+readonly IRONFOX_AS_COMMIT='0d2c998a9c3a08be03806cc62164ffa066623133'
+readonly IRONFOX_AS_SHA512SUM='6664e1a59447e549c4a9c4334b6dd62799ba503c02d03eeea2b2929d1612c637bf923920feaabcfc88dfa94bf775d45639c3c3d744be31c8e177632e1b1fae60'
+readonly IRONFOX_AS_VERSION='159.0.1'
 
 # firefox-l10n
 # https://github.com/mozilla-l10n/firefox-l10n
 # NOTE: This repo is updated several times a day...
 # so I think best approach here will be for us to just update it alongside new releases
-readonly IRONFOX_L10N_CENTRAL_COMMIT='2b43666290f9cb7964b54087935852e3a226b998'
-readonly IRONFOX_L10N_CENTRAL_SHA512SUM='e97d3dcf8a680c63b1a5d5d75e5a8ae6ce2953486832733f54f6680a2bfe53965ba7bb43c05cdcd9b5cd692897e8f57774cb7b3019ebfb4f8a8343fedf31add4'
+readonly IRONFOX_L10N_CENTRAL_COMMIT='0ec2b5cc91d0d7d1cad7794cfbf6d51008a7f633'
+readonly IRONFOX_L10N_CENTRAL_SHA512SUM='f823d3bf2fc35d2fca379190c929d0700fbfd61dd02ad0ed65bb82b81d0d09f634b44eb4b82e94c8339fee6e076411c9ad477174e69dceb0865d33425253b1ee'
 
 # Glean
-# Version: 70.2.0
+# Version: 70.2.1
 # https://github.com/mozilla/glean
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/gradle/libs.versions.toml)
-readonly IRONFOX_GLEAN_COMMIT='9d987fd33e1dc3f2a89e5f5c4565ae696245f6eb'
-readonly IRONFOX_GLEAN_SHA512SUM='c13c07cd355016059c8f60fb3f0502e7f778d534e03e565e48cac089a9c8d34f71fa6bb46090a49cd6426e0ba7ed1d1246758864e28427851eab73553ea59668'
-readonly IRONFOX_GLEAN_VERSION='70.2.0'
+readonly IRONFOX_GLEAN_COMMIT='1208715a85f7e9611729a199dc8955ec1bf3162d'
+readonly IRONFOX_GLEAN_SHA512SUM='eeffff6474c7a82172e787e9016d929c31bf153b86ebde12186c7512bcc868f41e691b7f815e2c3191ab0055660cf5d9fee838bde6a556013ef123ab8378679c'
+readonly IRONFOX_GLEAN_VERSION='70.2.1'
 
 # Glean Parser
 # Version: v20.2.0
@@ -153,8 +153,8 @@ readonly IRONFOX_CBINDGEN_VERSION='0.29.4'
 
 # Gradle (F-Droid)
 # https://gitlab.com/fdroid/gradlew-fdroid
-readonly IRONFOX_GRADLE_COMMIT='c7227d147483979bb5c408048cee3533a8814fb0'
-readonly IRONFOX_GRADLE_SHA512SUM='43b54c6814d24ec3661262e124f527802056386f94f5b63ad51c7eeaf4503a92c503d0eb025220364d98491c23459a4662a62247a9f092823a626ac39dc860e4'
+readonly IRONFOX_GRADLE_COMMIT='ac23ffb5285c0c0961a677e310dd58ef90531057'
+readonly IRONFOX_GRADLE_SHA512SUM='5a42f32b9e330856fb36511f4f73374aaaa2851e5cf3509ce870f59a4a189248e472f4f3b45d01c4905737bff9a1142c330f22e037f93a2f49ce3cbc7dd243c7'
 
 # GYP
 # Version: v0.22.2

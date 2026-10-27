@@ -8,27 +8,18 @@ Adds minor tweaks to the browser's user interface.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-index 91dddf5d6ac7..cf0e2513e89c 100644
+index aec18f553f7e..02f9c913879a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-@@ -148,6 +148,8 @@ fun MainMenu(
-     webExtensionMenuCount: Int,
+@@ -150,6 +150,7 @@ fun MainMenu(
      showIPProtection: Boolean,
+     showPasswords: Boolean,
      ipProtectionMenuState: IPProtectionMenuState,
-+    isPasswordManagerEnabled: Boolean,
 +    isFxaSignedIn: Boolean,
      onMoreMenuClick: () -> Unit,
      onCustomizeReaderViewMenuClick: () -> Unit,
      onMozillaAccountButtonClick: () -> Unit,
-@@ -307,6 +309,7 @@ fun MainMenu(
- 
-         LibraryMenuGroup(
-             isDownloadHighlighted = isDownloadHighlighted,
-+            isPasswordManagerEnabled = isPasswordManagerEnabled,
-             onBookmarksMenuClick = onBookmarksMenuClick,
-             onHistoryMenuClick = onHistoryMenuClick,
-             onDownloadsMenuClick = onDownloadsMenuClick,
-@@ -314,11 +317,13 @@ fun MainMenu(
+@@ -317,11 +318,13 @@ fun MainMenu(
          )
  
          MenuGroup {
@@ -47,53 +38,18 @@ index 91dddf5d6ac7..cf0e2513e89c 100644
  
              if (accessPoint == MenuAccessPoint.Home) {
                  MenuItem(
-@@ -504,6 +509,7 @@ private fun MoreMenuButtonGroup(
- @Suppress("LongMethod")
- private fun LibraryMenuGroup(
-     isDownloadHighlighted: Boolean = false,
-+    isPasswordManagerEnabled: Boolean = false,
-     onBookmarksMenuClick: () -> Unit,
-     onHistoryMenuClick: () -> Unit,
-     onDownloadsMenuClick: () -> Unit,
-@@ -568,14 +574,16 @@ private fun LibraryMenuGroup(
- 
-         Spacer(Modifier.width(spacerWidth))
- 
--        LibraryMenuItem(
--            modifier = Modifier.weight(1f).fillMaxHeight(),
--            iconRes = iconsR.drawable.mozac_ic_login_24,
--            labelRes = R.string.browser_menu_passwords,
--            shape = rightShape,
--            index = 3,
--            onClick = onPasswordsMenuClick,
--        )
-+        if (isPasswordManagerEnabled) {
-+            LibraryMenuItem(
-+                modifier = Modifier.weight(1f).fillMaxHeight(),
-+                iconRes = iconsR.drawable.mozac_ic_login_24,
-+                labelRes = R.string.browser_menu_passwords,
-+                shape = rightShape,
-+                index = 3,
-+                onClick = onPasswordsMenuClick,
-+            )
-+        }
-     }
- }
- 
-@@ -738,6 +746,8 @@ private fun MenuDialogPreview(@PreviewParameter(PreviewThemeProvider::class) the
-                 webExtensionMenuCount = 1,
+@@ -745,6 +748,7 @@ private fun MenuDialogPreview(@PreviewParameter(PreviewThemeProvider::class) the
                  showIPProtection = true,
+                 showPasswords = true,
                  ipProtectionMenuState = IPProtectionMenuState(),
-+                isPasswordManagerEnabled = false,
 +                isFxaSignedIn = false,
                  onMoreMenuClick = {},
                  onCustomizeReaderViewMenuClick = {},
                  onMozillaAccountButtonClick = {},
-@@ -801,6 +811,8 @@ private fun MenuDialogPrivatePreview(
+@@ -808,6 +812,7 @@ private fun MenuDialogPrivatePreview(
                  showBanner = true,
                  isDownloadHighlighted = true,
                  webExtensionMenuCount = 0,
-+                isPasswordManagerEnabled = false,
 +                isFxaSignedIn = false,
                  onMoreMenuClick = {},
                  onCustomizeReaderViewMenuClick = {},
@@ -147,7 +103,7 @@ index bafe4f957dfe..2a73dc0f856f 100644
                      isPrivate = false,
                      onWebCompatReporterClick = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 2d14245b95f4..c5be8a74d5d3 100644
+index 73ad76287577..6984592ee0ba 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 @@ -532,7 +532,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
@@ -159,16 +115,19 @@ index 2d14245b95f4..c5be8a74d5d3 100644
                                  isBottomToolbar = settings.shouldUseBottomToolbar,
                                  isExpandedToolbarEnabled = settings.shouldUseExpandedToolbar,
                                  isSiteLoading = isSiteLoading,
-@@ -552,6 +552,8 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -552,9 +552,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                                  showBanner = shouldShowMenuBanner && !defaultBrowser,
                                  isDownloadHighlighted = isDownloadHighlighted,
                                  webExtensionMenuCount = webExtensionsCount,
-+                                isPasswordManagerEnabled = settings.shouldPromptToSaveLogins,
 +                                isFxaSignedIn = settings.ironfox.fxaEnabled && settings.signedInFxaAccount,
                                  isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
                                  showIPProtection = components.ipProtection.store.state.isEligible,
+-                                showPasswords = settings.isAutofillSupported,
++                                showPasswords = settings.isAutofillSupported && settings.shouldPromptToSaveLogins,
                                  ipProtectionMenuState = ipProtectionMenuState,
-@@ -662,9 +664,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                                 onMozillaAccountButtonClick = {
+                                     menuStore.dispatch(
+@@ -663,9 +664,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                                          externalAppName = appLinksRedirect?.appName ?: "",
                                          isOpenInAppMenuHighlighted = isOpenInAppMenuHighlighted,
                                          translationInfo = translationInfo,

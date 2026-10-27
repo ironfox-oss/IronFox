@@ -23,10 +23,10 @@ index d867c71ba500..8b6f86ab1ecc 100644
      // Reading the sentry token from a local file (if it exists). In a release task on taskcluster it will be available.
      buildConfigField 'String', 'SENTRY_TOKEN', 'null'
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 13f9f6166f53..f0c0ee373410 100644
+index 37f1465be702..3153791cd436 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -65,14 +65,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
+@@ -63,14 +63,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
  import mozilla.components.feature.search.SearchApplicationName
  import mozilla.components.feature.search.SearchDeviceType
  import mozilla.components.feature.search.SearchUpdateChannel
@@ -75,12 +75,12 @@ index 13f9f6166f53..f0c0ee373410 100644
                  // Install the "icons" WebExtension to automatically load icons for every visited website.
                  icons.install(engine, this)
  
--                CoroutineScope(Dispatchers.Main).launch {
-+/*                CoroutineScope(Dispatchers.Main).launch {
+-                applicationScope.launch {
++/*                applicationScope.launch {
                      val providerList =
-                         withContext(Dispatchers.IO) {
-                             SerpTelemetryRepository(
-@@ -432,7 +432,7 @@ class Core(
+                         SerpTelemetryRepository(
+                                 collectionName = COLLECTION_NAME,
+@@ -430,7 +430,7 @@ class Core(
                      adsTelemetry.install(engine, this@apply, providerList)
                      // Install the "cookies" WebExtension and tracks user interaction with SERPs.
                      searchTelemetry.install(engine, this@apply, providerList)
@@ -89,7 +89,7 @@ index 13f9f6166f53..f0c0ee373410 100644
  
                  WebNotificationFeature(
                      context,
-@@ -493,7 +493,7 @@ class Core(
+@@ -491,7 +491,7 @@ class Core(
          )
      }
  
@@ -98,7 +98,7 @@ index 13f9f6166f53..f0c0ee373410 100644
          context.components.analytics.metrics
      }
  
-@@ -503,7 +503,7 @@ class Core(
+@@ -501,7 +501,7 @@ class Core(
  
      val searchTelemetry by lazyMonitored {
          InContentTelemetry()

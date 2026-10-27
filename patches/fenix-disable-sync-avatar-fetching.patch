@@ -8,52 +8,50 @@ Prevents the browser from downloading the user's profile picture from Mozilla if
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
-index 288150bc6368..a977f4ecdecf 100644
+index 876982af7924..969c8336ca32 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
-@@ -187,7 +187,7 @@ private fun AvatarIcon(
-     } else if (accountState is AuthenticationProblem) {
+@@ -176,9 +176,9 @@ private fun AvatarIcon(
+     if (accountState is AuthenticationProblem) {
          WarningAvatarIcon()
      } else {
 -        val avatarUrl = account?.avatar?.url
-+/*        val avatarUrl = account?.avatar?.url
++        FallbackAvatarIcon()
  
-         if (avatarUrl != null) {
+-        if (avatarUrl != null) {
++/*        if (avatarUrl != null) {
              Image(
-@@ -199,9 +199,9 @@ private fun AvatarIcon(
-                 placeholder = { FallbackAvatarIcon() },
-                 fallback = { FallbackAvatarIcon() },
+                 url = avatarUrl,
+                 modifier = Modifier.clip(CircleShape).size(AVATAR_SIZE),
+@@ -188,7 +188,7 @@ private fun AvatarIcon(
              )
--        } else {
-+        } else { */
+         } else {
              FallbackAvatarIcon()
 -        }
-+//        }
++        } */
      }
  }
  
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
-index da8fa9afaa7f..be8b28ff70f6 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
-@@ -51,16 +51,16 @@ class AccountUiView(
-             preferenceSignIn.isVisible = false
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountPreferenceUpdater.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountPreferenceUpdater.kt
+index 036068316c11..44a001b07adf 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountPreferenceUpdater.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountPreferenceUpdater.kt
+@@ -43,14 +43,14 @@ class AccountPreferenceUpdater(
+         preference.email = profile?.email
  
-             avatarJob?.cancel()
--            val avatarUrl = profile?.avatar?.url
-+/*            val avatarUrl = profile?.avatar?.url
-             if (avatarUrl != null) {
-                 avatarJob = scope.launch {
-                     val roundedAvatarDrawable = toRoundedDrawable(avatarUrl, context)
-                     preferenceFirefoxAccount.icon = roundedAvatarDrawable ?: genericAvatar(context)
-                 }
--            } else {
-+            } else { */
-                 avatarJob = null
-                 preferenceFirefoxAccount.icon = genericAvatar(context)
--            }
-+//            }
+         avatarJob?.cancel()
+-        val avatarUrl = profile?.avatar?.url
+-        if (avatarUrl == null) {
++//        val avatarUrl = profile?.avatar?.url
++        if (true) {
+             preference.icon = genericAvatar(context)
+             return
+         }
  
-             preferenceSignIn.onPreferenceClickListener = null
-             preferenceFirefoxAccountAuthError.isVisible = false
+         avatarJob = scope.launch {
+-            preference.icon = toRoundedDrawable(avatarUrl, context) ?: genericAvatar(context)
++            preference.icon = genericAvatar(context)
+         }
+     }
+ 
 -- 

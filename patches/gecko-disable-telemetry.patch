@@ -21,15 +21,15 @@ index 077c7ca2f14b..e6fa430c772d 100644
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
 diff --git a/python/sites/mach.txt b/python/sites/mach.txt
-index d1f054b20871..f4129b4c68ad 100644
+index 0f800b6813fe..1b74085c26b8 100644
 --- a/python/sites/mach.txt
 +++ b/python/sites/mach.txt
 @@ -58,7 +58,7 @@ pth:xpcom/geckoprocesstypes_generator
  pth:xpcom/idl-parser
  # glean-sdk may not be installable if a wheel isn't available
  # and it has to be built from source.
--pypi-optional:glean-sdk==70.2.0:telemetry will not be collected
-+# pypi-optional:glean-sdk==70.2.0:telemetry will not be collected
+-pypi-optional:glean-sdk==70.2.1:telemetry will not be collected
++# pypi-optional:glean-sdk==70.2.1:telemetry will not be collected
  pypi-optional:orjson>=3.10:json operations will be slower in various tools
  # Mach gracefully handles the case where `psutil` is unavailable.
  # We aren't (yet) able to pin packages in automation, so we have to
@@ -81,10 +81,10 @@ index 22dfab5a45f4..21ee5138beb4 100644
  ]
  
 diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
-index 7a1fcc784204..edfe15b22e08 100644
+index c8494da71ddd..021b298e6e74 100644
 --- a/toolkit/components/glean/src/init/mod.rs
 +++ b/toolkit/components/glean/src/init/mod.rs
-@@ -71,7 +71,7 @@ pub extern "C" fn fog_init(
+@@ -74,7 +74,7 @@ pub extern "C" fn fog_init(
      disable_internal_pings: bool,
  ) -> nsresult {
      // On Android always enable Glean upload.
@@ -93,16 +93,21 @@ index 7a1fcc784204..edfe15b22e08 100644
      // Don't set up an uploader.
      let uploader = None;
  
-@@ -102,7 +102,7 @@ fn fog_init_internal(
+@@ -105,10 +105,10 @@ fn fog_init_internal(
  
-     conf.upload_enabled = upload_enabled;
+     let (mut conf, client_info) = build_configuration(data_path_override, app_id_override)?;
+ 
+-    conf.upload_enabled = upload_enabled;
++    conf.upload_enabled = false;
      conf.uploader = uploader;
 -    conf.enable_internal_pings = enable_internal_pings;
+-    conf.enable_store_submitted_pings = enable_store_submitted_pings;
 +    conf.enable_internal_pings = false;
++    conf.enable_store_submitted_pings = false;
  
      // If we're operating in automation without any specific source tags to set,
      // set the tag "automation" so any pings that escape don't clutter the tables.
-@@ -117,7 +117,7 @@ fn fog_init_internal(
+@@ -123,7 +123,7 @@ fn fog_init_internal(
      log::debug!("Configuration: {:#?}", conf);
  
      // Register all custom pings before we initialize.

@@ -229,19 +229,19 @@ index adaf2ac411b4..e02d1b0e4c41 100644
  
      override fun handleTopSiteSettingsClicked() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index daf3317dfa7b..9c56e14ff14d 100644
+index cc25d9e578..514785e164 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -158,7 +158,7 @@ import org.mozilla.fenix.ext.recordEventInNimbus
- import org.mozilla.fenix.ext.setNavigationIcon
+@@ -157,7 +157,7 @@ import org.mozilla.fenix.ext.setNavigationIcon
  import org.mozilla.fenix.extension.WebExtensionPromptFeature
  import org.mozilla.fenix.home.HomeFragment
+ import org.mozilla.fenix.home.HomeFragmentDirections
 -import org.mozilla.fenix.home.TopSitesRefresher
 +// import org.mozilla.fenix.home.TopSitesRefresher
  import org.mozilla.fenix.home.intent.AssistIntentProcessor
  import org.mozilla.fenix.home.intent.CrashReporterIntentProcessor
  import org.mozilla.fenix.home.intent.HomeDeepLinkIntentProcessor
-@@ -639,12 +639,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -638,12 +638,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              serviceWorkerSupport,
              crashReporterBinding,
              defaultPinnedSitesBinding,
@@ -256,16 +256,19 @@ index daf3317dfa7b..9c56e14ff14d 100644
              downloadSnackbar,
              privateBrowsingLockFeature,
              externalAppLinkStatusBinding,
-@@ -699,7 +699,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -697,9 +697,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+             true,
          )
  
-         if (components.settings.showContileFeature) {
--            components.core.macTopSitesUpdater.startPeriodicWork()
-+//            components.core.macTopSitesUpdater.startPeriodicWork()
-         }
+-        if (components.settings.showContileFeature) {
++/*        if (components.settings.showContileFeature) {
+             components.core.macTopSitesUpdater.startPeriodicWork()
+-        }
++        } */
  
          if (!components.settings.hiddenEnginesRestored) {
-@@ -1000,7 +1000,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+             components.settings.hiddenEnginesRestored = true
+@@ -999,7 +999,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              data = mapOf("finishing" to isFinishing.toString()),
          )
  
