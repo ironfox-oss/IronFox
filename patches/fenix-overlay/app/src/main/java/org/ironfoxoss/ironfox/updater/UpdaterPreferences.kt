@@ -74,19 +74,23 @@ class UpdaterPreferences(private val fragment: PreferenceFragmentCompat) {
     val browserSettings = fragment.requireContext().components.settings
     val httpsOnlyInAllTabs = browserSettings.shouldUseHttpsOnly && browserSettings.shouldUseHttpsOnlyInAllTabs
     val showSecretDebugMenuThisSession = browserSettings.showSecretDebugMenuThisSession
+
+    // (We can't support switching to direct downloads for Accrescent builds, to avoid violating their policies:
+    // https://accrescent.app/docs/guide/appendix/requirements/#self-updaters)
+    val directDownloadsSupported: Boolean = store == null || store.packageName != "app.accrescent.client"
+
     fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_enabled).isChecked =
       settings.updaterEnabled
     fragment.requirePreference<SeekBarPreference>(R.string.pref_key_updater_interval_hours).value =
       settings.updaterIntervalHours.coerceIn(UpdateInterval.MIN_HOURS, UpdateInterval.MAX_HOURS)
     fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_direct_downloads).apply {
-      // (We can't support switching to direct downloads for Accrescent builds, to avoid violating their policies:
-      // https://accrescent.app/docs/guide/appendix/requirements/#self-updaters)
-      isVisible = store != null && store.packageName != "app.accrescent.client"
+      isVisible = directDownloadsSupported && store != null
       isChecked = settings.updaterDirectDownloads
       if (store != null) summary = this@UpdaterPreferences.fragment.getString(R.string.updater_direct_downloads_summary, store.displayName)
     }
     fragment.requirePreference<SwitchPreference>(R.string.pref_key_updater_auto_download).apply {
       val downloadsDirectly = controller.activeStore == null
+      isVisible = directDownloadsSupported
       isEnabled = downloadsDirectly
       isChecked = settings.updaterAutoDownload && downloadsDirectly
       summary = this@UpdaterPreferences.fragment.getString(
