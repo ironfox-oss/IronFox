@@ -1,1 +1,9 @@
-- Updated to Firefox [`158.0.2`](https://firefox.com/firefox/android/158.0.2/releasenotes/).
+- Updated to Firefox [`159.0`](https://firefox.com/firefox/android/159.0/releasenotes/).
+- [Implemented a built-in app updater](https://codeberg.org/ironfox-oss/bugs/issues/436).
+  - The updater is enabled by default and notifies users when new IronFox releases are available.
+  - When an update is available, users will either have the option to download/install IronFox directly, or will be prompted to open the external app store that IronFox was installed from.
+  - Users who have installed IronFox from external app stores *(except for Accrescent)* can switch to having updates managed and downloaded/installed directly by us *(by enabling the `Download updates directly` option at `Settings` -> `IronFox settings` -> `Updates`)*.
+  - The updater can also automatically download new releases for users *(Enabled by default for users who download IronFox from `ironfoxoss.org` or our GitLab releases, unsupported for Accrescent users)*, which can be controlled with the `Download updates automatically` setting at `Settings` -> `IronFox settings` -> `Updates`.
+  - From a privacy and security perspective: The updater enforces `HTTPS`, performs SHA512sum validation for downloads, and its connections are protected with certificate pinning. Android also checks and ensures that the downloaded app signature matches.
+  - At the cost of security, the updater can be disabled entirely with the `Check for updates automatically` setting at `Settings` -> `IronFox settings` -> `Updates`, though this is **NOT** recommended.
+- Minor tweaks/enhancements.

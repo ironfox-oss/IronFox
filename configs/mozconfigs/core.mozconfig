@@ -100,7 +100,7 @@ ac_add_options --disable-system-preferences
 ## Disable telemetry
 export MOZ_TELEMETRY_REPORTING=
 
-## Disable the updater
+## Disable Mozilla's updater
 ac_add_options --disable-unverified-updates
 ac_add_options --disable-updater
 
@@ -111,7 +111,7 @@ ac_add_options --disable-nodejs
 ### https://support.mozilla.org/kb/customizing-firefox-using-autoconfig
 ac_add_options --enable-pref-extensions
 
-## Enable the built-in app updater
+## Enable our built-in app updater
 ac_add_options --enable-ironfox-updater
 
 ## Enable isolated content process support
