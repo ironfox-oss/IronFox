@@ -208,7 +208,7 @@ function extract_archive() {
 
   # Set a temporary archive name
   local -r temp_archive_path_name=$("${IRONFOX_BASENAME}" "${target_path}")
-  local -r temp_archive_path="${IRONFOX_EXTERNAL}/temp/${temp_archive_path}"
+  local -r temp_archive_path="${IRONFOX_EXTERNAL}/temp/${temp_archive_path_name}"
 
   # If our temporary directory for extraction already exists, delete it
   if [[ -d "${temp_archive_path}" ]]; then
