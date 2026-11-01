@@ -188,6 +188,9 @@ function extract_archive() {
   # Ensure we have cp
   verify_exec "${IRONFOX_CP}" 'IRONFOX_CP' || return 1
 
+  # Ensure we have dirname
+  verify_exec "${IRONFOX_DIRNAME}" 'IRONFOX_DIRNAME' || return 1
+
   # Ensure we have ls
   verify_exec "${IRONFOX_LS}" 'IRONFOX_LS' || return 1
 
@@ -261,8 +264,19 @@ function extract_archive() {
     return 1
   fi
 
+  # Ensure the directory above the directory we want to extract the archive into exists
+  local -r top_target_dir=$("${IRONFOX_DIRNAME}" "${target_path}")
+  if [[ ! -d "${top_target_dir}" ]]; then
+    "${IRONFOX_MKDIR}" -p "${top_target_dir}"
+  fi
+
   local -r top_input_dir=$("${IRONFOX_LS}" "${temp_archive_path}")
-  "${IRONFOX_CP}" -rf "${temp_archive_path}/${top_input_dir}/" "${target_path}" || local extraction_failed=1
+  if [[ -d "${temp_archive_path}/${top_input_dir}" ]]; then
+    local -r input_dir="${temp_archive_path}/${top_input_dir}"
+  else
+    local -r input_dir="${temp_archive_path}"
+  fi
+  "${IRONFOX_CP}" -rf "${input_dir}/" "${target_path}" || local extraction_failed=1
 
   # Ensure the directory we just extracted the archive to is valid
   if [[ "${extraction_failed}" != 1 ]] && [[ ! -d "${target_path}" ]]; then
