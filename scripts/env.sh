@@ -286,8 +286,8 @@ function setup_path() {
   add_to_full_path "${IRONFOX_PIP}" 'IRONFOX_PIP' 'pip' || return 1
   add_to_full_path "${IRONFOX_PWD}" 'IRONFOX_PWD' 'pwd' || return 1
   add_to_full_path "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' 'python' || return 1
-  add_to_full_path "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' 'python3' || return 1
-  add_to_full_path "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' 'python3.14' || return 1
+  add_to_full_path "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' "python${IRONFOX_PYTHON_MAJOR_VERSION}" || return 1
+  add_to_full_path "${IRONFOX_PYTHON}" 'IRONFOX_PYTHON' "python${IRONFOX_PYTHON_FULL_MAJOR_VERSION}" || return 1
   add_to_full_path "${IRONFOX_RANLIB}" 'IRONFOX_RANLIB' 'ranlib' || return 1
   add_to_full_path "${IRONFOX_REALPATH}" 'IRONFOX_REALPATH' 'realpath' || return 1
   add_to_full_path "${IRONFOX_RM}" 'IRONFOX_RM' 'rm' || return 1
