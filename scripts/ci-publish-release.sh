@@ -79,6 +79,12 @@ if [[ "${IRONFOX_CURRENT_BRANCH}" != "${IRONFOX_DEV_BRANCH}" ]] && [[ "${IRONFOX
   exit 1
 fi
 
+# Ensure this only runs for the official repo
+if [[ "${IRONFOX_CURRENT_REPO}" != "${IRONFOX_OFFICIAL_REPO}" ]]; then
+  echo_red_text "ERROR: Unable to publish release from repo: '${IRONFOX_CURRENT_REPO}'!"
+  exit 1
+fi
+
 # Set our target
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
   readonly IRONFOX_PUBLISH_TARGET='release'
@@ -103,13 +109,13 @@ echo_red_text 'CI - Downloading dependencies...'
 "${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 'android-sdk-build-tools' || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 'python' || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_GET_SOURCES_SH}" 's3cmd' || exit 1
-echo_green_text 'CI - SUCCESS: Downloaded dependencies.'
+echo_green_text 'CI - SUCCESS: Downloaded dependencies!'
 
 # Get secrets
 echo_red_text 'CI - Preparing secrets...'
 set +x || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_PREP_SH}" 's3-releases' || exit 1
-echo_green_text 'CI - SUCCESS: Prepared secrets.'
+echo_green_text 'CI - SUCCESS: Prepared secrets!'
 
 # Set verbosity
 set_verbosity
@@ -120,10 +126,10 @@ echo_red_text 'CI - Downloading artifacts...'
 "${IRONFOX_BASH}" "${IRONFOX_CI_DL_AR_SH}" 'fenix' 'arm' || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_DL_AR_SH}" 'fenix' 'x86_64' || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_DL_AR_SH}" 'fenix' 'bundle' || exit 1
-echo_green_text 'CI - SUCCESS: Downloaded artifacts.'
+echo_green_text 'CI - SUCCESS: Downloaded artifacts!'
 
 # Publish our packages
 echo_red_text 'CI - Publishing packages...'
 set +x || exit 1
 "${IRONFOX_BASH}" "${IRONFOX_CI_PUBLISH_SH}" "${IRONFOX_PUBLISH_TARGET}" || exit 1
-echo_green_text 'CI - SUCCESS: Published packages.'
+echo_green_text 'CI - SUCCESS: Published packages!'

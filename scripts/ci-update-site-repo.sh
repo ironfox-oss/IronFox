@@ -73,6 +73,12 @@ if [[ "${IRONFOX_CURRENT_BRANCH}" != "${IRONFOX_DEV_BRANCH}" ]] && [[ "${IRONFOX
   exit 0
 fi
 
+# Ensure this only runs for the official repo
+if [[ "${IRONFOX_CURRENT_REPO}" != "${IRONFOX_OFFICIAL_REPO}" ]]; then
+  echo_red_text "ERROR: Unable to update website from repo: '${IRONFOX_CURRENT_REPO}'!"
+  exit 1
+fi
+
 # Get dependencies
 echo_red_text 'CI - Downloading dependencies...'
 /bin/sudo /bin/dnf update -y --refresh || exit 1

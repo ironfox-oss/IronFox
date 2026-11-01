@@ -5,6 +5,12 @@ set -euo pipefail
 # Ensure this is never ran with xtrace...
 set +x || return 1
 
+# Ensure this only runs for the official repo
+if [[ "${IRONFOX_CURRENT_REPO}" != "${IRONFOX_OFFICIAL_REPO}" ]]; then
+  echo_red_text "ERROR: Unable to upload artifacts for repo: '${IRONFOX_CURRENT_REPO}'!"
+  return 1
+fi
+
 # Include S3 utilities
 verify_file_with_env "${IRONFOX_S3_UTILS}" 'IRONFOX_S3_UTILS' || return 1
 source "${IRONFOX_S3_UTILS}" || return 1

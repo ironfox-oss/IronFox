@@ -358,26 +358,64 @@ function setup_lint_path() {
 
 # For CI, ensure external environment variables are set
 function setup_ci() {
-  # Get our current branch
-  if [[ -z "${CI_COMMIT_REF_NAME+x}" ]] || [[ "${CI_COMMIT_REF_NAME}" == "" ]] ||
-    [[ "${CI_COMMIT_REF_NAME}" == "null" ]]; then
-    echo_red_text "ERROR: Missing current branch! Please set 'CI_COMMIT_REF_NAME'."
+  # Ensure our CI type is set and valid
+  if [[ -z "${IRONFOX_CI_TYPE+x}" ]] || [[ "${IRONFOX_CI_TYPE}" == "" ]] ||
+    [[ "${IRONFOX_CI_TYPE}" == "null" ]]; then
+    echo "ERROR: Missing CI type! Please set 'IRONFOX_CI_TYPE'."
     return 1
+  fi
+
+  if [[ "${IRONFOX_CI_TYPE}" != 'gitlab' ]]; then
+    echo "ERROR: Invalid CI type: '${IRONFOX_CI_TYPE}'!"
+    return 1
+  fi
+
+  # Get our current branch
+  if [[ "${IRONFOX_CI_TYPE}" == 'gitlab' ]]; then
+    if [[ -z "${CI_COMMIT_REF_NAME+x}" ]] || [[ "${CI_COMMIT_REF_NAME}" == "" ]] ||
+      [[ "${CI_COMMIT_REF_NAME}" == "null" ]]; then
+      echo "ERROR: Missing current branch! Please set 'CI_COMMIT_REF_NAME'."
+      return 1
+    else
+      readonly IRONFOX_CURRENT_BRANCH="${CI_COMMIT_REF_NAME}"
+      export IRONFOX_CURRENT_BRANCH
+    fi
   else
-    readonly IRONFOX_CURRENT_BRANCH="${CI_COMMIT_REF_NAME}"
-    export IRONFOX_CURRENT_BRANCH
+    echo "ERROR: Unable to get current branch for CI type: '${IRONFOX_CI_TYPE}'!"
+    return 1
+  fi
+
+  # Get our current repo
+  if [[ "${IRONFOX_CI_TYPE}" == 'gitlab' ]]; then
+    if [[ -z "${CI_PROJECT_PATH+x}" ]] || [[ "${CI_PROJECT_PATH}" == "" ]] ||
+      [[ "${CI_PROJECT_PATH}" == "null" ]]; then
+      echo "ERROR: Missing current repo! Please set 'CI_PROJECT_PATH'."
+      return 1
+    else
+      readonly IRONFOX_CURRENT_REPO="${CI_PROJECT_PATH}"
+    fi
+  else
+    echo "ERROR: Unable to get current repo for CI type: '${IRONFOX_CI_TYPE}'!"
+    return 1
   fi
 
   # Ensure our branches are set
   if [[ -z "${IRONFOX_DEV_BRANCH+x}" ]] || [[ "${IRONFOX_DEV_BRANCH}" == "" ]] ||
     [[ "${IRONFOX_DEV_BRANCH}" == "null" ]]; then
-    echo_red_text "ERROR: Missing developer branch! Please set 'IRONFOX_DEV_BRANCH'."
+    echo "ERROR: Missing developer branch! Please set 'IRONFOX_DEV_BRANCH'."
     return 1
   fi
 
   if [[ -z "${IRONFOX_PROD_BRANCH+x}" ]] || [[ "${IRONFOX_PROD_BRANCH}" == "" ]] ||
     [[ "${IRONFOX_PROD_BRANCH}" == "null" ]]; then
-    echo_red_text "ERROR: Missing production branch! Please set 'IRONFOX_PROD_BRANCH'."
+    echo "ERROR: Missing production branch! Please set 'IRONFOX_PROD_BRANCH'."
+    return 1
+  fi
+
+  # Ensure the offical repo is set
+  if [[ -z "${IRONFOX_OFFICIAL_REPO+x}" ]] || [[ "${IRONFOX_OFFICIAL_REPO}" == "" ]] ||
+    [[ "${IRONFOX_OFFICIAL_REPO}" == "null" ]]; then
+    echo "ERROR: Missing official repo! Please set 'IRONFOX_OFFICIAL_REPO'."
     return 1
   fi
 }

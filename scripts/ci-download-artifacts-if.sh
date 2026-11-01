@@ -5,6 +5,12 @@ set -euo pipefail
 # Set verbosity
 set_verbosity
 
+# Ensure this only runs for the official repo
+if [[ "${IRONFOX_CURRENT_REPO}" != "${IRONFOX_OFFICIAL_REPO}" ]]; then
+  echo_red_text "ERROR: Unable to download artifacts for repo: '${IRONFOX_CURRENT_REPO}'!"
+  return 1
+fi
+
 # Include download utilities
 verify_file_with_env "${IRONFOX_DOWNLOAD_UTILS}" 'IRONFOX_DOWNLOAD_UTILS' || return 1
 source "${IRONFOX_DOWNLOAD_UTILS}" || return 1

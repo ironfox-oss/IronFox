@@ -45,6 +45,12 @@ if [[ "${IRONFOX_CI}" != 1 ]]; then
   exit 1
 fi
 
+# Ensure this only runs for the official repo
+if [[ "${IRONFOX_CURRENT_REPO}" != "${IRONFOX_OFFICIAL_REPO}" ]]; then
+  echo_red_text "ERROR: Unable to get secrets for repo: '${IRONFOX_CURRENT_REPO}'!"
+  exit 1
+fi
+
 # Ensure we have GNU awk
 verify_exec "${IRONFOX_AWK}" 'IRONFOX_AWK' || exit 1
 

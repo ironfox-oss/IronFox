@@ -106,6 +106,13 @@ case "${IRONFOX_CI_BUILD_PROJECT}" in
     ;;
 esac
 
+# Ensure we only try to build Fenix in the official repo
+## This is necessary because building Fenix depends on GeckoView artifacts, which we can't upload + download outside of the official repo
+if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'fenix' ]] && [[ "${IRONFOX_CURRENT_REPO}" != "${IRONFOX_OFFICIAL_REPO}" ]]; then
+  echo_red_text "ERROR: Unable to build Fenix on repo: '${IRONFOX_CURRENT_REPO}'!"
+  exit 1
+fi
+
 # Get dependencies
 echo_red_text 'CI - Downloading dependencies...'
 /bin/sudo /bin/dnf update -y --refresh || exit 1
@@ -174,17 +181,19 @@ else
     "${IRONFOX_BASH}" "${IRONFOX_CI_DL_AR_SH}" 'geckoview' 'x86_64' || exit 1
   fi
 fi
-echo_green_text 'CI - SUCCESS: Downloaded dependencies.'
+echo_green_text 'CI - SUCCESS: Downloaded dependencies!'
 
 # Get secrets
-echo_red_text 'CI - Preparing secrets...'
-set +x || exit 1
-"${IRONFOX_BASH}" "${IRONFOX_CI_PREP_SH}" 's3-artifacts' || exit 1
-"${IRONFOX_BASH}" "${IRONFOX_CI_PREP_SH}" 'sb' || exit 1
-if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'fenix' ]]; then
-  "${IRONFOX_BASH}" "${IRONFOX_CI_PREP_SH}" 'android-ks' || exit 1
+if [[ "${IRONFOX_CURRENT_REPO}" == "${IRONFOX_OFFICIAL_REPO}" ]]; then
+  echo_red_text 'CI - Preparing secrets...'
+  set +x || exit 1
+  "${IRONFOX_BASH}" "${IRONFOX_CI_PREP_SH}" 's3-artifacts' || exit 1
+  "${IRONFOX_BASH}" "${IRONFOX_CI_PREP_SH}" 'sb' || exit 1
+  if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'fenix' ]]; then
+    "${IRONFOX_BASH}" "${IRONFOX_CI_PREP_SH}" 'android-ks' || exit 1
+  fi
+  echo_green_text 'CI - SUCCESS: Prepared secrets!'
 fi
-echo_green_text 'CI - SUCCESS: Prepared secrets.'
 
 if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'fenix' ]]; then
   # Fail-fast in case the signing key is unavailable or an empty file
@@ -205,7 +214,7 @@ if [[ "${IRONFOX_CI_BUILD_PROJECT}" == 'geckoview' ]]; then
 else
   "${IRONFOX_BASH}" "${IRONFOX_CI_PREBUILD_SH}" || exit 1
 fi
-echo_green_text 'CI - SUCCESS: Prepared sources.'
+echo_green_text 'CI - SUCCESS: Prepared sources!'
 
 # Build
 echo_red_text "CI - Building ${IRONFOX_CI_BUILD_PROJECT} (${IRONFOX_CI_BUILD_ARCH})..."
@@ -213,7 +222,9 @@ echo_red_text "CI - Building ${IRONFOX_CI_BUILD_PROJECT} (${IRONFOX_CI_BUILD_ARC
 echo_green_text "CI - SUCCESS: Built ${IRONFOX_CI_BUILD_PROJECT} (${IRONFOX_CI_BUILD_ARCH})!"
 
 # Upload artifacts
-echo_red_text 'CI - Uploading artifacts...'
-set +x || exit 1
-"${IRONFOX_BASH}" "${IRONFOX_CI_UP_AR_SH}" "${IRONFOX_CI_BUILD_PROJECT}" "${IRONFOX_CI_BUILD_ARCH}" || exit 1
-echo_green_text 'CI - SUCCESS: Uploaded artifacts.'
+if [[ "${IRONFOX_CURRENT_REPO}" == "${IRONFOX_OFFICIAL_REPO}" ]]; then
+  echo_red_text 'CI - Uploading artifacts...'
+  set +x || exit 1
+  "${IRONFOX_BASH}" "${IRONFOX_CI_UP_AR_SH}" "${IRONFOX_CI_BUILD_PROJECT}" "${IRONFOX_CI_BUILD_ARCH}" || exit 1
+  echo_green_text 'CI - SUCCESS: Uploaded artifacts!'
+fi
