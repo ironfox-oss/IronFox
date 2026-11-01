@@ -560,11 +560,7 @@ function setDohBootstrap(address) {
    address === "https://cloudflare-dns.com:443/dns-query" ||
    address === "https://dns.cloudflare.com/dns-query" ||
    address === "https://dns.cloudflare.com:443/dns-query") {
-    if (useFallback) {
-      bootstrapIP = '1.0.0.1';
-    } else {
-      bootstrapIP = '1.1.1.1';
-    };
+    bootstrapIP = '1.0.0.1';
   } else if (address === "https://security.cloudflare-dns.com/dns-query" ||
    address === "https://security.cloudflare-dns.com:443/dns-query") {
     if (useFallback) {
