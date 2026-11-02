@@ -15,4 +15,7 @@
     <string name="ironfox_onboarding_spoof_english">Sprache auf en-US umstellen</string>
     <string name="ironfox_onboarding_spoof_english_caption">Verbessern Sie Ihre Privatsphäre, indem Sie die Spracheinstellungen Ihres Geräts maskieren.</string>
     <string name="ironfox_onboarding_spoof_english_description">Fordern Sie englische (en-US) Versionen von Webseiten an. Dadurch erscheint Ihr Browser weniger einzigartig, was den Schutz vor Fingerprinting-Techniken stärkt, die Nutzer anhand ihrer Spracheinstellungen identifizieren.</string>
+    <string name="ironfox_onboarding_updater_title">Bleiben Sie auf dem Laufenden</string>
+    <string name="ironfox_onboarding_updater_description">IronFox sucht nach neuen Versionen und fragt Sie vor der Installation, ob diese installiert werden sollen. Sie können diese Funktion jederzeit in den IronFox-Einstellungen deaktivieren.</string>
+    <string name="ironfox_onboarding_updater_switch">Automatisch nach Updates suchen</string>
 </resources>

@@ -62,4 +62,12 @@
     <string name="preference_webgl_disabled">Désactiver WebGL</string>
     <string name="wallpaper_collection_fennec_description">Fonds d\'écrans venants de Fennec F-Droid.%s</string>
     <string name="preference_autoplay_policy_sticky">Collant</string>
+    <string name="if_preferences_geo">Géolocalisation</string>
+    <string name="preference_ironfox_history_enabled">Mémoriser l\'historique de navigation</string>
+    <string name="preference_ironfox_fxa_enabled">Activer Firefox Sync</string>
+    <string name="preference_ironfox_ip_protection_enabled">Activer Firefox VPN</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Activer le fournisseur de géolocalisation Android</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Si activé, IronFox va tenter d\'utiliser le service de localisation d\'Android pour fournir votre géolocalisation aux sites web (si vous accordez l\'autorisation au site) - Modifier ce paramètre va redémarrer votre navigateur</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Activer le fournisseur de géolocalisation réseau</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Si activé et le fournisseur de géolocalisation d\'Android est indisponible, IronFox utilisera le service de géolocalisation réseau BeaconDB pour fournir votre géolocalisation aux sites web (si vous accordez l\'autorisation au site) - Modifier ce paramètre redémarrera votre navigateur</string>
 </resources>

@@ -15,4 +15,7 @@
     <string name="ironfox_onboarding_spoof_english">Als taal en-US doorsturen</string>
     <string name="ironfox_onboarding_spoof_english_caption">Verbeter de privacy door de taalinstellingen van het apparaat te maskeren.</string>
     <string name="ironfox_onboarding_spoof_english_description">Vraag Engelse (en-US) versies van webpagina\'s op. Hierdoor lijkt de browser minder uniek, waardoor de bescherming tegen fingerprinting-technieken die gebruikers identificeren op basis van hun taalvoorkeuren, beter werkt.</string>
+    <string name="ironfox_onboarding_updater_title">Blijf up-to-date</string>
+    <string name="ironfox_onboarding_updater_description">IronFox kan controleren of er een nieuwe versie is en deze na bevestiging installeren. Dit kan op ieder moment uitgeschakeld worden in de IronFox-instellingen.</string>
+    <string name="ironfox_onboarding_updater_switch">Automatisch op updates controleren</string>
 </resources>

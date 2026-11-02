@@ -15,4 +15,7 @@
     <string name="ironfox_onboarding_spoof_english">Simular o idioma como Inglês</string>
     <string name="ironfox_onboarding_spoof_english_caption">Melhore sua privacidade mascarando o idioma do seu dispositivo.</string>
     <string name="ironfox_onboarding_spoof_english_description">Solicitar versões em Inglês (en-US) das páginas. Isto pode ajudar seu navegador a ficar menos único, o que melhora sua proteção contra técnicas de fingerprinting que identificam usuários baseado nas suas configurações de idioma.</string>
+    <string name="ironfox_onboarding_updater_title">Continue atualizado</string>
+    <string name="ironfox_onboarding_updater_description">O IronFox busca por novas versões e pede para instalá-las. Você pode desativar isto a qualquer momento nas configurações do IronFox.</string>
+    <string name="ironfox_onboarding_updater_switch">Buscar atualizações automaticamente</string>
 </resources>

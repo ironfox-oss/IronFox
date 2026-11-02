@@ -71,4 +71,7 @@
     <string name="preference_ironfox_ip_protection_enabled">Lülita Firefoxi VPN sisse</string>
     <string name="preference_ironfox_fxa_enabled">Kasuta Firefox Synci</string>
     <string name="preference_ironfox_history_enabled">Jäta veebisirvimise ajalugu meelde</string>
+    <string name="ironfox_doh_migration_message_title">Teade Mullvadi teenuse lõpetamise kohta</string>
+    <string name="ironfox_doh_migration_message_desc">Sinu praegu valitud HTTPS-iga nimelahenduse teenusepakkuja (Mullvad) lõpetab tegevuse 2. novembril 2026. Et tagada, et sinu brauser jätkaks töötamist ootuspäraselt, soovitame tungivalt vahetada teenusepakkujat.</string>
+    <string name="ironfox_doh_migration_button">Ava HTTPS-iga nimelahenduse seadistused</string>
 </resources>

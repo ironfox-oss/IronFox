@@ -70,4 +70,7 @@
     <string name="preference_ironfox_history_enabled">閲覧履歴を保存</string>
     <string name="preference_ironfox_fxa_enabled">Firefox Syncを有効化</string>
     <string name="preference_ironfox_ip_protection_enabled">Firefox VPNを有効化</string>
+    <string name="ironfox_doh_migration_message_title">Mullvad サービス終了のお知らせ</string>
+    <string name="ironfox_doh_migration_message_desc">現状で選択されているDNS over HTTPSプロバイダー(Mullvad)は、2026年11月2日をもってサービスを終了します。ブラウザが引き続き正常に動作するようにするため、別なプロバイダーへの切り替えを強く推奨します。</string>
+    <string name="ironfox_doh_migration_button">Open DNS over HTTPS の設定</string>
 </resources>

@@ -70,4 +70,7 @@
     <string name="preference_ironfox_ip_protection_enabled">啟用 Firefox VPN</string>
     <string name="preference_ironfox_fxa_enabled">啟用 Firefox 同步</string>
     <string name="preference_ironfox_history_enabled">記住瀏覽紀錄</string>
+    <string name="ironfox_doh_migration_message_title">Mullvad 服務終止通知</string>
+    <string name="ironfox_doh_migration_message_desc">您目前選用的 DNS over HTTPS 服務供應商（Mullvad）將於 2026 年 11 月 2 日停止營運。為確保您的瀏覽器能持續正常運作，強烈建議您切換至其他服務供應商。</string>
+    <string name="ironfox_doh_migration_button">開啟 DNS over HTTPS 設定</string>
 </resources>

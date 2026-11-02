@@ -70,4 +70,7 @@
     <string name="preference_ironfox_fxa_enabled">Firefox Sync aktivieren</string>
     <string name="preference_ironfox_ip_protection_enabled">Firefox-VPN aktivieren</string>
     <string name="preference_ironfox_history_enabled">Browserverlauf speichern</string>
+    <string name="ironfox_doh_migration_message_title">Mitteilung zur Einstellung von Mullvad</string>
+    <string name="ironfox_doh_migration_button">Einstellungen für DNS über HTTPS öffnen</string>
+    <string name="ironfox_doh_migration_message_desc">Ihr derzeit ausgewählter Anbieter für DNS über HTTPS (Mullvad) stellt seinen Betrieb am 2. November 2026 ein. Um sicherzustellen, dass Ihr Browser weiterhin wie erwartet funktioniert, wird dringend empfohlen, zu einem anderen Anbieter zu wechseln.</string>
 </resources>

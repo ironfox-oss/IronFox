@@ -62,4 +62,15 @@
     <string name="preference_autoplay_policy_click_to_play">Кликни за възпроизвеждане</string>
     <string name="preference_always_use_private_browsing">Винаги използвайте режим на частно сърфиране</string>
     <string name="wallpaper_collection_fennec_description">Тапети от Fennec F-Droid. %s</string>
+    <string name="if_preferences_geo">Геолокация</string>
+    <string name="preference_ironfox_history_enabled">Запомни историята на сърфирането</string>
+    <string name="preference_ironfox_fxa_enabled">Активиране на синхронизирането с Firefox</string>
+    <string name="preference_ironfox_ip_protection_enabled">Активирайте VPN за Firefox</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Активиране на доставчика на геолокация за Android</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Ако е активирано, IronFox ще се опита да използва услугите за местоположение на операционната система Android, за да предостави вашата геолокация на уебсайтове (ако предоставите разрешение на сайта) - Промяната на тази настройка ще рестартира браузъра ви</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Активиране на доставчика на мрежово геолокиране</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Ако е активирано и доставчикът на геолокация за Android не е наличен, IronFox ще използва услугата за геолокация на мрежата BeaconDB, за да предостави местоположението ви на уебсайтове (ако предоставите разрешение на сайта) - Промяната на тази настройка ще рестартира браузъра ви</string>
+    <string name="ironfox_doh_migration_message_title">Известие за прекратяване на Mullvad</string>
+    <string name="ironfox_doh_migration_message_desc">Вашият текущо избран доставчик на DNS през HTTPS (Mullvad) прекратява дейността си на 2 ноември 2026 г. За да сте сигурни, че браузърът ви ще продължи да работи както се очаква, силно ви препоръчваме да преминете към друг доставчик.</string>
+    <string name="ironfox_doh_migration_button">Настройки за отворен DNS през HTTPS</string>
 </resources>

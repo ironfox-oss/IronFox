@@ -62,4 +62,15 @@
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Poista aikavyöhykenaamiointi tietyiltä verkkosivuilta oletuksena vähentääksesi verkkosivujen rikkoutumista - Tämän asetuksen muuttaminen käynnistää selaimen uudelleen</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Kun WebGL on pois käytöstä, uudelleenkäynnistää WebGL:n tietyille verkkosivuille oletuksena vähentääkseen sivujen rikkoutumista - Tämän asetuksen muuttaminen käynnistää selaimen uudelleen</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Lisäosien asentaminen on toistaiseksi pois käytöstä. Jos halutaan, turvallisuuden kustannuksella, voit sallia laajennukset siirtymällä: Asetukset -&gt; IronFox -&gt; IronFoxin asetukset -&gt; Turvallisuus -&gt; Salli lisäosien asentaminen.</string>
+    <string name="if_preferences_geo">Geolokaatio</string>
+    <string name="preference_ironfox_history_enabled">Muista selaushistoria</string>
+    <string name="preference_ironfox_fxa_enabled">Ota käyttöön Firefox Sync</string>
+    <string name="preference_ironfox_ip_protection_enabled">Ota käyttöön Firefox VPN</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Jos käytössä, ja Androidin Geolocation Provider ei ole saatavilla, IronFox käyttää BeaconDB:n network geolokaatio palvelua antaakseen sijaintisi nettisivuille (jos annat sivulle käyttöluvan) - Tämän asetuksen vaihtaminen edellyttää selaimen uudelleenkäynnistystä</string>
+    <string name="ironfox_doh_migration_message_title">Mullvadin Lopetus Ilmoitus</string>
+    <string name="ironfox_doh_migration_message_desc">Valitsemasi DNS over HTTPS tarjoaja (Mullvad) on lopettamassa toiminnan 2. Marraskuuta 2026. Varmistaaksesi että selaimesi toimii kuten odottaisit, sinua kovasti kehotetaan vaihtaa eri tarjoajaan.</string>
+    <string name="ironfox_doh_migration_button">Avaa DNS over HTTPS asetukset</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Ota käyttöön Androidin Geolocation Provider</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Jos päällä, IronFox yrittää käyttää Androidin OS sijainti palveluita tarjotakseen geolokaatiosi nettisivuille (jos annat sivulle luvan) - Tämän asetuksen vaihtaminen kehottaa selaimen uudelleenkäynnistystä</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Ota käyttöön Network Geolocation Tarjoaja</string>
 </resources>

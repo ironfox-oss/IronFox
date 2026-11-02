@@ -15,4 +15,7 @@
     <string name="ironfox_onboarding_spoof_english">言語を en-US に偽装する</string>
     <string name="ironfox_onboarding_spoof_english_caption">端末の言語設定を隠すことで、プライバシーを強化します。</string>
     <string name="ironfox_onboarding_spoof_english_description">ウェブサイトに英語版 (en-US) のページをリクエストします。ブラウザ固有の特徴を減らすことで、言語設定に基づくフィンガープリント採取への保護を強化します。</string>
+    <string name="ironfox_onboarding_updater_title">最新の情報を入手</string>
+    <string name="ironfox_onboarding_updater_description">IronFoxは新たなバージョンの有無を確認してインストール前に確認メッセージを表示します。この機能はIronFoxの設定からいつでも無効化できます。</string>
+    <string name="ironfox_onboarding_updater_switch">更新を自動で確認</string>
 </resources>

@@ -70,4 +70,7 @@
     <string name="preference_ironfox_ip_protection_enabled">Povolit Firefox VPN</string>
     <string name="preference_ironfox_history_enabled">Zapamatovat si historii prohlížení</string>
     <string name="preference_ironfox_fxa_enabled">Povolit službu Firefox Sync</string>
+    <string name="ironfox_doh_migration_message_title">Upozornění na zrušení poskytovatele Mullvad</string>
+    <string name="ironfox_doh_migration_message_desc">Váš aktuálně zvolený poskytovatel DNS přes HTTPS (Mullvad) ukončí dne 2. listopadu 2026 svůj provoz. Pro zajištění, že váš prohlížeč nadále bude fungovat tak, jak očekáváte, vám důrazně doporučujeme přejít k jinému poskytovateli.</string>
+    <string name="ironfox_doh_migration_button">Otevřít nastavení DNS přes HTTPS</string>
 </resources>

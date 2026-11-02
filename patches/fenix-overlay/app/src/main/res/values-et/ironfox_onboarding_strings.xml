@@ -15,4 +15,7 @@
     <string name="ironfox_onboarding_spoof_english">Häma keeleks en-US</string>
     <string name="ironfox_onboarding_spoof_english_caption">Varjates seadme keeli saad parandada oma privaatsust.</string>
     <string name="ironfox_onboarding_spoof_english_description">Küsi veebisaite Ameerika inglisekeelsetena (en-US). Sellisel puhul on sinu brauser vähem unikaalne ning aitab täpsema tuvastamise vastu, mis põhineb kasutajate keele-eelistustel.</string>
+    <string name="ironfox_onboarding_updater_title">Taga uuendused</string>
+    <string name="ironfox_onboarding_updater_description">IronFox kontrollib uute versioonide olemasolu ja küsib sinult enne nende paigaldamist luba. Saad selle võimaluse alati IronFoxi seadistustest välja lülitada.</string>
+    <string name="ironfox_onboarding_updater_switch">Kontrolli uuenduste olemasolu automaatselt</string>
 </resources>

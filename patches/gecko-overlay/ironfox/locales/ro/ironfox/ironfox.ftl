@@ -1,6 +1,6 @@
 about-attribution-title = Mulțumesc.
 about-attribution-subtitle = IronFox nu ar fi ceea ce este astăzi fără timpul și efortul următoarelor persoane:
-about-attribution-closing = Eforturile dumneavoastră sunt apreciate și recunoscute.
+about-attribution-closing = Eforturile tale sunt apreciate și recunoscute.
 about-ironfox-title = Cartea Fierului, 1:2
 about-ironfox-quote =
     Și astfel, <em>Cârtița</em> a căzut. Deoarece <em>Bestia</em> își pierduse deja drumul, credincioșii
