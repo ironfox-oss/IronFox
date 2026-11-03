@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="restart_required_summary">Mengubah pengaturan ini akan me-restart browser Anda</string>
+    <string name="unsupported_summary">Pengaturan ini tidak disarankan atau didukung. Lakukan dengan hati-hati.</string>
+    <string name="ironfox_retry">Coba</string>
+    <string name="if_preferences">Pengaturan ironfox</string>
+</resources>
