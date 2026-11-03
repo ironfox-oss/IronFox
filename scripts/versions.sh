@@ -2,32 +2,32 @@
 # Sources
 
 # Firefox
-# Version: 159.0 (RELEASE)
+# Version: 159.0.1 (BUILD1)
 # https://github.com/mozilla-firefox/firefox
-readonly IRONFOX_GECKO_COMMIT='9a2dc53c369c7ae5172018b35988e1d2ffeff402'
-readonly IRONFOX_GECKO_SHA512SUM='123f9508fc13929181bc9a729386c9cf338affd4e5ac9feaf03e5423370e2b83a86d842ca70ab4f0a6b66882e533564fcb470c19dad1c8280cca3f18082393cf'
-readonly IRONFOX_GECKO_VERSION='159.0'
+readonly IRONFOX_GECKO_COMMIT='6181e6b5f28a8fbae1d5c3ef6f6626b5a2180213'
+readonly IRONFOX_GECKO_SHA512SUM='f2d6bf7ef10b8a21e6b33b4e5c809e16f0a00795b7e0a908759b2d1715a8a5d162904b018824de483e5a1765d995f9d6a47e18849ee70dd41bd438f5c3b6da8d'
+readonly IRONFOX_GECKO_VERSION='159.0.1'
 
 # IronFox
 readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}"
 
 # This value is used for ex. producing reproducable archives, and its value should be bumped upon new releases
-readonly IRONFOX_VERSION_DATE='2026.10.27'
+readonly IRONFOX_VERSION_DATE='2026.11.02'
 
 # Application Services
-# Version: v159.0.1
+# Version: v159.0.2
 # https://github.com/mozilla/application-services
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt)
-readonly IRONFOX_AS_COMMIT='0d2c998a9c3a08be03806cc62164ffa066623133'
-readonly IRONFOX_AS_SHA512SUM='6664e1a59447e549c4a9c4334b6dd62799ba503c02d03eeea2b2929d1612c637bf923920feaabcfc88dfa94bf775d45639c3c3d744be31c8e177632e1b1fae60'
-readonly IRONFOX_AS_VERSION='159.0.1'
+readonly IRONFOX_AS_COMMIT='381435719dead4ab16db6a1bb3f4c846d09cb477'
+readonly IRONFOX_AS_SHA512SUM='084ca33bae4b7c866761e6d1d169382aed1cf04c8e01817b4077ddb9ffb9206a63ffce6f5a65ad1f9ada5468578813962bdd2ac8f0050dca5e7d0191f751e0e3'
+readonly IRONFOX_AS_VERSION='159.0.2'
 
 # firefox-l10n
 # https://github.com/mozilla-l10n/firefox-l10n
 # NOTE: This repo is updated several times a day...
 # so I think best approach here will be for us to just update it alongside new releases
-readonly IRONFOX_L10N_CENTRAL_COMMIT='8d87c320995573427c0ddf694266af3a183cff8a'
-readonly IRONFOX_L10N_CENTRAL_SHA512SUM='f71e7d251273b28d2258558976d263ba76424b8b44f091065151975d91699b4ff27e133ef66be3b05d9a5d07d080cfa58e15c2883f4c431be1d3947a21d006ce'
+readonly IRONFOX_L10N_CENTRAL_COMMIT='7b55dc26badf70a3265906601d90d2c623f13e2b'
+readonly IRONFOX_L10N_CENTRAL_SHA512SUM='b680f0c111663dc1647bde7e2898de4cc8faee002af668aa835ec32d6477c03e39f535573e5115bea289fbbafefbde63ff8e8be8804e7e0a6f3ff70501ce6647'
 
 # Glean
 # Version: 70.2.1
