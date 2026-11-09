@@ -17,6 +17,7 @@ enum class KnownStore(val packageName: String, val displayName: String) {
   FDROID("org.fdroid.fdroid", "F-Droid"),
   FDROID_BASIC("org.fdroid.basic", "F-Droid Basic"),
   FFUPDATER("de.marmaro.krt.ffupdater", "FFUpdater"),
+  FLICKY("app.flicky", "Flicky"),
   FLORID("com.nahnah.florid", "Florid"),
   FOXY_DROID("nya.kitsunyan.foxydroid", "Foxy Droid"),
   NEO_STORE("com.machiav3lli.fdroid", "Neo Store"),
