@@ -2,7 +2,6 @@ toolkit.jar:
 % skin global classic/1.0 %skin/classic/global/
   skin/classic/global/aboutCache.css                            (../../../toolkit/themes/shared/aboutCache.css)
   skin/classic/global/aboutCacheEntry.css                       (../../../toolkit/themes/shared/aboutCacheEntry.css)
-  skin/classic/global/aboutLicense.css                          (../../../toolkit/themes/shared/aboutLicense.css)
   skin/classic/global/aboutNetError.css                         (../../../toolkit/themes/shared/aboutNetError.css)
   skin/classic/global/autocomplete.css                          (../../../toolkit/themes/linux/global/autocomplete.css)
   skin/classic/global/button.css                                (../../../toolkit/themes/windows/global/button.css)

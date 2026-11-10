@@ -8,10 +8,10 @@ Provides support for a UI setting to enable/disable browsing history.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 45a68358d157..78b1b506251d 100644
+index e3007a552f15..683dc30e286f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -174,7 +174,7 @@ class Core(
+@@ -173,7 +173,7 @@ class Core(
                  remoteDebuggingEnabled = context.components.settings.isRemoteDebuggingEnabled,
                  testingModeEnabled = false,
                  trackingProtectionPolicy = trackingProtectionPolicyFactory.createTrackingProtectionPolicy(),
@@ -20,16 +20,16 @@ index 45a68358d157..78b1b506251d 100644
                  preferredColorScheme = getPreferredColorScheme(),
                  automaticFontSizeAdjustment = context.components.settings.shouldUseAutoSize,
                  fontInflationEnabled = context.components.settings.shouldUseAutoSize,
-@@ -341,7 +341,7 @@ class Core(
+@@ -355,7 +355,7 @@ class Core(
                  ProfileMarkerMiddleware(markerName = "BrowserStore", profiler = engine.profiler),
                  LogMiddleware(tag = "BrowserStore", shouldIncludeDetailedData = { Config.channel.isDebug }),
                  LastAccessMiddleware(),
--                RecentlyClosedMiddleware(recentlyClosedTabsStorage, RECENTLY_CLOSED_MAX),
-+                RecentlyClosedMiddleware(recentlyClosedTabsStorage, RECENTLY_CLOSED_MAX, context.components.settings.ironfox.historyEnabled && !context.components.settings.ironfox.alwaysUsePrivateBrowsing),
+-                RecentlyClosedMiddleware(recentlyClosedTabsStorage, RECENTLY_CLOSED_MAX, applicationScope),
++                RecentlyClosedMiddleware(recentlyClosedTabsStorage, RECENTLY_CLOSED_MAX, context.components.settings.ironfox.historyEnabled && !context.components.settings.ironfox.alwaysUsePrivateBrowsing, applicationScope),
                  DownloadMiddleware(
                      applicationContext = context,
                      downloadServiceClass = DownloadService::class.java,
-@@ -376,7 +376,7 @@ class Core(
+@@ -390,7 +390,7 @@ class Core(
                  PromptMiddleware(),
                  AdsTelemetryMiddleware(adsTelemetry),
                  LastMediaAccessMiddleware(),

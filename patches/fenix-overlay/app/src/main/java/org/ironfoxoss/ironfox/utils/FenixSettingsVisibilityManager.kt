@@ -7,7 +7,9 @@ import androidx.preference.PreferenceFragmentCompat
 import org.ironfoxoss.core.IFDeviceUtils
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.R
+import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.getPreferenceKey
+import org.mozilla.fenix.utils.Settings
 
 // Helpers for controlling the visibility of Fenix UI settings
 
@@ -51,6 +53,8 @@ object FenixSettingsVisibilityManager {
     context: Context,
     prefFragment: PreferenceFragmentCompat
   ) {
+    val settings: Settings = context.components.settings
+
     displayPreference(context, R.string.pref_key_debug_force_weekly_privacy_report_notification, prefFragment)
     displayPreference(context, R.string.pref_key_enable_homepage_as_new_tab, prefFragment)
     displayPreference(context, R.string.pref_key_enable_import_bookmarks, prefFragment)
@@ -59,6 +63,7 @@ object FenixSettingsVisibilityManager {
     displayPreference(context, R.string.pref_key_enable_lna_blocking_enabled, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_feature_enabled, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_tracker_blocking_enabled, prefFragment)
+    displayPreference(context, R.string.pref_key_enable_menu_customization, prefFragment)
     displayPreference(context, R.string.pref_key_enable_wayback_machine, prefFragment)
     displayPreference(context, R.string.pref_key_enable_weekly_privacy_notification, prefFragment)
     displayPreference(context, R.string.pref_key_native_share_sheet, prefFragment)
@@ -82,6 +87,13 @@ object FenixSettingsVisibilityManager {
     hidePreference(context, R.string.pref_key_private_mode_and_stories_entry_point, prefFragment)
     hidePreference(context, R.string.pref_key_use_new_crash_reporter, prefFragment)
     hidePreference(context, R.string.pref_key_use_remote_search_configuration, prefFragment)
+
+    val menuScreenKey = context.getPreferenceKey(R.string.pref_key_enable_menu_customization_screen)
+    val menuScreenPreference = prefFragment.findPreference<Preference>(menuScreenKey)
+
+    if (settings.isMenuCustomizationEnabled) {
+      menuScreenPreference?.isVisible = true
+    }
   }
 
   /**

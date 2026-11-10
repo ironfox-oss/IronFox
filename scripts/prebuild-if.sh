@@ -473,8 +473,13 @@ function prepare_as() {
   "${IRONFOX_RM}" -v "${IRONFOX_AS}/components/remote_settings/dumps/main/search-telemetry-v2.json" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_AS}/components/remote_settings/dumps/main/search-telemetry-v2.timestamp" || return 1
 
+  # Remove the search config V3 collection
+  ## We don't currently use/want this
+  "${IRONFOX_RM}" -v "${IRONFOX_AS}/components/remote_settings/dumps/main/search-config-v3.json" || return 1
+  "${IRONFOX_RM}" -v "${IRONFOX_AS}/components/remote_settings/dumps/main/search-config-v3.timestamp" || return 1
+
   # Remove the Mozilla Ads Client library
-  "${IRONFOX_SED}" -i 's|"components/ads-client"|# "components/ads-client"|g' "${IRONFOX_AS}/Cargo.toml" || return 1
+  "${IRONFOX_SED}" -i 's|"components/ads-client|# "components/ads-client|g' "${IRONFOX_AS}/Cargo.toml" || return 1
   "${IRONFOX_SED}" -i 's|ads-client|# ads-client|g' "${IRONFOX_AS}/megazords/full/Cargo.toml" || return 1
 
   # Remove the Crash Reporter test library
@@ -489,6 +494,11 @@ function prepare_as() {
   ## Used for telemetry/error reporting, depends on Glean
   "${IRONFOX_SED}" -i 's|"components/support/error|# "components/support/error|g' "${IRONFOX_AS}/Cargo.toml" || return 1
   "${IRONFOX_SED}" -i 's|error-support|# error-support|g' "${IRONFOX_AS}/megazords/full/Cargo.toml" || return 1
+  "${IRONFOX_RM}" -vr "${IRONFOX_AS}/components/support/error/android" || return 1
+
+  # Remove useless iOS Megazord + docs
+  "${IRONFOX_SED}" -i 's|"megazords/ios-rust|# "megazords/ios-rust|g' "${IRONFOX_AS}/Cargo.toml" || return 1
+  "${IRONFOX_SED}" -i 's|"automation/swift-components-docs|# "automation/swift-components-docs|g' "${IRONFOX_AS}/Cargo.toml" || return 1
 
   # Apply Application Services overlay
   apply_overlay "${IRONFOX_AS_OVERLAY}/" || return 1
@@ -581,14 +591,12 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/fox_ai_on_state.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_launcher_foreground.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_launcher_monochrome.xml" || return 1
-  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_onboarding_search_widget.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_onboarding_sync.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/microsurvey_success.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/nova_onboarding_marketing.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/nova_onboarding_sync.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/nova_onboarding_tou.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/nova_onboarding_tou_2.xml" || return 1
-  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/nova_onboarding_widget.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/review_prompt_negative_button.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable/review_prompt_positive_button.xml" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/drawable-hdpi/fenix_search_widget.webp" || return 1
@@ -610,22 +618,18 @@ function prepare_fenix() {
   "${IRONFOX_SED}" -i -e 's|R.drawable.nova_onboarding_sync|R.drawable.ic_ironfox_artwork|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/onboarding/continuous/ContinuousOnboardingFeature.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|R.drawable.nova_onboarding_sync|R.drawable.ic_ironfox_artwork|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/onboarding/continuous/ContinuousOnboardingScreen.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|R.drawable.nova_onboarding_sync|R.drawable.ic_ironfox_artwork|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPage.kt" || return 1
-  "${IRONFOX_SED}" -i -e 's|R.drawable.nova_onboarding_widget|R.drawable.ic_ironfox_artwork|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPage.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|R.drawable.review_prompt_negative_button|R.drawable.ic_ironfox_artwork|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/reviewprompt/ui/CustomReviewPrompt.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|R.drawable.review_prompt_positive_button|R.drawable.ic_ironfox_artwork|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/reviewprompt/ui/CustomReviewPrompt.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|image-res: nova_onboarding_marketing|image-res: ic_ironfox_artwork|g' "${IRONFOX_FENIX}/app/onboarding.fml.yaml" || return 1
+  "${IRONFOX_SED}" -i -e 's|image-res: nova_onboarding_sync|image-res: ic_ironfox_artwork|g' "${IRONFOX_FENIX}/app/onboarding.fml.yaml" || return 1
 
   # Remove unused telemetry and marketing services/components
   "${IRONFOX_SED}" -i -e 's|import mozilla.appservices.syncmanager.SyncTelemetry|// import mozilla.appservices.syncmanager.SyncTelemetry|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|// import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt" || return 1
-  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.components.toolbar.BrowserToolbarTelemetryMiddleware|// import org.mozilla.fenix.components.toolbar.BrowserToolbarTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt" || return 1
-  "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.home.toolbar.BrowserToolbarTelemetryMiddleware|// import org.mozilla.fenix.home.toolbar.BrowserToolbarTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.tabstray.TabsTrayTelemetryMiddleware|// import org.mozilla.fenix.tabstray.TabsTrayTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.webcompat.middleware.WebCompatReporterTelemetryMiddleware|// import org.mozilla.fenix.webcompat.middleware.WebCompatReporterTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt" || return 1
 
   "${IRONFOX_SED}" -i -e 's|BookmarksTelemetryMiddleware(|// BookmarksTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarkFragment.kt" || return 1
-  "${IRONFOX_SED}" -i -e 's|BrowserToolbarTelemetryMiddleware(|// BrowserToolbarTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt" || return 1
-  "${IRONFOX_SED}" -i -e 's|BrowserToolbarTelemetryMiddleware(|// BrowserToolbarTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|CustomReviewPromptTelemetryMiddleware(|// CustomReviewPromptTelemetryMiddleware(|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt" || return 1
   "${IRONFOX_SED}" -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt" || return 1
@@ -663,7 +667,6 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/ReferralAttribution.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/RtamoAttributionHandler.kt" || return 1
-  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/crashes/CrashFactCollector.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/crashes/CrashReportingAppMiddleware.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/crashes/NimbusExperimentDataProvider.kt" || return 1
@@ -672,7 +675,6 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/ext/Configuration.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/middleware/HomeTelemetryMiddleware.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/PocketMiddleware.kt" || return 1
-  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/messaging/state/MessagingMiddleware.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/reviewprompt/ReviewPromptMiddleware.kt" || return 1
@@ -1020,7 +1022,7 @@ function prepare_firefox() {
   deglean_firefox || return 1
 
   "${IRONFOX_SED}" -i 's/8b28662ab15031496b495fa701f211aa336c119b99c25b522be6f396a1231891/c78330d24c41b1c23cf161cf8f32a2d7c0879989e2a11938f6c276791def98f4/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json" || return 1
-  "${IRONFOX_SED}" -i 's/ada8f059f0fa8a3a82315606318429d3a70200bbb2886d1a1bcaad2856a6303b/9e2f2f22f500be3e80638131fb0921c47702d377aaa13f4662d51dae57c21155/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json" || return 1
+  "${IRONFOX_SED}" -i 's/e2bc0630d2a94105a5211a3595a824f52f9031ef515080013700849887150230/0512f189d8c22c1963892f3ce5fddc0fd870e4dca05a36fde735b996e237a7f2/g' "${IRONFOX_GECKO}/third_party/rust/glean-core/.cargo-checksum.json" || return 1
 
   ## We also need to de-glean Android Components here, as not doing so appears to cause build failures for ex. GeckoView
   deglean_ac || return 1

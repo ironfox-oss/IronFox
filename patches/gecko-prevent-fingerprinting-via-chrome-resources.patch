@@ -8,10 +8,10 @@ Prevents the browser from exposing branding assets and certain other internal re
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/caps/nsScriptSecurityManager.cpp b/caps/nsScriptSecurityManager.cpp
-index aaca13e98a07..969f507ed5b1 100644
+index ddeb7ec7d138..d1d1a50d8348 100644
 --- a/caps/nsScriptSecurityManager.cpp
 +++ b/caps/nsScriptSecurityManager.cpp
-@@ -1030,6 +1030,89 @@ nsresult nsScriptSecurityManager::CheckLoadURIFlags(
+@@ -1030,6 +1030,88 @@ nsresult nsScriptSecurityManager::CheckLoadURIFlags(
            return NS_OK;
          }
        }
@@ -37,7 +37,6 @@ index aaca13e98a07..969f507ed5b1 100644
 +            StringBeginsWith(spec, "chrome://global/content/model-files-view"_ns) ||
 +            StringBeginsWith(spec, "chrome://global/skin/aboutCache.css"_ns) ||
 +            StringBeginsWith(spec, "chrome://global/skin/aboutCacheEntry.css"_ns) ||
-+            StringBeginsWith(spec, "chrome://global/skin/aboutLicense.css"_ns) ||
 +            StringBeginsWith(spec, "chrome://global/skin/aboutNetError.css"_ns) ||
 +            StringBeginsWith(spec, "chrome://global/skin/autocomplete.css"_ns) ||
 +            StringBeginsWith(spec, "chrome://global/skin/button.css"_ns) ||

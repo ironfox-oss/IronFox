@@ -13,6 +13,7 @@ class OnboardingTelemetryRecorder(
   fun onImpression(sequenceId: String, pageType: OnboardingPageUiData.Type, sequencePosition: String) {}
   fun onSetToDefaultClick(sequenceId: String, sequencePosition: String) {}
   fun onSyncSignInClick(sequenceId: String, sequencePosition: String) {}
+  fun onNotificationCardImpression(sequenceId: String, sequencePosition: String) {}
   fun onNotificationPermissionClick(sequenceId: String, sequencePosition: String) {}
   fun onAddSearchWidgetClick(sequenceId: String, sequencePosition: String) {}
   fun onSkipSetToDefaultClick(sequenceId: String, sequencePosition: String) {}

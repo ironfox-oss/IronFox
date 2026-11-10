@@ -8,25 +8,26 @@ Adds support for IronFox-specific UI settings to control various functionality.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 75f51971cb20..b445d15c4171 100644
+index 4f1e4d71d7b8..9696a9eb87b6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -144,6 +144,7 @@ import org.mozilla.fenix.theme.ThemeProvider
- import org.mozilla.fenix.utils.Settings
- import org.mozilla.fenix.utils.isLargeScreenSize
+@@ -154,6 +154,7 @@ import org.mozilla.fenix.utils.isLargeScreenSize
  import org.mozilla.fenix.wallpapers.Wallpaper
+ import org.mozilla.fenix.widget.SearchWidgets
+ import org.mozilla.fenix.widget.glance.SearchBarWidgetPreviews
 +import org.ironfoxoss.ironfox.utils.IFPrefs
  
  private const val RAM_THRESHOLD_MEGABYTES = 1024
  private const val BYTES_TO_MEGABYTES_CONVERSION = 1024.0 * 1024.0
-@@ -238,6 +239,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-             // Start loading the SharedPreferences file from disk on a background thread immediately.
-             applicationScope.launch(IO) {
+@@ -265,6 +266,8 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                  applicationContext.getSharedPreferences(Settings.FENIX_PREFERENCES, MODE_PRIVATE)
-+                IFPrefs.setPrefs(applicationContext)
              }
  
++            IFPrefs.setPrefs(applicationContext)
++
              // Allow overriding secret settings with values specified in `local.properties` at build time.
+             // This allows developers to opt-in to a set of features for their own workflow.
+             // Only debug build variants populate this BuildConfig value.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 index 13f9f6166f53..9e854f714f4d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt

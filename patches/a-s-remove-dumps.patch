@@ -8,10 +8,10 @@ Removes unwanted Remote Settings dumps.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
-index b951d45c0..faf1ef996 100644
+index 0eaf1d42f..91595e0d1 100644
 --- a/components/remote_settings/src/client.rs
 +++ b/components/remote_settings/src/client.rs
-@@ -93,11 +93,11 @@ struct RemoteSettingsClientConfig {
+@@ -93,12 +93,12 @@ struct RemoteSettingsClientConfig {
  impl<C: ApiClient> RemoteSettingsClient<C> {
      // One line per bucket + collection
      packaged_collections! {
@@ -19,14 +19,16 @@ index b951d45c0..faf1ef996 100644
 +//        ("main", "regions"),
          ("main", "search-config-icons"),
          ("main", "search-config-v2"),
+-        ("main", "search-config-v3"),
 -        ("main", "search-telemetry-v2"),
 -        ("main", "summarizer-models-config"),
++//        ("main", "search-config-v3"),
 +//        ("main", "search-telemetry-v2"),
 +//        ("main", "summarizer-models-config"),
          ("main", "translations-models"),
          ("main", "translations-wasm"),
      }
-@@ -113,10 +113,10 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+@@ -114,10 +114,10 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
      // and check for the folder + name in
      // `remote_settings/dumps/{bucket}/attachments/{collection}/{filename}
      packaged_attachments! {

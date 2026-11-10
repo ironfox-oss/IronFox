@@ -8,10 +8,10 @@ Adds IronFox-specific onboarding screens.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/onboarding.fml.yaml b/mobile/android/fenix/app/onboarding.fml.yaml
-index 73b46a4a7e60..a251d9db6d37 100644
+index 3666e564b73c..6ce6f563c67a 100644
 --- a/mobile/android/fenix/app/onboarding.fml.yaml
 +++ b/mobile/android/fenix/app/onboarding.fml.yaml
-@@ -58,6 +58,57 @@ features:
+@@ -67,6 +67,57 @@ features:
                    body-line-one-text: nova_onboarding_marketing_body
                    body-line-one-link-text: nova_onboarding_marketing_body_link_text
  
@@ -69,7 +69,7 @@ index 73b46a4a7e60..a251d9db6d37 100644
    continuous-onboarding:
      description: >
        Feature to enable the continuous onboarding flow. This feature reduces the number of upfront
-@@ -148,6 +199,16 @@ objects:
+@@ -174,6 +225,16 @@ objects:
          description: >
            An optional marketing data for the onboarding card.
          default: null
@@ -84,9 +84,9 @@ index 73b46a4a7e60..a251d9db6d37 100644
 +          A list of preferences for the IronFox updater preferences onboarding card.
 +        default: [ ]
  
-   CustomizationToolbarData:
-     description: An object to describe the placement of the toolbar.
-@@ -248,6 +309,46 @@ objects:
+   TermsOfServiceData:
+     description: An object to describe the terms of service onboarding card.
+@@ -255,6 +316,46 @@ objects:
          description: The text for line three of the body.
          default: ""
  
@@ -133,7 +133,7 @@ index 73b46a4a7e60..a251d9db6d37 100644
  enums:
  
    OnboardingCardType:
-@@ -267,6 +368,34 @@ enums:
+@@ -268,6 +369,34 @@ enums:
          description: Page to display the terms of services.
        marketing-data:
          description: Allows user to opt out of marketing data collection.
@@ -166,8 +166,8 @@ index 73b46a4a7e60..a251d9db6d37 100644
 +      updater:
 +        description: Whether to check for IronFox updates automatically.
  
-   ToolbarType:
-     description: An enum to describe a toolbar placement option.
+   MarketingCardVariant:
+     description: An enum to describe a marketing card variation.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index 3c71fd5f01a1..dcd975a24095 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
@@ -181,7 +181,7 @@ index 3c71fd5f01a1..dcd975a24095 100644
                  logger = logger,
                  analytics = components.analytics,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 65d97c0775b6..943d5cefa715 100644
+index 998824ba25f8..1c3ac4543bdb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 @@ -4,6 +4,7 @@
@@ -190,18 +190,20 @@ index 65d97c0775b6..943d5cefa715 100644
  
 +import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
  import android.annotation.SuppressLint
- import android.appwidget.AppWidgetManager
  import android.content.Context
-@@ -189,6 +190,8 @@ class OnboardingFragment : Fragment() {
+ import android.content.pm.ActivityInfo
+@@ -179,7 +180,9 @@ class OnboardingFragment : Fragment() {
          }
      }
  
+-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 +    private val ifOnboardingFeature = ViewBoundFeatureWrapper<IFOnboardingPageAdditionSupport>()
 +
-     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
++     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
          addMarketingFeature.set(
-             feature = MarketingPageAdditionSupport(
-@@ -201,6 +204,14 @@ class OnboardingFragment : Fragment() {
+             feature =
+                 OnboardingPageAdditionSupport(
+@@ -204,6 +207,14 @@ class OnboardingFragment : Fragment() {
              owner = this,
              view = view,
          )
@@ -216,7 +218,7 @@ index 65d97c0775b6..943d5cefa715 100644
          super.onViewCreated(view, savedInstanceState)
      }
  
-@@ -335,6 +346,7 @@ class OnboardingFragment : Fragment() {
+@@ -302,6 +313,7 @@ class OnboardingFragment : Fragment() {
              },
              currentIndex = { index ->
                  requireComponents.settings.onboardingCurrentPageIndex = index
@@ -224,14 +226,8 @@ index 65d97c0775b6..943d5cefa715 100644
              },
              onNavigateToNextPage = {
                  telemetryRecorder.onNavigatedToNextPage()
-@@ -385,17 +397,19 @@ class OnboardingFragment : Fragment() {
-         requireComponents.fenixOnboarding.finish()
- 
+@@ -352,13 +364,13 @@ class OnboardingFragment : Fragment() {
          val settings = requireComponents.settings
-+        settings.ironfox.ironFoxOnboardingCompleted = true
-+        GeckoSettingsBridge.setIronFoxPrefs(requireContext(), requireComponents.core.engine)
-         settings.recordOnboardingCompleted()
-         settings.onboardingCurrentPageIndex = 0
  
          // Telemetry and daily usage ping get enabled after ToU acceptance.
 -        startMetricsIfEnabled(
@@ -244,10 +240,20 @@ index 65d97c0775b6..943d5cefa715 100644
 -        )
 +        ) */
  
-         findNavController().nav(
-             id = R.id.onboardingFragment,
+         findNavController()
+             .nav(
+@@ -370,6 +382,9 @@ class OnboardingFragment : Fragment() {
+         // intent and may navigate to the browser. Navigating home first keeps home on the back stack beneath it.
+         requireComponents.fenixOnboarding.finish()
+ 
++        settings.ironfox.ironFoxOnboardingCompleted = true
++        GeckoSettingsBridge.setIronFoxPrefs(requireContext(), requireComponents.core.engine)
++
+         settings.recordOnboardingCompleted()
+         settings.onboardingCurrentPageIndex = 0
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
-index 2525976c8137..3175aa0a2cca 100644
+index 6cdf6939ec82..3200067e2193 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 @@ -4,6 +4,11 @@
@@ -259,11 +265,11 @@ index 2525976c8137..3175aa0a2cca 100644
 +import org.mozilla.fenix.nimbus.IfOnboardingPreferenceUpdaterType
 +import org.mozilla.fenix.nimbus.IfPreferencesData
 +import org.mozilla.fenix.nimbus.IfPreferenceUpdaterData
- import org.mozilla.fenix.nimbus.CustomizationToolbarData
  import org.mozilla.fenix.nimbus.MarketingData
  import org.mozilla.fenix.nimbus.OnboardingCardData
-@@ -105,6 +110,8 @@ private fun OnboardingCardData.toPageUiData() = cardType?.let { type ->
-         toolbarOptions = extraData?.customizationToolbarData?.takeIf { it.isNotEmpty() }?.toOnboardingToolbarOptions(),
+ import org.mozilla.fenix.nimbus.OnboardingCardType
+@@ -90,6 +95,8 @@ private fun OnboardingCardData.toPageUiData() = cardType?.let { type ->
+         secondaryButtonLabel = secondaryButtonLabel.ifEmpty { null },
          termsOfService = extraData?.termOfServiceData?.toOnboardingTermsOfService(),
          marketingData = extraData?.marketingData?.toOnboardingMarketingData(),
 +        ifPreferencesData = extraData?.ifPreferencesData?.toOnboardingIfPreferenceOptions(),
@@ -271,8 +277,8 @@ index 2525976c8137..3175aa0a2cca 100644
      )
  }
  
-@@ -117,6 +124,9 @@ private fun OnboardingCardType.toPageUiDataType() =
-         OnboardingCardType.TOOLBAR_PLACEMENT -> OnboardingPageUiData.Type.TOOLBAR_PLACEMENT
+@@ -99,6 +106,9 @@ private fun OnboardingCardType.toPageUiDataType() =
+         OnboardingCardType.SYNC_SIGN_IN -> OnboardingPageUiData.Type.SYNC_SIGN_IN
          OnboardingCardType.TERMS_OF_SERVICE -> OnboardingPageUiData.Type.TERMS_OF_SERVICE
          OnboardingCardType.MARKETING_DATA -> OnboardingPageUiData.Type.MARKETING_DATA
 +        OnboardingCardType.IF_PREFERENCE_DOH -> OnboardingPageUiData.Type.IF_PREFERENCE_DOH
@@ -280,12 +286,11 @@ index 2525976c8137..3175aa0a2cca 100644
 +        OnboardingCardType.IF_PREFERENCE_UPDATER -> OnboardingPageUiData.Type.IF_PREFERENCE_UPDATER
      }
  
- private fun List<CustomizationToolbarData>.toOnboardingToolbarOptions() = map { it.toOnboardingCustomizeToolbar() }
-@@ -161,6 +171,41 @@ private fun ToolbarType.toToolbarOptionType() =
-         ToolbarType.TOOLBAR_TOP -> ToolbarOptionType.TOOLBAR_TOP
-         ToolbarType.TOOLBAR_BOTTOM -> ToolbarOptionType.TOOLBAR_BOTTOM
-     }
-+ 
+ private fun TermsOfServiceData.toOnboardingTermsOfService() =
+@@ -127,6 +137,41 @@ private fun MarketingData.toOnboardingMarketingData() =
+         bodyThreeText = bodyLineThreeText,
+     )
+ 
 +private fun List<IfPreferencesData>.toOnboardingIfPreferenceOptions() = map { it.toOnboardingIfPreferenceOption() }
 +
 +private fun IfPreferencesData.toOnboardingIfPreferenceOption() = with(this) {
@@ -320,11 +325,12 @@ index 2525976c8137..3175aa0a2cca 100644
 +    IfOnboardingPreferenceUpdaterType.UPDATER -> IfPreferenceUpdaterType.UPDATER
 +    IfOnboardingPreferenceUpdaterType.DEFAULT -> throw UnsupportedOperationException("Unsupported IfOnboardingPreferenceUpdaterType: default")
 +}
- 
++
  /**
   * Mapper to convert [OnboardingPageUiData] to [OnboardingPageState] that is a param for [OnboardingPage] composable.
-@@ -180,6 +225,9 @@ internal fun mapToOnboardingPageState(
-     onCustomizeToolbarButtonClick: () -> Unit,
+  */
+@@ -140,6 +185,9 @@ internal fun mapToOnboardingPageState(
+     onSignInSkipClick: () -> Unit,
      onTermsOfServiceButtonClick: () -> Unit,
      onMarketingDataContinueClick: () -> Unit = {},
 +    onIfPreferenceDohButtonClick: () -> Unit,
@@ -333,7 +339,7 @@ index 2525976c8137..3175aa0a2cca 100644
  ): OnboardingPageState =
      when (onboardingPageUiData.type) {
          OnboardingPageUiData.Type.DEFAULT_BROWSER ->
-@@ -237,6 +285,30 @@ internal fun mapToOnboardingPageState(
+@@ -173,6 +221,30 @@ internal fun mapToOnboardingPageState(
                  onNegativeButtonClick = {}, // No negative button option for marketing data.
                  isSmallDevice = isSmallDevice,
              )
@@ -364,8 +370,8 @@ index 2525976c8137..3175aa0a2cca 100644
      }
  
  private fun createOnboardingPageState(
-@@ -257,5 +329,7 @@ private fun createOnboardingPageState(
-         toolbarOptions = onboardingPageUiData.toolbarOptions,
+@@ -192,5 +264,7 @@ private fun createOnboardingPageState(
+             },
          termsOfService = onboardingPageUiData.termsOfService,
          marketingData = onboardingPageUiData.marketingData,
 +        ifPreferenceOptions = onboardingPageUiData.ifPreferencesData,
@@ -373,7 +379,7 @@ index 2525976c8137..3175aa0a2cca 100644
          isSmallDevice = isSmallDevice,
      )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
-index 83cbeedac17d..2449d249f029 100644
+index 4ef5e5d787c9..e81d6c45a06c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
 @@ -4,6 +4,8 @@
@@ -385,17 +391,17 @@ index 83cbeedac17d..2449d249f029 100644
  import androidx.annotation.DrawableRes
  import org.mozilla.fenix.nimbus.MarketingCardVariant
  
-@@ -30,6 +32,8 @@ data class OnboardingPageState(
+@@ -28,6 +30,8 @@ data class OnboardingPageState(
+     val secondaryButton: Action? = null,
      val termsOfService: OnboardingTermsOfService? = null,
-     val toolbarOptions: List<ToolbarOption>? = null,
      val marketingData: OnboardingMarketingData? = null,
 +    val ifPreferenceOptions: List<IfPreferenceOption>? = null,
 +    val ifPreferenceUpdaterOptions: List<IfPreferenceUpdaterOption>? = null,
      val onRecordImpressionEvent: () -> Unit = {},
      val isSmallDevice: Boolean = false,
  )
-@@ -47,6 +51,33 @@ data class ToolbarOption(
-     val label: String,
+@@ -38,6 +42,33 @@ data class Action(
+     val onClick: () -> Unit,
  )
  
 +data class IfPreferenceOption(
@@ -425,9 +431,9 @@ index 83cbeedac17d..2449d249f029 100644
 +    UPDATER("updater"),
 +}
 +
- /**
-  * Types of toolbar placement options available.
-  *
+ /** Model containing data for the terms of service page during onboarding. */
+ data class OnboardingTermsOfService(
+     val subheaderOneText: String? = null,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
 index 79a2a84c731f..db1ef08cad8a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
@@ -452,10 +458,10 @@ index 79a2a84c731f..db1ef08cad8a 100644
  }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-index 8e36d42a548f..3612a7498e4b 100644
+index fa63b8760b91..a41dc72d6ecc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-@@ -244,6 +244,15 @@ fun OnboardingScreen(
+@@ -198,6 +198,15 @@ fun OnboardingScreen(
              onMarketingDataSkipClick()
              scrollToNextPageOrDismiss()
          },
@@ -468,10 +474,10 @@ index 8e36d42a548f..3612a7498e4b 100644
 +        onIfPreferenceUpdaterButtonClick = {
 +            scrollToNextPageOrDismiss()
 +        },
-         onboardingStore = onboardingStore,
      )
  }
-@@ -369,6 +378,9 @@ private fun OnboardingContent(
+ 
+@@ -297,6 +306,9 @@ private fun OnboardingContent(
      onMarketingDataLearnMoreClick: () -> Unit,
      onMarketingDataContinueClick: (allowMarketingDataCollection: Boolean) -> Unit,
      onMarketingDataSkipClick: () -> Unit,
@@ -481,9 +487,9 @@ index 8e36d42a548f..3612a7498e4b 100644
  ) {
      BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
          val layout = getOnboardingLayout(this)
-@@ -415,6 +427,9 @@ private fun OnboardingContent(
-                         onAddFirefoxWidgetSkipClick = onSkipFirefoxWidgetClick,
-                         onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
+@@ -338,6 +350,9 @@ private fun OnboardingContent(
+                         onSignInButtonClick = onSignInButtonClick,
+                         onSignInSkipClick = onSignInSkipClick,
                          onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
 +                        onIfPreferenceDohButtonClick = onIfPreferenceDohButtonClick,
 +                        onIfPreferencesButtonClick = onIfPreferencesButtonClick,
@@ -491,7 +497,7 @@ index 8e36d42a548f..3612a7498e4b 100644
                          isSmallDevice = layout.isSmall,
                      )
  
-@@ -512,6 +527,10 @@ private fun OnboardingPageForType(
+@@ -412,6 +427,10 @@ private fun OnboardingPageForType(
                  state,
                  termsOfServiceEventHandler,
              )
@@ -502,10 +508,10 @@ index 8e36d42a548f..3612a7498e4b 100644
      }
  }
  
-@@ -691,6 +710,9 @@ private fun OnboardingScreenPreview() {
+@@ -586,6 +605,9 @@ private fun OnboardingScreenPreview() {
+             onMarketingOptInToggle = {},
+             onMarketingDataContinueClick = {},
              onMarketingDataSkipClick = {},
-             onNotificationPermissionButtonClick = {},
-             onNotificationPermissionSkipClick = {},
 +            onIfPreferenceDohButtonClick = {},
 +            onIfPreferencesButtonClick = {},
 +            onIfPreferenceUpdaterButtonClick = {},

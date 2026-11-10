@@ -8,7 +8,7 @@ Removes the Glean SDK.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 5a7aaab55..2b900c888 100644
+index b3515f486..16a86703f 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 @@ -26,11 +26,11 @@ import kotlinx.coroutines.async
@@ -16,14 +16,13 @@ index 5a7aaab55..2b900c888 100644
  import kotlinx.coroutines.withContext
  import mozilla.appservices.remotesettings.RemoteSettingsService
 -import mozilla.telemetry.glean.Glean
-+// // import mozilla.telemetry.glean.Glean
++// import mozilla.telemetry.glean.Glean
  import org.json.JSONObject
 -import org.mozilla.experiments.nimbus.GleanMetrics.NimbusEvents
--import org.mozilla.experiments.nimbus.GleanMetrics.NimbusHealth
++/* import org.mozilla.experiments.nimbus.GleanMetrics.NimbusEvents
+ import org.mozilla.experiments.nimbus.GleanMetrics.NimbusHealth
 -import org.mozilla.experiments.nimbus.GleanMetrics.Pings
-+// /* import org.mozilla.experiments.nimbus.GleanMetrics.NimbusEvents
-+// import org.mozilla.experiments.nimbus.GleanMetrics.NimbusHealth
-+// import org.mozilla.experiments.nimbus.GleanMetrics.Pings */
++import org.mozilla.experiments.nimbus.GleanMetrics.Pings */
  import org.mozilla.experiments.nimbus.internal.AppContext
  import org.mozilla.experiments.nimbus.internal.AvailableExperiment
  import org.mozilla.experiments.nimbus.internal.DatabaseLoadExtraDef
@@ -61,7 +60,7 @@ index 5a7aaab55..2b900c888 100644
                  NimbusEvents.enrollmentStatus.record(
                      NimbusEvents.EnrollmentStatusExtra(
                          branch = extra.branch,
-@@ -127,42 +127,42 @@ open class Nimbus(
+@@ -127,50 +127,50 @@ open class Nimbus(
                          conflictSlug = extra.conflictSlug,
                      ),
                  )
@@ -108,11 +107,21 @@ index 5a7aaab55..2b900c888 100644
  
          override fun submitTargetingContext() {
 -            org.mozilla.experiments.nimbus.GleanMetrics.Pings.nimbusTargetingContext.submit()
-+// //            org.mozilla.experiments.nimbus.GleanMetrics.Pings.nimbusTargetingContext.submit()
++//            org.mozilla.experiments.nimbus.GleanMetrics.Pings.nimbusTargetingContext.submit()
+         }
+ 
+         override fun recordRolloutsOptOut() {
+-            NimbusEvents.rolloutsOptOut.record()
++//            NimbusEvents.rolloutsOptOut.record()
+         }
+ 
+         override fun recordStudiesOptOut() {
+-            NimbusEvents.studiesOptOut.record()
++//            NimbusEvents.studiesOptOut.record()
          }
      }
  
-@@ -231,11 +231,11 @@ open class Nimbus(
+@@ -245,11 +245,11 @@ open class Nimbus(
          try {
              nimbusClient.getFeatureConfigVariables(featureId)?.let { JSONObject(it) }
          } catch (e: NimbusException.DatabaseNotReady) {
@@ -126,7 +135,7 @@ index 5a7aaab55..2b900c888 100644
              null
          } catch (e: Throwable) {
              reportError("getFeatureConfigVariablesJson", e)
-@@ -311,9 +311,9 @@ open class Nimbus(
+@@ -325,9 +325,9 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun fetchExperimentsOnThisThread() = withCatchAll("fetchExperiments") {
          try {
@@ -139,7 +148,7 @@ index 5a7aaab55..2b900c888 100644
              updateObserver {
                  it.onExperimentsFetched()
              }
-@@ -349,7 +349,7 @@ open class Nimbus(
+@@ -363,7 +363,7 @@ open class Nimbus(
                  val time = measureTimeMillis {
                      enrollmentChangeEvents = nimbusClient.applyPendingExperiments()
                  }
@@ -148,7 +157,7 @@ index 5a7aaab55..2b900c888 100644
  
                  // SAFETY: events is only null at declaration time and is
                  // immediately assigned a non-null value inside the
-@@ -407,13 +407,13 @@ open class Nimbus(
+@@ -421,13 +421,13 @@ open class Nimbus(
      ) {
          val experiments = nimbusClient.getActiveExperiments()
  
@@ -164,7 +173,7 @@ index 5a7aaab55..2b900c888 100644
  
          if (initial || enrollmentChangeEvents.isNotEmpty()) {
              // During initialization we need to inform the application when we've
-@@ -619,19 +619,19 @@ open class Nimbus(
+@@ -633,19 +633,19 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun recordExperimentTelemetry(experiments: List<EnrolledExperiment>) {
          // Call Glean.setExperimentActive() for each active experiment.
@@ -187,7 +196,7 @@ index 5a7aaab55..2b900c888 100644
              when (event.change) {
                  EnrollmentChangeEventType.ENROLLMENT -> {
                      NimbusEvents.enrollment.record(
-@@ -693,7 +693,7 @@ open class Nimbus(
+@@ -707,7 +707,7 @@ open class Nimbus(
                      )
                  }
              }
@@ -196,14 +205,22 @@ index 5a7aaab55..2b900c888 100644
      }
  
      // The exposure event should be recorded when the expected treatment (or no-treatment, such as
+@@ -820,6 +820,6 @@ open class Nimbus(
+     * Glean pings exposed for use in Fenix tests outside this package.
+     */
+     public object Pings {
+-        public val nimbusTargetingContext = org.mozilla.experiments.nimbus.GleanMetrics.Pings.nimbusTargetingContext
++//         public val nimbusTargetingContext = org.mozilla.experiments.nimbus.GleanMetrics.Pings.nimbusTargetingContext
+     }
+ }
 diff --git a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-index f8a9f86b1..b29d2d6dc 100644
+index 8d764316f..c5541b9ea 100644
 --- a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
 +++ b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-@@ -14,9 +14,9 @@ package mozilla.appservices.logins
-  */
+@@ -15,9 +15,9 @@ package mozilla.appservices.logins
  
  import mozilla.appservices.db_crypto.KeyManager
+ import mozilla.appservices.db_crypto.createManagedEncdec
 -import mozilla.telemetry.glean.private.CounterMetricType
 +/* import mozilla.telemetry.glean.private.CounterMetricType
  import mozilla.telemetry.glean.private.LabeledMetricType
@@ -212,7 +229,7 @@ index f8a9f86b1..b29d2d6dc 100644
  
  /**
   * An artifact of the uniffi conversion - a thin-ish wrapper around a
-@@ -135,13 +135,13 @@ class DatabaseLoginsStorage(dbPath: String, keyManager: KeyManager) : AutoClosea
+@@ -136,13 +136,13 @@ class DatabaseLoginsStorage(dbPath: String, keyManager: KeyManager) : AutoClosea
  
      @Throws(LoginsApiException::class)
      fun deleteUndecryptableLoginsAndRecordMetrics() {
@@ -228,7 +245,7 @@ index f8a9f86b1..b29d2d6dc 100644
      }
  }
  
-@@ -151,12 +151,12 @@ enum class KeyRegenerationEventReason {
+@@ -152,12 +152,12 @@ enum class KeyRegenerationEventReason {
  
  fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
      // Avoid the deprecation warning when calling  `record()` without the optional EventExtras param
@@ -243,7 +260,7 @@ index f8a9f86b1..b29d2d6dc 100644
  }
  
  /**
-@@ -169,8 +169,8 @@ fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
+@@ -170,8 +170,8 @@ fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
   * This is a convenience wrapper to measure the two in one shot.
   */
  class LoginsStoreCounterMetrics(
@@ -254,7 +271,7 @@ index f8a9f86b1..b29d2d6dc 100644
  ) {
      inline fun <U> measure(callback: () -> U): U {
          return measureIgnoring({ false }, callback)
-@@ -181,7 +181,7 @@ class LoginsStoreCounterMetrics(
+@@ -182,7 +182,7 @@ class LoginsStoreCounterMetrics(
          shouldIgnore: (Exception) -> Boolean,
          callback: () -> U,
      ): U {
@@ -263,7 +280,7 @@ index f8a9f86b1..b29d2d6dc 100644
          try {
              return callback()
          } catch (e: Exception) {
-@@ -190,19 +190,19 @@ class LoginsStoreCounterMetrics(
+@@ -191,19 +191,19 @@ class LoginsStoreCounterMetrics(
              }
              when (e) {
                  is LoginsApiException.NoSuchRecord -> {
@@ -312,7 +329,7 @@ index 3a29758ef..b865f01be 100644
 -}
 +} */
 diff --git a/components/places/Cargo.toml b/components/places/Cargo.toml
-index c8a720743..6f9d618c7 100644
+index 2ed0a3c7b..a90888a96 100644
 --- a/components/places/Cargo.toml
 +++ b/components/places/Cargo.toml
 @@ -9,7 +9,7 @@ exclude = ["/android", "/ios"]
@@ -339,8 +356,8 @@ index c8a720743..6f9d618c7 100644
  
  [build-dependencies]
  uniffi = { version = "0.32", features=["build"]}
--glean-build = { git = "https://github.com/mozilla/glean", tag = "v70.0.0" }
-+# glean-build = { git = "https://github.com/mozilla/glean", tag = "v70.0.0" }
+-glean-build = { git = "https://github.com/mozilla/glean", tag = "v70.2.0" }
++# glean-build = { git = "https://github.com/mozilla/glean", tag = "v70.2.0" }
 diff --git a/components/places/src/ffi.rs b/components/places/src/ffi.rs
 index cf69997e5..016082bd7 100644
 --- a/components/places/src/ffi.rs
@@ -492,4 +509,81 @@ index 3c8140348..434012fb9 100644
 +        } */
      }
  }
+diff --git a/components/support/error/Cargo.toml b/components/support/error/Cargo.toml
+index 551da6e10..e9a9f0773 100644
+--- a/components/support/error/Cargo.toml
++++ b/components/support/error/Cargo.toml
+@@ -11,8 +11,8 @@ exclude = ["/android"]
+ backtrace = { version = "0.3", optional = true}
+ error-support-macros = { path = "macros" }
+ env_logger = { version = "0.10", default-features = false }
+-glean = { version = "70", optional = true }
+-glean-sym = { version = "70", optional = true }
++# glean = { version = "70", optional = true }
++# glean-sym = { version = "70", optional = true }
+ lazy_static = { version = "1.4" }
+ log = { version = "0.4" }
+ parking_lot = { version = ">=0.11,<=0.12" }
+@@ -24,14 +24,14 @@ tracing-subscriber = { version = "0.3", default-features = false, features = ["r
+ 
+ [build-dependencies]
+ uniffi = { version = "0.32", features=["build"]}
+-glean-build = { git = "https://github.com/mozilla/glean", tag = "v70.2.0" }
++# glean-build = { git = "https://github.com/mozilla/glean", tag = "v70.2.0" }
+ 
+ [features]
+ backtrace = ["dep:backtrace"]
+ testing = []
+ # Should we use glean-sym to report the error ping?
+ # This is a temporary flag so that we can introduce the new system one application at a time.
+-glean-sym = ["dep:glean-sym"]
++# glean-sym = ["dep:glean-sym"]
+ # Use Firefox-on-Glean to publish metrics (Desktop)
+ # Note: if set, we will not use `glean-sym`
+-glean-fog = ["dep:glean"]
++# glean-fog = ["dep:glean"]
+diff --git a/components/support/error/build.rs b/components/support/error/build.rs
+index 4237f7816..0825b03f8 100644
+--- a/components/support/error/build.rs
++++ b/components/support/error/build.rs
+@@ -3,8 +3,8 @@
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ fn main() {
+-    let format = if cfg!(feature = "glean-fog") {
+-        "rust"
++    let format = "rust";
++/*        "rust"
+     } else {
+         "rust_sym"
+     };
+@@ -14,5 +14,5 @@ fn main() {
+         .file("pings.yaml")
+         .format(format)
+         .generate()
+-        .expect("Error generating Glean Rust bindings");
++        .expect("Error generating Glean Rust bindings"); */
+ }
+diff --git a/megazords/full/Cargo.toml b/megazords/full/Cargo.toml
+index 5881445ee..2822fa70c 100644
+--- a/megazords/full/Cargo.toml
++++ b/megazords/full/Cargo.toml
+@@ -36,7 +36,7 @@ merino = { path = "../../components/merino" }
+ relay = { path = "../../components/relay" }
+ ads-client = { path = "../../components/ads-client" }
+ mozilla-central-workspace-hack = { version = "0.1", features = ["megazord"], optional = true }
+-glean-sym = { version = "70" }
++# glean-sym = { version = "70" }
+ uniffi = { version = "0.32" }
+ 
+ # Direct dep so this crate can forward the mozbuild-rustlib feature down the
+@@ -50,7 +50,7 @@ db-crypto = { path = "../../components/support/db-crypto" }
+ #
+ # Other targets are used for unit tests where we don't have access to libxul.
+ # Metrics reporting will fail with a linker error.
+-glean-sym = { version = "70", features = ["active"] }
++# glean-sym = { version = "70", features = ["active"] }
+ 
+ [features]
+ mozbuild-rustlib = ["rc_crypto/mozbuild-rustlib"]
 -- 

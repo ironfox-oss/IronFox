@@ -8,25 +8,23 @@ Provides support for a UI setting to enable/disable accessibility services.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 83e0f40483b7..ca17852a0bfd 100644
+index 8d94dc962b33..9071a2e99240 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1515,7 +1515,7 @@ class Settings(
-             accessibilityManager?.getEnabledAccessibilityServiceList(0)?.let { activeServices ->
-                 for (service in activeServices) {
-                     if (service.capabilities.and(CAPABILITY_CAN_PERFORM_GESTURES) == 1) {
--                        return true
-+                        return ironfox.accessibilityEnabled
-                     }
-                 }
-             }
-@@ -1527,7 +1527,7 @@ class Settings(
+@@ -1692,6 +1692,7 @@ class Settings(
+      */
+     val switchServiceIsEnabled: Boolean
          get() {
++            if (!ironfox.accessibilityEnabled) { return false }
              val accessibilityManager =
                  appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
--            return accessibilityManager?.isTouchExplorationEnabled ?: false
-+            return ironfox.accessibilityEnabled && (accessibilityManager?.isTouchExplorationEnabled ?: false)
-         }
  
-     val accessibilityServicesEnabled: Boolean
+@@ -1708,6 +1709,7 @@ class Settings(
+ 
+     val touchExplorationIsEnabled: Boolean
+         get() {
++            if (!ironfox.accessibilityEnabled) { return false }
+             val accessibilityManager =
+                 appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
+             return accessibilityManager?.isTouchExplorationEnabled ?: false
 -- 

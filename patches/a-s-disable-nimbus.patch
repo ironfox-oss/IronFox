@@ -8,18 +8,21 @@ Disables and prevents A/B testing/experimentation and remote configuration of se
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 20e459dbb..26d1dda6e 100644
+index b3515f486..ffb3ef565 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-@@ -165,21 +165,21 @@ open class Nimbus(
+@@ -176,8 +176,8 @@ open class Nimbus(
  
      private val nimbusClient: NimbusClientInterface
  
 -    override var experimentParticipation: Boolean
--        get() = nimbusClient.getExperimentParticipation()
+-        get() = withCatchAll("getExperimentParticipation") {
 +    override var experimentParticipation: Boolean = false
-+/*        get() = nimbusClient.getExperimentParticipation()
-         set(active) {
++/*        get() = withCatchAll("getExperimentParticipation") {
+             nimbusClient.getExperimentParticipation()
+         } ?: true
+ 
+@@ -185,10 +185,10 @@ open class Nimbus(
              dbScope.launch {
                  setExperimentParticipationOnThisThread(active)
              }
@@ -27,10 +30,13 @@ index 20e459dbb..26d1dda6e 100644
 +        } */
  
 -    override var rolloutParticipation: Boolean
--        get() = nimbusClient.getRolloutParticipation()
+-        get() = withCatchAll("getExperimentParticipation") {
 +    override var rolloutParticipation: Boolean = false
-+/*        get() = nimbusClient.getRolloutParticipation()
-         set(active) {
++/*        get() = withCatchAll("getExperimentParticipation") {
+             nimbusClient.getRolloutParticipation()
+         } ?: true
+ 
+@@ -196,7 +196,7 @@ open class Nimbus(
              dbScope.launch {
                  setRolloutParticipationOnThisThread(active)
              }
@@ -39,7 +45,7 @@ index 20e459dbb..26d1dda6e 100644
  
      init {
          NullVariables.instance.setContext(context)
-@@ -300,9 +300,9 @@ open class Nimbus(
+@@ -317,9 +317,9 @@ open class Nimbus(
          }
      }
  

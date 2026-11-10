@@ -145,10 +145,10 @@ index 50d5ce2ac8..58338736a0 100644
                      ),
              )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/SettingsSearchProviders.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/SettingsSearchProviders.kt
-index 433fc89141..627dc56c67 100644
+index 15298f02ed..dadadcbf8d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/SettingsSearchProviders.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/SettingsSearchProviders.kt
-@@ -5,10 +5,10 @@
+@@ -5,11 +5,11 @@
  package org.mozilla.fenix.components
  
  import org.mozilla.fenix.settings.ToolbarShortcutSettingsSearchProvider
@@ -156,12 +156,13 @@ index 433fc89141..627dc56c67 100644
 +/* import org.mozilla.fenix.settings.ai.AIControlsSearchProvider
  import org.mozilla.fenix.settings.datachoices.DataChoicesSearchProvider
  import org.mozilla.fenix.settings.labs.FirefoxLabsSettingsSearchProvider
--import org.mozilla.fenix.settings.pagesummaries.PageSummariesSettingsSearchProvider
-+import org.mozilla.fenix.settings.pagesummaries.PageSummariesSettingsSearchProvider */
+ import org.mozilla.fenix.settings.pagesummaries.PageSummariesSettingsSearchProvider
+-import org.mozilla.fenix.settings.search.GoogleLensSettingsSearchProvider
++import org.mozilla.fenix.settings.search.GoogleLensSettingsSearchProvider */
  import org.mozilla.fenix.settings.settingssearch.SettingsSearchProvider
  import org.mozilla.fenix.summarization.onboarding.SummarizationFeatureDiscoveryConfiguration
  
-@@ -28,9 +28,9 @@ internal fun settingsSearchProviders(
+@@ -29,10 +29,10 @@ internal fun settingsSearchProviders(
      summarizationFeatureConfiguration: SummarizationFeatureDiscoveryConfiguration
  ): List<SettingsSearchProvider> =
      listOf(
@@ -172,6 +173,8 @@ index 433fc89141..627dc56c67 100644
 -        FirefoxLabsSettingsSearchProvider(),
 +        FirefoxLabsSettingsSearchProvider(), */
          ToolbarShortcutSettingsSearchProvider,
+-        GoogleLensSettingsSearchProvider,
++//        GoogleLensSettingsSearchProvider,
      )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/distributions/DistributionTools.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/distributions/DistributionTools.kt
 index 979e420aa7..36061cd0c1 100644

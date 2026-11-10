@@ -8,10 +8,10 @@ Updates and expands the list of domains supported by Mozilla's built-in certific
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index 338a92fbf404..8a72d6bad270 100644
+index 3dd26a63ff74..fba753264613 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
-@@ -175,6 +175,33 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
+@@ -175,12 +175,105 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
  static const char kUSERTrust_RSA_Certification_AuthorityFingerprint[] =
    "x4QzPSC810K5/cMjb05Qm4k3Bw5zBn4lTdO/nEW/Td4=";
  
@@ -45,10 +45,10 @@ index 338a92fbf404..8a72d6bad270 100644
  /* Pinsets are each an ordered list by the actual value of the fingerprint */
  struct StaticFingerprints {
    // See bug 1338873 about making these fields const.
-@@ -182,6 +209,72 @@ struct StaticFingerprints {
+   size_t size;
    const char* const* data;
  };
- 
++ 
 +static const char* const kPinset_ironfox_Data[] = {
 +  kGlobalSign_Root_CAFingerprint,
 +  kGTS_Root_R4Fingerprint,
@@ -114,11 +114,10 @@ index 338a92fbf404..8a72d6bad270 100644
 +  sizeof(kPinset_grapheneos_Data) / sizeof(const char*),
 +  kPinset_grapheneos_Data
 +};
-+
+ 
  /* PreloadedHPKPins.json pinsets */
  static const char* const kPinset_google_root_pems_Data[] = {
-   kCOMODO_ECC_Certification_AuthorityFingerprint,
-@@ -667,9 +760,110 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -590,9 +683,111 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "youtube.com", true, false, false, -1, &kPinset_google_root_pems },
    { "youtube.ug", true, false, false, -1, &kPinset_google_root_pems },
    { "ytimg.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -126,6 +125,7 @@ index 338a92fbf404..8a72d6bad270 100644
 +  { "account.brave.software", true, false, false, -1, &kPinset_brave },
 +  { "account.bravesoftware.com", true, false, false, -1, &kPinset_brave },
 +  { "adblock-data.s3.brave.com", true, false, false, -1, &kPinset_brave },
++  { "addons.celenity.dev", true, false, false, -1, &kPinset_celenity_cdn },
 +  { "ai-chat.bsg.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "altstore.celenity.dev", true, false, false, -1, &kPinset_celenity },
 +  { "anonymous.ads.brave.com", true, false, false, -1, &kPinset_brave },
@@ -225,8 +225,8 @@ index 338a92fbf404..8a72d6bad270 100644
 +  { "www.ironfoxoss.org", true, false, false, -1, &kPinset_ironfox },
  };
  
--// Pinning Preload List Length = 387;
-+// Pinning Preload List Length = 491;
+-// Pinning Preload List Length = 310;
++// Pinning Preload List Length = 415;
  
  static const int32_t kUnknownId = -1;
  

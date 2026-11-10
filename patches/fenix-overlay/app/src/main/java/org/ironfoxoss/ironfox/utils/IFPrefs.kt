@@ -145,7 +145,6 @@ object IFPrefs {
     // Disable Mozilla feedback surveys
     prefs.setBoolPref(R.string.pref_key_enable_uninstall_survey, false)
     prefs.setBoolPref(R.string.pref_key_microsurvey_feature_enabled, false)
-    prefs.setBoolPref(R.string.pref_key_should_show_microsurvey_prompt, false)
 
     // Disable Mozilla in-app messages and pop-ups
     prefs.setBoolPref(R.string.pref_cfr_popups_enabled, false)

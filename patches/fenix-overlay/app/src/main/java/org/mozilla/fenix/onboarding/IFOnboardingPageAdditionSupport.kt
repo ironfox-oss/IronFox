@@ -43,16 +43,11 @@ class IFOnboardingPageAdditionSupport(
 
 // Remove unwanted onboarding pages
 internal fun MutableList<OnboardingPageUiData>.removeIfPageNotReached(index: Int) {
-  val searchWidgetIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.ADD_SEARCH_WIDGET }
   val syncIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.SYNC_SIGN_IN }
   val updaterIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.IF_PREFERENCE_UPDATER }
 
   if (index < syncIndex) {
     removeAt(syncIndex)
-  }
-
-  if (index < searchWidgetIndex) {
-    removeAt(searchWidgetIndex)
   }
 
   if (!IFConstants.IRONFOX_UPDATER && index < updaterIndex) {

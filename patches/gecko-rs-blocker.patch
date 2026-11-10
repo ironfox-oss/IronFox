@@ -261,19 +261,22 @@ index 5ca99c812c395..f60507b1c084a 100644
        }
  
 diff --git a/toolkit/components/search/SearchEngineSelector.sys.mjs b/toolkit/components/search/SearchEngineSelector.sys.mjs
-index 3a42b383af198..e375db546bcda 100644
+index 8c2a5b4826..f39a6ef4f1 100644
 --- a/toolkit/components/search/SearchEngineSelector.sys.mjs
 +++ b/toolkit/components/search/SearchEngineSelector.sys.mjs
-@@ -409,13 +409,13 @@ export class SearchEngineSelector {
+@@ -358,7 +358,7 @@ export class SearchEngineSelector {
     *   could be obtained.
     */
-   async #getConfigurationOverrides() {
+   async #getConfiguration(firstTime = true) {
 -    let result = [];
 +/*    let result = [];
+     let failed = false;
      try {
-       result = await this.#remoteConfigOverrides.get();
-     } catch (ex) {
-       // This data is remote only, so we just return an empty array if it fails.
+       result = await this.#remoteConfig.get({
+@@ -377,8 +377,8 @@ export class SearchEngineSelector {
+       await this.#remoteConfig.db.clear();
+       // Now call this again.
+       return this.#getConfiguration(false);
 -    }
 -    return result;
 +    } */

@@ -8,16 +8,16 @@ Removes Mozilla's promotional "Try it free" nag to enable Firefox VPN in the bro
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/IPProtectionMenuItem.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/IPProtectionMenuItem.kt
-index a95ed73cb3d0..43f440e93cfb 100644
+index bb16e91996..46bb5b72ea 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/IPProtectionMenuItem.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/IPProtectionMenuItem.kt
-@@ -207,7 +207,7 @@ private fun badgeText(status: IPProtectionMenuStatus): String =
-         IPProtectionMenuStatus.Activating -> stringResource(R.string.ip_protection_menu_connecting)
-         IPProtectionMenuStatus.DataLimitReached -> stringResource(R.string.ip_protection_menu_paused)
-         IPProtectionMenuStatus.ConnectionError -> stringResource(R.string.ip_protection_menu_error)
--        IPProtectionMenuStatus.AuthRequired -> stringResource(R.string.ip_protection_menu_try_vpn_cta)
-+        IPProtectionMenuStatus.AuthRequired -> stringResource(R.string.preferences_ip_protection_off)
+@@ -147,7 +147,7 @@ private fun badgeText(status: IPProtectionStatus): String =
+         IPProtectionStatus.Activating -> stringResource(R.string.ip_protection_menu_connecting)
+         IPProtectionStatus.DataLimitReached -> stringResource(R.string.ip_protection_menu_paused)
+         IPProtectionStatus.ConnectionError -> stringResource(R.string.ip_protection_menu_error)
+-        IPProtectionStatus.AuthRequired -> stringResource(R.string.ip_protection_menu_try_vpn_cta)
++        IPProtectionStatus.AuthRequired -> stringResource(R.string.preferences_ip_protection_off)
      }
  
- private fun badgeState(status: IPProtectionMenuStatus): MenuItemState =
+ private fun badgeState(status: IPProtectionStatus): MenuItemState =
 -- 

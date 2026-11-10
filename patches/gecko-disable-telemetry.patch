@@ -21,15 +21,15 @@ index 077c7ca2f14b..e6fa430c772d 100644
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
 diff --git a/python/sites/mach.txt b/python/sites/mach.txt
-index 0f800b6813fe..1b74085c26b8 100644
+index 815e1c7f5a..24f79dfc6a 100644
 --- a/python/sites/mach.txt
 +++ b/python/sites/mach.txt
 @@ -58,7 +58,7 @@ pth:xpcom/geckoprocesstypes_generator
  pth:xpcom/idl-parser
  # glean-sdk may not be installable if a wheel isn't available
  # and it has to be built from source.
--pypi-optional:glean-sdk==70.2.1:telemetry will not be collected
-+# pypi-optional:glean-sdk==70.2.1:telemetry will not be collected
+-pypi-optional:glean-sdk==70.3.0:telemetry will not be collected
++# pypi-optional:glean-sdk==70.3.0:telemetry will not be collected
  pypi-optional:orjson>=3.10:json operations will be slower in various tools
  # Mach gracefully handles the case where `psutil` is unavailable.
  # We aren't (yet) able to pin packages in automation, so we have to

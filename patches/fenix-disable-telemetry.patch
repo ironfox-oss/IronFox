@@ -23,7 +23,7 @@ index d867c71ba500..8b6f86ab1ecc 100644
      // Reading the sentry token from a local file (if it exists). In a release task on taskcluster it will be available.
      buildConfigField 'String', 'SENTRY_TOKEN', 'null'
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 37f1465be702..3153791cd436 100644
+index e3007a552f157..1bb7b3918d225 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -63,14 +63,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
@@ -53,7 +53,22 @@ index 37f1465be702..3153791cd436 100644
  import org.mozilla.fenix.translations.TranslationsEnabledSettings
  import org.mozilla.fenix.utils.Settings.DeleteDownloadBehavior
  import org.mozilla.fenix.utils.getUndoDelay
-@@ -360,7 +360,7 @@ class Core(
+@@ -327,12 +327,12 @@ class Core(
+      * of the process. application-services only holds a weak reference to each client and skips collections whose
+      * client has been collected, so a short-lived repository would opt `search-telemetry-v2` out of syncing entirely.
+      */
+-    val serpTelemetryRepository by lazyMonitored {
++/*    val serpTelemetryRepository by lazyMonitored {
+         SerpTelemetryRepository(
+             collectionName = COLLECTION_NAME,
+             remoteSettingsService = context.components.remoteSettingsService.value,
+         )
+-    }
++    } */
+ 
+     /** The [BrowserStore] holds the global [BrowserState]. */
+     val store by lazyMonitored {
+@@ -375,7 +375,7 @@ class Core(
                          ),
                  ),
                  ReaderViewMiddleware(),
@@ -62,7 +77,7 @@ index 37f1465be702..3153791cd436 100644
                  ThumbnailsMiddleware(thumbnailStorage),
                  UndoMiddleware(context.components.settings.getUndoDelay()),
                  RegionMiddleware(context, locationService, applicationScope = applicationScope),
-@@ -373,7 +373,7 @@ class Core(
+@@ -388,7 +388,7 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -71,16 +86,14 @@ index 37f1465be702..3153791cd436 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  ProtectionsDashboardMiddleware(protectionsStorage),
-@@ -419,7 +419,7 @@ class Core(
+@@ -434,13 +434,13 @@ class Core(
                  // Install the "icons" WebExtension to automatically load icons for every visited website.
                  icons.install(engine, this)
  
 -                applicationScope.launch {
 +/*                applicationScope.launch {
-                     val providerList =
-                         SerpTelemetryRepository(
-                                 collectionName = COLLECTION_NAME,
-@@ -430,7 +430,7 @@ class Core(
+                     val providerList = serpTelemetryRepository.updateProviderList()
+                     // Install the "ads" WebExtension to get the links in an partner page.
                      adsTelemetry.install(engine, this@apply, providerList)
                      // Install the "cookies" WebExtension and tracks user interaction with SERPs.
                      searchTelemetry.install(engine, this@apply, providerList)
@@ -89,7 +102,7 @@ index 37f1465be702..3153791cd436 100644
  
                  WebNotificationFeature(
                      context,
-@@ -491,7 +491,7 @@ class Core(
+@@ -501,7 +501,7 @@ class Core(
          )
      }
  
@@ -98,7 +111,7 @@ index 37f1465be702..3153791cd436 100644
          context.components.analytics.metrics
      }
  
-@@ -501,7 +501,7 @@ class Core(
+@@ -511,7 +511,7 @@ class Core(
  
      val searchTelemetry by lazyMonitored {
          InContentTelemetry()
