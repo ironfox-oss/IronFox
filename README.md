@@ -9,7 +9,9 @@
 </div>
 
 <div align="center">
-
+[<img src="assets/ironfoxoss.png"
+  alt="Get it on ironfoxoss.org"
+  height="80">](https://releases.ironfoxoss.org/ironfox/releases/latest/universal/ironfox-latest-universal.apk)
 [<img src="assets/accrescent.png"
   alt="Get it on Accrescent"
   height="80">](https://accrescent.app/app/org.ironfoxoss.ironfox)
