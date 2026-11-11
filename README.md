@@ -93,7 +93,7 @@ See [Nightly vs. Release](https://ironfoxoss.org/docs/nightly-vs-release/).
 
 The [changelog](CHANGELOG.md) has the notes for the latest release. Notes for
 every release are on the
-[releases page](https://gitlab.com/ironfox-oss/IronFox/-/releases).
+[releases page](https://ironfoxoss.org/releases/).
 
 **Package ID**: `org.ironfoxoss.ironfox`
 
@@ -140,4 +140,4 @@ or later](COPYING.txt). Patches follow the license of the files they modify. See
 - Firefox source code is available at
   <https://github.com/mozilla-firefox/firefox>.
 
-[mull]: https://web.archive.org/web/20250113132510/https://divestos.org/pages/our_apps#mull
+[Mull]: https://web.archive.org/web/20250113132510/https://divestos.org/pages/our_apps#mull
