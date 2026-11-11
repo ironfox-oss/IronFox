@@ -62,4 +62,15 @@
     <string name="ironfox_onboarding_state_installing_ublock">Đang cài đặt uBlock Origin…</string>
     <string name="ironfox_onboarding_state_installing_ublock_error">Có lỗi xảy ra khi cài đặt uBlock Origin: %1$s</string>
     <string name="ironfox_retry">Thử lại</string>
+    <string name="if_preferences_geo">Vị trí địa lý</string>
+    <string name="preference_ironfox_history_enabled">Ghi nhớ lịch sử duyệt web</string>
+    <string name="preference_ironfox_fxa_enabled">Bật lên Đồng bộ Firefox</string>
+    <string name="preference_ironfox_ip_protection_enabled">Bật Firefox VPN lên</string>
+    <string name="preference_ironfox_geo_provider_android_enabled">Bật Nhà cung cấp Vị trí địa lý Android lên</string>
+    <string name="preference_ironfox_geo_provider_android_summary">Nếu được bật, Ironfox sẽ cố gắng dùng dịch vụ vị trí của hệ điều hành Android để cung cấp vị trí địa lý của bạn cho các trang web (nếu bạn cấp quyền cho trang web) - Thay đổi cài đặt này sẽ khởi động lại trình duyệt</string>
+    <string name="preference_ironfox_geo_provider_network_enabled">Bật Nhà cung cấp Vị trí địa lý Mạng</string>
+    <string name="preference_ironfox_geo_provider_network_summary">Nếu được bật và Nhà cung cấp Vị tria địa lý Android không khả dụng, Ironfox sẽ dùng dịch vụ địa lý vị trí mạng BeaconDB để cung cấp vị trí của bạn cho trang web ( nếu bạn cấp quyền cho trang web ) - Thay đổi cài đặt này sẽ khởi động lại trình duyệt</string>
+    <string name="ironfox_doh_migration_message_title">Thông báo ngừng cung cấp dịch vụ Mullvad</string>
+    <string name="ironfox_doh_migration_message_desc">Nhà cung cấp DNS over HTTPS hiện tại bạn chọn ( Mullvad ) sẽ không còn vận hành vào 2 Tháng 11, 2026. Để đảm bảo trình duyệt của bạn tiếp tục hoạt động như mong đợi, bạn hãy nhanh chóng chuyển sang nhà cung cấp khác.</string>
+    <string name="ironfox_doh_migration_button">Mở cài đặt DNS over HTTPS</string>
 </resources>

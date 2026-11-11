@@ -15,4 +15,7 @@
     <string name="ironfox_onboarding_spoof_english">Giả mạo ngôn ngữ sang en-US</string>
     <string name="ironfox_onboarding_spoof_english_caption">Tăng cường quyền riêng tư của bạn bằng cách ẩn cài đặt ngôn ngữ trên thiết bị của bạn.</string>
     <string name="ironfox_onboarding_spoof_english_description">Yêu cầu hiển thị phiên bản tiếng Anh (en-US) của các trang web. Điều này giúp trình duyệt của bạn trông ít đặc trưng hơn, từ đó tăng cường khả năng bảo vệ trước các kỹ thuật nhận dạng dấu vân tay nhằm xác định người dùng dựa trên sở thích ngôn ngữ của họ.</string>
+    <string name="ironfox_onboarding_updater_title">Luôn cập nhật thông tin</string>
+    <string name="ironfox_onboarding_updater_description">IronFox kiểm tra các phiên bản mới và sẽ hỏi ý kiến bạn trước khi tiến hành cài đặt. Bạn có thể tắt tính năng này bất cứ lúc nào trong phần cài đặt của IronFox.</string>
+    <string name="ironfox_onboarding_updater_switch">Kiểm tra cập nhật tự động</string>
 </resources>

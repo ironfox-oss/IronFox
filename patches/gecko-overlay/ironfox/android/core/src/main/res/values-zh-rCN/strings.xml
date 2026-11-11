@@ -70,4 +70,5 @@
     <string name="preference_ironfox_ip_protection_enabled">启用 Firefox VPN</string>
     <string name="preference_ironfox_history_enabled">记住浏览历史</string>
     <string name="preference_ironfox_fxa_enabled">Firefox 同步</string>
+    <string name="ironfox_doh_migration_message_title">Mullvad 服务终止通知</string>
 </resources>

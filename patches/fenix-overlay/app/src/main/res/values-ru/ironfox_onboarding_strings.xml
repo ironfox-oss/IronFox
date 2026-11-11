@@ -15,4 +15,7 @@
     <string name="ironfox_onboarding_spoof_english">Подменить язык на en-US</string>
     <string name="ironfox_onboarding_spoof_english_caption">Повысьте конфиденциальность, скрыв языковые настройки вашего устройства.</string>
     <string name="ironfox_onboarding_spoof_english_description">Запрашивать английские (en-US) версии веб-страниц. Это делает ваш браузер менее уникальным, усиливая защиту от методов фингерпринтинга, которые идентифицируют пользователей по их языковым предпочтениям.</string>
+    <string name="ironfox_onboarding_updater_title">Оставайтесь в курсе обновлений</string>
+    <string name="ironfox_onboarding_updater_description">IronFox проверяет наличие новых версий и спрашивает перед их установкой. Вы можете отключить это в любое время в настройках IronFox.</string>
+    <string name="ironfox_onboarding_updater_switch">Проверять обновления автоматически</string>
 </resources>
