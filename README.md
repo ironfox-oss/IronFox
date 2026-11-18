@@ -94,8 +94,7 @@ IronFox supports the same minimum Android version as Firefox for Android, on
 a different package ID, and differ slightly in branding and developer options.
 See [Nightly vs. Release](https://ironfoxoss.org/docs/nightly-vs-release/).
 
-The [changelog](CHANGELOG.md) has the notes for the latest release. Notes for
-every release are on the
+Changelogs for releases can be found on the
 [releases page](https://ironfoxoss.org/releases/).
 
 **Package ID**: `org.ironfoxoss.ironfox`
