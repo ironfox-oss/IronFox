@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="restart_required_summary">การเปลี่ยนการตั้งค่านี้จะทำให้เบราว์เซอร์รีสตาร์ท</string>
+    <string name="ironfox_retry">ลองอีกครั้ง</string>
+    <string name="if_preferences">การตั้งค่าIronFox</string>
+    <string name="if_preferences_misc">อื่นๆ</string>
+    <string name="if_preferences_privacy">ความเป็นส่วนตัว</string>
+    <string name="if_preferences_privacy_security">ความเป็นส่วนตัวและความปลอดภัย</string>
+    <string name="if_preferences_security">ความปลอดภัย</string>
+    <string name="unsupported_summary">ไม่แนะนำให้ใช้การตั้งค่านี้และไม่มีการรองรับ โปรดดำเนินการด้วยความระมัดระวัง</string>
+    <string name="if_preferences_geo">ตำแหน่งที่ตั้ง</string>
+    <string name="if_preferences_secret">การตั้งค่าลับ</string>
+    <string name="ironfox_doh_migration_button">เปิด DNS ผ่านการตั้งค่า HTTPS</string>
+    <string name="preference_always_use_private_browsing">เปิดใช้งานโหมดไม่ระบุตัวตนเสมอ</string>
+    <string name="preference_ironfox_history_enabled">จำประวัติการเข้าชม</string>
+    <string name="preference_referer_policy">นโยบาย Referer ข้ามต้นทาง</string>
+    <string name="preference_accessibility_enabled">เปิดใช้งานบริการการช่วยเหลือพิเศษ</string>
+</resources>
