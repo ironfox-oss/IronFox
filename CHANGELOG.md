@@ -1,1 +1,3 @@
 - Updated to Firefox [`160.0.1`](https://firefox.com/firefox/android/160.0.1/releasenotes/).
+- Updated to microG [`v0.3.18.252432`](https://github.com/microg/GmsCore/releases/tag/v0.3.18.252432).
+- Updated to Rust [`1.100.0`](https://releases.rs/docs/1.100.0/).
