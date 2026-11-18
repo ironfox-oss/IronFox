@@ -1,2 +1,1 @@
-- Updated to Firefox [`160.0`](https://firefox.com/firefox/android/160.0/releasenotes/).
-- Minor tweaks/fixes/adjustments.
+- Updated to Firefox [`160.0.1`](https://firefox.com/firefox/android/160.0.1/releasenotes/).
