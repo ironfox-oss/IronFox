@@ -27,19 +27,19 @@ index 324a25a10af0..4225ec0a1ead 100644
          <activity
              android:name=".HomeActivity"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 7b612460fa8e..10a12e478876 100644
+index d5b5159843cf..f3d4927f041e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -148,7 +148,7 @@ class Components(
-     val useCases by lazyMonitored {
+@@ -159,7 +159,7 @@ class Components(
+     val useCases by lazy {
          UseCases(
              context = context,
--            crashReporter = lazyMonitored { analytics.crashReporter },
-+//            crashReporter = lazyMonitored { analytics.crashReporter },
-             engine = lazyMonitored { core.engine },
-             store = lazyMonitored { core.store },
-             shortcutManager = lazyMonitored { core.webAppShortcutManager },
-@@ -375,7 +375,7 @@ class Components(
+-            crashReporter = lazy { analytics.crashReporter },
++//            crashReporter = lazy { analytics.crashReporter },
+             engine = lazy { core.engine },
+             store = lazy { core.store },
+             shortcutManager = lazy { core.webAppShortcutManager },
+@@ -385,7 +385,7 @@ class Components(
              )
              .also {
                  it.dispatch(AppAction.SetupChecklistAction.Init)

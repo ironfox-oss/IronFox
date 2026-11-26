@@ -8,15 +8,15 @@ Removes proprietary, tracking, and other unwanted libraries/functionality.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/gradle/plugins/conventions/src/main/java/org/mozilla/conventions/SettingsPlugin.kt b/mobile/android/gradle/plugins/conventions/src/main/java/org/mozilla/conventions/SettingsPlugin.kt
-index c4d88520a423..9a780680aed6 100644
+index 35563c1a00e3..e2311ca68171 100644
 --- a/mobile/android/gradle/plugins/conventions/src/main/java/org/mozilla/conventions/SettingsPlugin.kt
 +++ b/mobile/android/gradle/plugins/conventions/src/main/java/org/mozilla/conventions/SettingsPlugin.kt
-@@ -68,7 +68,7 @@ class SettingsPlugin : Plugin<Settings> {
+@@ -85,7 +85,7 @@ abstract class SettingsPlugin : Plugin<Settings> {
          // name-prefix matching.
          val isAndroidLint = settings.startParameter.projectProperties.containsKey("android-lint")
          val shouldIncludeProject = { name: String, _: ProjectConfig ->
 -            isAndroidLint || rootDir.contains("android-components") || !name.startsWith("components:samples")
-+            !name.startsWith("components:samples") && !name.startsWith("components:feature-webcompat-reporter") && !name.startsWith("components:lib-crash-sentry") && !name.startsWith("components:lib-integrity-googleplay") && !name.startsWith("components:lib-push-firebase") && !name.startsWith("components:service-glean") && !name.startsWith("components:service-mars")
++            !name.startsWith("components:samples") && !name.startsWith("components:feature-webcompat-reporter") && !name.startsWith("components:lib-crash-sentry") && !name.startsWith("components:lib-installation-blockstore") && !name.startsWith("components:lib-integrity-googleplay") && !name.startsWith("components:lib-push-firebase") && !name.startsWith("components:service-glean") && !name.startsWith("components:service-mars")
          }
  
          includeProjects(settings, buildConfig, baseDir, shouldIncludeProject)

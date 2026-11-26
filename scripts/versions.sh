@@ -2,47 +2,47 @@
 # Sources
 
 # Firefox
-# Version: 160.0.1 (RELEASE)
-# https://github.com/mozilla-firefox/firefox
-readonly IRONFOX_GECKO_COMMIT='58fed86b1b6864ad71b83c910a879d6f1a6b678b'
-readonly IRONFOX_GECKO_SHA512SUM='a067bf36a1ea60118f63da9d77298b5b16632182cbfe1e37d0f1eb7a8a25f388d656b019bbcba001c9fba1c8b15f00511dcb2f7006ee6d8f87891117515395cb'
-readonly IRONFOX_GECKO_VERSION='160.0.1'
+# Version: 161.0 (RELEASE)
+# https://github.com/mozilla-firefox/firefox/tags
+readonly IRONFOX_GECKO_COMMIT='9c70d5d48c866afc2e581d6b7ff6de98a1371d99'
+readonly IRONFOX_GECKO_SHA512SUM='353c7d91670589c107e3b3935058c68e21d9045b30339ebb05cb7f2403b1959412fc84d9312e5c9aa12aa19251a4a364b9d70a82a96b4455fd088fc7b1fa0670'
+readonly IRONFOX_GECKO_VERSION='161.0'
 
 # IronFox
 readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}"
 
 # This value is used for ex. producing reproducable archives, and its value should be bumped upon new releases
-readonly IRONFOX_VERSION_DATE='2026.11.18'
+readonly IRONFOX_VERSION_DATE='2026.11.26'
 
 # Application Services
-# Version: v160.0
+# Version: v161.0
 # https://github.com/mozilla/application-services
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt)
-readonly IRONFOX_AS_COMMIT='6fa5114f13d1b10572bf9bac3db74d4dc1926339'
-readonly IRONFOX_AS_SHA512SUM='1f10e759e82eda9fff76ed326b0f7f351d90a0c6d47089151e6568dfc3b93484ffe8a9fc2c56802ff44030d5141506376ec680572403ecbb8aba82d5b624ba83'
-readonly IRONFOX_AS_VERSION='160.0'
+readonly IRONFOX_AS_COMMIT='7baeec0fde829785594d2e7b7f9c0bb1244b7502'
+readonly IRONFOX_AS_SHA512SUM='4027a2336a11e556c065d7783eef66fa5b4b9aa78e5972dcbae363ea5390f325f3a4ce848701071d4b05e2bf80e695efa297ee03d2da7e4fc8e367eec9462e4a'
+readonly IRONFOX_AS_VERSION='161.0'
 
 # firefox-l10n
 # https://github.com/mozilla-l10n/firefox-l10n
 # NOTE: This repo is updated several times a day...
 # so I think best approach here will be for us to just update it alongside new releases
-readonly IRONFOX_L10N_CENTRAL_COMMIT='3bedceb8373d168d70cd3bfdfa96c5c8120a6a3b'
-readonly IRONFOX_L10N_CENTRAL_SHA512SUM='6edd5ecef3529cbceb53cbed4037d69d3886e682095f838ba515ed4ed7eb8a260bb1964ba6afc8f67c52213ade9d66b561045c00406ea1e661a741dfba457b06'
+readonly IRONFOX_L10N_CENTRAL_COMMIT='e4a0810fb6a79c090266e86c150bbf4c9bf9d09d'
+readonly IRONFOX_L10N_CENTRAL_SHA512SUM='e7674d1c46dccd4ad0178f68190d98b2e2039f5c8ac616d7723291d7057d7a539ea327b30080ceb5ce63767403175787b1433ca28d2e6a3a1f9b4659ab83a9de'
 
 # Glean
-# Version: 70.3.0
+# Version: 71.0.0
 # https://github.com/mozilla/glean
 # (for reference: https://github.com/mozilla-firefox/firefox/blob/main/gradle/libs.versions.toml)
-readonly IRONFOX_GLEAN_COMMIT='1ce78aefa6072e71dc90efcb6795624d08b5b17d'
-readonly IRONFOX_GLEAN_SHA512SUM='3d172df99d4cff6a350004aa9bf130d227b33e6c2d6c385693f92a3e60b6b45876fb1ae13c2881bff13a352c9b7bc8b0db74c8e26e55eaa81f53e931b3ed5e5c'
-readonly IRONFOX_GLEAN_VERSION='70.3.0'
+readonly IRONFOX_GLEAN_COMMIT='c7f1204c8945030f1b5c8b524de5753c0e0d7f2c'
+readonly IRONFOX_GLEAN_SHA512SUM='d4b915f56b2ded0fae474c7a962e0b7f6c4839e0133ec6a2bce9188f5cdd8ce3af2bdc2116406e0fd435e9f670ce574f1d7128e07ac8d19aa8f4b8092194e90e'
+readonly IRONFOX_GLEAN_VERSION='71.0.0'
 
 # Glean Parser
-# Version: v20.2.0
+# Version: v22.0.1
 # https://github.com/mozilla/glean_parser
-readonly IRONFOX_GLEAN_PARSER_COMMIT='f6c1d64b2cb1d3955deda980809dafe56da500c9'
-readonly IRONFOX_GLEAN_PARSER_SHA512SUM='17f77cc56592f219cf9af8ed343a05509ebccb5e4c8b9433a39e32789f167059aec8185fa518cd5e33eb0cf3b46c96dbadd29ca315966bd2e8b8a0afe050db73'
-readonly IRONFOX_GLEAN_PARSER_VERSION='20.2.0'
+readonly IRONFOX_GLEAN_PARSER_COMMIT='e6aef810291bc9bc17d56472e6e089297a24e5d8'
+readonly IRONFOX_GLEAN_PARSER_SHA512SUM='ae7378ddd3b9f70445caa3f67785d62a2539622884a895347bf0c63ea6c718de771044709d99f83ce0e2a6f0941d01206557eef706c42beba8c561b1d1cff0a1'
+readonly IRONFOX_GLEAN_PARSER_VERSION='22.0.1'
 
 # microG
 # Version: v0.3.18.252432

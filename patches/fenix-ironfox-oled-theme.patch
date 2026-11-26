@@ -8,13 +8,13 @@ Adds support for a true OLED black theme.
 Signed-off-by: Akash Yadav <itsaky01@gmail.com>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index aff32cbcd7f3..fd0a5a8a793f 100644
+index f41f6dcd029d..f1261a721051 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -161,6 +161,11 @@ class Core(
+@@ -165,6 +165,11 @@ class Core(
  ) {
      /** The browser engine component initialized based on the build configuration (see build variants). */
-     val engine: Engine by lazyMonitored {
+     val engine: Engine by lazy {
 +        val clearColor = if (context.components.settings.shouldUseOledTheme) {
 +            R.color.fx_mobile_surface_oled
 +        } else {
@@ -23,7 +23,7 @@ index aff32cbcd7f3..fd0a5a8a793f 100644
          val defaultSettings =
              DefaultSettings(
                  requestInterceptor = requestInterceptor,
-@@ -178,7 +183,7 @@ class Core(
+@@ -182,7 +187,7 @@ class Core(
                  clearColor =
                      ContextCompat.getColor(
                          context,

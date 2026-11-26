@@ -7,11 +7,37 @@ Removes proprietary, tracking, and other unwanted libraries/functionality.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
+diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
+index a919aca08f..b76908e36b 100644
+--- a/mobile/android/fenix/.buildconfig.yml
++++ b/mobile/android/fenix/.buildconfig.yml
+@@ -89,8 +89,8 @@ projects:
+     - components:lib-crash
+     - components:lib-crash-sentry
+     - components:lib-dataprotect
+-    - components:lib-installation-blockstore
+-    - components:lib-integrity-googleplay
++#    - components:lib-installation-blockstore
++#    - components:lib-integrity-googleplay
+     - components:lib-llm-mlpa
+     - components:lib-password-parser-csv
+     - components:lib-passwords-file
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index ad28bfb8c8ff..baa5656a3613 100644
+index 09fbed05d1c1..6271d0879d60 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -681,13 +681,13 @@ dependencies {
+@@ -577,8 +577,8 @@ dependencies {
+     implementation project(':components:lib-push-firebase')
+     implementation project(':components:lib-state')
+     implementation project(':components:lib-accelerometer-sensormanager')
+-    implementation project(':components:lib-installation-blockstore')
+-    implementation project(':components:lib-integrity-googleplay')
++//    implementation project(':components:lib-installation-blockstore')
++//    implementation project(':components:lib-integrity-googleplay')
+     implementation project(':components:lib-llm-mlpa')
+     implementation project(':components:lib-shake')
+     implementation project(':components:lib-ai-controls')
+@@ -635,13 +635,13 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -51,7 +77,7 @@ index 70cf6e8802..451cc94e79 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 50d5ce2ac8..58338736a0 100644
+index d5b5159843..040a86db94 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -28,10 +28,10 @@ import mozilla.components.feature.tabdata.coordinator.TabDataCoordinator
@@ -63,14 +89,14 @@ index 50d5ce2ac8..58338736a0 100644
  import mozilla.components.lib.crash.store.CrashMiddleware
  import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient
 -import mozilla.components.lib.integrity.googleplay.IntegrityConsumer
-+import mozilla.components.lib.integrity.googleplay.IntegrityConsumer*/
++import mozilla.components.lib.integrity.googleplay.IntegrityConsumer */
  import mozilla.components.lib.llm.mlpa.MlpaTokenStorage
  import mozilla.components.lib.publicsuffixlist.PublicSuffixList
  import mozilla.components.service.fxrelay.eligibility.RelayEligibilityStore
-@@ -66,10 +66,10 @@ import org.mozilla.fenix.components.lens.LensImageSearch
- import org.mozilla.fenix.components.listentopage.ListenToPage
- import org.mozilla.fenix.components.llm.Llm
+@@ -69,10 +69,10 @@ import org.mozilla.fenix.components.llm.Llm
  import org.mozilla.fenix.components.llm.ext.accessTokenProvider
+ import org.mozilla.fenix.components.menu.MenuCustomizationRepository
+ import org.mozilla.fenix.components.menu.configuration.BrowserMenuConfiguration
 -import org.mozilla.fenix.components.metrics.MetricsMiddleware
 +// import org.mozilla.fenix.components.metrics.MetricsMiddleware
  import org.mozilla.fenix.components.tabs.DefaultTabRepository
@@ -78,12 +104,12 @@ index 50d5ce2ac8..58338736a0 100644
 -import org.mozilla.fenix.crashes.SettingsCrashReportCache
 +// import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
 +// import org.mozilla.fenix.crashes.SettingsCrashReportCache
+ import org.mozilla.fenix.datastore.customizedBrowserMenuInfoDataStore
  import org.mozilla.fenix.datastore.pocketStoriesSelectedCategoriesDataStore
  import org.mozilla.fenix.distributions.DefaultDistributionBrowserStoreProvider
- import org.mozilla.fenix.distributions.DefaultDistributionProviderChecker
-@@ -79,18 +79,18 @@ import org.mozilla.fenix.ext.asRecentTabs
- import org.mozilla.fenix.ext.components
+@@ -84,19 +84,19 @@ import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.filterState
+ import org.mozilla.fenix.ext.isToolbarAtBottom
  import org.mozilla.fenix.ext.sort
 -import org.mozilla.fenix.home.PocketMiddleware
 -import org.mozilla.fenix.home.SettingsBackedPocketSettings
@@ -100,30 +126,31 @@ index 50d5ce2ac8..58338736a0 100644
 -import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
 +// import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
  import org.mozilla.fenix.ipprotection.store.DefaultIPProtectionPromptRepository
+ import org.mozilla.fenix.listentopage.ListenToPageAIControlFeature
 -import org.mozilla.fenix.messaging.state.MessagingMiddleware
 +// import org.mozilla.fenix.messaging.state.MessagingMiddleware
  import org.mozilla.fenix.nimbus.FxNimbus
  import org.mozilla.fenix.onboarding.FenixOnboarding
  import org.mozilla.fenix.perf.AppLinkIntentLaunchTypeProvider
-@@ -99,7 +99,7 @@ import org.mozilla.fenix.perf.StartupActivityLog
+@@ -104,7 +104,7 @@ import org.mozilla.fenix.perf.AppStartReasonProvider
+ import org.mozilla.fenix.perf.StartupActivityLog
  import org.mozilla.fenix.perf.StartupStateProvider
  import org.mozilla.fenix.perf.StrictModeManager
- import org.mozilla.fenix.perf.lazyMonitored
 -import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
 +// import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
  import org.mozilla.fenix.search.VoiceSearchAIControlFeature
  import org.mozilla.fenix.settings.emailmasks.middleware.DefaultEmailMasksRepository
  import org.mozilla.fenix.settings.emailmasks.middleware.EmailMasksRepository
-@@ -336,7 +336,7 @@ class Components(
+@@ -344,7 +344,7 @@ class Components(
                          ProfileMarkerMiddleware(markerName = "AppStore", profiler = core.engine.profiler),
                          LogMiddleware(tag = "AppStore", shouldIncludeDetailedData = { Config.channel.isDebug }),
                          BlocklistMiddleware(blocklistHandler),
 -                        PocketMiddleware(
 +/*                        PocketMiddleware(
-                             lazyMonitored { core.pocketStoriesService },
+                             lazy { core.pocketStoriesService },
                              context.pocketStoriesSelectedCategoriesDataStore,
                              SettingsBackedPocketSettings(settings),
-@@ -357,9 +357,9 @@ class Components(
+@@ -362,9 +362,9 @@ class Components(
                                  currentTimeInMillis = currentTimeMillis,
                              )
                          ),
@@ -131,11 +158,11 @@ index 50d5ce2ac8..58338736a0 100644
 +                        HomeTelemetryMiddleware(), */
                          SetupChecklistPreferencesMiddleware(DefaultSetupChecklistRepository(context, settings)),
 -                        SetupChecklistTelemetryMiddleware(),
-+ /*                       SetupChecklistTelemetryMiddleware(),
++/*                        SetupChecklistTelemetryMiddleware(),
                          ReviewPromptMiddleware(
                                  continuousOnboardingInProgress = {
-                                     val continuousOnboardingCompleted =
-@@ -375,7 +375,7 @@ class Components(
+                                     settings.continuousOnboardingFeatureEnabled &&
+@@ -379,7 +379,7 @@ class Components(
                              )
                              .also {
                                  settings.migrateLastReviewPromptTimePrefIfNeeded(nimbus.events)

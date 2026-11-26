@@ -186,6 +186,10 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_pocket_homescreen_recommendations, false)
     prefs.setBoolPref(R.string.pref_key_pocket_sponsored_stories, false)
 
+    // Disable processing of Qualified Website Authentication Certificates (QWACs)
+    // https://codeberg.org/celenity/Phoenix/src/commit/1f2fe00e914df90815e7e074568e62a1c2a8252b/phoenix-unified.cfg#L2011
+    prefs.setBoolPref(R.string.pref_key_enable_qwac_ui, false) // [DEFAULT]
+
     // Disable recent search suggestions by default
     prefs.setDefaultBoolPref(R.string.pref_key_show_recent_search_suggestions, false)
 
@@ -217,9 +221,6 @@ object IFPrefs {
     prefs.setBoolPref(R.string.pref_key_setup_step_install_search_widget, true)
     prefs.setBoolPref(R.string.pref_key_setup_step_theme, true)
     prefs.setBoolPref(R.string.pref_key_setup_step_toolbar, true)
-
-    // Disable stories
-    prefs.setBoolPref(R.string.pref_key_private_mode_and_stories_entry_point, false)
 
     // Disable swipe gestures for TV users
     if (isTV) {
@@ -274,6 +275,10 @@ object IFPrefs {
     // Disable voice search
     // This depends on/uses Google Speech Services...
     prefs.setBoolPref(R.string.pref_key_show_voice_search, false)
+
+    // Disable Wrexham widget
+    prefs.setBoolPref(R.string.pref_key_enable_homepage_wrexham_widget, false)
+    prefs.setBoolPref(R.string.pref_key_show_homepage_wrexham_widget, false) // [DEFAULT] UI
 
     // Disable Zygote preloading by default
     // https://grapheneos.org/usage#exec-spawning

@@ -8,10 +8,10 @@ Disables and prevents A/B testing/experimentation and remote configuration of se
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 8c61dbb0291c..fbe56f557ec0 100644
+index 8ebaa678cbc3..ab087950f047 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -13,15 +13,15 @@ includes:
+@@ -13,20 +13,20 @@ includes:
    - onboarding.fml.yaml
    - messaging-fenix.fml.yaml
  import:
@@ -21,8 +21,13 @@ index 8c61dbb0291c..fbe56f557ec0 100644
 -      pdfjs:
 -        - channel: developer
 -          value: {
--          download-button: true,
--          open-in-app-button: true
+-          download-button: false,
+-          open-in-app-button: false
+-        }
+-        - channel: nightly
+-          value: {
+-          download-button: false,
+-          open-in-app-button: false
 -        }
 +#  - path: ../../android-components/components/browser/engine-gecko/geckoview.fml.yaml
 +#    channel: release
@@ -30,8 +35,13 @@ index 8c61dbb0291c..fbe56f557ec0 100644
 +#      pdfjs:
 +#        - channel: developer
 +#          value: {
-+#          download-button: true,
-+#          open-in-app-button: true
++#          download-button: false,
++#          open-in-app-button: false
++#        }
++#        - channel: nightly
++#          value: {
++#          download-button: false,
++#          open-in-app-button: false
 +#        }
    - path: ../../android-components/components/feature/fxsuggest/fxsuggest.fml.yaml
      channel: release

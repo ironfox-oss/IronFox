@@ -23,7 +23,7 @@ index d867c71ba500..8b6f86ab1ecc 100644
      // Reading the sentry token from a local file (if it exists). In a release task on taskcluster it will be available.
      buildConfigField 'String', 'SENTRY_TOKEN', 'null'
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index e3007a552f157..1bb7b3918d225 100644
+index f41f6dcd029d..fbd91c4b2cb1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -63,14 +63,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
@@ -44,7 +44,7 @@ index e3007a552f157..1bb7b3918d225 100644
  import mozilla.components.feature.session.HistoryDelegate
  import mozilla.components.feature.session.middleware.LastAccessMiddleware
  import mozilla.components.feature.session.middleware.undo.UndoMiddleware
-@@ -148,7 +148,7 @@ import org.mozilla.fenix.summarization.eligibility.SummarizationEligibilityCheck
+@@ -146,7 +146,7 @@ import org.mozilla.fenix.summarization.eligibility.SummarizationEligibilityCheck
  import org.mozilla.fenix.summarization.onboarding.FenixSummarizationFeatureConfiguration
  import org.mozilla.fenix.summarization.onboarding.SummarizationFeatureDiscoveryConfiguration
  import org.mozilla.fenix.tabgroups.middleware.TabGroupMiddleware
@@ -53,12 +53,12 @@ index e3007a552f157..1bb7b3918d225 100644
  import org.mozilla.fenix.translations.TranslationsEnabledSettings
  import org.mozilla.fenix.utils.Settings.DeleteDownloadBehavior
  import org.mozilla.fenix.utils.getUndoDelay
-@@ -327,12 +327,12 @@ class Core(
+@@ -325,12 +325,12 @@ class Core(
       * of the process. application-services only holds a weak reference to each client and skips collections whose
       * client has been collected, so a short-lived repository would opt `search-telemetry-v2` out of syncing entirely.
       */
--    val serpTelemetryRepository by lazyMonitored {
-+/*    val serpTelemetryRepository by lazyMonitored {
+-    val serpTelemetryRepository by lazy {
++/*    val serpTelemetryRepository by lazy {
          SerpTelemetryRepository(
              collectionName = COLLECTION_NAME,
              remoteSettingsService = context.components.remoteSettingsService.value,
@@ -67,8 +67,8 @@ index e3007a552f157..1bb7b3918d225 100644
 +    } */
  
      /** The [BrowserStore] holds the global [BrowserState]. */
-     val store by lazyMonitored {
-@@ -375,7 +375,7 @@ class Core(
+     val store by lazy {
+@@ -373,7 +373,7 @@ class Core(
                          ),
                  ),
                  ReaderViewMiddleware(),
@@ -77,7 +77,7 @@ index e3007a552f157..1bb7b3918d225 100644
                  ThumbnailsMiddleware(thumbnailStorage),
                  UndoMiddleware(context.components.settings.getUndoDelay()),
                  RegionMiddleware(context, locationService, applicationScope = applicationScope),
-@@ -388,7 +388,7 @@ class Core(
+@@ -386,7 +386,7 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -86,7 +86,7 @@ index e3007a552f157..1bb7b3918d225 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  ProtectionsDashboardMiddleware(protectionsStorage),
-@@ -434,13 +434,13 @@ class Core(
+@@ -432,13 +432,13 @@ class Core(
                  // Install the "icons" WebExtension to automatically load icons for every visited website.
                  icons.install(engine, this)
  
@@ -102,22 +102,22 @@ index e3007a552f157..1bb7b3918d225 100644
  
                  WebNotificationFeature(
                      context,
-@@ -501,7 +501,7 @@ class Core(
+@@ -499,7 +499,7 @@ class Core(
          )
      }
  
--    val metrics by lazyMonitored {
-+/*    val metrics by lazyMonitored {
+-    val metrics by lazy {
++/*    val metrics by lazy {
          context.components.analytics.metrics
      }
  
-@@ -511,7 +511,7 @@ class Core(
+@@ -509,7 +509,7 @@ class Core(
  
-     val searchTelemetry by lazyMonitored {
+     val searchTelemetry by lazy {
          InContentTelemetry()
 -    }
 +    } */
  
      /** Shortcut component for managing shortcuts on the device home screen. */
-     val webAppShortcutManager by lazyMonitored {
+     val webAppShortcutManager by lazy {
 -- 

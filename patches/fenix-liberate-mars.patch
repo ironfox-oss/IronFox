@@ -34,32 +34,32 @@ index ad28bfb8c8ff..0b2428484c79 100644
      implementation project(':components:service-nimbus')
      implementation project(':components:service-pocket')
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 87a4f911c0cf..f92e2c53742e 100644
+index d5b5159843cf..4954511474d0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -153,7 +153,7 @@ class Components(private val context: Context) {
-             bookmarksStorage = lazyMonitored { core.bookmarksStorage },
-             historyStorage = lazyMonitored { core.historyStorage },
-             syncedTabsCommands = lazyMonitored { backgroundServices.syncedTabsCommands },
+@@ -168,7 +168,7 @@ class Components(
+             historyStorage = lazy { core.historyStorage },
+             lastSavedFolderCache = lazy { context.components.settings.lastSavedFolderCache },
+             syncedTabsCommands = lazy { backgroundServices.syncedTabsCommands },
 -            adsClientProvider = ads.lazyAdsClientProvider,
 +//            adsClientProvider = ads.lazyAdsClientProvider,
-             appStore = lazyMonitored { appStore },
-             client = lazyMonitored { core.client },
-             strictMode = lazyMonitored { strictMode },
-@@ -478,7 +478,7 @@ class Components(private val context: Context) {
+             appStore = lazy { appStore },
+             client = lazy { core.client },
+             strictMode = lazy { strictMode },
+@@ -500,7 +500,7 @@ class Components(
      }
  
-     val ads by lazyMonitored {
+     val ads by lazy {
 -        Ads(context = context)
 +//        Ads(context = context)
      }
  
-     val relayEligibilityStore by lazyMonitored {
+     val relayEligibilityStore by lazy {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index a8f4af42231d..7782a3ff67de 100644
+index f41f6dcd029d..2b747becc585 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -85,11 +85,11 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
+@@ -89,11 +89,11 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
  import mozilla.components.service.digitalassetlinks.local.StatementRelationChecker
  import mozilla.components.service.location.LocationService
  import mozilla.components.service.location.MozillaLocationService
@@ -73,36 +73,36 @@ index a8f4af42231d..7782a3ff67de 100644
  import mozilla.components.service.merino.manifest.MerinoManifestProvider
  import mozilla.components.service.pocket.ContentRecommendationsRequestConfig
  import mozilla.components.service.pocket.PocketStoriesConfig
-@@ -619,7 +619,7 @@ class Core(
+@@ -642,7 +642,7 @@ class Core(
+         )
      }
-     val pocketStoriesService by lazyMonitored { PocketStoriesService(context, pocketStoriesConfig) }
  
--    val macTopSitesProvider by lazyMonitored {
-+/*    val macTopSitesProvider by lazyMonitored {
+-    val macTopSitesProvider by lazy {
++/*    val macTopSitesProvider by lazy {
          MacTopSitesProvider(
              adsClientProvider = context.components.ads.lazyAdsClientProvider,
-             requestConfig = MacTopSitesRequestConfig(
-@@ -639,13 +639,13 @@ class Core(
+             requestConfig =
+@@ -664,13 +664,13 @@ class Core(
              provider = macTopSitesProvider,
              frequency = Frequency(3, TimeUnit.HOURS),
          )
 -    }
 +    } */
  
-     val topSitesStorage by lazyMonitored {
+     val topSitesStorage by lazy {
          DefaultTopSitesStorage(
              pinnedSitesStorage = pinnedSiteStorage,
              historyStorage = historyStorage,
 -            topSitesProvider = macTopSitesProvider,
 +            topSitesProvider = null,
+             defaultTopSitesProvider = defaultTopSitesProvider,
          )
      }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt
-index 24554c7ab197..2bfaf905d77c 100644
+index 1e2eaefce7eb..71c44624fa68 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt
-@@ -26,9 +26,9 @@ import mozilla.components.feature.tabs.CustomTabsUseCases
+@@ -28,9 +28,9 @@ import mozilla.components.feature.tabs.CustomTabsUseCases
  import mozilla.components.feature.tabs.TabsUseCases
  import mozilla.components.feature.top.sites.TopSitesStorage
  import mozilla.components.feature.top.sites.TopSitesUseCases
@@ -132,10 +132,10 @@ index 24554c7ab197..2bfaf905d77c 100644
      appStore: Lazy<AppStore>,
      client: Lazy<Client>,
      strictMode: Lazy<StrictModeManager>,
-@@ -164,10 +164,10 @@ class UseCases(
-     val marsUseCases by lazyMonitored { MARSUseCases(client.value) }
+@@ -152,10 +152,10 @@ class UseCases(
+     val marsUseCases by lazy { MARSUseCases(client.value) }
  
-     val mozAdsUseCases by lazyMonitored {
+     val mozAdsUseCases by lazy {
 -        MozAdsUseCases(
 +/*        MozAdsUseCases(
              adsClientProvider = adsClientProvider,
@@ -144,8 +144,8 @@ index 24554c7ab197..2bfaf905d77c 100644
 +        ) */
      }
  
-     val fenixBrowserUseCases by lazyMonitored {
-@@ -185,7 +185,7 @@ class UseCases(
+     val fenixBrowserUseCases by lazy {
+@@ -173,7 +173,7 @@ class UseCases(
          DefaultShareSheetLauncher(
              applicationContext = context.applicationContext,
              homeActivityClass = HomeActivity::class.java,

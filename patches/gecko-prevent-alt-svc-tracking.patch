@@ -12,18 +12,18 @@ For more details, see https://librewolf.dev/librewolf/issues/issues/3254.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/netwerk/protocol/http/nsHttpHandler.cpp b/netwerk/protocol/http/nsHttpHandler.cpp
-index 0192e5f6f2..f1de771683 100644
+index 2dae4d2d9ae9..caa7bd08bc3f 100644
 --- a/netwerk/protocol/http/nsHttpHandler.cpp
 +++ b/netwerk/protocol/http/nsHttpHandler.cpp
-@@ -9,6 +9,7 @@
+@@ -8,6 +8,7 @@
+ #include <bitset>
  
  #include "ASpdySession.h"
- #include "AltServiceChild.h"
 +#include "CacheObserver.h"
  #include "EventTokenBucket.h"
  #include "HttpLog.h"
  #include "LoadContextInfo.h"
-@@ -2321,6 +2322,9 @@ nsHttpHandler::Observe(nsISupports* subject, const char* topic,
+@@ -2300,6 +2301,9 @@ nsHttpHandler::Observe(nsISupports* subject, const char* topic,
      // clear cache of all authentication credentials.
      mAuthCache->ClearAll();
      mPrivateAuthCache->ClearAll();
@@ -33,5 +33,4 @@ index 0192e5f6f2..f1de771683 100644
      if (mWifiTickler) mWifiTickler->Cancel();
  
      // Inform nsIOService that network is tearing down.
-
 -- 

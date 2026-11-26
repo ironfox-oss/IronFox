@@ -9,20 +9,20 @@ Firefox checks for add-on updates, from every 12 hours to hourly.
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 87a4f911c0cf..80e9e7346880 100644
+index d5b5159843cf..64b177f32d86 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -210,7 +210,7 @@ class Components(private val context: Context) {
+@@ -224,7 +224,7 @@ class Components(
  
      @Suppress("MagicNumber")
-     val addonUpdater by lazyMonitored {
--        DefaultAddonUpdater(context, Frequency(12, TimeUnit.HOURS), notificationsDelegate)
-+        DefaultAddonUpdater(context, Frequency(1, TimeUnit.HOURS), notificationsDelegate)
+     val addonUpdater by lazy {
+-        DefaultAddonUpdater(context, Frequency(12, TimeUnit.HOURS), core.store)
++        DefaultAddonUpdater(context, Frequency(1, TimeUnit.HOURS), core.store)
      }
  
      @Suppress("MagicNumber")
-@@ -225,7 +225,7 @@ class Components(private val context: Context) {
-     val remoteSettingsSyncScheduler by lazyMonitored {
+@@ -239,7 +239,7 @@ class Components(
+     val remoteSettingsSyncScheduler by lazy {
          DefaultRemoteSettingsSyncScheduler(
              context,
 -            Frequency(2, TimeUnit.HOURS),

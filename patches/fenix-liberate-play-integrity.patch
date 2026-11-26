@@ -7,32 +7,6 @@ Removes the Google Play Integrity library.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
-diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index e23ec109a522..736c25ed8705 100644
---- a/mobile/android/fenix/.buildconfig.yml
-+++ b/mobile/android/fenix/.buildconfig.yml
-@@ -80,7 +80,7 @@ projects:
-     - components:lib-crash
-     - components:lib-crash-sentry
-     - components:lib-dataprotect
--    - components:lib-integrity-googleplay
-+#    - components:lib-integrity-googleplay
-     - components:lib-llm-mlpa
-     - components:lib-publicsuffixlist
-     - components:lib-push-firebase
-diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index ad28bfb8c8ff..d8c4a23dbdd0 100644
---- a/mobile/android/fenix/app/build.gradle
-+++ b/mobile/android/fenix/app/build.gradle
-@@ -625,7 +625,7 @@ dependencies {
-     implementation project(':components:lib-push-firebase')
-     implementation project(':components:lib-state')
-     implementation project(':components:lib-accelerometer-sensormanager')
--    implementation project(':components:lib-integrity-googleplay')
-+//    implementation project(':components:lib-integrity-googleplay')
-     implementation project(':components:lib-llm-mlpa')
-     implementation project(':components:lib-shake')
-     implementation project(':components:lib-ai-controls')
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUuid.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUuid.kt
 index 900108a18e..96ba611d71 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUuid.kt
@@ -58,13 +32,13 @@ index 900108a18e..96ba611d71 100644
          /**
           * Convenience initializer that creates a [SharedPreferences] to be used by [ClientUuid].
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 50d5ce2ac8..70aa9b89c3 100644
+index d5b5159843cf..710506a921ea 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -427,11 +427,11 @@ class Components(
+@@ -447,11 +447,11 @@ class Components(
      }
  
-     val integrityClient by lazyMonitored {
+     val integrityClient by lazy {
 -        GooglePlayIntegrityClient.create(
 +/*        GooglePlayIntegrityClient.create(
              context = context,
@@ -74,8 +48,8 @@ index 50d5ce2ac8..70aa9b89c3 100644
 +        ) */
      }
  
-     val termsOfUsePromptRepository by lazyMonitored {
-@@ -523,7 +523,7 @@ class Components(
+     val termsOfUsePromptRepository by lazy {
+@@ -577,7 +577,7 @@ class Components(
              client = core.client,
              storage = MlpaTokenStorage.sharedPrefs(context),
              fxaTokenProvider = backgroundServices.accountManager.accessTokenProvider,
@@ -84,7 +58,7 @@ index 50d5ce2ac8..70aa9b89c3 100644
              userIdProvider = clientUUID,
          )
      }
-@@ -538,7 +538,7 @@ class Components(
+@@ -592,7 +592,7 @@ class Components(
              authSources =
                  IPProtectionAuthSources(
                      fxaAccountManager = lazy { backgroundServices.accountManager },
@@ -141,7 +115,7 @@ index 30cd9f1c78..5f28566747 100644
              storage = storage,
              mlpaService = fenixMlpaService,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt
-index d75d40a914..c562abdf73 100644
+index a710dde8c386..a2d616f50399 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ipprotection/IPProtection.kt
 @@ -9,12 +9,12 @@ import androidx.lifecycle.ProcessLifecycleOwner
@@ -150,16 +124,16 @@ index d75d40a914..c562abdf73 100644
  import mozilla.components.feature.ipprotection.IPProtectionFeature
 -import mozilla.components.feature.ipprotection.auth.gpi.IPProtectionGpiProvider
 +// import mozilla.components.feature.ipprotection.auth.gpi.IPProtectionGpiProvider
+ import mozilla.components.feature.ipprotection.storage.DefaultIPProtectionLocationRepository
  import mozilla.components.feature.ipprotection.storage.IPProtectionStorageSynchronizer
- import mozilla.components.feature.ipprotection.store.DefaultIPProtectionLocationRepository
- import mozilla.components.feature.ipprotection.store.IPProtectionLocationMiddleware
  import mozilla.components.feature.ipprotection.store.IPProtectionStore
+ import mozilla.components.feature.ipprotection.store.middleware.IPProtectionLocationMiddleware
 -import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient
 +// import mozilla.components.lib.integrity.googleplay.GooglePlayIntegrityClient
  import mozilla.components.service.fxa.manager.FxaAccountManager
  import mozilla.components.service.fxa.store.SyncStore
  import mozilla.components.support.base.log.logger.Logger
-@@ -36,7 +36,7 @@ import org.mozilla.fenix.utils.Settings
+@@ -37,7 +37,7 @@ import org.mozilla.fenix.utils.Settings
   */
  data class IPProtectionAuthSources(
      val fxaAccountManager: Lazy<FxaAccountManager>,
@@ -168,7 +142,7 @@ index d75d40a914..c562abdf73 100644
  )
  
  /** Provides access to IP Protection related components. */
-@@ -87,7 +87,7 @@ class IPProtection(
+@@ -90,7 +90,7 @@ class IPProtection(
              store = store,
              engine = engine,
              accountManager = authSources.fxaAccountManager.value,

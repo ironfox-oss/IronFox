@@ -67,6 +67,7 @@ object FenixSettingsVisibilityManager {
     displayPreference(context, R.string.pref_key_enable_wayback_machine, prefFragment)
     displayPreference(context, R.string.pref_key_enable_weekly_privacy_notification, prefFragment)
     displayPreference(context, R.string.pref_key_native_share_sheet, prefFragment)
+    displayPreference(context, R.string.pref_key_open_links_in_youtube_feature_enabled, prefFragment)
     displayPreference(context, R.string.pref_key_should_show_custom_tab_extensions, prefFragment)
     displayPreference(context, R.string.pref_key_show_tab_groups_in_menu, prefFragment)
     displayPreference(context, R.string.pref_key_tab_groups, prefFragment)
@@ -84,7 +85,6 @@ object FenixSettingsVisibilityManager {
     hidePreference(context, R.string.pref_key_enable_uninstall_survey, prefFragment)
     hidePreference(context, R.string.pref_key_microsurvey_feature_enabled, prefFragment)
     hidePreference(context, R.string.pref_key_nimbus_use_preview, prefFragment)
-    hidePreference(context, R.string.pref_key_private_mode_and_stories_entry_point, prefFragment)
     hidePreference(context, R.string.pref_key_use_new_crash_reporter, prefFragment)
     hidePreference(context, R.string.pref_key_use_remote_search_configuration, prefFragment)
 

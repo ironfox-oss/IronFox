@@ -962,6 +962,63 @@
     },
     {
       "schemaVersion": "1.12.0",
+      "slug": "ironfox-homepage-wrexham-widget",
+      "id": "ironfox-homepage-wrexham-widget",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Homepage Wrexham Widget",
+      "userFacingDescription": "Controls display of the homepage Wrexham widget",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-homepage-wrexham-widget-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "homepage-wrexham-widget"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "homepage-wrexham-widget",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
       "slug": "ironfox-homescreen",
       "id": "ironfox-homescreen",
       "arguments": {},
@@ -1100,6 +1157,63 @@
       "proposedDuration": 100,
       "proposedEnrollment": 100,
       "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-installation",
+      "id": "ironfox-installation",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Installation",
+      "userFacingDescription": "Controls whether installation telemetry is recorded and reported to Mozilla",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-installation-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "installation"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "installation",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
       "featureValidationOptOut": false,
       "localizations": null,
       "locales": null,
@@ -1683,26 +1797,26 @@
     },
     {
       "schemaVersion": "1.12.0",
-      "slug": "ironfox-private-mode-and-stories-entry-point",
-      "id": "ironfox-private-mode-and-stories-entry-point",
+      "slug": "ironfox-regional-default-shortcuts",
+      "id": "ironfox-regional-default-shortcuts",
       "arguments": {},
       "application": "org.mozilla.firefox",
       "appName": "fenix",
       "appId": "org.mozilla.firefox",
       "channel": "release",
-      "userFacingName": "Private Mode and Stories",
-      "userFacingDescription": "Controls whether the 'Private Mode and Stories' functionality is enabled",
+      "userFacingName": "Regional Default Shortcuts",
+      "userFacingDescription": "Controls whether Mozilla's regional default shortcuts are enabled",
       "isEnrollmentPaused": false,
       "isRollout": false,
       "bucketConfig": {
         "count": 10000,
         "start": 0,
         "total": 10000,
-        "namespace": "fenix-private-mode-and-stories-entry-point-release-1",
+        "namespace": "fenix-regional-default-shortcuts-1",
         "randomizationUnit": "nimbus_id"
       },
       "featureIds": [
-        "private-mode-and-stories-entry-point"
+        "regional-default-shortcuts"
       ],
       "probeSets": [],
       "outcomes": [],
@@ -1712,7 +1826,7 @@
           "ratio": 100,
           "features": [
             {
-              "featureId": "private-mode-and-stories-entry-point",
+              "featureId": "regional-default-shortcuts",
               "enabled": true,
               "value": {
                 "enabled": false

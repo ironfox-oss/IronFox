@@ -8,10 +8,10 @@ Updates and expands the list of domains supported by Mozilla's built-in certific
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index 3dd26a63ff74..fba753264613 100644
+index 4f5492c0517c..17e213f7e814 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
-@@ -175,12 +175,105 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
+@@ -175,6 +175,33 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
  static const char kUSERTrust_RSA_Certification_AuthorityFingerprint[] =
    "x4QzPSC810K5/cMjb05Qm4k3Bw5zBn4lTdO/nEW/Td4=";
  
@@ -45,10 +45,10 @@ index 3dd26a63ff74..fba753264613 100644
  /* Pinsets are each an ordered list by the actual value of the fingerprint */
  struct StaticFingerprints {
    // See bug 1338873 about making these fields const.
-   size_t size;
+@@ -182,6 +209,72 @@ struct StaticFingerprints {
    const char* const* data;
  };
-+ 
+ 
 +static const char* const kPinset_ironfox_Data[] = {
 +  kGlobalSign_Root_CAFingerprint,
 +  kGTS_Root_R4Fingerprint,
@@ -114,11 +114,12 @@ index 3dd26a63ff74..fba753264613 100644
 +  sizeof(kPinset_grapheneos_Data) / sizeof(const char*),
 +  kPinset_grapheneos_Data
 +};
- 
++
  /* PreloadedHPKPins.json pinsets */
  static const char* const kPinset_google_root_pems_Data[] = {
-@@ -590,9 +683,111 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-   { "youtube.com", true, false, false, -1, &kPinset_google_root_pems },
+   kCOMODO_ECC_Certification_AuthorityFingerprint,
+@@ -594,9 +687,111 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+   { "youtube.kz", true, false, false, -1, &kPinset_google_root_pems },
    { "youtube.ug", true, false, false, -1, &kPinset_google_root_pems },
    { "ytimg.com", true, false, false, -1, &kPinset_google_root_pems },
 +  { "account.brave.com", true, false, false, -1, &kPinset_brave },
@@ -225,8 +226,8 @@ index 3dd26a63ff74..fba753264613 100644
 +  { "www.ironfoxoss.org", true, false, false, -1, &kPinset_ironfox },
  };
  
--// Pinning Preload List Length = 310;
-+// Pinning Preload List Length = 415;
+-// Pinning Preload List Length = 314;
++// Pinning Preload List Length = 419;
  
  static const int32_t kUnknownId = -1;
  

@@ -295,6 +295,9 @@ function prepare_ac() {
   # Remove Firebase
   "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/lib/push-firebase" || return 1
 
+  # Remove Google Play Auth/Blockstore
+  "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/lib/installation-blockstore" || return 1
+
   # Remove Google Play Integrity
   "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/feature/ipprotection/src/main/java/mozilla/components/feature/ipprotection/auth/gpi" || return 1
   "${IRONFOX_RM}" -vr "${IRONFOX_AC}/components/lib/integrity-googleplay" || return 1

@@ -355,10 +355,10 @@ index 1b30426f64..e2d512aec9 100644
      override fun onConfigurationChanged(config: android.content.res.Configuration) {
          // Workaround for androidx appcompat issue where follow system day/night mode config changes
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index a8ee6d1191..5f6ee9f203 100644
+index f18cbc660d..c255ddf278 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -92,14 +92,14 @@ import mozilla.components.support.utils.toSafeIntent
+@@ -95,14 +95,14 @@ import mozilla.components.support.utils.toSafeIntent
  import mozilla.components.support.webextensions.WebExtensionOptionsPageObserver
  import mozilla.components.support.webextensions.WebExtensionPopupObserver
  import mozilla.components.ui.icons.R as iconsR
@@ -375,7 +375,7 @@ index a8ee6d1191..5f6ee9f203 100644
  import org.mozilla.fenix.addons.ExtensionsProcessDisabledBackgroundController
  import org.mozilla.fenix.addons.ExtensionsProcessDisabledForegroundController
  import org.mozilla.fenix.automation.AutomatedLaunch
-@@ -120,10 +120,10 @@ import org.mozilla.fenix.components.appstate.AppAction.ShareAction
+@@ -124,10 +124,10 @@ import org.mozilla.fenix.components.appstate.AppAction.ShareAction
  import org.mozilla.fenix.components.appstate.OrientationMode
  import org.mozilla.fenix.components.menu.MenuAccessPoint
  import org.mozilla.fenix.components.menu.share.QRCodeDialogFragment
@@ -388,7 +388,7 @@ index a8ee6d1191..5f6ee9f203 100644
  import org.mozilla.fenix.components.share.QR_CODE_URI_KEY
  import org.mozilla.fenix.components.share.SEND_TO_DEVICES_ACTION
  import org.mozilla.fenix.components.share.SendToDevicesDialogFragment
-@@ -150,7 +150,7 @@ import org.mozilla.fenix.ext.hasTopDestination
+@@ -154,7 +154,7 @@ import org.mozilla.fenix.ext.hasTopDestination
  import org.mozilla.fenix.ext.isAllowedDuringOnboardingIntent
  import org.mozilla.fenix.ext.nav
  import org.mozilla.fenix.ext.openSetDefaultBrowserOption
@@ -397,7 +397,7 @@ index a8ee6d1191..5f6ee9f203 100644
  import org.mozilla.fenix.ext.setNavigationIcon
  import org.mozilla.fenix.extension.WebExtensionPromptFeature
  import org.mozilla.fenix.home.HomeFragment
-@@ -529,11 +529,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -544,11 +544,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                  storage = DefaultSplashScreenStorage(components.settings),
                  showSplashScreen = { installSplashScreen().setKeepOnScreenCondition(it) },
                  onSplashScreenFinished = { result ->
@@ -411,7 +411,7 @@ index a8ee6d1191..5f6ee9f203 100644
  
                      if (savedInstanceState == null && shouldShowOnboarding) {
                          navHost.navController.navigate(NavGraphDirections.actionGlobalOnboarding())
-@@ -603,15 +603,15 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -619,15 +619,15 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                      navigateToBrowserOnColdStart()
                  }
                  maybeShowSetAsDefaultBrowserPrompt()
@@ -421,7 +421,7 @@ index a8ee6d1191..5f6ee9f203 100644
 +//                StartOnHome.enterHomeScreen.record(NoExtras())
              }
          } else {
-             processLaunchIntentAfterOnboarding()
+             registerDeferredIntentProcessing()
          }
  
          // This will record an event in Nimbus' internal event store. Used for behavioral targeting
@@ -430,7 +430,7 @@ index a8ee6d1191..5f6ee9f203 100644
          if (components.settings.isTelemetryEnabled) {
              lifecycle.addObserver(
                  BreadcrumbsRecorder(
-@@ -629,7 +629,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -645,7 +645,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                      AppIcon.newPrivateTabTapped.record(NoExtras())
                  }
              }
@@ -439,7 +439,7 @@ index a8ee6d1191..5f6ee9f203 100644
          supportActionBar?.hide()
  
          lifecycle.addObservers(
-@@ -780,7 +780,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -790,7 +790,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              components.strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
                  components.appStore.dispatch(AppAction.UpdateWasNativeDefaultBrowserPromptShown(true))
                  showSetDefaultBrowserPrompt()
@@ -448,7 +448,7 @@ index a8ee6d1191..5f6ee9f203 100644
                  components.settings.setAsDefaultPromptCalled()
              }
          }
-@@ -842,7 +842,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -852,7 +852,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              }
          }
  
@@ -457,7 +457,7 @@ index a8ee6d1191..5f6ee9f203 100644
              if (components.settings.checkIfFenixIsDefaultBrowserOnAppResume()) {
                  if (components.appStore.state.wasNativeDefaultBrowserPromptShown) {
                      Metrics.defaultBrowserChangedViaNativeSystemPrompt.record(NoExtras())
-@@ -858,7 +858,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -868,7 +868,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
              if (components.core.sentFromFirefoxManager.shouldShowSnackbar) {
                  components.appStore.dispatch(ShareAction.ShareToWhatsApp)
              }
@@ -466,7 +466,7 @@ index a8ee6d1191..5f6ee9f203 100644
  
          lifecycleScope.launch(IO) {
              // Register the [MARKETING_CHANNEL_ID] channel so that it appears in the Android Settings App.
-@@ -1067,9 +1067,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -1077,9 +1077,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
          val qrCodeUri = intent.getStringExtra(QR_CODE_URI_KEY)
          if (qrCodeUri != null) {
              if (supportFragmentManager.findFragmentByTag(QRCodeDialogFragment.TAG) == null) {
@@ -478,7 +478,7 @@ index a8ee6d1191..5f6ee9f203 100644
  
                  QRCodeDialogFragment.newInstance(qrCodeUri)
                      .showNow(
-@@ -1131,7 +1131,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -1146,7 +1146,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
  
      @VisibleForTesting
      internal fun navigateToSignInForSendTab() {
@@ -487,7 +487,7 @@ index a8ee6d1191..5f6ee9f203 100644
          beginAwaitingSignInForSendTab()
          navHost.navController.navigate(
              NavGraphDirections.actionGlobalTurnOnSync(entrypoint = FenixFxAEntryPoint.DeepLink)
-@@ -1475,9 +1475,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -1478,9 +1478,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                  )
              }
  
@@ -499,7 +499,7 @@ index a8ee6d1191..5f6ee9f203 100644
  
          return nimbusOperation
      }
-@@ -1741,14 +1741,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
+@@ -1766,14 +1766,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                  )
  
              if (recentlyUsedPwaCount == 0) {

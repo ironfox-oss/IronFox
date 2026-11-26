@@ -311,10 +311,10 @@ index 840dc9e1a50e8..5a2845fd05a74 100644
  }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
-index fa27cc81305e3..fee9d3c770827 100644
+index 89b1d5f32114..74661d3e82d2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
-@@ -683,6 +683,8 @@ class TabManagementFragment : Fragment() {
+@@ -725,6 +725,8 @@ class TabManagementFragment : Fragment() {
                                  displayTabsInGrid = settings.gridTabView,
                                  homepageAsNewTabEnabled = settings.enableHomepageAsNewTab,
                                  tabGroupsEnabled = settings.tabGroupsEnabled,
@@ -323,15 +323,15 @@ index fa27cc81305e3..fee9d3c770827 100644
                              )
                      ) ?: createInitialState(args, settings),
                  middlewares =
-@@ -758,6 +760,8 @@ class TabManagementFragment : Fragment() {
-                     showTabAutoCloseBanner =
-                         settings.shouldShowAutoCloseTabsBanner && settings.canShowCfr && settings.cfrPopupsEnabled,
-                     collectionsEnabled = settings.collections,
-+                    isFxaSignedIn = settings.ironfox.fxaEnabled && settings.signedInFxaAccount,
-+                    alwaysUsePB = settings.ironfox.alwaysUsePrivateBrowsing,
-                 ),
-         )
-     }
+@@ -804,6 +806,8 @@ class TabManagementFragment : Fragment() {
+                         showTabAutoCloseBanner =
+                             settings.shouldShowAutoCloseTabsBanner && settings.canShowCfr && settings.cfrPopupsEnabled,
+                         collectionsEnabled = settings.collections,
++                        isFxaSignedIn = settings.ironfox.fxaEnabled && settings.signedInFxaAccount,
++                        alwaysUsePB = settings.ironfox.alwaysUsePrivateBrowsing,
+                     ),
+             )
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/tabstray/TabsTray.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/tabstray/TabsTray.kt
 index f78a5fc4b9c9e..61ebde0e9adfe 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/ui/tabstray/TabsTray.kt

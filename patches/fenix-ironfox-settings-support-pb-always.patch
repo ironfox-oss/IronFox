@@ -7,96 +7,65 @@ Provides support for a UI setting to always use private browsing mode.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/ExperimentalHomepageHeader.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/ExperimentalHomepageHeader.kt
-index b1840862ca13..c0f8add3104f 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/ExperimentalHomepageHeader.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/ExperimentalHomepageHeader.kt
-@@ -104,13 +104,15 @@ fun ExperimentalHomepageHeader(
-  * @param onHomeTapped callback for when the home button is tapped.
-  */
- @Composable
--fun ExperimentalPrivateHomepageHeader(onHomeTapped: () -> Unit) {
-+fun ExperimentalPrivateHomepageHeader(alwaysUsePB: Boolean, onHomeTapped: () -> Unit) {
-     Row(
-         modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(all = 16.dp),
-         verticalAlignment = Alignment.Top,
-         horizontalArrangement = Arrangement.End,
-     ) {
--        HomeButton(onHomeTapped)
-+        if (!alwaysUsePB) {
-+            HomeButton(onHomeTapped)
-+        }
-     }
- }
- 
-@@ -219,7 +221,7 @@ private fun HomepageHeaderPreview(@PreviewParameter(PreviewThemeProvider::class)
- private fun PrivateHomepageHeaderPreview(@PreviewParameter(PreviewThemeProvider::class) theme: Theme) {
-     FirefoxTheme(theme) {
-         Surface {
--            ExperimentalPrivateHomepageHeader {}
-+            ExperimentalPrivateHomepageHeader(alwaysUsePB = false) {}
-         }
-     }
- }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt
-index 14dc9a752170..c1e7d1b53790 100644
+index 56182dfae713..eedb7f4381f4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/Homepage.kt
-@@ -174,13 +174,14 @@ internal fun Homepage(
-                 }
- 
-                 is HeaderState.Experimental.Private -> {
--                    ExperimentalPrivateHomepageHeader(onHomeTapped = { browsingModeChanged(BrowsingMode.Normal) })
-+                    ExperimentalPrivateHomepageHeader(alwaysUsePB = components.settings.ironfox.alwaysUsePrivateBrowsing, onHomeTapped = { browsingModeChanged(BrowsingMode.Normal) })
-                 }
- 
-                 is HeaderState.Normal -> {
-                     HomepageHeader(
-                         browsingMode = state.browsingMode,
-                         showStoriesButton = headerState.showStoriesButton,
-+                        alwaysUsePB = components.settings.ironfox.alwaysUsePrivateBrowsing,
-                         browsingModeChanged = browsingModeChanged,
-                         onStoriesTapped = { interactor.onDiscoverMoreClicked() },
-                     )
+@@ -170,6 +170,7 @@ internal fun Homepage(
+             HomepageHeader(
+                 browsingMode = state.browsingMode,
+                 showStoriesButton = state.headerState.showStoriesButton,
++                alwaysUsePB = components.settings.ironfox.alwaysUsePrivateBrowsing,
+                 showButtons = state.headerState.showButtons,
+                 browsingModeChanged = browsingModeChanged,
+                 onStoriesTapped = { interactor.onDiscoverMoreClicked() },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt
-index 552548656d85..f664bfd82321 100644
+index 80daa8d0d14a..9a8b8893adcd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/ui/HomepageHeader.kt
-@@ -52,6 +52,7 @@ import org.mozilla.fenix.wallpapers.WallpaperTheme
+@@ -54,6 +54,7 @@ import org.mozilla.fenix.wallpapers.WallpaperTheme
  fun HomepageHeader(
      browsingMode: BrowsingMode,
      showStoriesButton: Boolean,
 +    alwaysUsePB: Boolean,
+     showButtons: Boolean,
      browsingModeChanged: (BrowsingMode) -> Unit,
      onStoriesTapped: () -> Unit,
- ) {
-@@ -92,11 +93,13 @@ fun HomepageHeader(
+@@ -96,11 +97,13 @@ fun HomepageHeader(
  
-             Spacer(modifier = Modifier.weight(1f))
+                 Spacer(modifier = Modifier.weight(1f))
  
--            PrivateBrowsingButton(
--                color = privateBrowsingButtonColor,
--                browsingMode = browsingMode,
--                browsingModeChanged = browsingModeChanged,
--            )
-+            if (!alwaysUsePB) {
-+                PrivateBrowsingButton(
-+                    color = privateBrowsingButtonColor,
-+                    browsingMode = browsingMode,
-+                    browsingModeChanged = browsingModeChanged,
-+                )
-+            }
+-                PrivateBrowsingButton(
+-                    color = privateBrowsingButtonColor,
+-                    browsingMode = browsingMode,
+-                    browsingModeChanged = browsingModeChanged,
+-                )
++                if (!alwaysUsePB) {
++                    PrivateBrowsingButton(
++                        color = privateBrowsingButtonColor,
++                        browsingMode = browsingMode,
++                        browsingModeChanged = browsingModeChanged,
++                    )
++                }
+             }
          }
  
-         if (!browsingMode.isPrivate) {
-@@ -162,6 +165,7 @@ private fun HomepageHeaderPreview(@PreviewParameter(PreviewThemeProvider::class)
+@@ -171,6 +174,7 @@ private fun HomepageHeaderPreview(@PreviewParameter(PreviewThemeProvider::class)
              HomepageHeader(
                  browsingMode = BrowsingMode.Normal,
                  showStoriesButton = true,
 +                alwaysUsePB = false,
+                 showButtons = true,
                  browsingModeChanged = {},
                  onStoriesTapped = {},
-             )
+@@ -187,6 +191,7 @@ private fun HomepageHeaderPrivatePreview() {
+             HomepageHeader(
+                 browsingMode = BrowsingMode.Private,
+                 showStoriesButton = false,
++                alwaysUsePB = false,
+                 showButtons = true,
+                 browsingModeChanged = {},
+                 onStoriesTapped = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
 index 826acce5d92d..6300f494cad8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
@@ -110,28 +79,10 @@ index 826acce5d92d..6300f494cad8 100644
  
          requirePreference<SwitchPreferenceCompat>(R.string.pref_key_allow_screenshots_in_private_mode).apply {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7881995e2927..c4011dbc25fc 100644
+index 5630e496ee3c..0de17eef9dc1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -320,7 +320,7 @@ class Settings(
- 
-     /** Indicates if the recent tabs homepage section settings should be visible */
-     val showHomepageRecentTabsSectionToggle: Boolean
--        get() = !enableHomepageSearchBar
-+        get() = !enableHomepageSearchBar && ironfox.historyEnabled && !ironfox.alwaysUsePrivateBrowsing
- 
-     /** Indicates if the bookmarks homepage section settings should be visible */
-     val showHomepageBookmarksSectionToggle: Boolean
-@@ -328,7 +328,7 @@ class Settings(
- 
-     /** Indicates if the recently visited homepage section settings should be visible */
-     val showHomepageRecentlyVisitedSectionToggle: Boolean
--        get() = !enableHomepageSearchBar
-+        get() = !enableHomepageSearchBar && ironfox.historyEnabled && !ironfox.alwaysUsePrivateBrowsing
- 
-     /** Indicates whether or not the homepage should use edge to edge background */
-     val enableHomepageEdgeToEdgeBackgroundFeature: Boolean
-@@ -1508,7 +1508,7 @@ class Settings(
+@@ -1495,7 +1495,7 @@ class Settings(
                      false,
                  )
  
