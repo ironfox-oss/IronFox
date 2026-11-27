@@ -50,4 +50,27 @@ index ed56bde6116b..cfb05bdd8c01 100644
          ShortcutsSection(
              showShortcuts = showShortcuts,
              isPinned = isPinned,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/ReportBrokenSiteMenuItemProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/ReportBrokenSiteMenuItemProvider.kt
+index fea513d5a48a..26f1e3dec993 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/ReportBrokenSiteMenuItemProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/ReportBrokenSiteMenuItemProvider.kt
+@@ -58,17 +58,7 @@ class ReportBrokenSiteMenuItemProvider(
+     private val scope: CoroutineScope,
+ ) : MenuItemProvider {
+     override val itemsFlow: StateFlow<List<MenuItem>> =
+-        if (target == MenuTarget.CustomizeMenu) {
+-            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
+-        } else {
+-            browserStore.stateFlow
+-                .map { state -> listOfNotNull(target.browserSessionFrom(state).reportBrokenSiteItem()) }
+-                .stateIn(
+-                    scope = scope,
+-                    started = SharingStarted.Eagerly,
+-                    initialValue = listOfNotNull(target.browserSessionFrom(browserStore.state).reportBrokenSiteItem()),
+-                )
+-        }
++        MutableStateFlow(listOfNotNull(null))
+ 
+     override fun handles(event: MenuEvent) = event == MenuAction.Navigate.WebCompatReporter
+ 
 -- 

@@ -1,3 +1,2 @@
-- Updated to Firefox [`160.0.1`](https://firefox.com/firefox/android/160.0.1/releasenotes/).
-- Updated to microG [`v0.3.18.252432`](https://github.com/microg/GmsCore/releases/tag/v0.3.18.252432).
-- Updated to Rust [`1.100.0`](https://releases.rs/docs/1.100.0/).
+- Updated to Firefox [`161.0`](https://firefox.com/firefox/android/161.0/releasenotes/).
+- Updated UnifiedPush-AC to [`1.0.9`](https://gitlab.com/ironfox-oss/unifiedpush-ac/-/releases/1.0.9).

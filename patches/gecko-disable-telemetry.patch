@@ -20,6 +20,19 @@ index 077c7ca2f14b..e6fa430c772d 100644
  imply_option("MOZ_GECKOVIEW_HISTORY", True)
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
+diff --git a/mobile/android/installer/package-manifest.in b/mobile/android/installer/package-manifest.in
+index 1d4876ed30c1..4e8d1ca02036 100644
+--- a/mobile/android/installer/package-manifest.in
++++ b/mobile/android/installer/package-manifest.in
+@@ -98,7 +98,7 @@
+ @BINPATH@/defaults/settings
+ 
+ ; JavaScript components
+-@BINPATH@/components/extensions.manifest
++; @BINPATH@/components/extensions.manifest
+ 
+ @BINPATH@/components/antitracking.manifest
+ 
 diff --git a/python/sites/mach.txt b/python/sites/mach.txt
 index ebdb04510231..909a26595d48 100644
 --- a/python/sites/mach.txt

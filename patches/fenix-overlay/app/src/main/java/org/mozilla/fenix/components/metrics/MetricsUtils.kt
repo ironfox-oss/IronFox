@@ -2,6 +2,7 @@
 
 package org.mozilla.fenix.components.metrics
 
+import mozilla.components.browser.state.search.SearchAccessPoint
 import mozilla.components.browser.state.search.SearchEngine
 import org.mozilla.experiments.nimbus.NimbusEventStore
 
@@ -10,7 +11,7 @@ object MetricsUtils {
   private const val PBKDF2_KEY_LEN_BITS = 256
 
   enum class Source {
-    ACTION, SHORTCUT, SUGGESTION, TOPSITE, WIDGET, DIGITAL_ASSISTANT, NONE
+    ACTION, SHORTCUT, SUGGESTION, TOPSITE, WIDGET, CONTEXT, DIGITAL_ASSISTANT, NONE
   }
 
   fun recordSearchMetrics(
@@ -66,3 +67,15 @@ object MetricsUtils {
     BROWSER_MENU,
   }
 }
+
+fun MetricsUtils.Source.toSearchAccessPoint(): String =
+  when (this) {
+    MetricsUtils.Source.CONTEXT -> SearchAccessPoint.CONTEXT
+    MetricsUtils.Source.TOPSITE -> SearchAccessPoint.TOPSITE
+    MetricsUtils.Source.WIDGET -> SearchAccessPoint.WIDGET
+    MetricsUtils.Source.ACTION,
+    MetricsUtils.Source.SHORTCUT,
+    MetricsUtils.Source.SUGGESTION,
+    MetricsUtils.Source.DIGITAL_ASSISTANT,
+    MetricsUtils.Source.NONE -> SearchAccessPoint.DEFAULT
+  }

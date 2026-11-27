@@ -12,7 +12,7 @@ readonly IRONFOX_GECKO_VERSION='161.0'
 readonly IRONFOX_VERSION="${IRONFOX_GECKO_VERSION}"
 
 # This value is used for ex. producing reproducable archives, and its value should be bumped upon new releases
-readonly IRONFOX_VERSION_DATE='2026.11.26'
+readonly IRONFOX_VERSION_DATE='2026.11.27'
 
 # Application Services
 # Version: v161.0
@@ -26,8 +26,8 @@ readonly IRONFOX_AS_VERSION='161.0'
 # https://github.com/mozilla-l10n/firefox-l10n
 # NOTE: This repo is updated several times a day...
 # so I think best approach here will be for us to just update it alongside new releases
-readonly IRONFOX_L10N_CENTRAL_COMMIT='e4a0810fb6a79c090266e86c150bbf4c9bf9d09d'
-readonly IRONFOX_L10N_CENTRAL_SHA512SUM='e7674d1c46dccd4ad0178f68190d98b2e2039f5c8ac616d7723291d7057d7a539ea327b30080ceb5ce63767403175787b1433ca28d2e6a3a1f9b4659ab83a9de'
+readonly IRONFOX_L10N_CENTRAL_COMMIT='f37c2c485ba60a1494f38382155d18ca995f3da4'
+readonly IRONFOX_L10N_CENTRAL_SHA512SUM='23c9544d5e610eba178dee39fbbe4fcf0ed94958cae0274474a56395633ed486bee0571314e9669729a821f2d05af69069ab737fb0dfad69542a7afee02cd6a4'
 
 # Glean
 # Version: 71.0.0
@@ -64,10 +64,10 @@ readonly IRONFOX_UNIFFI_SHA512SUM='10711019fc92f2904caf1e87d88e1aaa200b2dc25c731
 readonly IRONFOX_UNIFFI_VERSION='0.32.2'
 
 # UnifiedPush-AC
-# Version: 1.0.8
-# https://gitlab.com/ironfox-oss/unifiedpush-ac
-readonly IRONFOX_UP_AC_COMMIT='1fc4832dfd5cc34530b5e64d19aef657920bc668'
-readonly IRONFOX_UP_AC_SHA512SUM='61684659e524acf7645fb6a08c428591a55123b8f84389e25c4f38f2c1624e96416d4b05bc911ec85d081fcced5067c18c4dc3e007f29e0e71cb4a5842085fb5'
+# Version: 1.0.9
+# https://gitlab.com/ironfox-oss/unifiedpush-ac/-/releases
+readonly IRONFOX_UP_AC_COMMIT='50570c3b9f0eef94ad059cc23ef0d571b8208867'
+readonly IRONFOX_UP_AC_SHA512SUM='516b33829c7a6517e3f793c921f549f99a677ef784d013b1e4be87a4aeb2ff10adfd9feac50b8abfb1dc3602ad9a8fce08a423c7d6675b7cd69a53afca793805'
 
 # WASI SDK
 # https://github.com/WebAssembly/wasi-sdk

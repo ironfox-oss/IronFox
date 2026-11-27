@@ -663,6 +663,8 @@ function prepare_fenix() {
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerHandlingService.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerWorker.kt" || return 1
+  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/InstallationMetricsService.kt" || return 1
+  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/InstallationWorker.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/MetricController.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsMiddleware.kt" || return 1
   "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsService.kt" || return 1
@@ -762,6 +764,10 @@ function prepare_fenix() {
 
   # Remove default built-in search engines
   "${IRONFOX_RM}" -vr "${IRONFOX_FENIX}/app/src/main/assets/searchplugins"/* || return 1
+
+  # Remove default shortcuts
+  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/raw/default_pinned_shortcuts.json" || return 1
+  "${IRONFOX_RM}" -v "${IRONFOX_FENIX}/app/src/main/res/raw/default_shortcuts.json" || return 1
 
   # Apply Fenix overlay
   apply_overlay "${IRONFOX_FENIX_OVERLAY}/" || return 1

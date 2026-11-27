@@ -7,6 +7,94 @@ Adds minor tweaks to the browser's user interface.
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/accounts/MozillaAccountMenuItemProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/accounts/MozillaAccountMenuItemProvider.kt
+index 13c2c6cb51..a2d7cad7f3 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/accounts/MozillaAccountMenuItemProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/accounts/MozillaAccountMenuItemProvider.kt
+@@ -54,6 +54,7 @@ private const val AVATAR_SIZE_DP = 24
+ 
+ /** Provides the menu item for the current Mozilla account state. */
+ class MozillaAccountMenuItemProvider(
++    isEnabled: Boolean,
+     private val syncStore: SyncStore,
+     private val httpClient: Client,
+     context: Context,
+@@ -70,17 +71,21 @@ class MozillaAccountMenuItemProvider(
+             ?.let(::MenuItemIconDrawable)
+             ?: MenuItemIconRes(iconsR.drawable.mozac_ic_avatar_warning_circle_fill_multicolor_24)
+     private val mutableItems: MutableStateFlow<List<MenuItem>>? =
+-        if (target == MenuTarget.CustomizeMenu) {
++        if (!isEnabled || target == MenuTarget.CustomizeMenu) {
+             null
+         } else {
+             MutableStateFlow(listOf(syncStore.state.toMenuItem()))
+         }
+ 
+     override val itemsFlow: StateFlow<List<MenuItem>> =
+-        mutableItems?.asStateFlow() ?: MutableStateFlow(listOf(DEFAULT_MENU_ITEM)).asStateFlow()
++        if (!isEnabled) {
++            MutableStateFlow(listOfNotNull(null)).asStateFlow()
++        } else {
++            mutableItems?.asStateFlow() ?: MutableStateFlow(listOf(DEFAULT_MENU_ITEM)).asStateFlow()
++        }
+ 
+     init {
+-        if (target != MenuTarget.CustomizeMenu) {
++        if (isEnabled && target != MenuTarget.CustomizeMenu) {
+             scope.launch {
+                 syncStore.stateFlow
+                     .distinctUntilChangedBy { it.account to it.accountState }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuItemProvidersFactory.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuItemProvidersFactory.kt
+index 7428761e78f6..5b2e4fd76216 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuItemProvidersFactory.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuItemProvidersFactory.kt
+@@ -217,6 +217,7 @@ class MenuItemProvidersFactory(
+ 
+             FenixMenuItem.MoveToNormalTabs ->
+                 MoveToNormalTabsMenuItemProvider(
++                    isEnabled = !settings.ironfox.alwaysUsePrivateBrowsing,
+                     browserStore = browserStore,
+                     target = target,
+                     migratePrivateTab = useCases.tabsUseCases.migratePrivateTabUseCase,
+@@ -239,7 +240,7 @@ class MenuItemProvidersFactory(
+                     browserStore = browserStore,
+                     target = target,
+                     pinnedSiteStorage = pinnedSiteStorage,
+-                    areShortcutsEnabled = settings.showTopSitesFeature,
++                    areShortcutsEnabled = settings.showTopSitesFeature && !settings.ironfox.alwaysUsePrivateBrowsing,
+                     topSitesUseCases = useCases.topSitesUseCase,
+                     appStore = appStore,
+                     scope = menuViewScope,
+@@ -297,6 +298,7 @@ class MenuItemProvidersFactory(
+             FenixMenuItem.Print ->
+                 PrintMenuItemProvider(
+                     isAndroidAutomotiveAvailable = isAndroidAutomotiveAvailable,
++                    isEnabled = settings.ironfox.printEnabled,
+                     browserStore = browserStore,
+                     target = target,
+                     printContent = useCases.sessionUseCases.printContent,
+@@ -316,11 +318,13 @@ class MenuItemProvidersFactory(
+             FenixMenuItem.Passwords ->
+                 PasswordsMenuItemProvider(
+                     isAutofillSupported = settings.isAutofillSupported,
++                    isEnabled = settings.shouldPromptToSaveLogins,
+                     target = target,
+                 )
+ 
+             FenixMenuItem.MozillaAccount ->
+                 MozillaAccountMenuItemProvider(
++                    isEnabled = settings.ironfox.fxaEnabled && settings.signedInFxaAccount,
+                     syncStore = syncStore,
+                     httpClient = httpClient,
+                     context = context,
+@@ -337,6 +341,7 @@ class MenuItemProvidersFactory(
+                 QuitMenuItemProvider(
+                     appName = context.getString(R.string.app_name),
+                     deletesBrowsingDataOnQuit = settings.shouldDeleteBrowsingDataOnQuit,
++                    isEnabled = true,
+                     deleteBrowsingDataController = { deleteBrowsingDataController },
+                     quitApplicationDelegate = quitApplicationDelegate,
+                     applicationScope = applicationScope,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
 index aec18f553f7e..02f9c913879a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
@@ -139,6 +227,69 @@ index 73ad76287577..6984592ee0ba 100644
                                          summarizationMenuState = summarizationMenuState,
                                          onWebCompatReporterClick = {
                                              menuStore.dispatch(MenuAction.Navigate.WebCompatReporter)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/print/PrintMenuItemProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/print/PrintMenuItemProvider.kt
+index 28b0bb78fc..44296f4cef 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/print/PrintMenuItemProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/print/PrintMenuItemProvider.kt
+@@ -31,6 +31,7 @@ import org.mozilla.fenix.components.menu.store.MenuAction
+  */
+ class PrintMenuItemProvider(
+     isAndroidAutomotiveAvailable: Boolean,
++    isEnabled: Boolean,
+     private val browserStore: BrowserStore,
+     private val target: MenuTarget,
+     private val printContent: SessionUseCases.PrintContentUseCase,
+@@ -41,7 +42,7 @@ class PrintMenuItemProvider(
+         } else {
+             MutableStateFlow(
+                 listOfNotNull(
+-                    if (isAndroidAutomotiveAvailable) {
++                    if (!isEnabled || isAndroidAutomotiveAvailable) {
+                         null
+                     } else {
+                         DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.PrintRequested)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/deletebrowsingdata/QuitMenuItemProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/deletebrowsingdata/QuitMenuItemProvider.kt
+index a195586f8c..b561ba903b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/deletebrowsingdata/QuitMenuItemProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/deletebrowsingdata/QuitMenuItemProvider.kt
+@@ -39,6 +39,7 @@ import org.mozilla.fenix.components.menu.store.MenuAction
+ class QuitMenuItemProvider(
+     appName: String,
+     deletesBrowsingDataOnQuit: Boolean,
++    isEnabled: Boolean,
+     private val deleteBrowsingDataController: () -> DeleteBrowsingDataController,
+     private val quitApplicationDelegate: () -> Unit,
+     private val applicationScope: CoroutineScope,
+@@ -50,7 +51,7 @@ class QuitMenuItemProvider(
+         } else {
+             MutableStateFlow(
+                 listOfNotNull(
+-                    when (deletesBrowsingDataOnQuit) {
++                    when (isEnabled) {
+                         true -> defaultMenuItem(appName).copy(onClickEvent = MenuAction.DeleteBrowsingDataAndQuit)
+ 
+                         else -> null
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/logins/PasswordsMenuItemProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/logins/PasswordsMenuItemProvider.kt
+index 19448151bf..7ea391eeac 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/logins/PasswordsMenuItemProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/logins/PasswordsMenuItemProvider.kt
+@@ -29,6 +29,7 @@ import org.mozilla.fenix.components.menu.store.MenuAction
+  */
+ class PasswordsMenuItemProvider(
+     isAutofillSupported: Boolean,
++    isEnabled: Boolean,
+     private val target: MenuTarget,
+ ) : MenuItemProvider {
+     override val itemsFlow: StateFlow<List<MenuItem>> =
+@@ -37,7 +38,7 @@ class PasswordsMenuItemProvider(
+         } else {
+             MutableStateFlow(
+                 listOfNotNull(
+-                    when (isAutofillSupported) {
++                    when (isEnabled && isAutofillSupported) {
+                         true -> DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.Navigate.Passwords)
+                         false -> null
+                     }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/Page.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/Page.kt
 index 500ba6b8f5cba..9b37e37a058a9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/redux/state/Page.kt

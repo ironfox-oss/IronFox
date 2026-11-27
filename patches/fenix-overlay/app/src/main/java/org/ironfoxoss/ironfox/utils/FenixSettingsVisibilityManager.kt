@@ -63,7 +63,6 @@ object FenixSettingsVisibilityManager {
     displayPreference(context, R.string.pref_key_enable_lna_blocking_enabled, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_feature_enabled, prefFragment)
     displayPreference(context, R.string.pref_key_enable_lna_tracker_blocking_enabled, prefFragment)
-    displayPreference(context, R.string.pref_key_enable_menu_customization, prefFragment)
     displayPreference(context, R.string.pref_key_enable_wayback_machine, prefFragment)
     displayPreference(context, R.string.pref_key_enable_weekly_privacy_notification, prefFragment)
     displayPreference(context, R.string.pref_key_native_share_sheet, prefFragment)

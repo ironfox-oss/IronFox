@@ -225,26 +225,4 @@ index 8c4943f23067..7ef2293767a7 100644
 +    val url = ""
      return DisplayableCrash.Report(name, url)
  }
-diff --git a/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt b/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
-index ae8c5002251e..fa7e3d50695a 100644
---- a/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
-+++ b/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
-@@ -5,7 +5,7 @@
- package mozilla.components.support
- 
- import mozilla.appservices.RustComponentsInitializer
--import mozilla.components.concept.base.crash.CrashReporting
-+// import mozilla.components.concept.base.crash.CrashReporting
- import mozilla.components.support.base.log.Log
- import mozilla.components.support.rustlog.RustLog
- 
-@@ -41,7 +41,7 @@ object AppServicesInitializer {
-      */
-     data class Config(
-         // Do not add a crash reporting default. We want to be explicit if we make this choice.
--        val crashReporting: CrashReporting?,
-+//        val crashReporting: CrashReporting?,
-         val logLevel: Log.Priority = Log.Priority.INFO,
-     )
- }
 -- 
