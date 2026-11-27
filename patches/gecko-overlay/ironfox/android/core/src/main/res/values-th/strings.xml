@@ -15,4 +15,10 @@
     <string name="preference_ironfox_history_enabled">จำประวัติการเข้าชม</string>
     <string name="preference_referer_policy">นโยบาย Referer ข้ามต้นทาง</string>
     <string name="preference_accessibility_enabled">เปิดใช้งานบริการการช่วยเหลือพิเศษ</string>
+    <string name="preference_ironfox_ip_protection_enabled">เปิดใช้งาน Firefox VPN</string>
+    <string name="preference_media_autoplay_title">เล่นสื่ออัตโนมัติ</string>
+    <string name="preference_autoplay_policy_click_to_play">คลิกเพื่อเล่น</string>
+    <string name="preference_pdfjs_disabled">เปิดไฟล์ PDF จากภายนอก</string>
+    <string name="preference_prefers_dark_color_scheme">มืด</string>
+    <string name="preference_prefers_light_color_scheme">สว่าง (ค่าเริ่มต้น)</string>
 </resources>
